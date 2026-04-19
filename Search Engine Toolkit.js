@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @namespace    https://github.com/Startanuki07
-// @version      1.8.1
+// @version      1.8.2
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -24,7 +24,6 @@
 // @match        https://www.ecosia.org/search*
 // @match        https://www.qwant.com/*
 // @match        https://search.naver.com/search*
-// @match        https://www.startpage.com/search*
 // @match        https://kagi.com/search*
 // @match        https://www.sogou.com/web*
 // @match        https://www.so.com/s*
@@ -38,6 +37,7 @@
 // @match        https://www.ask.com/images*
 // @match        https://www.ecosia.org/images*
 // @match        https://kagi.com/images*
+// @match        https://pic.sogou.com/pics*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_openInTab
@@ -145,6 +145,14 @@
       panelWidthHint: "↺ Resets to locale default width",
       seBarOffsetLabel: "Raise Engine Bar (+50px)",
       hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
+      hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
+      toggleBtnIconLabel:     "Icon",
+      toggleBtnIconEmoji:     "🔍 Emoji",
+      toggleBtnIconSvgLine:   "SVG Outline",
+      toggleBtnIconSvgFill:   "SVG Filled",
+      toggleBtnBgColorLabel:  "BG Color",
+      toggleBtnBgOpacityLabel:"BG Opacity",
+      svgIconColorLabel:      "SVG Icon Color",
       style: "Style",
       borderRadius: "Border Radius",
       contrast: "Contrast",
@@ -397,6 +405,14 @@
       panelWidthHint: "↺ 重置 = 恢復語系預設寬度",
       seBarOffsetLabel: "引擎列上移 50px",
       hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
+      hideBlacklistBtnLabel: "隱藏 🚫 黑名單按鈕",
+      toggleBtnStyleLabel:    "開關按鈕樣式",
+      toggleBtnIconEmoji:     "🔍 Emoji",
+      toggleBtnIconSvgLine:   "SVG 線框",
+      toggleBtnIconSvgFill:   "SVG 填色",
+      toggleBtnBgColorLabel:  "背景顏色",
+      toggleBtnBgOpacityLabel:"背景透明度",
+      svgIconColorLabel:      "SVG 圖示顏色",
       style: "風格",
       borderRadius: "圓角",
       contrast: "對比度",
@@ -640,6 +656,14 @@
       panelWidthHint: "↺ 重置 = 恢复语系默认宽度",
       seBarOffsetLabel: "引擎列上移 50px",
       hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
+      hideBlacklistBtnLabel: "隱藏 🚫 黑名单按钮",
+      toggleBtnStyleLabel:    "开关按钮样式",
+      toggleBtnIconEmoji:     "🔍 Emoji",
+      toggleBtnIconSvgLine:   "SVG 线框",
+      toggleBtnIconSvgFill:   "SVG 填色",
+      toggleBtnBgColorLabel:  "背景颜色",
+      toggleBtnBgOpacityLabel:"背景透明度",
+      svgIconColorLabel:      "SVG 图标颜色",
       style: "风格",
       borderRadius: "圆角",
       contrast: "对比度",
@@ -884,6 +908,14 @@
       panelWidthHint: "↺ リセット = 言語別デフォルト幅",
       seBarOffsetLabel: "ｴﾝｼﾞﾝ列+50px上移",
       hideSyntaxBtnLabel: "📖 構文ﾍﾙﾌﾟを非表示",
+      hideBlacklistBtnLabel: "🚫 除外域ﾎﾞﾀﾝを非表示",
+      toggleBtnIconLabel:     "ｱｲｺﾝ",
+      toggleBtnIconEmoji:     "🔍 Emoji",
+      toggleBtnIconSvgLine:   "SVG ｱｳﾄﾗｲﾝ",
+      toggleBtnIconSvgFill:   "SVG ﾌｨﾙ",
+      toggleBtnBgColorLabel:  "背景色",
+      toggleBtnBgOpacityLabel:"背景透明度",
+      svgIconColorLabel:      "SVGｱｲｺﾝ色",
       style: "スタイル",
       borderRadius: "角の丸み",
       contrast: "コントラスト",
@@ -1132,6 +1164,14 @@
       panelWidthHint: "↺ 초기화 = 언어 기본 너비 복원",
       seBarOffsetLabel: "엔진 바 +50px 위로",
       hideSyntaxBtnLabel: "📖 문법 도움말 숨기기",
+      hideBlacklistBtnLabel: "🚫 차단목록 버튼 숨기기",
+      toggleBtnIconLabel:     "아이콘",
+      toggleBtnIconEmoji:     "🔍 Emoji",
+      toggleBtnIconSvgLine:   "SVG 아웃라인",
+      toggleBtnIconSvgFill:   "SVG 채우기",
+      toggleBtnBgColorLabel:  "배경 색상",
+      toggleBtnBgOpacityLabel:"배경 투명도",
+      svgIconColorLabel:      "SVG 아이콘 색상",
       style: "스타일",
       borderRadius: "모서리 둥글기",
       contrast: "대비",
@@ -1389,6 +1429,14 @@
     panelWidthHint: "↺ Resets to locale default width",
     seBarOffsetLabel: "Raise Engine Bar (+50px)",
     hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
+    hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
+    toggleBtnStyleLabel:    "Toggle Button Style",
+    toggleBtnIconLabel:     "Icon",
+    toggleBtnIconEmoji:     "🔍 Emoji",
+    toggleBtnIconSvgLine:   "SVG Outline",
+    toggleBtnIconSvgFill:   "SVG Filled",
+    toggleBtnBgColorLabel:  "BG Color",
+    toggleBtnBgOpacityLabel:"BG Opacity",
     style: "Style",
     borderRadius: "Border Radius",
     contrast: "Contrast",
@@ -2009,6 +2057,11 @@
       overlayStrength: 0.5, multiSelectColor: "#ffc400", multiSelectOpacity: 0.85,
       siteButtonWidth: 0,
       hideSyntaxBtn: false,
+      hideBlacklistBtn: false,
+      iconStyle: "emoji",
+      toggleBtnBg: "",
+      toggleBtnBgOpacity: 0,
+      svgIconColor: "",
     };
     for (const k of Object.keys(_ssDefaults)) {
       if (styleSettings[k] === undefined) styleSettings[k] = _ssDefaults[k];
@@ -2062,6 +2115,78 @@
     searchConfig.isExpanded = false;
   }
 
+  function _applyIconToBtn(btn, emoji, svgLine, svgFill, emojiSize) {
+    if (!btn) return;
+    const style = styleSettings.iconStyle || "emoji";
+    const color = styleSettings.svgIconColor || "";
+    if (style === "svg-line") {
+      btn.innerHTML      = svgLine;
+      btn.style.fontSize = "0";
+      btn.style.color    = color || "";
+    } else if (style === "svg-fill") {
+      btn.innerHTML      = svgFill;
+      btn.style.fontSize = "0";
+      btn.style.color    = color || "";
+    } else {
+      btn.textContent    = emoji;
+      btn.style.fontSize = emojiSize || "14px";
+      btn.style.color    = "";
+    }
+  }
+
+  function applyAllBtnIcons() {
+    const _plus = document.querySelector(".se-plus-btn");
+    _applyIconToBtn(_plus, "⊕",
+      `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".18"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+      "11px"
+    );
+    const _dp = document.getElementById("se-dp-btn");
+    _applyIconToBtn(_dp, "📌",
+      `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="currentColor" fill-opacity=".2"/><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" fill="currentColor"/></svg>`,
+      "16px"
+    );
+    const _hist = document.getElementById("se-history-btn");
+    _applyIconToBtn(_hist, "🕐",
+      `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".18"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="12 6 12 12 16 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+      "12px"
+    );
+    const _clr = document.getElementById("se-clear-btn");
+    _applyIconToBtn(_clr, "✕",
+      `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="display:block;pointer-events:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".15"/><line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+      "10px"
+    );
+    document.querySelectorAll(".se-help-btn").forEach(_h => {
+      _applyIconToBtn(_h, "❓",
+        `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".15"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+        "12px"
+      );
+    });
+  }
+
+  function applyToggleBtnStyle(btn) {
+    if (!btn) return;
+    _applyIconToBtn(btn, "🔍",
+      `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity=".2"/><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+      "28px"
+    );
+    const bgHex   = styleSettings.toggleBtnBg || "";
+    const bgAlpha = styleSettings.toggleBtnBgOpacity ?? 0;
+    if (bgHex && /^#[0-9a-fA-F]{6}$/.test(bgHex) && bgAlpha > 0) {
+      const r = parseInt(bgHex.slice(1, 3), 16);
+      const g = parseInt(bgHex.slice(3, 5), 16);
+      const b = parseInt(bgHex.slice(5, 7), 16);
+      btn.style.background = `rgba(${r},${g},${b},${bgAlpha})`;
+    } else {
+      btn.style.background = "";
+    }
+  }
+
   const TIME_OPTIONS = t.timeOptions;
 
   function getBingFreshness(val) {
@@ -2080,7 +2205,10 @@
 
   function getTimeFilterEngine() {
     const host = window.location.hostname;
+    const path = window.location.pathname;
     if (host.includes("google."))          return "google";
+    if (host.includes("bing.com") &&
+        path.includes("/images/"))         return "bing-images";
     if (host.includes("bing.com"))         return "bing";
     if (host.includes("yahoo.com") ||
         host.includes("yahoo.co.jp"))      return "yahoo";
@@ -2104,6 +2232,7 @@
       if (host.includes("naver.com")     && params.get("where") === "image")return true;
       if (host.includes("ask.com")       && path.startsWith("/images"))     return true;
       if (host.includes("kagi.com")      && path.startsWith("/images"))     return true;
+      if (host === "pic.sogou.com")                                           return true;
     } catch (_) {}
     return false;
   }
@@ -2122,6 +2251,7 @@
     naver:      "https://search.naver.com/search.naver?where=image&query=",
     ask:        "https://www.ask.com/images?q=",
     kagi:       "https://kagi.com/images?q=",
+    sogou:      "https://pic.sogou.com/pics?query=",
   };
 
   function getImageSearchUrl(engineBaseUrl, keyword) {
@@ -2141,6 +2271,7 @@
       if (host.includes("naver.com"))    return SE_IMAGE_URLS.naver       + kw;
       if (host.includes("ask.com"))      return SE_IMAGE_URLS.ask         + kw;
       if (host.includes("kagi.com"))     return SE_IMAGE_URLS.kagi        + kw;
+      if (host.includes("sogou.com"))    return SE_IMAGE_URLS.sogou       + kw;
     } catch (_) {}
     return null;
   }
@@ -2158,6 +2289,20 @@
     return "1m";
   }
 
+  function getBingImageAge(val) {
+    if (!val) return null;
+    const m = {
+      h:60,    h2:120,   h3:180,   h6:360,   h12:720,
+      d:1440,  d2:2880,  d3:4320,
+      w:10080, w3:30240,
+      m:43200, m3:129600, m6:259200,
+      y:525960, y2:1051920, y3:1577880,
+      y4:2103840, y5:2629800, y6:3155760,
+      y7:3681720, y8:4207680, y9:4733640,
+    };
+    return m[val] ?? null;
+  }
+
   function applyTimeFilter(val) {
     const engine = getTimeFilterEngine();
     if (!engine) {
@@ -2167,7 +2312,17 @@
       return;
     }
     const url = new URL(location.href);
-    if (engine === "bing") {
+    if (engine === "bing-images") {
+      const mins    = getBingImageAge(val);
+      const curQft  = url.searchParams.get("qft") || "";
+      const baseQft = curQft.replace(/[+]?filterui:age-lt\d+/g, "").replace(/^\+/, "").trim();
+      if (mins !== null) {
+        url.searchParams.set("qft", (baseQft ? baseQft + "+" : "") + `filterui:age-lt${mins}`);
+      } else {
+        if (baseQft) url.searchParams.set("qft", baseQft);
+        else         url.searchParams.delete("qft");
+      }
+    } else if (engine === "bing") {
       if (val) url.searchParams.set("freshness", getBingFreshness(val));
       else     url.searchParams.delete("freshness");
     } else if (engine === "yahoo") {
@@ -2781,17 +2936,17 @@
 
     const toggleBtnSimple = document.getElementById("site-toggle-simple");
     if (toggleBtnSimple) {
-      toggleBtnSimple.style.background = buttonBg;
-      toggleBtnSimple.style.color = textColor;
-      toggleBtnSimple.style.borderColor = borderColor;
+      toggleBtnSimple.style.color        = textColor;
+      toggleBtnSimple.style.borderColor  = borderColor;
       toggleBtnSimple.style.borderRadius = borderRadius;
-      toggleBtnSimple.style.opacity = buttonOpacity;
-      toggleBtnSimple.style.fontSize = "32px";
-      toggleBtnSimple.style.width = "48px";
-      toggleBtnSimple.style.height = "48px";
-      toggleBtnSimple.style.lineHeight = "48px";
+      toggleBtnSimple.style.opacity      = buttonOpacity;
+      toggleBtnSimple.style.width        = "48px";
+      toggleBtnSimple.style.height       = "48px";
+      toggleBtnSimple.style.lineHeight   = "48px";
       toggleBtnSimple.style.pointerEvents = "auto";
+      applyToggleBtnStyle(toggleBtnSimple);
     }
+    applyAllBtnIcons();
   }
 
   function initSearchConfigCollapse() {
@@ -2992,17 +3147,40 @@
         leftContainer.appendChild(multiPill);
       }
 
+      const _GRP_SVG = {
+        "☑": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 12 11 14 15 10"/></svg>`,
+        "↗": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`,
+        "✎": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+        "➕": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
+        "🗑️": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`,
+        "⋯": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>`,
+      };
+      function _applyGrpIcon(el, emoji) {
+        const _svgMode = (styleSettings.iconStyle || "emoji") !== "emoji";
+        const _svgColor = styleSettings.svgIconColor || "";
+        if (_svgMode && _GRP_SVG[emoji]) {
+          el.innerHTML = _GRP_SVG[emoji];
+          el.style.fontSize = "0";
+          if (_svgColor) el.style.color = _svgColor;
+        } else {
+          el.textContent = emoji;
+          el.style.fontSize = "";
+          el.style.color = "";
+        }
+      }
+
       function mkPillBtn(emoji, titleText) {
         const btn = document.createElement("button");
         btn.className = "icon-btn";
-        btn.textContent = emoji;
         btn.title = titleText;
         btn.style.cssText = `
           background:none; border:none; border-radius:0;
           cursor:pointer; padding:2px 7px;
           font-size:12px; line-height:1.6;
+          display:inline-flex; align-items:center; justify-content:center;
           opacity:0.6; transition:opacity 0.15s, background 0.15s;
         `;
+        _applyGrpIcon(btn, emoji);
         btn.addEventListener("mouseenter", () => { btn.style.opacity = "1"; btn.style.background = "rgba(128,128,128,0.12)"; });
         btn.addEventListener("mouseleave", () => { btn.style.opacity = btn._activeStyle ? "1" : "0.6"; btn.style.background = btn._activeStyle || "none"; });
         return btn;
@@ -3044,14 +3222,15 @@
       function mkIconBtn(emoji, titleText) {
         const btn = document.createElement("button");
         btn.className = "icon-btn";
-        btn.textContent = emoji;
         btn.title = titleText;
         btn.style.cssText = `
           background:none; border:none; border-radius:0;
           cursor:pointer; padding:2px 7px;
           font-size:12px; line-height:1.6;
+          display:inline-flex; align-items:center; justify-content:center;
           opacity:0.6; transition:opacity 0.15s, background 0.15s;
         `;
+        _applyGrpIcon(btn, emoji);
         btn.addEventListener("mouseenter", () => { btn.style.opacity = "1"; btn.style.background = "rgba(128,128,128,0.12)"; });
         btn.addEventListener("mouseleave", () => { btn.style.opacity = "0.6"; btn.style.background = "none"; });
         return btn;
@@ -3211,14 +3390,15 @@
             if (!document.getElementById(bannerId)) {
               const banner = document.createElement("div");
               banner.id = bannerId;
+              const _bDark = panelTheme === "dark";
               banner.style.cssText = `
-                margin-top:5px; padding:5px 10px;
-                background:#3d2200;
-                color:#ffe082; font-size:10px; font-weight:600;
-                border-radius:5px; text-align:center;
-                box-shadow:0 1px 4px rgba(0,0,0,0.35);
-                letter-spacing:0.2px; line-height:1.6;
-                border:1px solid #7a4800;
+                margin-top:5px; padding:4px 12px;
+                background:${_bDark ? "rgba(124,106,247,0.13)" : "rgba(79,70,229,0.07)"};
+                color:${_bDark ? "#b8aaff" : "#4f46e5"};
+                font-size:10px; font-weight:600;
+                border-radius:6px; text-align:center;
+                border:1px solid ${_bDark ? "rgba(124,106,247,0.28)" : "rgba(79,70,229,0.2)"};
+                letter-spacing:0.2px; line-height:1.7;
               `;
               banner.textContent = t.multiSelectBanner || "☑ 複選模式 — 點擊站點選取 · 再按 ☑ 或送出 ↗ 退出";
               blk.appendChild(banner);
@@ -3752,13 +3932,14 @@
 
         const del = document.createElement("span");
         del.className = "site-del";
-        del.textContent = "⋯";
         del.style.cssText = `
           cursor:pointer; margin-left:auto; flex-shrink:0;
           padding-left:4px; opacity:0.4; font-size:13px;
           line-height:1; transition:opacity 0.15s; user-select:none;
+          display:inline-flex; align-items:center;
         `;
         del.title = t.siteEditHint || "點擊開啟選單";
+        _applyGrpIcon(del, "⋯");
         del.addEventListener("mouseenter", () => { del.style.opacity = "0.9"; });
         del.addEventListener("mouseleave", () => { del.style.opacity = "0.4"; });
 
@@ -4554,49 +4735,43 @@
     plusBtn.textContent = "⊕";
     plusBtn.title = (t.se || {}).panelTitle || "搜尋引擎管理";
     plusBtn.style.cssText = `
-      width:15px; height:15px; font-size:11px; line-height:1;
-      cursor:pointer; border:1px solid #aaa; border-radius:2px;
-      background:transparent; padding:0; display:flex;
+      width:22px; height:22px; font-size:11px; line-height:1;
+      cursor:pointer; border:1px solid #aaa; border-radius:3px;
+      background:transparent; padding:3px; display:inline-flex;
       align-items:center; justify-content:center; flex-shrink:0;
+      transition:border-color .15s, background .15s;
     `;
     seBar.appendChild(plusBtn);
-    if (isImageSearchPage()) {
-      const imgBadge = document.createElement("span");
-      imgBadge.textContent = "🖼️";
-      imgBadge.title = "Image search mode — engine icons will open image search";
-      imgBadge.style.cssText = `
-        font-size:13px; line-height:1; opacity:0.85; flex-shrink:0;
-        margin-left:2px; cursor:default; user-select:none;
-      `;
-      seBar.appendChild(imgBadge);
-    }
     seBarWrap.appendChild(seBar);
     headerContainer.appendChild(seBarWrap);
 
     const dpBtn = document.createElement("button");
+    dpBtn.id = "se-dp-btn";
     dpBtn.style.cssText = `
       background:none; border:1px solid transparent; border-radius:5px;
-      cursor:pointer; font-size:16px; line-height:1; padding:2px 4px;
+      cursor:pointer; font-size:16px; line-height:1; padding:3px 4px;
       flex-shrink:0; transition:opacity 0.2s, border-color 0.2s, filter 0.2s;
       margin: 0 0 0 2px;
+      display:inline-flex; align-items:center; justify-content:center;
     `;
 
     function dpUpdateStyle() {
-      const dpT = (t.se || {}).dpTitle || {};
+      const dpT      = (t.se || {}).dpTitle || {};
+      const _dpEmoji = (styleSettings.iconStyle || "emoji") === "emoji";
       if (defaultPanelOpen === "pinned") {
-        dpBtn.textContent = "📌";
+        if (_dpEmoji) dpBtn.textContent = "📌";
         dpBtn.title = dpT.pinned || "面板永遠顯示（已固定）\n點擊可切換";
         dpBtn.style.opacity = "1";
         dpBtn.style.filter = "none";
         dpBtn.style.borderColor = "#f80";
       } else if (defaultPanelOpen === true) {
-        dpBtn.textContent = "📌";
+        if (_dpEmoji) dpBtn.textContent = "📌";
         dpBtn.title = dpT.on || "預設開啟面板（ON）\n點擊可切換";
         dpBtn.style.opacity = "1";
         dpBtn.style.filter = "none";
         dpBtn.style.borderColor = "#4a9";
       } else {
-        dpBtn.textContent = "📌";
+        if (_dpEmoji) dpBtn.textContent = "📌";
         dpBtn.title = dpT.off || "預設關閉面板（OFF）\n點擊可切換";
         dpBtn.style.opacity = "0.3";
         dpBtn.style.filter = "grayscale(1)";
@@ -4839,8 +5014,9 @@
       epTitleText.style.cssText = `font-weight:600;font-size:${styleSettings.fontSize + 1}px;color:${fg};letter-spacing:0.3px;`;
 
       const helpBtn = document.createElement("span");
+      helpBtn.className = "se-help-btn";
       helpBtn.textContent = "❓";
-      helpBtn.style.cssText = `cursor:help; font-size:12px; opacity:0.7; position:relative; flex-shrink:0;`;
+      helpBtn.style.cssText = `cursor:help; font-size:12px; opacity:0.7; position:relative; flex-shrink:0; display:inline-flex; align-items:center;`;
 
       const helpTip = document.createElement("div");
       helpTip.style.cssText = `
@@ -5591,6 +5767,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     `;
 
     const clearInputBtn = document.createElement("button");
+    clearInputBtn.id = "se-clear-btn";
     clearInputBtn.textContent = "✕";
     clearInputBtn.title = t.close;
     clearInputBtn.style.cssText = `
@@ -5615,6 +5792,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     `;
 
     const historyBtn = document.createElement("button");
+    historyBtn.id = "se-history-btn";
     historyBtn.textContent = "🕐";
     historyBtn.title = t.searchHistory || "搜尋歷史";
     historyBtn.style.cssText = `
@@ -5624,13 +5802,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       transform: translateY(-50%);
       width: 18px;
       height: 18px;
-      padding: 0;
+      padding: 1px;
       border: none;
       background: transparent;
       cursor: pointer;
       font-size: 12px;
-      line-height: 18px;
-      text-align: center;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       opacity: 0.45;
       transition: opacity 0.15s;
       z-index: 1;
@@ -6197,6 +6377,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       blacklistBtnEl.title = (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist");
     }
     blacklistBtnEl.onclick = () => showBlacklistDialog();
+    blacklistBtnEl.style.display = styleSettings.hideBlacklistBtn ? "none" : "";
     buttonContainer.appendChild(blacklistBtnEl);
     buttonContainer.appendChild(syntaxHelpBtn);
 
@@ -6251,7 +6432,18 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       try {
         const _u = new URL(location.href);
         let _curVal = "";
-        if (_tsEngine === "bing") {
+        if (_tsEngine === "bing-images") {
+          const _qft = _u.searchParams.get("qft") || "";
+          const _mMatch = _qft.match(/filterui:age-lt(\d+)/);
+          if (_mMatch) {
+            const _mins = parseInt(_mMatch[1]);
+            const _biaMap = [[60,"h"],[120,"h2"],[180,"h3"],[360,"h6"],[720,"h12"],
+              [1440,"d"],[2880,"d2"],[4320,"d3"],[10080,"w"],[30240,"w3"],
+              [43200,"m"],[129600,"m3"],[259200,"m6"],[525960,"y"]];
+            const _found = _biaMap.find(([n]) => n >= _mins);
+            _curVal = _found ? _found[1] : "y";
+          }
+        } else if (_tsEngine === "bing") {
           const _freshnessRev = { "past hour": "h", "past day": "d", "past week": "w", "past month": "m", "past year": "y" };
           const _fr = (_u.searchParams.get("freshness") || "").toLowerCase();
           _curVal = _freshnessRev[_fr] || "";
@@ -6712,6 +6904,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       panelMaxHeight: 87,
       siteButtonWidth: 0,
       hideSyntaxBtn: false,
+      hideBlacklistBtn: false,
+      iconStyle: "emoji",
+      toggleBtnBg: "",
+      toggleBtnBgOpacity: 0,
+      svgIconColor: "",
     };
 
     function rowCss() {
@@ -6863,15 +7060,78 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const lbl = document.createElement("label");
       lbl.htmlFor = "hide-syntax-btn-chk";
       lbl.textContent = t.hideSyntaxBtnLabel || "隱藏 📖 語法說明按鈕";
-      lbl.style.cssText = "cursor:pointer; font-size:12px; user-select:none;";
+      lbl.style.cssText = "cursor:pointer; font-size:12px; user-select:none; flex:1;";
       chk.onchange = () => {
         styleSettings.hideSyntaxBtn = chk.checked;
         save();
         const btn = document.getElementById("syntax-help-btn");
         if (btn) btn.style.display = chk.checked ? "none" : "";
       };
+      const _openSyntax = document.createElement("button");
+      _openSyntax.textContent = "📖";
+      _openSyntax.title = t.syntaxHelp || "Search Syntax Reference";
+      _openSyntax.style.cssText = `
+        padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
+        border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+        background:transparent; font-size:12px; line-height:1.6;
+        transition:background .15s;
+      `;
+      _openSyntax.addEventListener("mouseenter", () => {
+        _openSyntax.style.background = panelTheme === "dark" ? "#333" : "#f0f0f0";
+      });
+      _openSyntax.addEventListener("mouseleave", () => {
+        _openSyntax.style.background = "transparent";
+      });
+      _openSyntax.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showSyntaxPanel();
+      });
       row.appendChild(chk);
       row.appendChild(lbl);
+      row.appendChild(_openSyntax);
+      panelLayoutContainer.appendChild(row);
+    })();
+
+    (function() {
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex; align-items:center; gap:6px; margin-top:4px; padding-left:2px;";
+      const chk = document.createElement("input");
+      chk.type = "checkbox";
+      chk.id = "hide-blacklist-btn-chk";
+      chk.checked = !!styleSettings.hideBlacklistBtn;
+      chk.style.cssText = "cursor:pointer; flex-shrink:0;";
+      const lbl = document.createElement("label");
+      lbl.htmlFor = "hide-blacklist-btn-chk";
+      lbl.textContent = t.hideBlacklistBtnLabel || "隱藏 🚫 黑名單按鈕";
+      lbl.style.cssText = "cursor:pointer; font-size:12px; user-select:none; flex:1;";
+      chk.onchange = () => {
+        styleSettings.hideBlacklistBtn = chk.checked;
+        save();
+        const btn = document.getElementById("blacklist-btn");
+        if (btn) btn.style.display = chk.checked ? "none" : "";
+      };
+      const _openBl = document.createElement("button");
+      _openBl.textContent = "🚫";
+      _openBl.title = t.blacklistTitle || "Domain Blacklist";
+      _openBl.style.cssText = `
+        padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
+        border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+        background:transparent; font-size:12px; line-height:1.6;
+        transition:background .15s;
+      `;
+      _openBl.addEventListener("mouseenter", () => {
+        _openBl.style.background = panelTheme === "dark" ? "#333" : "#f0f0f0";
+      });
+      _openBl.addEventListener("mouseleave", () => {
+        _openBl.style.background = "transparent";
+      });
+      _openBl.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showBlacklistDialog();
+      });
+      row.appendChild(chk);
+      row.appendChild(lbl);
+      row.appendChild(_openBl);
       panelLayoutContainer.appendChild(row);
     })();
 
@@ -7131,6 +7391,205 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     siteButtonWidthRow.appendChild(_vs_siteButtonWidth);
     siteButtonWidthRow.appendChild(_rb_siteButtonWidth);
     generalStyleContainer.appendChild(siteButtonWidthRow);
+
+    const toggleBtnStyleContainer = document.createElement("div");
+    toggleBtnStyleContainer.style.cssText = `
+      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+      border-radius:${styleSettings.borderRadius}px;
+      padding:6px; display:flex; flex-direction:column;
+      gap:0; max-width:490px; margin-top:0;
+    `;
+    const _tbsHeader = document.createElement("div");
+    _tbsHeader.textContent = t.toggleBtnStyleLabel || "開關按鈕樣式";
+    _tbsHeader.style.cssText = "font-weight:bold; margin-bottom:6px; font-size:11px;";
+    toggleBtnStyleContainer.appendChild(_tbsHeader);
+
+    (function() {
+      const row = document.createElement("div");
+      row.style.cssText = rowCss() + "flex-wrap:wrap; gap:4px;";
+      const lbl = document.createElement("label");
+      lbl.textContent = t.toggleBtnIconLabel || "圖示";
+      lbl.style.cssText = labelCss();
+      row.appendChild(lbl);
+      const _wrap = document.createElement("div");
+      _wrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
+      const _opts = [
+        { v: "emoji",    lb: t.toggleBtnIconEmoji   || "🔍 Emoji" },
+        { v: "svg-line", lb: t.toggleBtnIconSvgLine || "SVG 線框" },
+        { v: "svg-fill", lb: t.toggleBtnIconSvgFill || "SVG 填色" },
+      ];
+      _opts.forEach(({ v, lb }) => {
+        const b = document.createElement("button");
+        b.textContent = lb;
+        b.dataset.iconVal = v;
+        const _isDark = panelTheme === "dark";
+        const _active = (styleSettings.iconStyle || "emoji") === v;
+        b.style.cssText = `
+          padding:2px 8px; border-radius:4px; cursor:pointer;
+          font-size:${styleSettings.fontSize - 1}px; white-space:nowrap;
+          border:1px solid ${_isDark ? "#555" : "#ccc"};
+          background:${_active ? (_isDark ? "#334466" : "#ddeeff") : "transparent"};
+          color:${_active ? (_isDark ? "#88aaff" : "#0055cc") : "inherit"};
+          transition: background .15s, color .15s;
+        `;
+        b.addEventListener("click", () => {
+          styleSettings.iconStyle = v;
+          save();
+          const tb = document.getElementById("site-toggle-simple");
+          if (tb) applyToggleBtnStyle(tb);
+          applyAllBtnIcons();
+          _wrap.querySelectorAll("button").forEach(btn2 => {
+            const now = btn2.dataset.iconVal === v;
+            btn2.style.background = now
+              ? (panelTheme === "dark" ? "#334466" : "#ddeeff")
+              : "transparent";
+            btn2.style.color = now
+              ? (panelTheme === "dark" ? "#88aaff" : "#0055cc")
+              : "inherit";
+          });
+        });
+        _wrap.appendChild(b);
+      });
+      row.appendChild(_wrap);
+      toggleBtnStyleContainer.appendChild(row);
+    })();
+
+    (function() {
+      const _isDkP = panelTheme === "dark";
+      const row = document.createElement("div");
+      row.style.cssText = rowCss() + "flex-wrap:wrap; align-items:center; gap:4px;";
+      const lbl = document.createElement("label");
+      lbl.textContent = t.svgIconColorLabel || "SVG 圖示顏色";
+      lbl.style.cssText = labelCss();
+      row.appendChild(lbl);
+      const _cRow = document.createElement("div");
+      _cRow.style.cssText = "display:flex; gap:5px; flex:1; flex-wrap:wrap; align-items:center;";
+      const PALETTE = [
+        { hex:"",        title:"Inherit (theme)" },
+        { hex:"#ffffff", title:"White"   },
+        { hex:"#dddddd", title:"Silver"  },
+        { hex:"#222222", title:"Black"   },
+        { hex:"#4a90d9", title:"Blue"    },
+        { hex:"#2ecc71", title:"Green"   },
+        { hex:"#e74c3c", title:"Red"     },
+        { hex:"#f39c12", title:"Amber"   },
+        { hex:"#9b59b6", title:"Purple"  },
+        { hex:"#1abc9c", title:"Teal"    },
+      ];
+      let _cci;
+      PALETTE.forEach(({ hex, title }) => {
+        const sw = document.createElement("button");
+        sw.title = title;
+        sw.dataset.palette = hex;
+        const _isAct = (styleSettings.svgIconColor || "") === hex;
+        sw.style.cssText = [
+          "width:18px; height:18px; border-radius:50%; cursor:pointer; flex-shrink:0;",
+          `border:2px solid ${_isAct ? (_isDkP ? "#88aaff" : "#4a90d9") : "rgba(0,0,0,0)"};`,
+          hex ? `background:${hex};` : "background:conic-gradient(#ccc 50%, #fff 50%);",
+          "box-shadow:inset 0 0 0 1px rgba(0,0,0,.18); transition:border-color .12s;",
+        ].join(" ");
+        sw.addEventListener("click", () => {
+          styleSettings.svgIconColor = hex;
+          save();
+          applyAllBtnIcons();
+          const tb = document.getElementById("site-toggle-simple");
+          if (tb) applyToggleBtnStyle(tb);
+          _cRow.querySelectorAll("button[data-palette]").forEach(b2 => {
+            b2.style.borderColor = b2.dataset.palette === hex
+              ? (_isDkP ? "#88aaff" : "#4a90d9") : "rgba(0,0,0,0)";
+          });
+          if (_cci && hex) _cci.value = hex;
+        });
+        _cRow.appendChild(sw);
+      });
+      _cci = document.createElement("input");
+      _cci.type  = "color";
+      _cci.title = "Custom color";
+      _cci.value = /^#[0-9a-fA-F]{6}$/.test(styleSettings.svgIconColor || "")
+        ? styleSettings.svgIconColor : "#4a90d9";
+      _cci.style.cssText = "width:22px; height:18px; border:none; cursor:pointer; padding:0; border-radius:3px; flex-shrink:0;";
+      _cci.oninput = () => {
+        styleSettings.svgIconColor = _cci.value;
+        save();
+        applyAllBtnIcons();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+        _cRow.querySelectorAll("button[data-palette]").forEach(b2 => {
+          b2.style.borderColor = "rgba(0,0,0,0)";
+        });
+      };
+      _cRow.appendChild(_cci);
+      row.appendChild(_cRow);
+      toggleBtnStyleContainer.appendChild(row);
+    })();
+
+    (function() {
+      const row = document.createElement("div");
+      row.style.cssText = rowCss();
+      const lbl = document.createElement("label");
+      lbl.textContent = t.toggleBtnBgColorLabel || "背景顏色";
+      lbl.style.cssText = labelCss();
+      row.appendChild(lbl);
+      const _cWrap = document.createElement("div");
+      _cWrap.style.cssText = "display:flex; align-items:center; gap:6px; flex:1;";
+      const _ci = document.createElement("input");
+      _ci.type = "color";
+      _ci.value = styleSettings.toggleBtnBg || "#ffffff";
+      _ci.style.cssText = "width:36px; height:24px; border:none; cursor:pointer; padding:0; border-radius:3px;";
+      _ci.oninput = () => {
+        styleSettings.toggleBtnBg = _ci.value;
+        save();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+      };
+      const _cbReset = makeResetBtn("", (dv) => {
+        styleSettings.toggleBtnBg = dv;
+        _ci.value = "#ffffff";
+        save();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+      });
+      _cWrap.appendChild(_ci);
+      _cWrap.appendChild(_cbReset);
+      row.appendChild(_cWrap);
+      toggleBtnStyleContainer.appendChild(row);
+    })();
+
+    (function() {
+      const row = document.createElement("div");
+      row.style.cssText = rowCss();
+      const lbl = document.createElement("label");
+      lbl.textContent = t.toggleBtnBgOpacityLabel || "背景透明度";
+      lbl.style.cssText = labelCss();
+      row.appendChild(lbl);
+      const _si = document.createElement("input");
+      _si.type = "range";
+      _si.min = "0"; _si.max = "1"; _si.step = "0.05";
+      _si.value = styleSettings.toggleBtnBgOpacity ?? 0;
+      _si.style.cssText = sliderCss();
+      const _vs = makeValueSpan(
+        parseFloat(_si.value).toFixed(2)
+      );
+      _si.oninput = () => {
+        styleSettings.toggleBtnBgOpacity = parseFloat(_si.value);
+        _vs.textContent = parseFloat(_si.value).toFixed(2);
+        save();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+      };
+      const _rb = makeResetBtn(0, (dv) => {
+        _si.value = dv;
+        styleSettings.toggleBtnBgOpacity = dv;
+        _vs.textContent = "0.00";
+        save();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+      });
+      row.appendChild(_si);
+      row.appendChild(_vs);
+      row.appendChild(_rb);
+      toggleBtnStyleContainer.appendChild(row);
+    })();
 
     const textStyleContainer = document.createElement("div");
     textStyleContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
@@ -7674,6 +8133,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     styleConfigContent.appendChild(panelLayoutContainer);
     styleConfigContent.appendChild(generalStyleContainer);
+    styleConfigContent.appendChild(toggleBtnStyleContainer);
     styleConfigContent.appendChild(textStyleContainer);
     styleConfigContent.appendChild(backgroundOverlayContainer);
     styleConfigContent.appendChild(multiSelectContainer);
@@ -8405,8 +8865,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     toggleBtnSimple.style.width = "48px";
     toggleBtnSimple.style.height = "48px";
     toggleBtnSimple.style.lineHeight = "48px";
-    toggleBtnSimple.style.fontSize = "32px";
     toggleBtnSimple.style.opacity = styleSettings.buttonOpacity.toString();
+    applyToggleBtnStyle(toggleBtnSimple);
 
     let isDragging = false;
     let startX, startY;
@@ -8565,6 +9025,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
             if (defaultPanelOpen && !manuallyClosed) {
               showPanel(panel);
             }
+            applyAllBtnIcons();
+            const _tb = document.getElementById("site-toggle-simple");
+            if (_tb) applyToggleBtnStyle(_tb);
           } catch (err) {
             console.error("渲染過程發生錯誤:", err);
           }
