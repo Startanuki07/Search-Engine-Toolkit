@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @namespace    https://github.com/Startanuki07
-// @version      1.8.2
+// @version      1.9.0
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -57,6 +57,30 @@
 
   function isValidPixelValue(value) {
     return typeof value === "string" && /^\d+(\.\d)?px$/.test(value);
+  }
+
+  const TIME_VALUES = [
+    "h","h2","h3","h6","h12",
+    "d","d2","d3",
+    "w","w3",
+    "m","m3","m6",
+    "y","y2","y3","y4","y5","y6","y7","y8","y9",
+  ];
+
+  function buildTimeOptions(labels) {
+    return TIME_VALUES.map((v, i) => ({ label: labels[i] || v, value: v }));
+  }
+
+  const SYNTAX_SYNTAXES = [
+    "inurl:login", "intitle:guide", "filetype:pdf",
+    "intext:privacy", "-keyword", "site:example.com",
+  ];
+
+  function buildSyntaxExamples(descs, syntaxOverrides) {
+    return SYNTAX_SYNTAXES.map((s, i) => ({
+      syntax: (syntaxOverrides && syntaxOverrides[i]) || s,
+      desc:   descs[i] || "",
+    }));
   }
 
   const LANGUAGES = {
@@ -277,47 +301,22 @@
           offToast: "⛔ OFF — panel stays open now. Click 🔍 or outside to close.",
         },
       },
-      timeOptions: [
-        { label: "Within 1 hour", value: "h" },
-        { label: "Within 2 hours", value: "h2" },
-        { label: "Within 3 hours", value: "h3" },
-        { label: "Within 6 hours", value: "h6" },
-        { label: "Within 12 hours", value: "h12" },
-        { label: "Within 1 day", value: "d" },
-        { label: "Within 2 days", value: "d2" },
-        { label: "Within 3 days", value: "d3" },
-        { label: "Within 1 week", value: "w" },
-        { label: "Within 3 weeks", value: "w3" },
-        { label: "Within 1 month", value: "m" },
-        { label: "Within 3 months", value: "m3" },
-        { label: "Within 6 months", value: "m6" },
-        { label: "Within 1 year", value: "y" },
-        { label: "Within 2 years", value: "y2" },
-        { label: "Within 3 years", value: "y3" },
-        { label: "Within 4 years", value: "y4" },
-        { label: "Within 5 years", value: "y5" },
-        { label: "Within 6 years", value: "y6" },
-        { label: "Within 7 years", value: "y7" },
-        { label: "Within 8 years", value: "y8" },
-        { label: "Within 9 years", value: "y9" },
-      ],
-      syntaxExamples: [
-        {
-          syntax: "inurl:login",
-          desc: "Searches for pages with 'login' in the URL",
-        },
-        {
-          syntax: "intitle:guide",
-          desc: "Searches for pages with 'guide' in the title",
-        },
-        { syntax: "filetype:pdf", desc: "Searches for PDF files" },
-        {
-          syntax: "intext:privacy",
-          desc: "Searches for pages containing 'privacy' in the text",
-        },
-        { syntax: "-keyword", desc: "Excludes pages containing 'keyword'" },
-        { syntax: "site:example.com", desc: "Searches within example.com" },
-      ],
+      timeOptions: buildTimeOptions([
+        "Within 1 hour","Within 2 hours","Within 3 hours","Within 6 hours","Within 12 hours",
+        "Within 1 day","Within 2 days","Within 3 days",
+        "Within 1 week","Within 3 weeks",
+        "Within 1 month","Within 3 months","Within 6 months",
+        "Within 1 year","Within 2 years","Within 3 years","Within 4 years","Within 5 years",
+        "Within 6 years","Within 7 years","Within 8 years","Within 9 years",
+      ]),
+      syntaxExamples: buildSyntaxExamples([
+        "Searches for pages with 'login' in the URL",
+        "Searches for pages with 'guide' in the title",
+        "Searches for PDF files",
+        "Searches for pages containing 'privacy' in the text",
+        "Excludes pages containing 'keyword'",
+        "Searches within example.com",
+      ]),
       timeUnsupported: "⚠️ Time filter is not supported on this search engine",
     },
     zh_TW: {
@@ -537,38 +536,18 @@
           offToast: "⛔ OFF — 面板目前仍開著，點擊 🔍 或面板外側可關閉。",
         },
       },
-      timeOptions: [
-        { label: "1小時內", value: "h" },
-        { label: "2小時內", value: "h2" },
-        { label: "3小時內", value: "h3" },
-        { label: "6小時內", value: "h6" },
-        { label: "12小時內", value: "h12" },
-        { label: "1天內", value: "d" },
-        { label: "2天內", value: "d2" },
-        { label: "3天內", value: "d3" },
-        { label: "1週內", value: "w" },
-        { label: "3週內", value: "w3" },
-        { label: "1月內", value: "m" },
-        { label: "3月內", value: "m3" },
-        { label: "6月內", value: "m6" },
-        { label: "1年內", value: "y" },
-        { label: "2年內", value: "y2" },
-        { label: "3年內", value: "y3" },
-        { label: "4年內", value: "y4" },
-        { label: "5年內", value: "y5" },
-        { label: "6年內", value: "y6" },
-        { label: "7年內", value: "y7" },
-        { label: "8年內", value: "y8" },
-        { label: "9年內", value: "y9" },
-      ],
-      syntaxExamples: [
-        { syntax: "inurl:登入", desc: "搜尋網址中包含「登入」的頁面" },
-        { syntax: "intitle:指南", desc: "搜尋標題中包含「指南」的頁面" },
-        { syntax: "filetype:pdf", desc: "搜尋 PDF 檔案" },
-        { syntax: "intext:隱私", desc: "搜尋內容中包含「隱私」的頁面" },
-        { syntax: "-關鍵字", desc: "排除包含「關鍵字」的頁面" },
-        { syntax: "site:example.com", desc: "在 example.com 內搜尋" },
-      ],
+      timeOptions: buildTimeOptions([
+        "1小時內","2小時內","3小時內","6小時內","12小時內",
+        "1天內","2天內","3天內",
+        "1週內","3週內",
+        "1月內","3月內","6月內",
+        "1年內","2年內","3年內","4年內","5年內",
+        "6年內","7年內","8年內","9年內",
+      ]),
+      syntaxExamples: buildSyntaxExamples(
+        ["搜尋網址中包含「登入」的頁面","搜尋標題中包含「指南」的頁面","搜尋 PDF 檔案","搜尋內容中包含「隱私」的頁面","排除包含「關鍵字」的頁面","在 example.com 內搜尋"],
+        ["inurl:登入","intitle:指南","filetype:pdf","intext:隱私","-關鍵字","site:example.com"]
+      ),
       timeUnsupported: "⚠️ 此搜尋引擎不支援時間篩選",
     },
     zh_CN: {
@@ -788,38 +767,18 @@
           offToast: "⛔ OFF — 面板目前仍开着，点击 🔍 或面板外侧可关闭。",
         },
       },
-      timeOptions: [
-        { label: "1小时内", value: "h" },
-        { label: "2小时内", value: "h2" },
-        { label: "3小时内", value: "h3" },
-        { label: "6小时内", value: "h6" },
-        { label: "12小时内", value: "h12" },
-        { label: "1天内", value: "d" },
-        { label: "2天内", value: "d2" },
-        { label: "3天内", value: "d3" },
-        { label: "1周内", value: "w" },
-        { label: "3周内", value: "w3" },
-        { label: "1月内", value: "m" },
-        { label: "3月内", value: "m3" },
-        { label: "6月内", value: "m6" },
-        { label: "1年内", value: "y" },
-        { label: "2年内", value: "y2" },
-        { label: "3年内", value: "y3" },
-        { label: "4年内", value: "y4" },
-        { label: "5年内", value: "y5" },
-        { label: "6年内", value: "y6" },
-        { label: "7年内", value: "y7" },
-        { label: "8年内", value: "y8" },
-        { label: "9年内", value: "y9" },
-      ],
-      syntaxExamples: [
-        { syntax: "inurl:登录", desc: "搜索网址中包含「登录」的页面" },
-        { syntax: "intitle:指南", desc: "搜索标题中包含「指南」的页面" },
-        { syntax: "filetype:pdf", desc: "搜索 PDF 文件" },
-        { syntax: "intext:隐私", desc: "搜索内容中包含「隐私」的页面" },
-        { syntax: "-关键字", desc: "排除包含「关键字」的页面" },
-        { syntax: "site:example.com", desc: "在 example.com 内搜索" },
-      ],
+      timeOptions: buildTimeOptions([
+        "1小时内","2小时内","3小时内","6小时内","12小时内",
+        "1天内","2天内","3天内",
+        "1周内","3周内",
+        "1月内","3月内","6月内",
+        "1年内","2年内","3年内","4年内","5年内",
+        "6年内","7年内","8年内","9年内",
+      ]),
+      syntaxExamples: buildSyntaxExamples(
+        ["搜索网址中包含「登录」的页面","搜索标题中包含「指南」的页面","搜索 PDF 文件","搜索内容中包含「隐私」的页面","排除包含「关键字」的页面","在 example.com 内搜索"],
+        ["inurl:登录","intitle:指南","filetype:pdf","intext:隐私","-关键字","site:example.com"]
+      ),
       timeUnsupported: "⚠️ 此搜索引擎不支持时间筛选",
     },
     ja: {
@@ -1042,41 +1001,18 @@
           offToast: "⛔ OFF — パネルは現在表示中。🔍 またはパネル外をクリックして閉じます。",
         },
       },
-      timeOptions: [
-        { label: "1ｱﾜ以内", value: "h" },
-        { label: "2ｱﾜ以内", value: "h2" },
-        { label: "3ｱﾜ以内", value: "h3" },
-        { label: "6ｱﾜ以内", value: "h6" },
-        { label: "12ｱﾜ以内", value: "h12" },
-        { label: "1日以内", value: "d" },
-        { label: "2日以内", value: "d2" },
-        { label: "3日以内", value: "d3" },
-        { label: "1週間以内", value: "w" },
-        { label: "3週間以内", value: "w3" },
-        { label: "1ｶ月以内", value: "m" },
-        { label: "3ｶ月以内", value: "m3" },
-        { label: "6ｶ月以内", value: "m6" },
-        { label: "1年以内", value: "y" },
-        { label: "2年以内", value: "y2" },
-        { label: "3年以内", value: "y3" },
-        { label: "4年以内", value: "y4" },
-        { label: "5年以内", value: "y5" },
-        { label: "6年以内", value: "y6" },
-        { label: "7年以内", value: "y7" },
-        { label: "8年以内", value: "y8" },
-        { label: "9年以内", value: "y9" },
-      ],
-      syntaxExamples: [
-        { syntax: "inurl:ﾛｸﾞｲﾝ", desc: "URLに「ﾛｸﾞｲﾝ」を含むﾍﾟｰｼﾞを検索" },
-        { syntax: "intitle:ｶﾞｲﾄﾞ", desc: "ﾀｲﾄﾙに「ｶﾞｲﾄﾞ」を含むﾍﾟｰｼﾞを検索" },
-        { syntax: "filetype:pdf", desc: "PDFﾌｧｲﾙを検索" },
-        {
-          syntax: "intext:ﾌﾟﾗｲﾊﾞｼｰ",
-          desc: "本文に「ﾌﾟﾗｲﾊﾞｼｰ」を含むﾍﾟｰｼﾞを検索",
-        },
-        { syntax: "-ｷｰﾜｰﾄﾞ", desc: "「ｷｰﾜｰﾄﾞ」を含むﾍﾟｰｼﾞを除外" },
-        { syntax: "site:example.com", desc: "example.com内で検索" },
-      ],
+      timeOptions: buildTimeOptions([
+        "1ｱﾜ以内","2ｱﾜ以内","3ｱﾜ以内","6ｱﾜ以内","12ｱﾜ以内",
+        "1日以内","2日以内","3日以内",
+        "1週間以内","3週間以内",
+        "1ｶ月以内","3ｶ月以内","6ｶ月以内",
+        "1年以内","2年以内","3年以内","4年以内","5年以内",
+        "6年以内","7年以内","8年以内","9年以内",
+      ]),
+      syntaxExamples: buildSyntaxExamples(
+        ["URLに「ﾛｸﾞｲﾝ」を含むﾍﾟｰｼﾞを検索","ﾀｲﾄﾙに「ｶﾞｲﾄﾞ」を含むﾍﾟｰｼﾞを検索","PDFﾌｧｲﾙを検索","本文に「ﾌﾟﾗｲﾊﾞｼｰ」を含むﾍﾟｰｼﾞを検索","「ｷｰﾜｰﾄﾞ」を含むﾍﾟｰｼﾞを除外","example.com内で検索"],
+        ["inurl:ﾛｸﾞｲﾝ","intitle:ｶﾞｲﾄﾞ","filetype:pdf","intext:ﾌﾟﾗｲﾊﾞｼｰ","-ｷｰﾜｰﾄﾞ","site:example.com"]
+      ),
       timeUnsupported: "⚠️ この検索エンジンは時間ﾌｨﾙﾀｰに対応していません",
     },
     ko: {
@@ -1296,38 +1232,18 @@
           offToast: "⛔ OFF — 패널이 현재 열려 있습니다。🔍 또는 패널 바깥을 클릭해 닫으세요。",
         },
       },
-      timeOptions: [
-        { label: "1시간 이내", value: "h" },
-        { label: "2시간 이내", value: "h2" },
-        { label: "3시간 이내", value: "h3" },
-        { label: "6시간 이내", value: "h6" },
-        { label: "12시간 이내", value: "h12" },
-        { label: "1일 이내", value: "d" },
-        { label: "2일 이내", value: "d2" },
-        { label: "3일 이내", value: "d3" },
-        { label: "1주 이내", value: "w" },
-        { label: "3주 이내", value: "w3" },
-        { label: "1개월 이내", value: "m" },
-        { label: "3개월 이내", value: "m3" },
-        { label: "6개월 이내", value: "m6" },
-        { label: "1년 이내", value: "y" },
-        { label: "2년 이내", value: "y2" },
-        { label: "3년 이내", value: "y3" },
-        { label: "4년 이내", value: "y4" },
-        { label: "5년 이내", value: "y5" },
-        { label: "6년 이내", value: "y6" },
-        { label: "7년 이내", value: "y7" },
-        { label: "8년 이내", value: "y8" },
-        { label: "9년 이내", value: "y9" },
-      ],
-      syntaxExamples: [
-        { syntax: "inurl:login", desc: "URL에 'login'이 포함된 페이지 검색" },
-        { syntax: "intitle:가이드", desc: "제목에 '가이드'가 포함된 페이지 검색" },
-        { syntax: "filetype:pdf", desc: "PDF 파일 검색" },
-        { syntax: "intext:개인정보", desc: "본문에 '개인정보'가 포함된 페이지 검색" },
-        { syntax: "-키워드", desc: "'키워드'가 포함된 페이지 제외" },
-        { syntax: "site:example.com", desc: "example.com 내에서 검색" },
-      ],
+      timeOptions: buildTimeOptions([
+        "1시간 이내","2시간 이내","3시간 이내","6시간 이내","12시간 이내",
+        "1일 이내","2일 이내","3일 이내",
+        "1주 이내","3주 이내",
+        "1개월 이내","3개월 이내","6개월 이내",
+        "1년 이내","2년 이내","3년 이내","4년 이내","5년 이내",
+        "6년 이내","7년 이내","8년 이내","9년 이내",
+      ]),
+      syntaxExamples: buildSyntaxExamples(
+        ["URL에 'login'이 포함된 페이지 검색","제목에 '가이드'가 포함된 페이지 검색","PDF 파일 검색","본문에 '개인정보'가 포함된 페이지 검색","'키워드'가 포함된 페이지 제외","example.com 내에서 검색"],
+        ["inurl:login","intitle:가이드","filetype:pdf","intext:개인정보","-키워드","site:example.com"]
+      ),
       timeUnsupported: "⚠️ 이 검색 엔진은 시간 필터를 지원하지 않습니다",
     },
   };
@@ -1541,27 +1457,22 @@
         offToast: "⛔ OFF — panel stays open now. Click 🔍 or outside to close.",
       },
     },
-    timeOptions: [
-      { label: "Within 1 hour", value: "h" }, { label: "Within 2 hours", value: "h2" },
-      { label: "Within 3 hours", value: "h3" }, { label: "Within 6 hours", value: "h6" },
-      { label: "Within 12 hours", value: "h12" }, { label: "Within 1 day", value: "d" },
-      { label: "Within 2 days", value: "d2" }, { label: "Within 3 days", value: "d3" },
-      { label: "Within 1 week", value: "w" }, { label: "Within 3 weeks", value: "w3" },
-      { label: "Within 1 month", value: "m" }, { label: "Within 3 months", value: "m3" },
-      { label: "Within 6 months", value: "m6" }, { label: "Within 1 year", value: "y" },
-      { label: "Within 2 years", value: "y2" }, { label: "Within 3 years", value: "y3" },
-      { label: "Within 4 years", value: "y4" }, { label: "Within 5 years", value: "y5" },
-      { label: "Within 6 years", value: "y6" }, { label: "Within 7 years", value: "y7" },
-      { label: "Within 8 years", value: "y8" }, { label: "Within 9 years", value: "y9" },
-    ],
-    syntaxExamples: [
-      { syntax: "inurl:login", desc: "Pages with 'login' in the URL" },
-      { syntax: "intitle:guide", desc: "Pages with 'guide' in the title" },
-      { syntax: "filetype:pdf", desc: "Search for PDF files" },
-      { syntax: "intext:privacy", desc: "Pages containing 'privacy' in text" },
-      { syntax: "-keyword", desc: "Exclude pages with 'keyword'" },
-      { syntax: "site:example.com", desc: "Search within example.com" },
-    ],
+    timeOptions: buildTimeOptions([
+      "Within 1 hour","Within 2 hours","Within 3 hours","Within 6 hours","Within 12 hours",
+      "Within 1 day","Within 2 days","Within 3 days",
+      "Within 1 week","Within 3 weeks",
+      "Within 1 month","Within 3 months","Within 6 months",
+      "Within 1 year","Within 2 years","Within 3 years","Within 4 years","Within 5 years",
+      "Within 6 years","Within 7 years","Within 8 years","Within 9 years",
+    ]),
+    syntaxExamples: buildSyntaxExamples([
+      "Pages with 'login' in the URL",
+      "Pages with 'guide' in the title",
+      "Search for PDF files",
+      "Pages containing 'privacy' in text",
+      "Exclude pages with 'keyword'",
+      "Search within example.com",
+    ]),
     onboarding: {
       step0Title: "🔍 Finding the panel",
       step0Body: "See the <b>🔍 button</b> on the page? Click it to open or close the main panel.",
@@ -2115,6 +2026,39 @@
     searchConfig.isExpanded = false;
   }
 
+  const ICONS = {
+    plus: {
+      emoji: "⊕", size: "11px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".18"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+    },
+    pin: {
+      emoji: "📌", size: "16px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="currentColor" fill-opacity=".2"/><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" fill="currentColor"/></svg>`,
+    },
+    history: {
+      emoji: "🕐", size: "12px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".18"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="12 6 12 12 16 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+    },
+    clear: {
+      emoji: "✕", size: "10px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="display:block;pointer-events:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".15"/><line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+    },
+    help: {
+      emoji: "❓", size: "12px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".15"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+    },
+    search: {
+      emoji: "🔍", size: "24px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity=".18"/><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.8"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
+    },
+  };
+
   function _applyIconToBtn(btn, emoji, svgLine, svgFill, emojiSize) {
     if (!btn) return;
     const style = styleSettings.iconStyle || "emoji";
@@ -2136,55 +2080,113 @@
 
   function applyAllBtnIcons() {
     const _plus = document.querySelector(".se-plus-btn");
-    _applyIconToBtn(_plus, "⊕",
-      `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
-      `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".18"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-      "11px"
-    );
+    _applyIconToBtn(_plus, ICONS.plus.emoji, ICONS.plus.line, ICONS.plus.fill, ICONS.plus.size);
     const _dp = document.getElementById("se-dp-btn");
-    _applyIconToBtn(_dp, "📌",
-      `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
-      `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="currentColor" fill-opacity=".2"/><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" fill="currentColor"/></svg>`,
-      "16px"
-    );
+    _applyIconToBtn(_dp, ICONS.pin.emoji, ICONS.pin.line, ICONS.pin.fill, ICONS.pin.size);
     const _hist = document.getElementById("se-history-btn");
-    _applyIconToBtn(_hist, "🕐",
-      `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
-      `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".18"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="12 6 12 12 16 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-      "12px"
-    );
+    _applyIconToBtn(_hist, ICONS.history.emoji, ICONS.history.line, ICONS.history.fill, ICONS.history.size);
     const _clr = document.getElementById("se-clear-btn");
-    _applyIconToBtn(_clr, "✕",
-      `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="display:block;pointer-events:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
-      `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".15"/><line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`,
-      "10px"
-    );
+    _applyIconToBtn(_clr, ICONS.clear.emoji, ICONS.clear.line, ICONS.clear.fill, ICONS.clear.size);
     document.querySelectorAll(".se-help-btn").forEach(_h => {
-      _applyIconToBtn(_h, "❓",
-        `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-        `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".15"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`,
-        "12px"
-      );
+      _applyIconToBtn(_h, ICONS.help.emoji, ICONS.help.line, ICONS.help.fill, ICONS.help.size);
     });
   }
 
   function applyToggleBtnStyle(btn) {
     if (!btn) return;
-    _applyIconToBtn(btn, "🔍",
-      `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
-      `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity=".2"/><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`,
-      "28px"
-    );
-    const bgHex   = styleSettings.toggleBtnBg || "";
-    const bgAlpha = styleSettings.toggleBtnBgOpacity ?? 0;
-    if (bgHex && /^#[0-9a-fA-F]{6}$/.test(bgHex) && bgAlpha > 0) {
-      const r = parseInt(bgHex.slice(1, 3), 16);
-      const g = parseInt(bgHex.slice(3, 5), 16);
-      const b = parseInt(bgHex.slice(5, 7), 16);
-      btn.style.background = `rgba(${r},${g},${b},${bgAlpha})`;
+
+    const _tbBgHex   = styleSettings.toggleBtnBg || "";
+    const _tbBgAlpha = styleSettings.toggleBtnBgOpacity ?? 0;
+    let _tbBg;
+    if (_tbBgHex && /^#[0-9a-fA-F]{6}$/.test(_tbBgHex) && _tbBgAlpha > 0) {
+      const r = parseInt(_tbBgHex.slice(1,3), 16);
+      const g = parseInt(_tbBgHex.slice(3,5), 16);
+      const b = parseInt(_tbBgHex.slice(5,7), 16);
+      _tbBg = `rgba(${r},${g},${b},${_tbBgAlpha})`;
     } else {
-      btn.style.background = "";
+      const _base = styleSettings.customBackgroundColor
+        || (panelTheme === "dark" ? "#2a2a2a" : "#f4f4f6");
+      const _hx = _base.replace("#","");
+      const _r  = parseInt(_hx.slice(0,2), 16) || 244;
+      const _g  = parseInt(_hx.slice(2,4), 16) || 244;
+      const _b  = parseInt(_hx.slice(4,6), 16) || 246;
+      _tbBg = `rgba(${_r},${_g},${_b},0.92)`;
     }
+
+    const _isDark   = panelTheme === "dark";
+    const _bdColor  = styleSettings.customButtonBg
+      ? adjustColor(styleSettings.customButtonBg, styleSettings.contrast ?? 0)
+      : _isDark ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.13)";
+    const _shadow   = _isDark
+      ? "0 4px 16px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.35)"
+      : "0 4px 16px rgba(0,0,0,0.14), 0 1px 3px rgba(0,0,0,0.09)";
+    const _radius   = (styleSettings.borderRadius ?? 10) + "px";
+    const _color    = styleSettings.textColor || (_isDark ? "#e8e8f0" : "#3a3a4a");
+
+    btn.style.cssText = `
+      position: fixed;
+      top: ${btn.style.top || "0px"};
+      left: ${btn.style.left || "0px"};
+      right: auto;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      appearance: none;
+      -webkit-appearance: none;
+      border: 1px solid ${_bdColor};
+      border-radius: ${_radius};
+      background: ${_tbBg};
+      color: ${_color};
+      box-shadow: ${_shadow};
+      cursor: pointer;
+      z-index: 2147483647;
+      opacity: ${styleSettings.buttonOpacity ?? 1};
+      transition: box-shadow 0.18s ease, transform 0.15s ease, opacity 0.2s ease;
+      user-select: none;
+      line-height: 1;
+      font-size: ${ICONS.search.size};
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      outline: none;
+    `;
+
+    _applyIconToBtn(btn, ICONS.search.emoji, ICONS.search.line, ICONS.search.fill, ICONS.search.size);
+
+    btn.__hoverBound && btn.removeEventListener("mouseenter", btn.__hoverBound);
+    btn.__leaveBound && btn.removeEventListener("mouseleave", btn.__leaveBound);
+    btn.__downBound  && btn.removeEventListener("mousedown",  btn.__downBound);
+    btn.__upBound    && btn.removeEventListener("mouseup",    btn.__upBound);
+
+    const _shadowHover  = _isDark
+      ? "0 6px 22px rgba(0,0,0,0.65), 0 2px 6px rgba(0,0,0,0.4)"
+      : "0 6px 22px rgba(0,0,0,0.20), 0 2px 6px rgba(0,0,0,0.12)";
+    const _shadowActive = _isDark
+      ? "0 2px 6px rgba(0,0,0,0.45)"
+      : "0 2px 6px rgba(0,0,0,0.10)";
+
+    btn.__hoverBound = () => {
+      btn.style.boxShadow = _shadowHover;
+      btn.style.transform = "translateY(-2px) scale(1.04)";
+    };
+    btn.__leaveBound = () => {
+      btn.style.boxShadow = _shadow;
+      btn.style.transform = "translateY(0) scale(1)";
+    };
+    btn.__downBound = () => {
+      btn.style.boxShadow = _shadowActive;
+      btn.style.transform = "translateY(0) scale(0.96)";
+    };
+    btn.__upBound = () => {
+      btn.style.boxShadow = _shadow;
+      btn.style.transform = "translateY(0) scale(1)";
+    };
+    btn.addEventListener("mouseenter", btn.__hoverBound);
+    btn.addEventListener("mouseleave", btn.__leaveBound);
+    btn.addEventListener("mousedown",  btn.__downBound);
+    btn.addEventListener("mouseup",    btn.__upBound);
   }
 
   const TIME_OPTIONS = t.timeOptions;
@@ -2613,17 +2615,24 @@
 
   function showToast(msg, duration = 1500) {
     const toast = document.createElement("div");
+    const _isDarkToast = panelTheme === "dark";
+    const _toastBg     = _isDarkToast ? "rgba(255,255,255,0.13)" : "rgba(0,0,0,0.76)";
+    const _toastRadius = (styleSettings.borderRadius ?? 6) + "px";
+    const _toastBorder = _isDarkToast ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(0,0,0,0.28)";
+
     toast.textContent = msg;
-    toast.style.position = "fixed";
-    toast.style.bottom = "20px";
-    toast.style.right = "20px";
-    toast.style.background = "#333";
-    toast.style.color = "#fff";
-    toast.style.padding = "8px 12px";
-    toast.style.borderRadius = "4px";
-    toast.style.zIndex = 2147483649;
-    toast.style.opacity = "0";
-    toast.style.transition = "opacity 0.3s ease";
+    toast.style.cssText = `
+      position:fixed; bottom:20px; right:20px;
+      background:${_toastBg}; color:#fff;
+      border:${_toastBorder}; border-radius:${_toastRadius};
+      padding:8px 14px; font-family:sans-serif;
+      font-size:${(styleSettings.fontSize ?? 13) - 1}px;
+      box-shadow:0 4px 16px rgba(0,0,0,0.3);
+      backdrop-filter:blur(4px);
+      z-index:2147483649; opacity:0;
+      transition:opacity 0.25s ease;
+      pointer-events:none; white-space:nowrap;
+    `;
     document.body.appendChild(toast);
     requestAnimationFrame(() => {
       toast.style.opacity = "1";
@@ -2642,27 +2651,18 @@
 
     const syntaxPanel = document.createElement("div");
     syntaxPanel.id = "syntax-panel";
-    syntaxPanel.style.position = "fixed";
-    syntaxPanel.style.top = "100px";
-    syntaxPanel.style.right = "20px";
-    syntaxPanel.style.background = styleSettings.backgroundImage
-      ? "transparent"
-      : panelTheme === "dark"
-        ? "#333"
-        : "#fff";
-    syntaxPanel.style.opacity = "1";
-    syntaxPanel.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
-    syntaxPanel.style.borderRadius = styleSettings.borderRadius + "px";
-    syntaxPanel.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-    syntaxPanel.style.padding = "10px";
-    syntaxPanel.style.zIndex = "2147483648";
-    syntaxPanel.style.maxWidth = "300px";
-    syntaxPanel.style.fontFamily = "sans-serif";
-    syntaxPanel.style.fontSize = styleSettings.fontSize + "px";
-    syntaxPanel.style.maxHeight = "80vh";
-    syntaxPanel.style.overflowY = "auto";
-    syntaxPanel.style.color =
-      styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000");
+    syntaxPanel.style.cssText = `
+      position:fixed; z-index:2147483648;
+      max-width:300px; max-height:80vh; overflow-y:auto;
+      padding:10px; font-family:sans-serif;
+      font-size:${styleSettings.fontSize}px;
+      border-radius:${styleSettings.borderRadius}px;
+      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+      box-shadow:0 4px 16px rgba(0,0,0,0.22);
+      background:${styleSettings.backgroundImage ? "transparent" : panelTheme === "dark" ? "#333" : "#fff"};
+      color:${styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000")};
+      opacity:1;
+    `;
 
     const _bgImgSyntax = styleSettings.backgroundImage;
     const _bgImgSyntaxSafe = (_bgImgSyntax && /^(https?:|data:image\/)/.test(_bgImgSyntax)) ? _bgImgSyntax : "";
@@ -2693,7 +2693,8 @@
       const syntaxText = document.createElement("span");
       syntaxText.textContent = syntax;
       syntaxText.style.fontFamily = "monospace";
-      syntaxText.style.background = panelTheme === "dark" ? "#444" : "#f0f0f0";
+      syntaxText.style.background = styleSettings.customButtonBg
+        || (panelTheme === "dark" ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.07)");
       syntaxText.style.padding = "2px 4px";
       syntaxText.style.borderRadius = styleSettings.borderRadius + "px";
       row.appendChild(syntaxText);
@@ -2722,6 +2723,33 @@
     document.body.appendChild(syntaxPanel);
     shieldFromFileDrop(syntaxPanel);
 
+    requestAnimationFrame(() => {
+      const mainPanel = document.getElementById("site-group-panel");
+      const tipW = syntaxPanel.offsetWidth  || 300;
+      const tipH = syntaxPanel.offsetHeight || 200;
+      const margin = 8;
+      if (mainPanel && mainPanel.style.display !== "none") {
+        const r = mainPanel.getBoundingClientRect();
+        const leftPos  = r.left - tipW - margin;
+        const rightPos = r.right + margin;
+        const topPos   = Math.min(r.top, window.innerHeight - tipH - margin);
+        if (leftPos >= margin) {
+          syntaxPanel.style.left = leftPos + "px";
+          syntaxPanel.style.top  = Math.max(margin, topPos) + "px";
+        } else if (rightPos + tipW <= window.innerWidth - margin) {
+          syntaxPanel.style.left = rightPos + "px";
+          syntaxPanel.style.top  = Math.max(margin, topPos) + "px";
+        } else {
+          syntaxPanel.style.left = Math.max(margin, r.left) + "px";
+          syntaxPanel.style.top  = (r.bottom + margin) + "px";
+        }
+        syntaxPanel.style.right = "auto";
+      } else {
+        syntaxPanel.style.top   = (styleSettings.panelTop ?? 80) + "px";
+        syntaxPanel.style.right = (styleSettings.panelRight ?? 20) + "px";
+      }
+    });
+
     const closeSyntaxPanel = (event) => {
       if (
         !syntaxPanel.contains(event.target) &&
@@ -2734,37 +2762,45 @@
     document.addEventListener("click", closeSyntaxPanel);
   }
 
-  function applyTheme(theme) {
-    log("Applying theme:", theme, "Style settings:", styleSettings);
-
+  function applyThemeValues(theme) {
     const isDark = theme === "dark";
     let baseButtonBg, backgroundColor, textColor, buttonBg;
 
     if (theme === "custom") {
-      baseButtonBg = styleSettings.customButtonBg;
+      baseButtonBg    = styleSettings.customButtonBg;
       backgroundColor = styleSettings.customBackgroundColor;
-      textColor = styleSettings.customTextColor;
-      buttonBg = adjustColor(baseButtonBg, styleSettings.contrast);
+      textColor       = styleSettings.customTextColor;
+      buttonBg        = adjustColor(baseButtonBg, styleSettings.contrast);
     } else {
-      baseButtonBg = isDark ? "#4a4a4a" : "#f5f5f5";
-      backgroundColor =
-        styleSettings.backgroundColor || (isDark ? "#333333" : "#ffffff");
-      textColor = styleSettings.textColor || (isDark ? "#ffffff" : "#000000");
-      buttonBg = adjustColor(baseButtonBg, styleSettings.contrast);
+      baseButtonBg    = isDark ? "#4a4a4a" : "#f5f5f5";
+      backgroundColor = styleSettings.backgroundColor || (isDark ? "#333333" : "#ffffff");
+      textColor       = styleSettings.textColor       || (isDark ? "#ffffff" : "#000000");
+      buttonBg        = adjustColor(baseButtonBg, styleSettings.contrast);
     }
 
-    const borderColor = adjustColor(baseButtonBg, styleSettings.contrast);
-    const borderRadius = styleSettings.borderRadius + "px";
-    const fontSize = styleSettings.fontSize + "px";
+    const borderColor   = adjustColor(baseButtonBg, styleSettings.contrast);
+    const borderRadius  = styleSettings.borderRadius + "px";
+    const fontSize      = styleSettings.fontSize + "px";
     const buttonOpacity = styleSettings.buttonOpacity;
-    const panelOpacity = styleSettings.opacity;
-    const groupOpacity = styleSettings.groupOpacity;
+    const panelOpacity  = styleSettings.opacity;
+    const groupOpacity  = styleSettings.groupOpacity;
     const safeBg = /^#[0-9a-fA-F]{6}$/.test(backgroundColor)
       ? backgroundColor
       : isDark ? "#333333" : "#ffffff";
     const r = parseInt(safeBg.slice(1, 3), 16);
     const g = parseInt(safeBg.slice(3, 5), 16);
     const b = parseInt(safeBg.slice(5, 7), 16);
+
+    return { isDark, baseButtonBg, backgroundColor, textColor, buttonBg,
+             borderColor, borderRadius, fontSize, buttonOpacity,
+             panelOpacity, groupOpacity, r, g, b };
+  }
+
+  function applyThemeToDom(v) {
+    const {
+      textColor, buttonBg, borderColor, borderRadius,
+      fontSize, buttonOpacity, panelOpacity, groupOpacity, r, g, b,
+    } = v;
 
     const panel = document.getElementById("site-group-panel");
     if (panel) {
@@ -2891,18 +2927,15 @@
       syntaxPanel.style.background = styleSettings.backgroundImage
         ? "transparent"
         : `rgba(${r},${g},${b},${panelOpacity})`;
-      syntaxPanel.style.color = textColor;
-      syntaxPanel.style.borderColor = borderColor;
+      syntaxPanel.style.color        = textColor;
+      syntaxPanel.style.borderColor  = borderColor;
       syntaxPanel.style.borderRadius = borderRadius;
-      syntaxPanel.style.fontSize = fontSize;
-      syntaxPanel.style.position = "fixed";
-      syntaxPanel.style.top = "80px";
-      syntaxPanel.style.right = "20px";
-      syntaxPanel.style.transform = "translate(0,0)";
-      syntaxPanel.style.transition = "opacity 0.2s ease, transform 0.2s ease";
-      syntaxPanel.style.maxHeight = "87vh";
-      syntaxPanel.style.overflowY = "auto";
-      syntaxPanel.style.opacity = panelOpacity;
+      syntaxPanel.style.fontSize     = fontSize;
+      syntaxPanel.style.position     = "fixed";
+      syntaxPanel.style.transition   = "opacity 0.2s ease, transform 0.2s ease";
+      syntaxPanel.style.maxHeight    = "87vh";
+      syntaxPanel.style.overflowY    = "auto";
+      syntaxPanel.style.opacity      = panelOpacity;
 
       if (styleSettings.backgroundImage) {
         syntaxPanel.style.backgroundImage = `linear-gradient(rgba(0,0,0,${1 - styleSettings.imageOpacity}), rgba(0,0,0,${1 - styleSettings.imageOpacity})), url(${styleSettings.backgroundImage})`;
@@ -2936,17 +2969,15 @@
 
     const toggleBtnSimple = document.getElementById("site-toggle-simple");
     if (toggleBtnSimple) {
-      toggleBtnSimple.style.color        = textColor;
-      toggleBtnSimple.style.borderColor  = borderColor;
-      toggleBtnSimple.style.borderRadius = borderRadius;
-      toggleBtnSimple.style.opacity      = buttonOpacity;
-      toggleBtnSimple.style.width        = "48px";
-      toggleBtnSimple.style.height       = "48px";
-      toggleBtnSimple.style.lineHeight   = "48px";
       toggleBtnSimple.style.pointerEvents = "auto";
       applyToggleBtnStyle(toggleBtnSimple);
     }
     applyAllBtnIcons();
+  }
+
+  function applyTheme(theme) {
+    log("Applying theme:", theme, "Style settings:", styleSettings);
+    applyThemeToDom(applyThemeValues(theme));
   }
 
   function initSearchConfigCollapse() {
@@ -3800,6 +3831,40 @@
 
       siteContainer.innerHTML = "";
 
+      if (!siteContainer.__delegationBound) {
+        siteContainer.__delegationBound = true;
+
+        siteContainer.addEventListener("mouseenter", (e) => {
+          const b = e.target.closest(".draggable-site");
+          if (!b) return;
+          const bg = b.dataset.baseBg || "";
+          if (bg) b.style.background = adjustColor(bg, 10);
+        }, true);
+
+        siteContainer.addEventListener("mouseleave", (e) => {
+          const b = e.target.closest(".draggable-site");
+          if (!b) return;
+          const bg = b.dataset.baseBg || "";
+          if (bg) b.style.background = bg;
+          b.style.transform  = "translateY(0)";
+          b.style.boxShadow  = "0 1px 2px rgba(0,0,0,0.15)";
+        }, true);
+
+        siteContainer.addEventListener("mousedown", (e) => {
+          const b = e.target.closest(".draggable-site");
+          if (!b) return;
+          b.style.transform = "translateY(1px)";
+          b.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.3)";
+        });
+
+        siteContainer.addEventListener("mouseup", (e) => {
+          const b = e.target.closest(".draggable-site");
+          if (!b) return;
+          b.style.transform = "translateY(0)";
+          b.style.boxShadow = "0 1px 2px rgba(0,0,0,0.15)";
+        });
+      }
+
       group.sites.forEach((site, siteIndex) => {
         const btn = document.createElement("div");
         btn.className = "draggable-site";
@@ -3815,6 +3880,8 @@
         const textColor =
           styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000");
         const borderColor = styleSettings.contrast > 0 ? "#888" : "#ccc";
+
+        btn.dataset.baseBg = baseBg;
 
         Object.assign(btn.style, {
           display: "flex",
@@ -3837,28 +3904,9 @@
           userSelect: "none",
         });
 
-        btn.addEventListener(
-          "mouseenter",
-          () => (btn.style.background = adjustColor(baseBg, 10)),
-        );
-        btn.addEventListener("mouseleave", () => {
-          btn.style.background = baseBg;
-          btn.style.transform = "translateY(0)";
-          btn.style.boxShadow = "0 1px 2px rgba(0,0,0,0.15)";
-        });
-
         let pressStartTime = 0;
 
-        btn.addEventListener("mousedown", () => {
-          pressStartTime = Date.now();
-          btn.style.transform = "translateY(1px)";
-          btn.style.boxShadow = "inset 0 1px 2px rgba(0,0,0,0.3)";
-        });
-
-        btn.addEventListener("mouseup", () => {
-          btn.style.transform = "translateY(0)";
-          btn.style.boxShadow = "0 1px 2px rgba(0,0,0,0.15)";
-        });
+        btn.addEventListener("mousedown", () => { pressStartTime = Date.now(); });
 
         btn.onclick = (e) => {
           const pressDuration = Date.now() - pressStartTime;
@@ -5757,7 +5805,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       border-radius: ${styleSettings.borderRadius}px;
       border: 1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
       font-size: ${styleSettings.fontSize}px;
-      background: ${panelTheme === "dark" ? "#2a2a2a" : "#fff"};
+      background: ${styleSettings.customBackgroundColor || (panelTheme === "dark" ? "#2a2a2a" : "#fff")};
       color: ${styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000")};
       box-sizing: border-box;
       outline: none;
@@ -6589,11 +6637,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const styleConfigWrap = document.createElement("div");
     styleConfigWrap.id = "style-config-wrap";
+    const _scBg = (panelTheme === "custom" && styleSettings.customBackgroundColor)
+      ? styleSettings.customBackgroundColor
+      : panelTheme === "dark" ? "#2a2a2a" : "#fff";
+    const _scFg = styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000");
     styleConfigWrap.style.cssText = `
       display: ${searchConfig.isExpanded ? "block" : "none"};
       position: fixed;
-      top: 80px;
-      left: 8px;
+      top: -9999px;
+      left: -9999px;
       right: auto;
       z-index: 2147483665;
       min-width: 300px;
@@ -6602,14 +6654,18 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       overflow-y: auto;
       border-radius: ${styleSettings.borderRadius}px;
       border: 1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
-      background: ${panelTheme === "dark" ? "#2a2a2a" : "#fff"};
-      color: ${styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000")};
+      background: ${_scBg};
+      color: ${_scFg};
       box-shadow: 0 6px 24px rgba(0,0,0,0.28);
       font-size: ${styleSettings.fontSize}px;
       padding: 0;
       user-select: none;
     `;
 
+    const _scHdrBg = (panelTheme === "custom" && styleSettings.customBackgroundColor)
+      ? (styleSettings.customBackgroundColor + "cc")
+      : panelTheme === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
+    const _scHdrBd = panelTheme === "dark" ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.10)";
     const styleConfigHeaderRow = document.createElement("div");
     styleConfigHeaderRow.style.cssText = `
       display: flex;
@@ -6617,9 +6673,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       gap: 6px;
       padding: 6px 8px 4px;
       cursor: grab;
-      background: ${panelTheme === "dark" ? "#333" : "#f0f0f0"};
+      background: ${_scHdrBg};
       border-radius: ${styleSettings.borderRadius}px ${styleSettings.borderRadius}px 0 0;
-      border-bottom: 1px solid ${panelTheme === "dark" ? "#444" : "#ddd"};
+      border-bottom: 1px solid ${_scHdrBd};
       flex-shrink: 0;
       position: sticky;
       top: 0;
@@ -8144,6 +8200,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
     document.body.appendChild(styleConfigWrap);
     shieldFromFileDrop(styleConfigWrap);
+    if (searchConfig.isExpanded) {
+      requestAnimationFrame(() => _positionStyleFloat(styleConfigWrap));
+    }
 
     panel.appendChild(searchConfigWrap);
     initSearchConfigCollapse();
@@ -8505,28 +8564,32 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       existingMsg.remove();
     }
 
+    const _undoIsDark   = panelTheme === "dark";
+    const _undoAccent   = _undoIsDark ? "#7c6af7" : "#4f46e5";
+    const _undoBg       = _undoIsDark
+      ? `rgba(124,106,247,0.22)`
+      : `rgba(79,70,229,0.88)`;
+    const _undoBorder   = _undoIsDark
+      ? "1px solid rgba(124,106,247,0.45)"
+      : "1px solid rgba(79,70,229,0.6)";
+    const _undoRadius   = Math.max(styleSettings.borderRadius ?? 6, 8) + "px";
+    const _undoFontSize = (styleSettings.fontSize ?? 13) + "px";
+
     const undoMsg = document.createElement("div");
     undoMsg.id = "undo-message";
     undoMsg.style.cssText = `
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 16px 24px;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    z-index: 2147483650;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: 15px;
-    font-weight: 500;
-    animation: slideUp 0.3s ease-out;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  `;
+      position:fixed; bottom:30px; left:50%;
+      transform:translateX(-50%);
+      background:${_undoBg}; color:#fff;
+      border:${_undoBorder}; border-radius:${_undoRadius};
+      box-shadow:0 8px 32px rgba(0,0,0,0.28);
+      z-index:2147483650;
+      display:flex; align-items:center; gap:16px;
+      padding:14px 20px;
+      font-size:${_undoFontSize}; font-weight:500;
+      animation:slideUp 0.3s ease-out;
+      backdrop-filter:blur(10px);
+    `;
     if (!document.getElementById("undo-animation-style")) {
       const style = document.createElement("style");
       style.id = "undo-animation-style";
@@ -8574,25 +8637,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const undoBtn = document.createElement("button");
     undoBtn.textContent = "↩️ Undo";
     undoBtn.style.cssText = `
-    background: rgba(255, 255, 255, 0.25);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.2s;
-    white-space: nowrap;
-  `;
-    undoBtn.onmouseover = () => {
-      undoBtn.style.background = "rgba(255, 255, 255, 0.35)";
-      undoBtn.style.transform = "scale(1.05)";
-    };
-    undoBtn.onmouseout = () => {
-      undoBtn.style.background = "rgba(255, 255, 255, 0.25)";
-      undoBtn.style.transform = "scale(1)";
-    };
+      background:rgba(255,255,255,0.22); color:#fff;
+      border:1px solid rgba(255,255,255,0.38);
+      padding:6px 14px; border-radius:${_undoRadius};
+      cursor:pointer; font-size:${_undoFontSize}; font-weight:600;
+      transition:background 0.18s, transform 0.15s; white-space:nowrap;
+    `;
+    undoBtn.onmouseover = () => { undoBtn.style.background = "rgba(255,255,255,0.35)"; undoBtn.style.transform = "scale(1.04)"; };
+    undoBtn.onmouseout  = () => { undoBtn.style.background = "rgba(255,255,255,0.22)"; undoBtn.style.transform = "scale(1)"; };
     undoBtn.onclick = () => {
       const targetGroup = groups[groupIndex];
       if (targetGroup) {
@@ -8843,8 +8895,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const toggleBtnSimple = document.createElement("button");
     toggleBtnSimple.id = "site-toggle-simple";
-    toggleBtnSimple.textContent = "🔍";
-    toggleBtnSimple.style.position = "fixed";
 
     const savedTop  = GM_getValue("toggleButtonTop",  null);
     const savedLeft = GM_getValue("toggleButtonLeft", null);
@@ -8854,18 +8904,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     toggleBtnSimple.style.top  = (savedTop  && isValidPixelValue(savedTop))  ? savedTop  : defaultTop;
     toggleBtnSimple.style.left = (savedLeft && isValidPixelValue(savedLeft)) ? savedLeft : defaultLeft;
-    toggleBtnSimple.style.right = "auto";
-    toggleBtnSimple.style.zIndex = "2147483647";
-    toggleBtnSimple.style.cursor = "pointer";
-    toggleBtnSimple.style.borderRadius = styleSettings.borderRadius + "px";
-    toggleBtnSimple.style.padding = "0";
-    toggleBtnSimple.style.display = "flex";
-    toggleBtnSimple.style.alignItems = "center";
-    toggleBtnSimple.style.justifyContent = "center";
-    toggleBtnSimple.style.width = "48px";
-    toggleBtnSimple.style.height = "48px";
-    toggleBtnSimple.style.lineHeight = "48px";
-    toggleBtnSimple.style.opacity = styleSettings.buttonOpacity.toString();
+
     applyToggleBtnStyle(toggleBtnSimple);
 
     let isDragging = false;
