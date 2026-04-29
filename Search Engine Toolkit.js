@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @namespace    https://github.com/Startanuki07
-// @version      1.9.0
+// @version      2.0.0
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -170,6 +170,7 @@
       seBarOffsetLabel: "Raise Engine Bar (+50px)",
       hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
       hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
+      toggleBtnStyleLabel:    "Toggle Button Style",
       toggleBtnIconLabel:     "Icon",
       toggleBtnIconEmoji:     "🔍 Emoji",
       toggleBtnIconSvgLine:   "SVG Outline",
@@ -226,6 +227,29 @@
       searchHistory: "Search History",
       clearSearchHistory: "Clear Search History",
       noSearchHistory: "No search history",
+      searchBarStyleLabel:    "Search Bar Style",
+      searchBarPreset:        "Quick Preset",
+      searchBarBgColor:       "Bar BG Color",
+      searchBarBgOpacity:     "Bar BG Opacity",
+      searchBarFgColor:       "Bar Text Color",
+      searchBarGlowEnabled:   "Bar Glow",
+      searchBarGlowColor:     "Glow Color",
+      searchBarGlowStrength:  "Glow Strength",
+      customThemeLabel:       "Custom Theme",
+      quickSchemeLabel:       "🎨 Quick Scheme",
+      quickSchemeLight:       "☀️ Light",
+      quickSchemeDark:        "🌑 Dark",
+      quickSchemeReset:       "↺ Reset",
+      glowLabel:              "Border Glow / Sheen",
+      enableBorderGlow:       "Border Glow",
+      borderGlowColor:        "Glow Color",
+      borderGlowStrength:     "Glow Strength",
+      borderGlowInset:        "Inset Glow",
+      enableSheen:            "Sheen Effect",
+      sheenAngle:             "Sheen Angle",
+      sheenOpacity:           "Sheen Intensity",
+      enableSiteGlow:         "Site Button Glow",
+      enableGroupGlow:        "Group Block Glow",
       styleOptions: {
         default: "Default",
         soft: "Soft",
@@ -406,6 +430,7 @@
       hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
       hideBlacklistBtnLabel: "隱藏 🚫 黑名單按鈕",
       toggleBtnStyleLabel:    "開關按鈕樣式",
+      toggleBtnIconLabel:     "圖示",
       toggleBtnIconEmoji:     "🔍 Emoji",
       toggleBtnIconSvgLine:   "SVG 線框",
       toggleBtnIconSvgFill:   "SVG 填色",
@@ -461,6 +486,29 @@
       searchHistory: "搜尋歷史",
       clearSearchHistory: "清除搜尋歷史",
       noSearchHistory: "無搜尋歷史",
+      searchBarStyleLabel:    "搜尋列樣式",
+      searchBarPreset:        "快速套色",
+      searchBarBgColor:       "列背景色",
+      searchBarBgOpacity:     "列背景透明度",
+      searchBarFgColor:       "列文字顏色",
+      searchBarGlowEnabled:   "搜尋列光暈",
+      searchBarGlowColor:     "光暈顏色",
+      searchBarGlowStrength:  "光暈強度",
+      customThemeLabel:       "自訂主題",
+      quickSchemeLabel:       "🎨 快速方案",
+      quickSchemeLight:       "☀️ 亮色",
+      quickSchemeDark:        "🌑 深色",
+      quickSchemeReset:       "↺ 重置",
+      glowLabel:              "外框光澤 / 高光",
+      enableBorderGlow:       "外框光暈",
+      borderGlowColor:        "光暈顏色",
+      borderGlowStrength:     "光暈強度",
+      borderGlowInset:        "內壁光",
+      enableSheen:            "高光光澤 (Sheen)",
+      sheenAngle:             "光澤角度",
+      sheenOpacity:           "光澤強度",
+      enableSiteGlow:         "站台按鈕光暈",
+      enableGroupGlow:        "群組區塊光暈",
       styleOptions: {
         default: "預設",
         soft: "柔和",
@@ -637,6 +685,7 @@
       hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
       hideBlacklistBtnLabel: "隱藏 🚫 黑名单按钮",
       toggleBtnStyleLabel:    "开关按钮样式",
+      toggleBtnIconLabel:     "图标",
       toggleBtnIconEmoji:     "🔍 Emoji",
       toggleBtnIconSvgLine:   "SVG 线框",
       toggleBtnIconSvgFill:   "SVG 填色",
@@ -692,6 +741,29 @@
       searchHistory: "搜索历史",
       clearSearchHistory: "清除搜索历史",
       noSearchHistory: "无搜索历史",
+      searchBarStyleLabel:    "搜索栏样式",
+      searchBarPreset:        "快速套色",
+      searchBarBgColor:       "栏背景色",
+      searchBarBgOpacity:     "栏背景透明度",
+      searchBarFgColor:       "栏文字颜色",
+      searchBarGlowEnabled:   "搜索栏光晕",
+      searchBarGlowColor:     "光晕颜色",
+      searchBarGlowStrength:  "光晕强度",
+      customThemeLabel:       "自定义主题",
+      quickSchemeLabel:       "🎨 快速方案",
+      quickSchemeLight:       "☀️ 亮色",
+      quickSchemeDark:        "🌑 深色",
+      quickSchemeReset:       "↺ 重置",
+      glowLabel:              "边框光泽 / 高光",
+      enableBorderGlow:       "边框光晕",
+      borderGlowColor:        "光晕颜色",
+      borderGlowStrength:     "光晕强度",
+      borderGlowInset:        "内壁光",
+      enableSheen:            "高光光泽 (Sheen)",
+      sheenAngle:             "光泽角度",
+      sheenOpacity:           "光泽强度",
+      enableSiteGlow:         "站点按钮光晕",
+      enableGroupGlow:        "群组区块光晕",
       styleOptions: {
         default: "默认",
         soft: "柔和",
@@ -868,6 +940,7 @@
       seBarOffsetLabel: "ｴﾝｼﾞﾝ列+50px上移",
       hideSyntaxBtnLabel: "📖 構文ﾍﾙﾌﾟを非表示",
       hideBlacklistBtnLabel: "🚫 除外域ﾎﾞﾀﾝを非表示",
+      toggleBtnStyleLabel:    "ﾄｸﾞﾙﾎﾞﾀﾝｽﾀｲﾙ",
       toggleBtnIconLabel:     "ｱｲｺﾝ",
       toggleBtnIconEmoji:     "🔍 Emoji",
       toggleBtnIconSvgLine:   "SVG ｱｳﾄﾗｲﾝ",
@@ -924,6 +997,28 @@
       searchHistory: "検索履歴",
       clearSearchHistory: "検索履歴をｸﾘｱ",
       noSearchHistory: "検索履歴なし",
+      searchBarStyleLabel:    "検索ﾊﾞｰｽﾀｲﾙ",
+      searchBarPreset:        "ｸｲｯｸﾌﾟﾘｾｯﾄ",
+      searchBarBgColor:       "ﾊﾞｰ背景色",
+      searchBarBgOpacity:     "ﾊﾞｰ背景不透明度",
+      searchBarFgColor:       "ﾊﾞｰ文字色",
+      searchBarGlowEnabled:   "検索ﾊﾞｰｸﾞﾛｳ",
+      searchBarGlowColor:     "ｸﾞﾛｳ色",
+      searchBarGlowStrength:  "ｸﾞﾛｳ強度",
+      customThemeLabel:       "ｶｽﾀﾑﾃｰﾏ",
+      quickSchemeLabel:       "🎨 ｸｲｯｸ方案",
+      quickSchemeLight:       "☀️ ﾗｲﾄ",
+      quickSchemeDark:        "🌑 ﾀﾞｰｸ",
+      quickSchemeReset:       "↺ ﾘｾｯﾄ",
+      enableBorderGlow:       "枠ｸﾞﾛｳ",
+      borderGlowColor:        "ｸﾞﾛｳ色",
+      borderGlowStrength:     "ｸﾞﾛｳ強度",
+      borderGlowInset:        "内側ｸﾞﾛｳ",
+      enableSheen:            "光沢ｼｰﾝ",
+      sheenAngle:             "光沢角度",
+      sheenOpacity:           "光沢強度",
+      enableSiteGlow:         "ｻｲﾄﾎﾞﾀﾝｸﾞﾛｳ",
+      enableGroupGlow:        "ｸﾞﾙｰﾌﾟｸﾞﾛｳ",
 
       styleOptions: {
         default: "デフォルト",
@@ -1101,6 +1196,7 @@
       seBarOffsetLabel: "엔진 바 +50px 위로",
       hideSyntaxBtnLabel: "📖 문법 도움말 숨기기",
       hideBlacklistBtnLabel: "🚫 차단목록 버튼 숨기기",
+      toggleBtnStyleLabel:    "토글 버튼 스타일",
       toggleBtnIconLabel:     "아이콘",
       toggleBtnIconEmoji:     "🔍 Emoji",
       toggleBtnIconSvgLine:   "SVG 아웃라인",
@@ -1157,6 +1253,29 @@
       searchHistory: "검색 기록",
       clearSearchHistory: "검색 기록 지우기",
       noSearchHistory: "검색 기록 없음",
+      searchBarStyleLabel:    "검색 바 스타일",
+      searchBarPreset:        "빠른 프리셋",
+      searchBarBgColor:       "바 배경색",
+      searchBarBgOpacity:     "바 배경 투명도",
+      searchBarFgColor:       "바 텍스트 색",
+      searchBarGlowEnabled:   "검색 바 글로우",
+      searchBarGlowColor:     "글로우 색",
+      searchBarGlowStrength:  "글로우 강도",
+      customThemeLabel:       "커스텀 테마",
+      quickSchemeLabel:       "🎨 빠른 방안",
+      quickSchemeLight:       "☀️ 라이트",
+      quickSchemeDark:        "🌑 다크",
+      quickSchemeReset:       "↺ 초기화",
+      glowLabel:              "테두리 글로우 / 쉰",
+      enableBorderGlow:       "테두리 글로우",
+      borderGlowColor:        "글로우 색",
+      borderGlowStrength:     "글로우 강도",
+      borderGlowInset:        "안쪽 글로우",
+      enableSheen:            "쉰 효과",
+      sheenAngle:             "쉰 각도",
+      sheenOpacity:           "쉰 강도",
+      enableSiteGlow:         "사이트 버튼 글로우",
+      enableGroupGlow:        "그룹 블록 글로우",
       styleOptions: {
         default: "기본",
         soft: "소프트",
@@ -1402,6 +1521,29 @@
     searchHistory: "Search History",
     clearSearchHistory: "Clear Search History",
     noSearchHistory: "No search history",
+    searchBarStyleLabel:    "Search Bar Style",
+    searchBarPreset:        "Quick Preset",
+    searchBarBgColor:       "Bar BG Color",
+    searchBarBgOpacity:     "Bar BG Opacity",
+    searchBarFgColor:       "Bar Text Color",
+    searchBarGlowEnabled:   "Bar Glow",
+    searchBarGlowColor:     "Glow Color",
+    searchBarGlowStrength:  "Glow Strength",
+    customThemeLabel:       "Custom Theme",
+    quickSchemeLabel:       "🎨 Quick Scheme",
+    quickSchemeLight:       "☀️ Light",
+    quickSchemeDark:        "🌑 Dark",
+    quickSchemeReset:       "↺ Reset",
+    glowLabel:              "Border Glow / Sheen",
+    enableBorderGlow:       "Border Glow",
+    borderGlowColor:        "Glow Color",
+    borderGlowStrength:     "Glow Strength",
+    borderGlowInset:        "Inset Glow",
+    enableSheen:            "Sheen Effect",
+    sheenAngle:             "Sheen Angle",
+    sheenOpacity:           "Sheen Intensity",
+    enableSiteGlow:         "Site Button Glow",
+    enableGroupGlow:        "Group Block Glow",
     styleOptions: { default: "Default", soft: "Soft", bold: "Bold" },
     imageModes: { center: "Center", tile: "Tile", contain: "Contain", auto: "Auto" },
     themeOptions: { light: "Light ☀️", dark: "Dark 🌙", custom: "Custom 🎨" },
@@ -1957,7 +2099,8 @@
     const _ssDefaults = {
       style: "default", borderRadius: 6, contrast: 0, opacity: 0.9,
       fontSize: 12, isExpanded: false,
-      panelTop: 80, panelRight: 20, panelWidth: 0, panelMaxHeight: 87,
+      panelTop: 80, panelRight: 20, panelLeft: -1, panelWidth: 0, panelMaxHeight: 87,
+      panelUserSized: false,
       backgroundImage: "", imageMode: "center", textColor: "", backgroundColor: "",
       imageOffsetX: 0, imageOffsetY: 0, groupOpacity: 1.0,
       textOpacityCompensation: 1.0, buttonOpacity: 1.0,
@@ -1973,6 +2116,21 @@
       toggleBtnBg: "",
       toggleBtnBgOpacity: 0,
       svgIconColor: "",
+      enableBorderGlow: false,
+      borderGlowColor: "#00bfff",
+      borderGlowStrength: 12,
+      borderGlowInset: true,
+      enableSheen: false,
+      sheenAngle: 135,
+      sheenOpacity: 0.08,
+      enableSiteGlow: false,
+      enableGroupGlow: false,
+      searchBarBg: "",
+      searchBarBgOpacity: 0,
+      searchBarFg: "",
+      searchBarGlowEnabled: false,
+      searchBarGlowColor: "#5599ff",
+      searchBarGlowStrength: 6,
     };
     for (const k of Object.keys(_ssDefaults)) {
       if (styleSettings[k] === undefined) styleSettings[k] = _ssDefaults[k];
@@ -2007,6 +2165,14 @@
     log("Saved manuallyClosed:", manuallyClosed);
     log("Saved resetOnReload:", searchConfig.resetOnReload);
 
+  }
+
+  {
+    let _applyTimer = null;
+    window._debouncedApply = function () {
+      clearTimeout(_applyTimer);
+      _applyTimer = setTimeout(() => applyTheme(panelTheme), 16);
+    };
   }
 
   function showPanel(panel) {
@@ -2057,6 +2223,11 @@
       line: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
       fill: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity=".18"/><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.8"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
     },
+    toggleAddress: {
+      emoji: "👁", size: "13px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>`,
+    },
   };
 
   function _applyIconToBtn(btn, emoji, svgLine, svgFill, emojiSize) {
@@ -2078,6 +2249,15 @@
     }
   }
 
+  const GRP_SVG_MAP = {
+    "☑": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 12 11 14 15 10"/></svg>`,
+    "↗": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`,
+    "✎": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+    "➕": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
+    "🗑️": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`,
+    "⋯": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>`,
+  };
+
   function applyAllBtnIcons() {
     const _plus = document.querySelector(".se-plus-btn");
     _applyIconToBtn(_plus, ICONS.plus.emoji, ICONS.plus.line, ICONS.plus.fill, ICONS.plus.size);
@@ -2089,6 +2269,28 @@
     _applyIconToBtn(_clr, ICONS.clear.emoji, ICONS.clear.line, ICONS.clear.fill, ICONS.clear.size);
     document.querySelectorAll(".se-help-btn").forEach(_h => {
       _applyIconToBtn(_h, ICONS.help.emoji, ICONS.help.line, ICONS.help.fill, ICONS.help.size);
+    });
+    const _tAddr = document.getElementById("se-toggle-address-btn");
+    if (_tAddr) {
+      const _addrStyle = styleSettings.iconStyle || "emoji";
+      if (_addrStyle !== "emoji") {
+        _applyIconToBtn(_tAddr, ICONS.toggleAddress.emoji, ICONS.toggleAddress.line, ICONS.toggleAddress.fill, ICONS.toggleAddress.size);
+        _tAddr.style.color = styleSettings.svgIconColor || "";
+      }
+    }
+    const _svgMode = (styleSettings.iconStyle || "emoji") !== "emoji";
+    const _svgColor = styleSettings.svgIconColor || "";
+    document.querySelectorAll(".icon-btn[data-grp-emoji]").forEach(el => {
+      const emoji = el.dataset.grpEmoji;
+      if (_svgMode && GRP_SVG_MAP[emoji]) {
+        el.innerHTML = GRP_SVG_MAP[emoji];
+        el.style.fontSize = "0";
+        el.style.color = _svgColor || "";
+      } else {
+        el.textContent = emoji;
+        el.style.fontSize = "";
+        el.style.color = "";
+      }
     });
   }
 
@@ -2809,16 +3011,58 @@
         : `rgba(${r},${g},${b},${panelOpacity})`;
       panel.style.color = textColor;
       panel.style.borderColor = borderColor;
-      panel.style.borderRadius = borderRadius;
+      panel.style.borderRadius = Math.max(parseInt(borderRadius) || 6, 10) + "px";
       panel.style.fontSize = fontSize;
       panel.style.position = "fixed";
       panel.style.top    = (styleSettings.panelTop    ?? 80)  + "px";
-      panel.style.right  = (styleSettings.panelRight  ?? 20)  + "px";
+      if (styleSettings.panelLeft >= 0) {
+        panel.style.left  = styleSettings.panelLeft + "px";
+      } else {
+        const _r = styleSettings.panelRight ?? 20;
+        const _w = parseInt(panel.style.width) || getEffectivePanelWidth();
+        panel.style.left = Math.max(8, window.innerWidth - _r - _w) + "px";
+      }
+      panel.style.right = "auto";
       panel.style.transform = "translate(0,0)";
       panel.style.transition = "opacity 0.2s ease, transform 0.2s ease";
       panel.style.maxHeight = (styleSettings.panelMaxHeight ?? 87) + "vh";
       panel.style.overflowY = "auto";
       panel.style.opacity = panelOpacity;
+
+      {
+        const _gc = styleSettings.borderGlowColor || "#00bfff";
+        const _gs = Math.max(4, Math.min(32, styleSettings.borderGlowStrength || 12));
+        let _shadow = "0 4px 20px rgba(0,0,0,0.35)";
+        if (styleSettings.enableBorderGlow) {
+          _shadow += `, 0 0 ${_gs}px ${_gc}, 0 0 ${_gs * 2}px ${_gc}44`;
+          if (styleSettings.borderGlowInset) {
+            _shadow += `, inset 0 0 ${Math.round(_gs * 0.6)}px ${_gc}33`;
+          }
+        }
+        panel.style.boxShadow = _shadow;
+      }
+
+      {
+        let sheenEl = panel.querySelector(".panel-sheen");
+        if (styleSettings.enableSheen) {
+          if (!sheenEl) {
+            sheenEl = document.createElement("div");
+            sheenEl.className = "panel-sheen";
+            sheenEl.style.cssText = `
+              position:absolute; inset:0; pointer-events:none;
+              border-radius:inherit; z-index:0;
+            `;
+            panel.insertBefore(sheenEl, panel.firstChild);
+          }
+          const _angle = styleSettings.sheenAngle ?? 135;
+          const _op    = Math.max(0.02, Math.min(0.25, styleSettings.sheenOpacity ?? 0.08));
+          sheenEl.style.background =
+            `linear-gradient(${_angle}deg, rgba(255,255,255,${_op}) 0%, transparent 55%)`;
+          sheenEl.style.display = "block";
+        } else if (sheenEl) {
+          sheenEl.style.display = "none";
+        }
+      }
 
       if (styleSettings.enableOverlayDarkening) {
         let overlayStyle = document.querySelector("style[data-overlay-style]");
@@ -2868,6 +3112,38 @@
         el.style.background = `rgba(${r},${g},${b},${groupOpacity})`;
         el.style.borderColor = borderColor;
         el.style.borderRadius = borderRadius;
+
+        {
+          const _gc = styleSettings.borderGlowColor || "#00bfff";
+          const _gs = Math.max(2, Math.min(20, (styleSettings.borderGlowStrength || 12) * 0.5));
+          if (styleSettings.enableGroupGlow) {
+            el.style.boxShadow =
+              `0 2px 8px rgba(0,0,0,0.18), 0 0 ${_gs}px ${_gc}, 0 0 ${_gs * 2}px ${_gc}44`;
+          } else {
+            el.style.boxShadow = "";
+          }
+        }
+
+        {
+          let sheenEl = el.querySelector(".group-sheen");
+          if (styleSettings.enableSheen) {
+            if (!sheenEl) {
+              sheenEl = document.createElement("div");
+              sheenEl.className = "group-sheen";
+              sheenEl.style.cssText =
+                "position:absolute; inset:0; pointer-events:none; border-radius:inherit; z-index:0;";
+              el.style.position = el.style.position || "relative";
+              el.insertBefore(sheenEl, el.firstChild);
+            }
+            const _angle = styleSettings.sheenAngle ?? 135;
+            const _op    = Math.max(0.02, Math.min(0.25, styleSettings.sheenOpacity ?? 0.08));
+            sheenEl.style.background =
+              `linear-gradient(${_angle}deg, rgba(255,255,255,${_op}) 0%, transparent 55%)`;
+            sheenEl.style.display = "block";
+          } else if (sheenEl) {
+            sheenEl.style.display = "none";
+          }
+        }
       });
 
       panel.querySelectorAll("button:not(.icon-btn)").forEach((el) => {
@@ -2885,18 +3161,61 @@
         };
       });
 
+      {
+        const _sbw = styleSettings.siteButtonWidth ?? 0;
+        const _minCell = _sbw > 0 ? _sbw : 104;
+        panel.querySelectorAll(".site-container").forEach(sc => {
+          sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(${_minCell}px, 1fr))`;
+        });
+      }
+
       panel.querySelectorAll(".draggable-site").forEach((el) => {
-        el.style.opacity = buttonOpacity;
+        el.style.opacity    = buttonOpacity;
+        el.style.background = buttonBg;
+        el.style.color      = textColor;
+        el.dataset.baseBg   = buttonBg;
         const _sbw = styleSettings.siteButtonWidth ?? 0;
         if (_sbw > 0) {
           el.style.width    = _sbw + "px";
           el.style.maxWidth = _sbw + "px";
         } else {
           el.style.width    = "";
-          el.style.maxWidth = "120px";
+          el.style.maxWidth = "none";
         }
         const _lbl = el.querySelector(".site-label");
         if (_lbl) _lbl.style.display = (_sbw > 0 && _sbw <= 28) ? "none" : "";
+
+        {
+          const _gc = styleSettings.borderGlowColor || "#00bfff";
+          const _gs = Math.max(2, Math.min(14, (styleSettings.borderGlowStrength || 12) * 0.35));
+          if (styleSettings.enableSiteGlow) {
+            el.style.boxShadow =
+              `0 1px 3px rgba(0,0,0,0.15), 0 0 ${_gs}px ${_gc}, 0 0 ${_gs * 2}px ${_gc}44`;
+          } else {
+            el.style.boxShadow = "0 1px 3px rgba(0,0,0,0.10)";
+          }
+        }
+
+        {
+          let sheenEl = el.querySelector(".site-sheen");
+          if (styleSettings.enableSheen) {
+            if (!sheenEl) {
+              sheenEl = document.createElement("div");
+              sheenEl.className = "site-sheen";
+              sheenEl.style.cssText =
+                "position:absolute; inset:0; pointer-events:none; border-radius:inherit; z-index:0;";
+              el.style.position = "relative";
+              el.insertBefore(sheenEl, el.firstChild);
+            }
+            const _angle = styleSettings.sheenAngle ?? 135;
+            const _op    = Math.max(0.02, Math.min(0.25, styleSettings.sheenOpacity ?? 0.08));
+            sheenEl.style.background =
+              `linear-gradient(${_angle}deg, rgba(255,255,255,${_op}) 0%, transparent 60%)`;
+            sheenEl.style.display = "block";
+          } else if (sheenEl) {
+            sheenEl.style.display = "none";
+          }
+        }
       });
 
       const textBorderVal = styleSettings.textBorder;
@@ -2965,6 +3284,33 @@
           ? "0.3px currentColor"
           : "0";
       });
+    }
+
+    {
+      const _scw = document.getElementById("search-config-wrap");
+      if (_scw) {
+        const _sbg    = styleSettings.searchBarBg || "";
+        const _sbgOp  = styleSettings.searchBarBgOpacity ?? 0;
+        const _sfg    = styleSettings.searchBarFg || "";
+        const _sglow  = !!styleSettings.searchBarGlowEnabled;
+        const _sglowC = styleSettings.searchBarGlowColor || "#5599ff";
+        const _sglowS = Math.max(2, Math.min(16, styleSettings.searchBarGlowStrength || 6));
+        const _isDarkScw = panelTheme === "dark";
+        if (_sbg && _sbgOp > 0) {
+          const _sr = parseInt(_sbg.slice(1,3),16) || 0;
+          const _sg = parseInt(_sbg.slice(3,5),16) || 0;
+          const _sb2 = parseInt(_sbg.slice(5,7),16) || 0;
+          _scw.style.background = `rgba(${_sr},${_sg},${_sb2},${_sbgOp})`;
+          _scw.style.border = `1px solid rgba(${_sr},${_sg},${_sb2},${Math.min(1,_sbgOp+0.15)})`;
+        } else {
+          _scw.style.background = _isDarkScw ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)";
+          _scw.style.border = `1px solid ${_isDarkScw ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.08)"}`;
+        }
+        _scw.style.color      = _sfg || "";
+        _scw.style.boxShadow  = _sglow
+          ? `0 0 ${_sglowS}px ${_sglowC}, 0 0 ${_sglowS * 2}px ${_sglowC}44`
+          : "";
+      }
     }
 
     const toggleBtnSimple = document.getElementById("site-toggle-simple");
@@ -3049,8 +3395,9 @@
     panel.style.minWidth = "300px";
     panel.style.width    = getEffectivePanelWidth() + "px";
     panel.style.maxWidth = getEffectivePanelWidth() + "px";
-    panel.style.padding = "10px";
-    panel.style.boxSizing = "border-box";
+    const _bodyTarget = document.getElementById("panel-group-slot")
+      || document.getElementById("panel-body")
+      || panel;
 
     groups.forEach((group) => {
       group.sites = group.sites.map((site) =>
@@ -3060,7 +3407,7 @@
     save();
 
     const existingBlocks = new Map();
-    panel.querySelectorAll(".group-block").forEach((block) => {
+    _bodyTarget.querySelectorAll(".group-block").forEach((block) => {
       existingBlocks.set(block.dataset.groupIndex, block);
     });
 
@@ -3100,7 +3447,7 @@
           block.style.opacity = "";
         });
 
-        panel.appendChild(block);
+        _bodyTarget.appendChild(block);
       } else {
         block.dataset.groupIndex = groupIndex;
         block.dataset.groupName = group.name;
@@ -3129,10 +3476,14 @@
       if (!nameSpan) {
         nameSpan = document.createElement("span");
         nameSpan.className = "group-name";
-        nameSpan.style.cssText = "font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;";
+        nameSpan.style.cssText = `
+          font-weight:500; font-size:11px; letter-spacing:0.03em;
+          overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+          opacity:0.65;
+        `;
         leftContainer.appendChild(nameSpan);
       }
-      nameSpan.textContent = "📂 " + group.name;
+      nameSpan.textContent = group.name;
 
       if (!block._multiSelected) block._multiSelected = new Set();
 
@@ -3178,21 +3529,15 @@
         leftContainer.appendChild(multiPill);
       }
 
-      const _GRP_SVG = {
-        "☑": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 12 11 14 15 10"/></svg>`,
-        "↗": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`,
-        "✎": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
-        "➕": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
-        "🗑️": `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`,
-        "⋯": `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>`,
-      };
+      const _GRP_SVG = GRP_SVG_MAP;
       function _applyGrpIcon(el, emoji) {
+        el.dataset.grpEmoji = emoji;
         const _svgMode = (styleSettings.iconStyle || "emoji") !== "emoji";
         const _svgColor = styleSettings.svgIconColor || "";
         if (_svgMode && _GRP_SVG[emoji]) {
           el.innerHTML = _GRP_SVG[emoji];
           el.style.fontSize = "0";
-          if (_svgColor) el.style.color = _svgColor;
+          el.style.color = _svgColor || "";
         } else {
           el.textContent = emoji;
           el.style.fontSize = "";
@@ -3204,6 +3549,7 @@
         const btn = document.createElement("button");
         btn.className = "icon-btn";
         btn.title = titleText;
+        btn.dataset.grpEmoji = emoji;
         btn.style.cssText = `
           background:none; border:none; border-radius:0;
           cursor:pointer; padding:2px 7px;
@@ -3246,7 +3592,17 @@
           border:1px solid rgba(128,128,128,0.25);
           border-radius:8px; overflow:hidden; flex-shrink:0;
           background:rgba(0,0,0,0.12);
+          opacity:0; transition:opacity 0.15s;
+          pointer-events:none;
         `;
+        header.addEventListener("mouseenter", () => {
+          rightContainer.style.opacity = "1";
+          rightContainer.style.pointerEvents = "auto";
+        });
+        header.addEventListener("mouseleave", () => {
+          rightContainer.style.opacity = "0";
+          rightContainer.style.pointerEvents = "none";
+        });
         header.appendChild(rightContainer);
       }
 
@@ -3752,9 +4108,12 @@
         siteContainer = document.createElement("div");
         siteContainer.className = "site-container";
         siteContainer.style.display = "grid";
-        siteContainer.style.gridTemplateColumns = "repeat(auto-fill, 120px)";
-        siteContainer.style.gap = "3px";
-        siteContainer.style.paddingTop = "4px";
+        {
+          const _sbw = styleSettings.siteButtonWidth > 0 ? styleSettings.siteButtonWidth : 104;
+          siteContainer.style.gridTemplateColumns = `repeat(auto-fill, minmax(${_sbw}px, 1fr))`;
+        }
+        siteContainer.style.gap = "5px";
+        siteContainer.style.paddingTop = "6px";
         siteContainer.style.minWidth = "280px";
         siteContainer.style.minHeight = "18px";
         siteContainer.dataset.groupIndex = groupIndex;
@@ -3874,9 +4233,9 @@
         btn.dataset.groupIndex = groupIndex;
         btn.draggable = true;
 
-        const baseBg =
-          styleSettings.customButtonBg ||
-          (panelTheme === "dark" ? "#444" : "#f5f5f5");
+        const baseBg = panelTheme === "custom"
+          ? (styleSettings.customButtonBg || "#f5f5f5")
+          : (panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5");
         const textColor =
           styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000");
         const borderColor = styleSettings.contrast > 0 ? "#888" : "#ccc";
@@ -3887,11 +4246,12 @@
           display: "flex",
           alignItems: "center",
           margin: "0",
-          padding: "2px 4px",
+          padding: "5px 8px",
+          gap: "5px",
           width:    (styleSettings.siteButtonWidth > 0 ? styleSettings.siteButtonWidth + "px" : ""),
-          maxWidth: (styleSettings.siteButtonWidth > 0 ? styleSettings.siteButtonWidth : 120) + "px",
-          borderRadius: styleSettings.borderRadius + "px",
-          border: `1px solid ${borderColor}`,
+          maxWidth: (styleSettings.siteButtonWidth > 0 ? styleSettings.siteButtonWidth + "px" : "none"),
+          borderRadius: Math.max(styleSettings.borderRadius, 8) + "px",
+          border: `0.5px solid ${borderColor}`,
           background: baseBg,
           color: textColor,
           cursor: "pointer",
@@ -3899,9 +4259,10 @@
           overflow: "hidden",
           textOverflow: "ellipsis",
           opacity: styleSettings.buttonOpacity.toString(),
-          boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
-          transition: "all 0.12s ease",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.10)",
+          transition: "background 0.12s ease, box-shadow 0.12s ease",
           userSelect: "none",
+          fontSize: styleSettings.fontSize + "px",
         });
 
         let pressStartTime = 0;
@@ -4216,15 +4577,23 @@
     panel.id = "site-group-panel";
     panel.style.position = "fixed";
     panel.style.top  = (styleSettings.panelTop  ?? 80) + "px";
-    panel.style.right = (styleSettings.panelRight ?? 20) + "px";
+    if (styleSettings.panelLeft >= 0) {
+      panel.style.left  = styleSettings.panelLeft + "px";
+    } else {
+      const _initRight = styleSettings.panelRight ?? 20;
+      const _initW = getEffectivePanelWidth();
+      panel.style.left = Math.max(8, window.innerWidth - _initRight - _initW) + "px";
+    }
+    panel.style.right = "auto";
     panel.style.background = styleSettings.backgroundImage
       ? "transparent"
       : styleSettings.backgroundColor ||
         (panelTheme === "dark" ? "#333" : "#fff");
-    panel.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
-    panel.style.borderRadius = styleSettings.borderRadius + "px";
-    panel.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
-    panel.style.padding = "10px";
+    panel.style.border = `1px solid ${panelTheme === "dark" ? "#444" : "#e0e0e0"}`;
+    panel.style.borderRadius = Math.max(styleSettings.borderRadius, 10) + "px";
+    panel.style.boxShadow = panelTheme === "dark"
+      ? "0 4px 20px rgba(0,0,0,0.45)"
+      : "0 4px 20px rgba(0,0,0,0.12)";
     panel.style.zIndex = "2147483648";
     panel.style.width    = getEffectivePanelWidth() + "px";
     panel.style.maxWidth = getEffectivePanelWidth() + "px";
@@ -4236,6 +4605,7 @@
     panel.style.opacity = styleSettings.opacity;
     panel.style.display = "none";
     panel.style.transition = "opacity 0.2s ease, transform 0.2s ease";
+    panel.style.boxSizing = "border-box";
 
     panel.addEventListener("dragover", (e) => {
       if (!e.defaultPrevented) {
@@ -4332,8 +4702,42 @@
 
     const headerContainer = document.createElement("div");
     headerContainer.className = "panel-header-container";
-    headerContainer.style.cssText =
-      "display:flex; align-items:center; margin-bottom:10px; gap:4px; flex-wrap:nowrap; box-sizing:border-box;";
+    headerContainer.style.cssText = `
+      display:flex; align-items:center; gap:4px; flex-wrap:nowrap; box-sizing:border-box;
+      padding:8px 10px 8px 12px;
+      border-bottom:1px solid ${panelTheme === "dark" ? "rgba(255,255,255,0.18)" : "rgba(0,0,0,0.1)"};
+      cursor:grab; user-select:none; flex-shrink:0;
+      border-radius:${Math.max(styleSettings.borderRadius, 10)}px ${Math.max(styleSettings.borderRadius, 10)}px 0 0;
+    `;
+
+    {
+      let _hDragging = false, _hOx = 0, _hOy = 0;
+      headerContainer.addEventListener("mousedown", (e) => {
+        if (e.target.closest("button,input,select,a,[role=button]")) return;
+        _hDragging = true;
+        const rect = panel.getBoundingClientRect();
+        _hOx = e.clientX - rect.left;
+        _hOy = e.clientY - rect.top;
+        headerContainer.style.cursor = "grabbing";
+        e.preventDefault();
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (!_hDragging) return;
+        const nx = Math.max(0, Math.min(e.clientX - _hOx, window.innerWidth  - panel.offsetWidth));
+        const ny = Math.max(0, Math.min(e.clientY - _hOy, window.innerHeight - panel.offsetHeight));
+        panel.style.left = nx + "px";
+        panel.style.top  = ny + "px";
+        panel.style.right = "auto";
+      });
+      document.addEventListener("mouseup", () => {
+        if (!_hDragging) return;
+        _hDragging = false;
+        headerContainer.style.cursor = "grab";
+        styleSettings.panelLeft = parseInt(panel.style.left) || 0;
+        styleSettings.panelTop  = parseInt(panel.style.top)  || 0;
+        GM_setValue("styleSettings", styleSettings);
+      });
+    }
 
     const headerLeft = document.createElement("div");
     headerLeft.style.cssText =
@@ -4341,12 +4745,12 @@
 
     const siteTitle = document.createElement("div");
     siteTitle.textContent = t.siteTitle || "站台快捷";
-    siteTitle.style.fontWeight = "bold";
+    siteTitle.style.cssText = "font-weight:600; font-size:13px; letter-spacing:0.01em;";
     headerLeft.appendChild(siteTitle);
 
     const panelHelpBtn = document.createElement("span");
     panelHelpBtn.textContent = "❓";
-    panelHelpBtn.style.cssText = "cursor:help; font-size:12px; opacity:0.65; flex-shrink:0;";
+    panelHelpBtn.style.cssText = "cursor:help; font-size:12px; opacity:0.55; flex-shrink:0;";
     const panelHelpTip = document.createElement("div");
     panelHelpTip.style.cssText = `
       display:none; position:fixed;
@@ -5780,6 +6184,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     panel.appendChild(headerContainer);
 
+    const panelBody = document.createElement("div");
+    panelBody.id = "panel-body";
+    panelBody.style.cssText = "padding:10px; box-sizing:border-box;";
     const searchContainer = document.createElement("div");
     searchContainer.id = "site-search-container";
     searchContainer.style.cssText = `
@@ -6192,20 +6599,27 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const buttonContainer = document.createElement("div");
     buttonContainer.id = "toolbar-container";
-    buttonContainer.style.display = "flex";
-    buttonContainer.style.flexWrap = "wrap";
-    buttonContainer.style.gap = "6px";
-    buttonContainer.style.marginBottom = "10px";
-    buttonContainer.style.position = "relative";
-    buttonContainer.style.zIndex = "0";
-    buttonContainer.style.rowGap = "4px";
+    buttonContainer.style.cssText = `
+      display:flex; flex-wrap:wrap; gap:4px; row-gap:3px;
+      margin-bottom:8px; position:relative; z-index:0;
+      padding:6px 8px;
+      background:${panelTheme === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)"};
+      border-radius:${Math.max(styleSettings.borderRadius, 8)}px;
+      border:1px solid ${panelTheme === "dark" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.08)"};
+    `;
+
+    const _tlbBg  = panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5";
+    const _tlbFg  = panelTheme === "dark" ? "#ffffff" : "#000000";
+    const _tlbBd  = panelTheme === "dark" ? "#666"    : "#ccc";
+    const _tlbRad = Math.max(styleSettings.borderRadius, 6) + "px";
 
     const addGroupBtn = document.createElement("button");
     addGroupBtn.textContent = t.addGroup || "新增群組";
-    addGroupBtn.style.padding = "4px 8px";
-    addGroupBtn.style.borderRadius = styleSettings.borderRadius + "px";
-    addGroupBtn.style.cursor = "pointer";
-    addGroupBtn.style.whiteSpace = "nowrap";
+    addGroupBtn.style.cssText = `
+      padding:3px 8px; border-radius:${_tlbRad};
+      cursor:pointer; white-space:nowrap; font-size:11px;
+      background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
+    `;
     addGroupBtn.onclick = () => {
       if (isPromptActive) {
         warn("提示框已在顯示，忽略新增群組請求");
@@ -6226,28 +6640,50 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     buttonContainer.appendChild(addGroupBtn);
 
     const toggleAddressBtn = document.createElement("button");
-    toggleAddressBtn.textContent = showAddresses ? t.toggleHide : t.toggleShow;
-    toggleAddressBtn.style.padding = "4px 8px";
-    toggleAddressBtn.style.borderRadius = styleSettings.borderRadius + "px";
-    toggleAddressBtn.style.cursor = "pointer";
-    toggleAddressBtn.style.whiteSpace = "nowrap";
+    toggleAddressBtn.id = "se-toggle-address-btn";
+    toggleAddressBtn.style.cssText = `
+      padding:3px 8px; border-radius:${_tlbRad};
+      cursor:pointer; white-space:nowrap; font-size:11px;
+      background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
+      display:inline-flex; align-items:center; gap:4px;
+    `;
+
+    function _updateAddrBtn() {
+      const _ic = styleSettings.iconStyle || "emoji";
+      const _lbl = showAddresses ? (t.toggleHide || "顯示註解") : (t.toggleShow || "顯示網址");
+      if (_ic === "emoji") {
+        toggleAddressBtn.textContent = ICONS.toggleAddress.emoji + "\u202F" + _lbl;
+        toggleAddressBtn.style.fontSize = "11px";
+      } else if (_ic === "svg-line") {
+        toggleAddressBtn.innerHTML =
+          ICONS.toggleAddress.line + `<span style="font-size:11px;line-height:1">${_lbl}</span>`;
+        toggleAddressBtn.style.color = styleSettings.svgIconColor || "";
+      } else {
+        toggleAddressBtn.innerHTML =
+          ICONS.toggleAddress.fill + `<span style="font-size:11px;line-height:1">${_lbl}</span>`;
+        toggleAddressBtn.style.color = styleSettings.svgIconColor || "";
+      }
+    }
+    _updateAddrBtn();
+
     toggleAddressBtn.onclick = () => {
       showAddresses = !showAddresses;
       GM_setValue("showAddresses", showAddresses);
-      toggleAddressBtn.textContent = showAddresses
-        ? t.toggleHide
-        : t.toggleShow;
-      updateAddressesVisibility();
+      _updateAddrBtn();
+      renderSites(panel);
     };
     buttonContainer.appendChild(toggleAddressBtn);
 
     const exportBtn = document.createElement("button");
     exportBtn.textContent = t.exportConfig || "匯出設定";
     exportBtn.style.padding = "4px 8px";
-    exportBtn.style.borderRadius = styleSettings.borderRadius + "px";
+    exportBtn.style.borderRadius = _tlbRad;
     exportBtn.style.cursor = "pointer";
     exportBtn.style.whiteSpace = "nowrap";
     exportBtn.style.flexShrink = "1";
+    exportBtn.style.background = _tlbBg;
+    exportBtn.style.color = _tlbFg;
+    exportBtn.style.border = `1px solid ${_tlbBd}`;
     exportBtn.onclick = () => {
       const config = {
         siteGroups: groups,
@@ -6295,10 +6731,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const importBtn = document.createElement("button");
     importBtn.textContent = t.importConfig || "匯入設定";
     importBtn.style.padding = "4px 8px";
-    importBtn.style.borderRadius = styleSettings.borderRadius + "px";
+    importBtn.style.borderRadius = _tlbRad;
     importBtn.style.cursor = "pointer";
     importBtn.style.whiteSpace = "nowrap";
     importBtn.style.flexShrink = "1";
+    importBtn.style.background = _tlbBg;
+    importBtn.style.color = _tlbFg;
+    importBtn.style.border = `1px solid ${_tlbBd}`;
     importBtn.onclick = () => {
       const fileInput = document.createElement("input");
       fileInput.type = "file";
@@ -6402,10 +6841,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     syntaxHelpBtn.title = t.syntaxHelp || "Search Syntax Reference";
     syntaxHelpBtn.style.cssText = `
       padding:3px 6px;
-      border-radius:${styleSettings.borderRadius}px;
+      border-radius:${_tlbRad};
       cursor:pointer; white-space:nowrap;
       font-size:${styleSettings.fontSize}px; line-height:1.4;
       flex-shrink:0;
+      background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
     `;
     syntaxHelpBtn.onclick = () => showSyntaxPanel();
     syntaxHelpBtn.style.display = styleSettings.hideSyntaxBtn ? "none" : "";
@@ -6415,10 +6855,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     blacklistBtnEl.textContent = t.blacklistBtn || "🚫 Blacklist";
     blacklistBtnEl.title = t.blacklistTitle || "Domain Blacklist";
     blacklistBtnEl.style.padding = "4px 8px";
-    blacklistBtnEl.style.borderRadius = styleSettings.borderRadius + "px";
+    blacklistBtnEl.style.borderRadius = _tlbRad;
     blacklistBtnEl.style.cursor = "pointer";
     blacklistBtnEl.style.whiteSpace = "nowrap";
     blacklistBtnEl.style.flexShrink = "0";
+    blacklistBtnEl.style.background = _tlbBg;
+    blacklistBtnEl.style.color = _tlbFg;
+    blacklistBtnEl.style.border = `1px solid ${_tlbBd}`;
     const _blCount = Array.isArray(domainBlacklist) ? domainBlacklist.filter(d => d.trim()).length : 0;
     if (_blCount > 0) {
       blacklistBtnEl.textContent = `🚫 ${_blCount}`;
@@ -6429,57 +6872,40 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     buttonContainer.appendChild(blacklistBtnEl);
     buttonContainer.appendChild(syntaxHelpBtn);
 
-    panel.appendChild(buttonContainer);
+    const groupSlot = document.createElement("div");
+    groupSlot.id = "panel-group-slot";
+    panel.appendChild(panelBody);
+    panelBody.appendChild(groupSlot);
 
     const searchConfigWrap = document.createElement("div");
     searchConfigWrap.id = "search-config-wrap";
-    searchConfigWrap.style.marginTop = "10px";
-    searchConfigWrap.style.padding = "8px";
-    searchConfigWrap.style.borderRadius = styleSettings.borderRadius + "px";
+    searchConfigWrap.style.cssText = `
+      margin-top:8px; padding:6px 8px;
+      border-radius:${Math.max(styleSettings.borderRadius, 8)}px;
+      background:${panelTheme === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)"};
+      border:1px solid ${panelTheme === "dark" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.08)"};
+    `;
 
     const searchConfigHeaderRow = document.createElement("div");
-    searchConfigHeaderRow.style.display = "flex";
-    searchConfigHeaderRow.style.alignItems = "center";
-    searchConfigHeaderRow.style.gap = "10px";
-    searchConfigHeaderRow.style.cursor = "pointer";
-    searchConfigHeaderRow.style.userSelect = "none";
-
-    const searchConfigHeaderText = document.createElement("div");
-    searchConfigHeaderText.textContent = t.searchConfig || "搜尋設定";
-    searchConfigHeaderText.style.fontWeight = "bold";
-    searchConfigHeaderRow.appendChild(searchConfigHeaderText);
+    searchConfigHeaderRow.style.cssText = `
+      display:flex; align-items:center; gap:8px;
+      cursor:pointer; user-select:none;
+    `;
 
     const timeFilterRow = document.createElement("div");
-    timeFilterRow.style.display = "flex";
-    timeFilterRow.style.alignItems = "center";
-    timeFilterRow.style.gap = "6px";
+    timeFilterRow.style.cssText = "display:flex; align-items:center; gap:6px; flex:1; min-width:0;";
 
     const timeLabel = document.createElement("label");
     timeLabel.textContent = t.timeLabel;
-    timeLabel.style.whiteSpace = "nowrap";
+    timeLabel.style.cssText = "white-space:nowrap; flex-shrink:0; font-size:11px; opacity:0.7;";
     timeFilterRow.appendChild(timeLabel);
 
-    const timeSelect = document.createElement("select");
-    timeSelect.style.width = "100px";
-    timeSelect.style.flexShrink = "0";
-    timeSelect.innerHTML = `<option value="">${t.unlimited}</option>`;
-    TIME_OPTIONS.forEach(({ label, value }) => {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = label;
-      timeSelect.appendChild(option);
-    });
-
     const _tsEngine = getTimeFilterEngine();
-    if (!_tsEngine) {
-      timeSelect.disabled = true;
-      timeSelect.style.opacity = "0.45";
-      timeSelect.style.cursor = "not-allowed";
-      timeSelect.title = t.timeUnsupported || "⚠️ 此搜尋引擎不支援時間篩選";
-    } else {
+
+    let _initTimeVal = "";
+    if (_tsEngine) {
       try {
         const _u = new URL(location.href);
-        let _curVal = "";
         if (_tsEngine === "bing-images") {
           const _qft = _u.searchParams.get("qft") || "";
           const _mMatch = _qft.match(/filterui:age-lt(\d+)/);
@@ -6489,45 +6915,151 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               [1440,"d"],[2880,"d2"],[4320,"d3"],[10080,"w"],[30240,"w3"],
               [43200,"m"],[129600,"m3"],[259200,"m6"],[525960,"y"]];
             const _found = _biaMap.find(([n]) => n >= _mins);
-            _curVal = _found ? _found[1] : "y";
+            _initTimeVal = _found ? _found[1] : "y";
           }
         } else if (_tsEngine === "bing") {
-          const _freshnessRev = { "past hour": "h", "past day": "d", "past week": "w", "past month": "m", "past year": "y" };
-          const _fr = (_u.searchParams.get("freshness") || "").toLowerCase();
-          _curVal = _freshnessRev[_fr] || "";
+          const _freshnessRev = { "past hour":"h","past day":"d","past week":"w","past month":"m","past year":"y" };
+          _initTimeVal = _freshnessRev[(_u.searchParams.get("freshness")||"").toLowerCase()] || "";
         } else if (_tsEngine === "yahoo") {
-          const _ageRev = { "1d": "d", "1w": "w", "1m": "m", "1y": "y" };
-          const _ag = _u.searchParams.get("age") || "";
-          _curVal = _ageRev[_ag] || "";
+          const _ageRev = { "1d":"d","1w":"w","1m":"m","1y":"y" };
+          _initTimeVal = _ageRev[_u.searchParams.get("age")||""] || "";
         } else {
-          const _tbs = _u.searchParams.get("tbs") || "";
-          const _m = _tbs.match(/qdr:([a-z0-9]+)/);
-          _curVal = _m ? _m[1] : "";
+          const _m = (_u.searchParams.get("tbs")||"").match(/qdr:([a-z0-9]+)/);
+          _initTimeVal = _m ? _m[1] : "";
         }
-        if (_curVal) {
-          const _opt = timeSelect.querySelector(`option[value="${_curVal}"]`);
-          if (_opt) _opt.selected = true;
-        }
-      } catch (_) {}
+      } catch(_) {}
     }
 
-    timeSelect.onchange = () => applyTimeFilter(timeSelect.value);
+    const _SEG_OPTIONS = [
+      { label: t.unlimited || "∞", value: "" },
+      { label: "1h",  value: "h"  },
+      { label: "1d",  value: "d"  },
+      { label: "1w",  value: "w"  },
+      { label: "1m",  value: "m"  },
+      { label: "1y",  value: "y"  },
+      { label: t.timeCustom || "…", value: "__custom__" },
+    ];
+    const _isDark = panelTheme === "dark";
+    const _segBg = _isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
+    const _segActiveBg = _isDark ? "rgba(255,255,255,0.18)" : "rgba(0,0,0,0.13)";
+    const _segBorder = _isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)";
+
+    const segWrap = document.createElement("div");
+    segWrap.style.cssText = `
+      display:flex; flex:1; border:1px solid ${_segBorder};
+      border-radius:8px; overflow:hidden; flex-shrink:0;
+      background:${_segBg};
+      opacity:${_tsEngine ? "1" : "0.45"};
+      pointer-events:${_tsEngine ? "auto" : "none"};
+    `;
     if (!_tsEngine) {
-      const _tsWrap = document.createElement("div");
-      _tsWrap.style.cssText = "position:relative; display:inline-flex; flex-shrink:0;";
-      const _tsOverlay = document.createElement("div");
-      _tsOverlay.style.cssText = "position:absolute; inset:0; z-index:1; cursor:not-allowed;";
-      _tsOverlay.title = timeSelect.title;
-      _tsOverlay.addEventListener("click", (e) => {
+      segWrap.title = t.timeUnsupported || "⚠️ 此搜尋引擎不支援時間篩選";
+      segWrap.style.pointerEvents = "auto";
+      segWrap.style.cursor = "not-allowed";
+      segWrap.addEventListener("click", (e) => {
         e.stopPropagation();
         showToast(t.timeUnsupported || "⚠️ 此搜尋引擎不支援時間篩選", 2500);
       });
-      _tsWrap.appendChild(timeSelect);
-      _tsWrap.appendChild(_tsOverlay);
-      timeFilterRow.appendChild(_tsWrap);
-    } else {
-      timeFilterRow.appendChild(timeSelect);
     }
+
+    const customDateRow = document.createElement("div");
+    customDateRow.style.cssText = `
+      display:none; align-items:center; gap:5px; flex-wrap:wrap;
+      margin-top:5px; padding:5px 6px;
+      background:${_segBg}; border:1px solid ${_segBorder};
+      border-radius:7px; font-size:11px;
+    `;
+
+    function _makeCustomDateInput(labelTxt, placeholder) {
+      const wrap = document.createElement("div");
+      wrap.style.cssText = "display:flex; align-items:center; gap:3px;";
+      const lbl = document.createElement("span");
+      lbl.textContent = labelTxt;
+      lbl.style.cssText = "opacity:0.6; white-space:nowrap;";
+      const inp = document.createElement("input");
+      inp.type = "date";
+      inp.placeholder = placeholder;
+      inp.style.cssText = `
+        font-size:11px; padding:2px 4px; border-radius:5px;
+        border:1px solid ${_segBorder};
+        background:${_isDark ? "#3a3a3a" : "#fff"};
+        color:inherit; cursor:pointer;
+      `;
+      wrap.appendChild(lbl);
+      wrap.appendChild(inp);
+      return { wrap, inp };
+    }
+
+    const _afterField  = _makeCustomDateInput("after:",  "YYYY-MM-DD");
+    const _beforeField = _makeCustomDateInput("before:", "YYYY-MM-DD");
+    const _applyCustomBtn = document.createElement("button");
+    _applyCustomBtn.textContent = t.apply || "Apply";
+    _applyCustomBtn.className = "icon-btn";
+    _applyCustomBtn.style.cssText = `
+      padding:2px 8px; border-radius:5px; font-size:11px; cursor:pointer;
+      background:${_segActiveBg}; border:1px solid ${_segBorder}; color:inherit;
+    `;
+    _applyCustomBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const after  = _afterField.inp.value;
+      const before = _beforeField.inp.value;
+      if (!after && !before) return;
+      try {
+        const u = new URL(location.href);
+        const q = u.searchParams.get("q") || u.searchParams.get("query") || "";
+        let newQ = q.replace(/\s*after:\S+/g, "").replace(/\s*before:\S+/g, "").trim();
+        if (after)  newQ += ` after:${after}`;
+        if (before) newQ += ` before:${before}`;
+        if (u.searchParams.has("q"))     u.searchParams.set("q", newQ.trim());
+        else if (u.searchParams.has("query")) u.searchParams.set("query", newQ.trim());
+        else { showToast("⚠️ 無法識別此引擎的查詢參數", 2000); return; }
+        location.href = u.toString();
+      } catch(_) {
+        showToast("⚠️ 日期格式錯誤，請使用 YYYY-MM-DD", 2000);
+      }
+    });
+    customDateRow.appendChild(_afterField.wrap);
+    customDateRow.appendChild(_beforeField.wrap);
+    customDateRow.appendChild(_applyCustomBtn);
+
+    _SEG_OPTIONS.forEach(({ label, value }) => {
+      const opt = document.createElement("button");
+      opt.className = "icon-btn seg-time-btn";
+      opt.dataset.value = value;
+      opt.textContent = label;
+      const _isActive = value === _initTimeVal;
+      opt.style.cssText = `
+        flex:1; border:none; border-right:1px solid ${_segBorder}; border-radius:0;
+        background:${_isActive ? _segActiveBg : "transparent"};
+        color:inherit; font-size:10px; font-weight:${_isActive ? "600" : "400"};
+        padding:4px 2px; cursor:${_tsEngine ? "pointer" : "not-allowed"};
+        transition:background 0.12s, font-weight 0.1s;
+        white-space:nowrap; line-height:1;
+      `;
+      opt.addEventListener("click", (e) => {
+        if (!_tsEngine) return;
+        e.stopPropagation();
+        segWrap.querySelectorAll(".seg-time-btn").forEach(b => {
+          const _a = b.dataset.value === value;
+          b.style.background = _a ? _segActiveBg : "transparent";
+          b.style.fontWeight = _a ? "600" : "400";
+        });
+        if (value === "__custom__") {
+          const _shown = customDateRow.style.display !== "none";
+          customDateRow.style.display = _shown ? "none" : "flex";
+        } else {
+          customDateRow.style.display = "none";
+          applyTimeFilter(value);
+        }
+      });
+      segWrap.appendChild(opt);
+    });
+    const _lastSeg = segWrap.lastElementChild;
+    if (_lastSeg) _lastSeg.style.borderRight = "none";
+
+    timeFilterRow.appendChild(segWrap);
+    timeFilterRow.style.flexWrap = "wrap";
+    timeFilterRow.appendChild(customDateRow);
 
     searchConfigHeaderRow.appendChild(timeFilterRow);
     searchConfigWrap.appendChild(searchConfigHeaderRow);
@@ -6553,41 +7085,72 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     collapsibleContent.appendChild(miscContainer);
     searchConfigWrap.appendChild(collapsibleContent);
-    panel.appendChild(searchConfigWrap);
 
-    if (document.body) {
-      document.body.appendChild(panel);
-      log("Panel appended to document.body");
+    {
+      const grip = document.createElement("div");
+      grip.id = "panel-resize-grip";
+      grip.title = "拖曳調整大小";
+      grip.style.cssText = `
+        position:sticky; bottom:0; right:0;
+        width:100%; height:14px;
+        display:flex; align-items:center; justify-content:flex-end;
+        padding-right:4px;
+        cursor:se-resize; z-index:10; flex-shrink:0;
+        background:${panelTheme === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)"};
+        border-top:1px solid ${panelTheme === "dark" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.08)"};
+        border-radius:0 0 ${Math.max(styleSettings.borderRadius, 10)}px ${Math.max(styleSettings.borderRadius, 10)}px;
+        user-select:none;
+      `;
+      grip.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" style="opacity:0.30;display:block">
+        <line x1="2" y1="9" x2="9" y2="2" stroke="currentColor" stroke-width="1.2"/>
+        <line x1="5" y1="9" x2="9" y2="5" stroke="currentColor" stroke-width="1.2"/>
+        <line x1="8" y1="9" x2="9" y2="8" stroke="currentColor" stroke-width="1.2"/>
+      </svg>`;
+      panel.appendChild(grip);
 
-    } else {
-      console.error("document.body is not available, cannot append panel");
+      let _rDragging = false, _rStartX = 0, _rStartY = 0, _rStartW = 0, _rStartH = 0;
+      grip.addEventListener("mousedown", (e) => {
+        _rDragging = true;
+        _rStartX = e.clientX; _rStartY = e.clientY;
+        _rStartW = panel.offsetWidth; _rStartH = panel.offsetHeight;
+        document.body.style.cursor = "se-resize";
+        e.preventDefault(); e.stopPropagation();
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (!_rDragging) return;
+        const nw = Math.max(260, _rStartW + (e.clientX - _rStartX));
+        const nh = Math.max(200, _rStartH + (e.clientY - _rStartY));
+        panel.style.width = nw + "px"; panel.style.maxWidth = nw + "px";
+        panel.style.maxHeight = Math.min(95, Math.round(nh / window.innerHeight * 100)) + "vh";
+      });
+      document.addEventListener("mouseup", () => {
+        if (!_rDragging) return;
+        _rDragging = false;
+        document.body.style.cursor = "";
+        styleSettings.panelWidth     = parseInt(panel.style.width)     || getEffectivePanelWidth();
+        styleSettings.panelMaxHeight = parseInt(panel.style.maxHeight) || 87;
+        styleSettings.panelUserSized = true;
+        GM_setValue("styleSettings", styleSettings);
+      });
     }
 
     const expandCollapseBtn = document.createElement("button");
     expandCollapseBtn.textContent = t.expand;
-    expandCollapseBtn.style.padding = "4px 8px";
-    expandCollapseBtn.style.borderRadius = styleSettings.borderRadius + "px";
-    expandCollapseBtn.style.cursor = "pointer";
-    expandCollapseBtn.style.whiteSpace = "nowrap";
-    expandCollapseBtn.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
-    expandCollapseBtn.style.background =
-      styleSettings.customButtonBg ||
-      (panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5");
-    expandCollapseBtn.style.color =
-      styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000");
-    expandCollapseBtn.style.opacity = styleSettings.buttonOpacity;
-    expandCollapseBtn.style.marginLeft = "6px";
+    expandCollapseBtn.style.cssText = `
+      padding:3px 8px; border-radius:${Math.max(styleSettings.borderRadius, 6)}px;
+      cursor:pointer; white-space:nowrap; font-size:11px; flex-shrink:0;
+      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+      background:${styleSettings.customButtonBg || (panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5")};
+      color:${styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000")};
+      opacity:${styleSettings.buttonOpacity};
+    `;
     expandCollapseBtn.onmouseover = () => {
       expandCollapseBtn.style.background = adjustColor(
-        styleSettings.customButtonBg ||
-          (panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5"),
-        10,
-      );
+        styleSettings.customButtonBg || (panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5"), 10);
     };
     expandCollapseBtn.onmouseout = () => {
       expandCollapseBtn.style.background =
-        styleSettings.customButtonBg ||
-        (panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5");
+        styleSettings.customButtonBg || (panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5");
     };
     expandCollapseBtn.onclick = () => {
       searchConfig.isExpanded = !searchConfig.isExpanded;
@@ -6850,10 +7413,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings = {
         theme: "light",
         style: "default",
-        borderRadius: 8,
+        borderRadius: 6,
         contrast: 0,
-        opacity: 0.95,
-        groupOpacity: 0.8,
+        opacity: 0.9,
+        groupOpacity: 1.0,
         textOpacityCompensation: 1.0,
         buttonOpacity: 1.0,
         fontSize: 12,
@@ -6866,20 +7429,42 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         customBackgroundColor: "#ffffff",
         customTextColor: "#000000",
         customButtonBg: "#f5f5f5",
-        groupBackgroundColor: "#f5f5f5",
-        enableOverlayDarkening: true,
+        groupBackgroundColor: "",
+        enableOverlayDarkening: false,
         overlayStrength: 0.5,
-        textBackgroundColor: "transparent",
+        textBackgroundColor: "",
         textBorder: false,
         panelTop:       80,
         panelRight:     20,
+        panelLeft:      -1,
         panelWidth:     0,
         panelMaxHeight: 87,
+        panelUserSized: false,
         multiSelectColor:   "#ffc400",
         multiSelectOpacity: 0.85,
         siteButtonWidth: 0,
-        hideSyntaxBtn:   false,
-        isExpanded:      false,
+        hideSyntaxBtn:    false,
+        hideBlacklistBtn: false,
+        isExpanded:       false,
+        iconStyle:          "emoji",
+        toggleBtnBg:        "",
+        toggleBtnBgOpacity: 0,
+        svgIconColor:       "",
+        enableBorderGlow:    false,
+        borderGlowColor:    "#00bfff",
+        borderGlowStrength:  12,
+        borderGlowInset:     true,
+        enableSheen:         false,
+        sheenAngle:          135,
+        sheenOpacity:        0.08,
+        enableSiteGlow:      false,
+        enableGroupGlow:     false,
+        searchBarBg:             "",
+        searchBarBgOpacity:      0,
+        searchBarFg:             "",
+        searchBarGlowEnabled:    false,
+        searchBarGlowColor:      "#5599ff",
+        searchBarGlowStrength:   6,
       };
       save();
       applyTheme(panelTheme);
@@ -7037,7 +7622,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           const p = document.getElementById("site-group-panel");
           if (!p) return;
           if (key === "panelTop")    p.style.top  = v + "px";
-          if (key === "panelRight")  p.style.right = v + "px";
+          if (key === "panelRight") {
+            const _w = parseInt(p.style.width) || getEffectivePanelWidth();
+            const _newLeft = Math.max(8, window.innerWidth - v - _w);
+            p.style.left = _newLeft + "px";
+            p.style.right = "auto";
+            styleSettings.panelLeft = _newLeft;
+            save();
+          }
           if (key === "panelWidth") { const _w = v > 0 ? v : getEffectivePanelWidth(); p.style.width = _w + "px"; p.style.maxWidth = _w + "px"; }
           if (key === "panelMaxHeight") p.style.maxHeight = v + "vh";
         }
@@ -7049,7 +7641,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const p = document.getElementById("site-group-panel");
         if (!p) return;
         if (key === "panelTop")    p.style.top  = dv + "px";
-        if (key === "panelRight")  p.style.right = dv + "px";
+        if (key === "panelRight") {
+          const _w = parseInt(p.style.width) || getEffectivePanelWidth();
+          const _newLeft = Math.max(8, window.innerWidth - dv - _w);
+          p.style.left = _newLeft + "px";
+          p.style.right = "auto";
+          styleSettings.panelLeft = _newLeft;
+          save();
+        }
         if (key === "panelWidth") { const _dw = dv > 0 ? dv : getEffectivePanelWidth(); p.style.width = _dw + "px"; p.style.maxWidth = _dw + "px"; }
         if (key === "panelMaxHeight") p.style.maxHeight = dv + "vh";
       });
@@ -7233,6 +7832,84 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     styleRow.appendChild(styleSelect);
     generalStyleContainer.appendChild(styleRow);
 
+    let _qsHeader;
+    {
+      const _qsDark = panelTheme === "dark";
+      const _qsContainer = document.createElement("div");
+      _qsContainer.style.cssText = `
+        border:1px solid ${_qsDark ? "#555" : "#ccc"};
+        border-radius:${styleSettings.borderRadius}px;
+        padding:6px 8px; display:flex; flex-direction:column; gap:4px; margin-top:0;
+      `;
+      _qsHeader = document.createElement("div");
+      _qsHeader.textContent = t.quickSchemeLabel || "🎨 Quick Scheme";
+      _qsHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
+      _qsContainer.appendChild(_qsHeader);
+
+      const _qsRow = document.createElement("div");
+      _qsRow.style.cssText = "display:flex; gap:5px; flex-wrap:wrap;";
+
+      const _SCHEMES = {
+        light: {
+          panelTheme:        "light",
+          searchBarBg:       "#ffffff",
+          searchBarBgOpacity: 0.85,
+          searchBarFg:       "#111111",
+          customBackgroundColor: "#ffffff",
+          customTextColor:   "#111111",
+          customButtonBg:    "#f0f0f0",
+        },
+        dark: {
+          panelTheme:        "dark",
+          searchBarBg:       "#1a1a1a",
+          searchBarBgOpacity: 0.75,
+          searchBarFg:       "#eeeeee",
+          customBackgroundColor: "#1e1e1e",
+          customTextColor:   "#eeeeee",
+          customButtonBg:    "#3c3c3c",
+        },
+        reset: null,
+      };
+
+      const _qsDefs = [
+      ];
+
+      _qsDefs.forEach(def => {
+        const pb = document.createElement("button");
+        pb.textContent = def.label;
+        pb.title = def.label;
+        pb.className = "icon-btn";
+        pb.style.cssText = `flex:1; padding:3px 6px; border-radius:5px; font-size:11px;
+          cursor:pointer; white-space:nowrap;
+          background:${_qsDark ? "#4a4a4a" : "#eee"};
+          border:1px solid ${_qsDark ? "#666" : "#ccc"}; color:inherit;`;
+        pb.onclick = () => {
+          if (def.key === "reset") {
+            styleSettings.searchBarBg        = "";
+            styleSettings.searchBarBgOpacity = 0;
+            styleSettings.searchBarFg        = "";
+            styleSettings.searchBarGlowEnabled = false;
+          } else {
+            const s = _SCHEMES[def.key];
+            styleSettings.searchBarBg        = s.searchBarBg;
+            styleSettings.searchBarBgOpacity = s.searchBarBgOpacity;
+            styleSettings.searchBarFg        = s.searchBarFg;
+            if (panelTheme === "custom") {
+              styleSettings.customBackgroundColor = s.customBackgroundColor;
+              styleSettings.customTextColor       = s.customTextColor;
+              styleSettings.customButtonBg        = s.customButtonBg;
+            }
+          }
+          save();
+          applyTheme(panelTheme);
+        };
+        _qsRow.appendChild(pb);
+      });
+
+      _qsContainer.appendChild(_qsRow);
+      generalStyleContainer.appendChild(_qsContainer);
+    }
+
     const borderRadiusRow = document.createElement("div");
     borderRadiusRow.style.cssText = rowCss();
 
@@ -7250,7 +7927,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     borderRadiusInput.oninput = () => {
       styleSettings.borderRadius = parseInt(borderRadiusInput.value);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_borderRadiusInput.textContent = borderRadiusInput.value+"px";
     };
     const _vs_borderRadiusInput = makeValueSpan(borderRadiusInput.value+"px");
@@ -7282,7 +7959,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     contrastInput.oninput = () => {
       styleSettings.contrast = parseInt(contrastInput.value);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_contrastInput.textContent = contrastInput.value;
     };
     const _vs_contrastInput = makeValueSpan(contrastInput.value);
@@ -7315,7 +7992,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     opacityInput.oninput = () => {
       styleSettings.opacity = parseFloat(opacityInput.value);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_opacityInput.textContent = parseFloat(opacityInput.value).toFixed(1);
     };
     const _vs_opacityInput = makeValueSpan(parseFloat(opacityInput.value).toFixed(1));
@@ -7348,7 +8025,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     groupOpacityInput.oninput = () => {
       styleSettings.groupOpacity = parseFloat(groupOpacityInput.value);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_groupOpacityInput.textContent = parseFloat(groupOpacityInput.value).toFixed(1);
     };
     const _vs_groupOpacityInput = makeValueSpan(parseFloat(groupOpacityInput.value).toFixed(1));
@@ -7381,7 +8058,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     buttonOpacityInput.oninput = () => {
       styleSettings.buttonOpacity = parseFloat(buttonOpacityInput.value);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_buttonOpacityInput.textContent = parseFloat(buttonOpacityInput.value).toFixed(1);
     };
     const _vs_buttonOpacityInput = makeValueSpan(parseFloat(buttonOpacityInput.value).toFixed(1));
@@ -7417,6 +8094,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.siteButtonWidth = v;
       _vs_siteButtonWidth.textContent = v > 0 ? v + "px" : (t.siteButtonWidthAuto || "Auto");
       save();
+      document.querySelectorAll(".site-container").forEach(sc => {
+        const _minCell = v > 0 ? v : 104;
+        sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(${_minCell}px, 1fr))`;
+      });
       document.querySelectorAll(".draggable-site").forEach(el => {
         if (v > 0) {
           el.style.width    = v + "px";
@@ -7425,7 +8106,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           if (lbl) lbl.style.display = v <= 28 ? "none" : "";
         } else {
           el.style.width    = "";
-          el.style.maxWidth = "120px";
+          el.style.maxWidth = "none";
           const lbl = el.querySelector(".site-label");
           if (lbl) lbl.style.display = "";
         }
@@ -7436,9 +8117,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.siteButtonWidth = dv;
       _vs_siteButtonWidth.textContent = t.siteButtonWidthAuto || "Auto";
       save();
+      document.querySelectorAll(".site-container").forEach(sc => {
+        sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(104px, 1fr))`;
+      });
       document.querySelectorAll(".draggable-site").forEach(el => {
         el.style.width    = "";
-        el.style.maxWidth = "120px";
+        el.style.maxWidth = "none";
         const lbl = el.querySelector(".site-label");
         if (lbl) lbl.style.display = "";
       });
@@ -7448,6 +8132,444 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     siteButtonWidthRow.appendChild(_rb_siteButtonWidth);
     generalStyleContainer.appendChild(siteButtonWidthRow);
 
+    const panelBgColorRow = document.createElement("div");
+    panelBgColorRow.style.cssText = rowCss();
+    const panelBgColorLabel = document.createElement("label");
+    panelBgColorLabel.textContent = t.panelBgColor || "面板背景色";
+    panelBgColorLabel.style.cssText = labelCss();
+    panelBgColorRow.appendChild(panelBgColorLabel);
+    const panelBgColorInput = document.createElement("input");
+    panelBgColorInput.type = "color";
+    panelBgColorInput.value = styleSettings.backgroundColor
+      || (panelTheme === "dark" ? "#333333" : "#ffffff");
+    panelBgColorInput.oninput = () => {
+      styleSettings.backgroundColor = panelBgColorInput.value;
+      save(); _debouncedApply();
+    };
+    const panelBgColorReset = makeResetBtn(
+      panelTheme === "dark" ? "#333333" : "#ffffff",
+      (dv) => {
+        panelBgColorInput.value = dv;
+        styleSettings.backgroundColor = dv;
+        save(); applyTheme(panelTheme);
+      }
+    );
+    panelBgColorRow.appendChild(panelBgColorInput);
+    panelBgColorRow.appendChild(panelBgColorReset);
+    generalStyleContainer.appendChild(panelBgColorRow);
+
+    const panelBgAlphaRow = document.createElement("div");
+    panelBgAlphaRow.style.cssText = rowCss();
+    const panelBgAlphaLabel = document.createElement("label");
+    panelBgAlphaLabel.textContent = t.panelBgAlpha || "背景透明度";
+    panelBgAlphaLabel.style.cssText = labelCss();
+    panelBgAlphaRow.appendChild(panelBgAlphaLabel);
+    const panelBgAlphaInput = document.createElement("input");
+    panelBgAlphaInput.type = "range";
+    panelBgAlphaInput.min = "0.1";
+    panelBgAlphaInput.max = "1";
+    panelBgAlphaInput.step = "0.05";
+    panelBgAlphaInput.value = styleSettings.opacity ?? 0.9;
+    panelBgAlphaInput.style.cssText = sliderCss();
+    const _vs_panelBgAlpha = makeValueSpan(
+      parseFloat(panelBgAlphaInput.value).toFixed(2)
+    );
+    panelBgAlphaInput.oninput = () => {
+      styleSettings.opacity = parseFloat(panelBgAlphaInput.value);
+      _vs_panelBgAlpha.textContent = styleSettings.opacity.toFixed(2);
+      save(); _debouncedApply();
+    };
+    const _rb_panelBgAlpha = makeResetBtn(0.9, (dv) => {
+      panelBgAlphaInput.value = dv;
+      styleSettings.opacity = dv;
+      _vs_panelBgAlpha.textContent = String(dv);
+      save(); applyTheme(panelTheme);
+    });
+    panelBgAlphaRow.appendChild(panelBgAlphaInput);
+    panelBgAlphaRow.appendChild(_vs_panelBgAlpha);
+    panelBgAlphaRow.appendChild(_rb_panelBgAlpha);
+    generalStyleContainer.appendChild(panelBgAlphaRow);
+
+    const glowSection = document.createElement("div");
+    glowSection.style.cssText = `
+      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+      border-radius:${styleSettings.borderRadius}px;
+      padding:7px 8px; margin-top:6px; display:flex;
+      flex-direction:column; gap:4px;
+    `;
+    const glowHeader = document.createElement("div");
+    glowHeader.textContent = "✨ " + (t.glowLabel || "外框光澤 / 高光");
+    glowHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
+    glowSection.appendChild(glowHeader);
+
+    const glowToggleRow = document.createElement("div");
+    glowToggleRow.style.cssText = rowCss();
+    const glowToggleLbl = document.createElement("label");
+    glowToggleLbl.textContent = t.enableBorderGlow || "外框光暈";
+    glowToggleLbl.style.cssText = labelCss();
+    glowToggleRow.appendChild(glowToggleLbl);
+    const glowToggle = document.createElement("input");
+    glowToggle.type = "checkbox";
+    glowToggle.checked = !!styleSettings.enableBorderGlow;
+    glowToggle.onchange = () => {
+      styleSettings.enableBorderGlow = glowToggle.checked;
+      save(); applyTheme(panelTheme);
+    };
+    glowToggleRow.appendChild(glowToggle);
+    glowSection.appendChild(glowToggleRow);
+
+    const glowColorRow = document.createElement("div");
+    glowColorRow.style.cssText = rowCss();
+    const glowColorLbl = document.createElement("label");
+    glowColorLbl.textContent = t.borderGlowColor || "光暈顏色";
+    glowColorLbl.style.cssText = labelCss();
+    glowColorRow.appendChild(glowColorLbl);
+    const glowColorInput = document.createElement("input");
+    glowColorInput.type = "color";
+    glowColorInput.value = styleSettings.borderGlowColor || "#00bfff";
+    glowColorInput.oninput = () => {
+      styleSettings.borderGlowColor = glowColorInput.value;
+      save(); _debouncedApply();
+    };
+    const glowColorReset = makeResetBtn("#00bfff", (dv) => {
+      glowColorInput.value = dv;
+      styleSettings.borderGlowColor = dv;
+      save(); applyTheme(panelTheme);
+    });
+    glowColorRow.appendChild(glowColorInput);
+    glowColorRow.appendChild(glowColorReset);
+    glowSection.appendChild(glowColorRow);
+
+    const glowStrRow = document.createElement("div");
+    glowStrRow.style.cssText = rowCss();
+    const glowStrLbl = document.createElement("label");
+    glowStrLbl.textContent = t.borderGlowStrength || "光暈強度";
+    glowStrLbl.style.cssText = labelCss();
+    glowStrRow.appendChild(glowStrLbl);
+    const glowStrInput = document.createElement("input");
+    glowStrInput.type = "range"; glowStrInput.min = "4"; glowStrInput.max = "32"; glowStrInput.step = "1";
+    glowStrInput.value = styleSettings.borderGlowStrength || 12;
+    glowStrInput.style.cssText = sliderCss();
+    const _vs_glowStr = makeValueSpan(glowStrInput.value + "px");
+    glowStrInput.oninput = () => {
+      styleSettings.borderGlowStrength = parseInt(glowStrInput.value);
+      _vs_glowStr.textContent = glowStrInput.value + "px";
+      save(); _debouncedApply();
+    };
+    glowStrRow.appendChild(glowStrInput);
+    glowStrRow.appendChild(_vs_glowStr);
+    glowSection.appendChild(glowStrRow);
+
+    const glowInsetRow = document.createElement("div");
+    glowInsetRow.style.cssText = rowCss();
+    const glowInsetLbl = document.createElement("label");
+    glowInsetLbl.textContent = t.borderGlowInset || "內壁光";
+    glowInsetLbl.style.cssText = labelCss();
+    glowInsetRow.appendChild(glowInsetLbl);
+    const glowInsetToggle = document.createElement("input");
+    glowInsetToggle.type = "checkbox";
+    glowInsetToggle.checked = styleSettings.borderGlowInset !== false;
+    glowInsetToggle.onchange = () => {
+      styleSettings.borderGlowInset = glowInsetToggle.checked;
+      save(); applyTheme(panelTheme);
+    };
+    glowInsetRow.appendChild(glowInsetToggle);
+    glowSection.appendChild(glowInsetRow);
+
+    const sheenToggleRow = document.createElement("div");
+    sheenToggleRow.style.cssText = rowCss() + "margin-top:4px;border-top:1px solid " +
+      (panelTheme === "dark" ? "#444" : "#eee") + ";padding-top:5px;";
+    const sheenToggleLbl = document.createElement("label");
+    sheenToggleLbl.textContent = t.enableSheen || "高光光澤 (Sheen)";
+    sheenToggleLbl.style.cssText = labelCss();
+    sheenToggleRow.appendChild(sheenToggleLbl);
+    const sheenToggle = document.createElement("input");
+    sheenToggle.type = "checkbox";
+    sheenToggle.checked = !!styleSettings.enableSheen;
+    sheenToggle.onchange = () => {
+      styleSettings.enableSheen = sheenToggle.checked;
+      save(); applyTheme(panelTheme);
+    };
+    sheenToggleRow.appendChild(sheenToggle);
+    glowSection.appendChild(sheenToggleRow);
+
+    const sheenAngleRow = document.createElement("div");
+    sheenAngleRow.style.cssText = rowCss();
+    const sheenAngleLbl = document.createElement("label");
+    sheenAngleLbl.textContent = t.sheenAngle || "光澤角度";
+    sheenAngleLbl.style.cssText = labelCss();
+    sheenAngleRow.appendChild(sheenAngleLbl);
+    const sheenAngleInput = document.createElement("input");
+    sheenAngleInput.type = "range"; sheenAngleInput.min = "0"; sheenAngleInput.max = "360"; sheenAngleInput.step = "5";
+    sheenAngleInput.value = styleSettings.sheenAngle ?? 135;
+    sheenAngleInput.style.cssText = sliderCss();
+    const _vs_sheenAngle = makeValueSpan(sheenAngleInput.value + "°");
+    sheenAngleInput.oninput = () => {
+      styleSettings.sheenAngle = parseInt(sheenAngleInput.value);
+      _vs_sheenAngle.textContent = sheenAngleInput.value + "°";
+      save(); _debouncedApply();
+    };
+    sheenAngleRow.appendChild(sheenAngleInput);
+    sheenAngleRow.appendChild(_vs_sheenAngle);
+    glowSection.appendChild(sheenAngleRow);
+
+    const sheenOpRow = document.createElement("div");
+    sheenOpRow.style.cssText = rowCss();
+    const sheenOpLbl = document.createElement("label");
+    sheenOpLbl.textContent = t.sheenOpacity || "光澤強度";
+    sheenOpLbl.style.cssText = labelCss();
+    sheenOpRow.appendChild(sheenOpLbl);
+    const sheenOpInput = document.createElement("input");
+    sheenOpInput.type = "range"; sheenOpInput.min = "0.02"; sheenOpInput.max = "0.25"; sheenOpInput.step = "0.01";
+    sheenOpInput.value = styleSettings.sheenOpacity ?? 0.08;
+    sheenOpInput.style.cssText = sliderCss();
+    const _vs_sheenOp = makeValueSpan(parseFloat(sheenOpInput.value).toFixed(2));
+    sheenOpInput.oninput = () => {
+      styleSettings.sheenOpacity = parseFloat(sheenOpInput.value);
+      _vs_sheenOp.textContent = styleSettings.sheenOpacity.toFixed(2);
+      save(); _debouncedApply();
+    };
+    sheenOpRow.appendChild(sheenOpInput);
+    sheenOpRow.appendChild(_vs_sheenOp);
+    glowSection.appendChild(sheenOpRow);
+
+    const siteGlowRow = document.createElement("div");
+    siteGlowRow.style.cssText = rowCss();
+    const siteGlowLbl = document.createElement("label");
+    siteGlowLbl.textContent = t.enableSiteGlow || "站台按鈕光暈";
+    siteGlowLbl.style.cssText = labelCss();
+    siteGlowRow.appendChild(siteGlowLbl);
+    const siteGlowToggle = document.createElement("input");
+    siteGlowToggle.type = "checkbox";
+    siteGlowToggle.checked = !!styleSettings.enableSiteGlow;
+    siteGlowToggle.oninput = () => {
+      styleSettings.enableSiteGlow = siteGlowToggle.checked;
+      save(); applyTheme(panelTheme);
+    };
+    const _rb_siteGlow = makeResetBtn(false, (dv) => {
+      siteGlowToggle.checked = dv;
+      styleSettings.enableSiteGlow = dv;
+      save(); applyTheme(panelTheme);
+    });
+    siteGlowRow.appendChild(siteGlowToggle);
+    siteGlowRow.appendChild(_rb_siteGlow);
+    glowSection.appendChild(siteGlowRow);
+
+    const groupGlowRow = document.createElement("div");
+    groupGlowRow.style.cssText = rowCss();
+    const groupGlowLbl = document.createElement("label");
+    groupGlowLbl.textContent = t.enableGroupGlow || "群組區塊光暈";
+    groupGlowLbl.style.cssText = labelCss();
+    groupGlowRow.appendChild(groupGlowLbl);
+    const groupGlowToggle = document.createElement("input");
+    groupGlowToggle.type = "checkbox";
+    groupGlowToggle.checked = !!styleSettings.enableGroupGlow;
+    groupGlowToggle.oninput = () => {
+      styleSettings.enableGroupGlow = groupGlowToggle.checked;
+      save(); applyTheme(panelTheme);
+    };
+    const _rb_groupGlow = makeResetBtn(false, (dv) => {
+      groupGlowToggle.checked = dv;
+      styleSettings.enableGroupGlow = dv;
+      save(); applyTheme(panelTheme);
+    });
+    groupGlowRow.appendChild(groupGlowToggle);
+    groupGlowRow.appendChild(_rb_groupGlow);
+    glowSection.appendChild(groupGlowRow);
+
+    generalStyleContainer.appendChild(glowSection);
+
+    const searchBarSection = document.createElement("div");
+    searchBarSection.style.cssText = `
+      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+      border-radius:${styleSettings.borderRadius}px;
+      padding:7px 8px; margin-top:6px; display:flex;
+      flex-direction:column; gap:4px;
+    `;
+    const _sbsHeader = document.createElement("div");
+    _sbsHeader.textContent = "🔍 " + (t.searchBarStyleLabel || "搜尋列樣式");
+    _sbsHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
+    searchBarSection.appendChild(_sbsHeader);
+
+    const _sbsPresetRow = document.createElement("div");
+    _sbsPresetRow.style.cssText = rowCss();
+    const _sbsPresetLbl = document.createElement("label");
+    _sbsPresetLbl.textContent = t.searchBarPreset || "快速套色";
+    _sbsPresetLbl.style.cssText = labelCss();
+    _sbsPresetRow.appendChild(_sbsPresetLbl);
+    const _presetBtnWrap = document.createElement("div");
+    _presetBtnWrap.style.cssText = "display:flex;gap:4px;flex:1;justify-content:flex-end;";
+    const _sbsPresets = [
+      { icon:"↺",  title:"重置 / Reset",    bg:"",        bgOp:0,    fg:"" },
+      { icon:"🌑",  title:"暗底 / Dark BG",  bg:"#1a1a1a", bgOp:0.75, fg:"#eeeeee" },
+      { icon:"☀️",  title:"亮底 / Light BG", bg:"#ffffff", bgOp:0.85, fg:"#111111" },
+    ];
+    let _sbsBgInputRef, _sbsBgOpInputRef, _sbsBgOpSpanRef, _sbsFgInputRef;
+    _sbsPresets.forEach(p => {
+      const pb = document.createElement("button");
+      pb.textContent = p.icon;
+      pb.title = p.title;
+      pb.className = "icon-btn";
+      pb.style.cssText = `padding:2px 7px;border-radius:5px;font-size:12px;cursor:pointer;
+        background:${panelTheme==="dark"?"#4a4a4a":"#eee"};
+        border:1px solid ${panelTheme==="dark"?"#666":"#ccc"};color:inherit;`;
+      pb.onclick = () => {
+        styleSettings.searchBarBg        = p.bg;
+        styleSettings.searchBarBgOpacity = p.bgOp;
+        styleSettings.searchBarFg        = p.fg;
+        if (_sbsBgInputRef)   _sbsBgInputRef.value   = p.bg  || "#333333";
+        if (_sbsBgOpInputRef) _sbsBgOpInputRef.value  = p.bgOp;
+        if (_sbsBgOpSpanRef)  _sbsBgOpSpanRef.textContent = p.bgOp.toFixed(2);
+        if (_sbsFgInputRef)   _sbsFgInputRef.value    = p.fg  || "#eeeeee";
+        save(); applyTheme(panelTheme);
+      };
+      _presetBtnWrap.appendChild(pb);
+    });
+    _sbsPresetRow.appendChild(_presetBtnWrap);
+    searchBarSection.appendChild(_sbsPresetRow);
+
+    const _sbsBgRow = document.createElement("div");
+    _sbsBgRow.style.cssText = rowCss();
+    const _sbsBgLbl = document.createElement("label");
+    _sbsBgLbl.textContent = t.searchBarBgColor || "列背景色";
+    _sbsBgLbl.style.cssText = labelCss();
+    _sbsBgRow.appendChild(_sbsBgLbl);
+    const sbsBgInput = document.createElement("input");
+    sbsBgInput.type = "color";
+    sbsBgInput.value = styleSettings.searchBarBg || "#333333";
+    sbsBgInput.oninput = () => {
+      styleSettings.searchBarBg = sbsBgInput.value;
+      save(); _debouncedApply();
+    };
+    _sbsBgInputRef = sbsBgInput;
+    const _rb_sbsBg = makeResetBtn("", (dv) => {
+      sbsBgInput.value = dv || "#333333";
+      styleSettings.searchBarBg = dv;
+      save(); applyTheme(panelTheme);
+    });
+    _sbsBgRow.appendChild(sbsBgInput);
+    _sbsBgRow.appendChild(_rb_sbsBg);
+    searchBarSection.appendChild(_sbsBgRow);
+
+    const _sbsBgOpRow = document.createElement("div");
+    _sbsBgOpRow.style.cssText = rowCss();
+    const _sbsBgOpLbl = document.createElement("label");
+    _sbsBgOpLbl.textContent = t.searchBarBgOpacity || "列背景透明度";
+    _sbsBgOpLbl.style.cssText = labelCss();
+    _sbsBgOpRow.appendChild(_sbsBgOpLbl);
+    const sbsBgOpInput = document.createElement("input");
+    sbsBgOpInput.type = "range"; sbsBgOpInput.min = "0"; sbsBgOpInput.max = "1"; sbsBgOpInput.step = "0.05";
+    sbsBgOpInput.value = styleSettings.searchBarBgOpacity ?? 0;
+    sbsBgOpInput.style.cssText = sliderCss();
+    const sbsBgOpSpan = makeValueSpan(parseFloat(sbsBgOpInput.value).toFixed(2));
+    sbsBgOpInput.oninput = () => {
+      styleSettings.searchBarBgOpacity = parseFloat(sbsBgOpInput.value);
+      sbsBgOpSpan.textContent = styleSettings.searchBarBgOpacity.toFixed(2);
+      save(); _debouncedApply();
+    };
+    _sbsBgOpInputRef = sbsBgOpInput;
+    _sbsBgOpSpanRef  = sbsBgOpSpan;
+    const _rb_sbsBgOp = makeResetBtn(0, (dv) => {
+      sbsBgOpInput.value = dv;
+      sbsBgOpSpan.textContent = parseFloat(dv).toFixed(2);
+      styleSettings.searchBarBgOpacity = dv;
+      save(); applyTheme(panelTheme);
+    });
+    _sbsBgOpRow.appendChild(sbsBgOpInput);
+    _sbsBgOpRow.appendChild(sbsBgOpSpan);
+    _sbsBgOpRow.appendChild(_rb_sbsBgOp);
+    searchBarSection.appendChild(_sbsBgOpRow);
+
+    const _sbsFgRow = document.createElement("div");
+    _sbsFgRow.style.cssText = rowCss();
+    const _sbsFgLbl = document.createElement("label");
+    _sbsFgLbl.textContent = t.searchBarFgColor || "列文字顏色";
+    _sbsFgLbl.style.cssText = labelCss();
+    _sbsFgRow.appendChild(_sbsFgLbl);
+    const sbsFgInput = document.createElement("input");
+    sbsFgInput.type = "color";
+    sbsFgInput.value = styleSettings.searchBarFg || "#eeeeee";
+    sbsFgInput.oninput = () => {
+      styleSettings.searchBarFg = sbsFgInput.value;
+      save(); _debouncedApply();
+    };
+    _sbsFgInputRef = sbsFgInput;
+    const _rb_sbsFg = makeResetBtn("", (dv) => {
+      sbsFgInput.value = dv || "#eeeeee";
+      styleSettings.searchBarFg = dv;
+      save(); applyTheme(panelTheme);
+    });
+    _sbsFgRow.appendChild(sbsFgInput);
+    _sbsFgRow.appendChild(_rb_sbsFg);
+    searchBarSection.appendChild(_sbsFgRow);
+
+    const _sbsGlowToggleRow = document.createElement("div");
+    _sbsGlowToggleRow.style.cssText = rowCss() + "margin-top:4px;border-top:1px solid " +
+      (panelTheme === "dark" ? "#444" : "#eee") + ";padding-top:5px;";
+    const _sbsGlowToggleLbl = document.createElement("label");
+    _sbsGlowToggleLbl.textContent = t.searchBarGlowEnabled || "搜尋列光暈";
+    _sbsGlowToggleLbl.style.cssText = labelCss();
+    _sbsGlowToggleRow.appendChild(_sbsGlowToggleLbl);
+    const _sbsGlowToggle = document.createElement("input");
+    _sbsGlowToggle.type = "checkbox";
+    _sbsGlowToggle.checked = !!styleSettings.searchBarGlowEnabled;
+    _sbsGlowToggle.onchange = () => {
+      styleSettings.searchBarGlowEnabled = _sbsGlowToggle.checked;
+      save(); applyTheme(panelTheme);
+    };
+    _sbsGlowToggleRow.appendChild(_sbsGlowToggle);
+    searchBarSection.appendChild(_sbsGlowToggleRow);
+
+    const _sbsGlowColorRow = document.createElement("div");
+    _sbsGlowColorRow.style.cssText = rowCss();
+    const _sbsGlowColorLbl = document.createElement("label");
+    _sbsGlowColorLbl.textContent = t.searchBarGlowColor || "光暈顏色";
+    _sbsGlowColorLbl.style.cssText = labelCss();
+    _sbsGlowColorRow.appendChild(_sbsGlowColorLbl);
+    const _sbsGlowColorInput = document.createElement("input");
+    _sbsGlowColorInput.type = "color";
+    _sbsGlowColorInput.value = styleSettings.searchBarGlowColor || "#5599ff";
+    _sbsGlowColorInput.oninput = () => {
+      styleSettings.searchBarGlowColor = _sbsGlowColorInput.value;
+      save(); _debouncedApply();
+    };
+    const _rb_sbsGlowColor = makeResetBtn("#5599ff", (dv) => {
+      _sbsGlowColorInput.value = dv;
+      styleSettings.searchBarGlowColor = dv;
+      save(); applyTheme(panelTheme);
+    });
+    _sbsGlowColorRow.appendChild(_sbsGlowColorInput);
+    _sbsGlowColorRow.appendChild(_rb_sbsGlowColor);
+    searchBarSection.appendChild(_sbsGlowColorRow);
+
+    const _sbsGlowStrRow = document.createElement("div");
+    _sbsGlowStrRow.style.cssText = rowCss();
+    const _sbsGlowStrLbl = document.createElement("label");
+    _sbsGlowStrLbl.textContent = t.searchBarGlowStrength || "光暈強度";
+    _sbsGlowStrLbl.style.cssText = labelCss();
+    _sbsGlowStrRow.appendChild(_sbsGlowStrLbl);
+    const _sbsGlowStrInput = document.createElement("input");
+    _sbsGlowStrInput.type = "range"; _sbsGlowStrInput.min = "2"; _sbsGlowStrInput.max = "16"; _sbsGlowStrInput.step = "1";
+    _sbsGlowStrInput.value = styleSettings.searchBarGlowStrength || 6;
+    _sbsGlowStrInput.style.cssText = sliderCss();
+    const _vs_sbsGlowStr = makeValueSpan(_sbsGlowStrInput.value + "px");
+    _sbsGlowStrInput.oninput = () => {
+      styleSettings.searchBarGlowStrength = parseInt(_sbsGlowStrInput.value);
+      _vs_sbsGlowStr.textContent = _sbsGlowStrInput.value + "px";
+      save(); _debouncedApply();
+    };
+    const _rb_sbsGlowStr = makeResetBtn(6, (dv) => {
+      _sbsGlowStrInput.value = dv;
+      _vs_sbsGlowStr.textContent = dv + "px";
+      styleSettings.searchBarGlowStrength = dv;
+      save(); applyTheme(panelTheme);
+    });
+    _sbsGlowStrRow.appendChild(_sbsGlowStrInput);
+    _sbsGlowStrRow.appendChild(_vs_sbsGlowStr);
+    _sbsGlowStrRow.appendChild(_rb_sbsGlowStr);
+    searchBarSection.appendChild(_sbsGlowStrRow);
+
+    generalStyleContainer.appendChild(searchBarSection);
     const toggleBtnStyleContainer = document.createElement("div");
     toggleBtnStyleContainer.style.cssText = `
       border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
@@ -7678,7 +8800,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     fontSizeInput.oninput = () => {
       styleSettings.fontSize = parseInt(fontSizeInput.value);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_fontSizeInput.textContent = fontSizeInput.value+"px";
     };
     const _vs_fontSizeInput = makeValueSpan(fontSizeInput.value+"px");
@@ -7709,7 +8831,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     textBackgroundColorInput.oninput = () => {
       styleSettings.textBackgroundColor = textBackgroundColorInput.value;
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
     };
     textBackgroundColorRow.appendChild(textBackgroundColorInput);
     textStyleContainer.appendChild(textBackgroundColorRow);
@@ -7760,7 +8882,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         textOpacityCompensationInput.value,
       );
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_textOpacityCompensationInput.textContent = parseFloat(textOpacityCompensationInput.value).toFixed(1);
     };
     const _vs_textOpacityCompensationInput = makeValueSpan(parseFloat(textOpacityCompensationInput.value).toFixed(1));
@@ -7833,7 +8955,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     overlayStrengthInput.oninput = () => {
       styleSettings.overlayStrength = parseFloat(overlayStrengthInput.value);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_overlayStrengthInput.textContent = parseFloat(overlayStrengthInput.value).toFixed(1);
     };
     const _vs_overlayStrengthInput = makeValueSpan(parseFloat(overlayStrengthInput.value).toFixed(1));
@@ -7940,7 +9062,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.imageOffsetX = parseInt(imageOffsetXInput.value);
       log("X Offset updated:", styleSettings.imageOffsetX);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_imageOffsetXInput.textContent = imageOffsetXInput.value+"px";
     };
     const _vs_imageOffsetXInput = makeValueSpan(imageOffsetXInput.value+"px");
@@ -7973,7 +9095,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.imageOffsetY = parseInt(imageOffsetYInput.value);
       log("Y Offset updated:", styleSettings.imageOffsetY);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_imageOffsetYInput.textContent = imageOffsetYInput.value+"px";
     };
     const _vs_imageOffsetYInput = makeValueSpan(imageOffsetYInput.value+"px");
@@ -8007,7 +9129,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageScaleInput.oninput = () => {
       styleSettings.imageScale = parseFloat(imageScaleInput.value);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_imageScaleInput.textContent = parseFloat(imageScaleInput.value).toFixed(1)+"x";
     };
     const _vs_imageScaleInput = makeValueSpan(parseFloat(imageScaleInput.value).toFixed(1)+"x");
@@ -8040,7 +9162,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageOpacityInput.oninput = () => {
       styleSettings.imageOpacity = parseFloat(imageOpacityInput.value);
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
       _vs_imageOpacityInput.textContent = parseFloat(imageOpacityInput.value).toFixed(1);
     };
     const _vs_imageOpacityInput = makeValueSpan(parseFloat(imageOpacityInput.value).toFixed(1));
@@ -8125,7 +9247,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     customThemeContainer.style.maxWidth = "490px";
 
     const customThemeHeader = document.createElement("div");
-    customThemeHeader.textContent = t.customBackgroundColor || "自訂主題";
+    customThemeHeader.textContent = t.customThemeLabel || "Custom Theme";
     customThemeHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
     customThemeContainer.appendChild(customThemeHeader);
 
@@ -8143,7 +9265,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     backgroundColorInput.oninput = () => {
       styleSettings.customBackgroundColor = backgroundColorInput.value;
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
     };
     backgroundColorRow.appendChild(backgroundColorInput);
     customThemeContainer.appendChild(backgroundColorRow);
@@ -8162,7 +9284,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     textColorInput.oninput = () => {
       styleSettings.customTextColor = textColorInput.value;
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
     };
     textColorRow.appendChild(textColorInput);
     customThemeContainer.appendChild(textColorRow);
@@ -8182,7 +9304,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     buttonBgInput.oninput = () => {
       styleSettings.customButtonBg = buttonBgInput.value;
       save();
-      applyTheme(panelTheme);
+      _debouncedApply();
     };
     buttonBgRow.appendChild(buttonBgInput);
     customThemeContainer.appendChild(buttonBgRow);
@@ -8195,6 +9317,213 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     styleConfigContent.appendChild(multiSelectContainer);
     styleConfigContent.appendChild(customThemeContainer);
 
+    {
+      const _hc = panelTheme === "dark"
+        ? "rgba(80,180,255,0.85)"
+        : "rgba(30,140,240,0.75)";
+      const _DASHED = `2px dashed ${_hc}`;
+      const _NONE   = "";
+
+      function _hlSet(selectors, on) {
+        const p = document.getElementById("site-group-panel");
+        if (!p) return;
+        selectors.forEach(sel => {
+          p.querySelectorAll(sel).forEach(el => {
+            el.style.outline       = on ? _DASHED : _NONE;
+            el.style.outlineOffset = on ? "2px"   : _NONE;
+          });
+        });
+      }
+
+      function _hlEls(els, on) {
+        els.forEach(el => {
+          if (!el) return;
+          el.style.outline       = on ? _DASHED : _NONE;
+          el.style.outlineOffset = on ? "2px"   : _NONE;
+        });
+      }
+
+      function _hlPanel(on) {
+        const p = document.getElementById("site-group-panel");
+        if (!p) return;
+        p.style.outline       = on ? _DASHED : _NONE;
+        p.style.outlineOffset = on ? "3px"   : _NONE;
+      }
+
+      function _bind(el, onEnter, onLeave) {
+        if (!el) return;
+        el.style.cursor = "default";
+        el.addEventListener("mouseenter", onEnter);
+        el.addEventListener("mouseleave", onLeave);
+      }
+
+      _bind(panelLayoutHeader,
+        () => _hlPanel(true),
+        () => _hlPanel(false)
+      );
+
+      _bind(generalStyleHeader,
+        () => _hlSet([".group-block", "button:not(.icon-btn)"], true),
+        () => _hlSet([".group-block", "button:not(.icon-btn)"], false)
+      );
+
+      _bind(_qsHeader,
+        () => { _hlPanel(true); _hlSearchBar(true); },
+        () => { _hlPanel(false); _hlSearchBar(false); }
+      );
+
+      _bind(glowHeader,
+        () => _hlPanel(true),
+        () => _hlPanel(false)
+      );
+
+      _bind(_tbsHeader,
+        () => _hlEls([document.getElementById("site-toggle-simple")], true),
+        () => _hlEls([document.getElementById("site-toggle-simple")], false)
+      );
+
+      _bind(textStyleHeader,
+        () => _hlSet([".site-label", ".group-name"], true),
+        () => _hlSet([".site-label", ".group-name"], false)
+      );
+
+      _bind(backgroundOverlayHeader,
+        () => _hlPanel(true),
+        () => _hlPanel(false)
+      );
+
+      _bind(multiSelectHeader,
+        () => _hlSet([".multi-btn", ".multi-send-btn"], true),
+        () => _hlSet([".multi-btn", ".multi-send-btn"], false)
+      );
+
+      _bind(customThemeHeader,
+        () => _hlSet([".group-block", ".draggable-site"], true),
+        () => _hlSet([".group-block", ".draggable-site"], false)
+      );
+
+      _bind(borderRadiusLabel,
+        () => _hlSet([".group-block", ".draggable-site"], true),
+        () => _hlSet([".group-block", ".draggable-site"], false)
+      );
+
+      _bind(contrastLabel,
+        () => _hlSet(["button:not(.icon-btn)", ".draggable-site"], true),
+        () => _hlSet(["button:not(.icon-btn)", ".draggable-site"], false)
+      );
+
+      _bind(opacityLabel,
+        () => _hlPanel(true),
+        () => _hlPanel(false)
+      );
+
+      _bind(groupOpacityLabel,
+        () => _hlSet([".group-block"], true),
+        () => _hlSet([".group-block"], false)
+      );
+
+      _bind(buttonOpacityLabel,
+        () => _hlSet([".draggable-site", "button:not(.icon-btn)"], true),
+        () => _hlSet([".draggable-site", "button:not(.icon-btn)"], false)
+      );
+
+      _bind(siteButtonWidthLabel,
+        () => _hlSet([".draggable-site"], true),
+        () => _hlSet([".draggable-site"], false)
+      );
+
+      _bind(panelBgColorLabel,  () => _hlPanel(true), () => _hlPanel(false));
+      _bind(panelBgAlphaLabel,  () => _hlPanel(true), () => _hlPanel(false));
+
+      _bind(glowToggleLbl,  () => _hlPanel(true), () => _hlPanel(false));
+      _bind(glowColorLbl,   () => _hlPanel(true), () => _hlPanel(false));
+      _bind(glowStrLbl,     () => _hlPanel(true), () => _hlPanel(false));
+      _bind(glowInsetLbl,   () => _hlPanel(true), () => _hlPanel(false));
+      _bind(sheenToggleLbl, () => _hlPanel(true), () => _hlPanel(false));
+      _bind(sheenAngleLbl,  () => _hlPanel(true), () => _hlPanel(false));
+      _bind(sheenOpLbl,     () => _hlPanel(true), () => _hlPanel(false));
+
+      _bind(siteGlowLbl,
+        () => _hlSet([".draggable-site"], true),
+        () => _hlSet([".draggable-site"], false)
+      );
+      _bind(groupGlowLbl,
+        () => _hlSet([".group-block"], true),
+        () => _hlSet([".group-block"], false)
+      );
+
+      toggleBtnStyleContainer.querySelectorAll("label").forEach(lbl => {
+        _bind(lbl,
+          () => _hlEls([document.getElementById("site-toggle-simple")], true),
+          () => _hlEls([document.getElementById("site-toggle-simple")], false)
+        );
+      });
+
+      _bind(fontSizeLabel,
+        () => _hlSet([".site-label", ".group-name"], true),
+        () => _hlSet([".site-label", ".group-name"], false)
+      );
+      _bind(textBackgroundColorLabel,
+        () => _hlSet([".site-label"], true),
+        () => _hlSet([".site-label"], false)
+      );
+      _bind(textBorderLabel,
+        () => _hlSet([".site-label", ".group-name"], true),
+        () => _hlSet([".site-label", ".group-name"], false)
+      );
+      _bind(textOpacityCompensationLabel,
+        () => _hlSet([".site-label", ".group-name"], true),
+        () => _hlSet([".site-label", ".group-name"], false)
+      );
+
+      _bind(overlayDarkeningLabel,  () => _hlPanel(true), () => _hlPanel(false));
+      _bind(overlayStrengthLabel,   () => _hlPanel(true), () => _hlPanel(false));
+
+      _bind(imageLabel,        () => _hlPanel(true), () => _hlPanel(false));
+      _bind(imageModeLabel,    () => _hlPanel(true), () => _hlPanel(false));
+      _bind(imageOffsetXLabel, () => _hlPanel(true), () => _hlPanel(false));
+      _bind(imageOffsetYLabel, () => _hlPanel(true), () => _hlPanel(false));
+      _bind(imageScaleLabel,   () => _hlPanel(true), () => _hlPanel(false));
+      _bind(imageOpacityLabel, () => _hlPanel(true), () => _hlPanel(false));
+
+      _bind(msColorLabel,
+        () => _hlSet([".multi-btn", ".multi-send-btn"], true),
+        () => _hlSet([".multi-btn", ".multi-send-btn"], false)
+      );
+      _bind(msOpacityLabel,
+        () => _hlSet([".multi-btn", ".multi-send-btn"], true),
+        () => _hlSet([".multi-btn", ".multi-send-btn"], false)
+      );
+
+      _bind(backgroundColorLabel,
+        () => _hlPanel(true),
+        () => _hlPanel(false)
+      );
+      _bind(textColorLabel,
+        () => _hlSet([".site-label", ".group-name"], true),
+        () => _hlSet([".site-label", ".group-name"], false)
+      );
+      _bind(buttonBgLabel,
+        () => _hlSet([".draggable-site", "button:not(.icon-btn)"], true),
+        () => _hlSet([".draggable-site", "button:not(.icon-btn)"], false)
+      );
+
+      function _hlSearchBar(on) {
+        const _scw = document.getElementById("search-config-wrap");
+        if (!_scw) return;
+        _scw.style.outline       = on ? _DASHED : _NONE;
+        _scw.style.outlineOffset = on ? "3px"   : _NONE;
+      }
+      _bind(_sbsHeader,
+        () => _hlSearchBar(true),
+        () => _hlSearchBar(false)
+      );
+      [_sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
+       _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl].forEach(lbl => {
+        _bind(lbl, () => _hlSearchBar(true), () => _hlSearchBar(false));
+      });
+    }
+
     if (document.getElementById("style-config-wrap")) {
       document.getElementById("style-config-wrap").remove();
     }
@@ -8204,8 +9533,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       requestAnimationFrame(() => _positionStyleFloat(styleConfigWrap));
     }
 
-    panel.appendChild(searchConfigWrap);
-    initSearchConfigCollapse();
+    panelBody.insertBefore(searchConfigWrap, groupSlot);
+    panelBody.insertBefore(buttonContainer,  groupSlot);
 
     panel.addEventListener("dragover", (e) => {
       e.preventDefault();
@@ -8266,6 +9595,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     });
 
     document.body.appendChild(panel);
+    initSearchConfigCollapse();
     renderSites(panel);
 
     try {
