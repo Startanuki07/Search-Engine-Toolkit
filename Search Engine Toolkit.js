@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @namespace    https://github.com/Startanuki07
-// @version      2.0.0
+// @version      2.0.1
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -4193,21 +4193,23 @@
       if (!siteContainer.__delegationBound) {
         siteContainer.__delegationBound = true;
 
-        siteContainer.addEventListener("mouseenter", (e) => {
+        siteContainer.addEventListener("mouseover", (e) => {
           const b = e.target.closest(".draggable-site");
           if (!b) return;
+          if (b.contains(e.relatedTarget)) return;
           const bg = b.dataset.baseBg || "";
           if (bg) b.style.background = adjustColor(bg, 10);
-        }, true);
+        });
 
-        siteContainer.addEventListener("mouseleave", (e) => {
+        siteContainer.addEventListener("mouseout", (e) => {
           const b = e.target.closest(".draggable-site");
           if (!b) return;
+          if (b.contains(e.relatedTarget)) return;
           const bg = b.dataset.baseBg || "";
           if (bg) b.style.background = bg;
           b.style.transform  = "translateY(0)";
           b.style.boxShadow  = "0 1px 2px rgba(0,0,0,0.15)";
-        }, true);
+        });
 
         siteContainer.addEventListener("mousedown", (e) => {
           const b = e.target.closest(".draggable-site");
@@ -7058,6 +7060,53 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     if (_lastSeg) _lastSeg.style.borderRight = "none";
 
     timeFilterRow.appendChild(segWrap);
+
+    {
+      const _yearExtOptions = TIME_OPTIONS.filter(o => /^y[2-9]$/.test(o.value));
+      if (_yearExtOptions.length > 0) {
+        const _yearSel = document.createElement("select");
+        _yearSel.title = "2–9 years";
+        _yearSel.style.cssText = `
+          flex-shrink:0; font-size:10px; padding:3px 4px;
+          border:1px solid ${_segBorder}; border-radius:7px;
+          background:${_segBg}; color:inherit; cursor:pointer;
+          opacity:${_tsEngine ? "1" : "0.45"};
+          pointer-events:${_tsEngine ? "auto" : "none"};
+        `;
+
+        const _ph = document.createElement("option");
+        _ph.value = "";
+        _ph.textContent = "2y+";
+        _ph.disabled = true;
+        _yearSel.appendChild(_ph);
+
+        _yearExtOptions.forEach(({ label, value }) => {
+          const opt = document.createElement("option");
+          opt.value = value;
+          opt.textContent = label;
+          _yearSel.appendChild(opt);
+        });
+
+        _yearSel.value = /^y[2-9]$/.test(_initTimeVal) ? _initTimeVal : "";
+
+        _yearSel.addEventListener("change", (e) => {
+          if (!_tsEngine) return;
+          const val = e.target.value;
+          if (!val) return;
+          segWrap.querySelectorAll(".seg-time-btn").forEach(b => {
+            b.style.background = "transparent";
+            b.style.fontWeight = "400";
+          });
+          customDateRow.style.display = "none";
+          applyTimeFilter(val);
+        });
+
+        segWrap.addEventListener("click", () => { _yearSel.value = ""; });
+
+        timeFilterRow.appendChild(_yearSel);
+      }
+    }
+
     timeFilterRow.style.flexWrap = "wrap";
     timeFilterRow.appendChild(customDateRow);
 
@@ -7839,7 +7888,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _qsContainer.style.cssText = `
         border:1px solid ${_qsDark ? "#555" : "#ccc"};
         border-radius:${styleSettings.borderRadius}px;
-        padding:6px 8px; display:flex; flex-direction:column; gap:4px; margin-top:0;
+        padding:6px 8px; display:none; flex-direction:column; gap:4px; margin-top:0;
       `;
       _qsHeader = document.createElement("div");
       _qsHeader.textContent = t.quickSchemeLabel || "🎨 Quick Scheme";
