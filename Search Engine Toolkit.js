@@ -5,8 +5,8 @@
 // @name:ja      マルチエンジン検索ツール — サイトグループ、時間フィルター、検索パネル
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
-// @namespace    https://github.com/Startanuki07
-// @version      2.0.1
+// @homepageURL  https://github.com/Startanuki07
+// @version      2.1.0
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -170,6 +170,14 @@
       seBarOffsetLabel: "Raise Engine Bar (+50px)",
       hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
       hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
+      hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
+      hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
+      hideExportBtnLabel: "Hide 📤 Export Button",
+      hideImportBtnLabel: "Hide 📥 Import Button",
+      hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
+      hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
+      hideExportBtnLabel: "Hide 📤 Export Button",
+      hideImportBtnLabel: "Hide 📥 Import Button",
       toggleBtnStyleLabel:    "Toggle Button Style",
       toggleBtnIconLabel:     "Icon",
       toggleBtnIconEmoji:     "🔍 Emoji",
@@ -342,6 +350,10 @@
         "Searches within example.com",
       ]),
       timeUnsupported: "⚠️ Time filter is not supported on this search engine",
+      unknownQueryParam: "⚠️ Cannot detect query parameter for this engine",
+      dateFormatError: "⚠️ Invalid date format, use YYYY-MM-DD",
+      resizeHandle: "Drag to resize",
+      resetToDefault: "Reset to Default",
     },
     zh_TW: {
       siteTitle: "站台群組",
@@ -429,6 +441,10 @@
       seBarOffsetLabel: "引擎列上移 50px",
       hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
       hideBlacklistBtnLabel: "隱藏 🚫 黑名單按鈕",
+      hideAddGroupBtnLabel: "隱藏 ➕ 新增群組按鈕",
+      hideAddressToggleBtnLabel: "隱藏 🔁 顯示/隱藏網址按鈕",
+      hideExportBtnLabel: "隱藏 📤 匯出按鈕",
+      hideImportBtnLabel: "隱藏 📥 匯入按鈕",
       toggleBtnStyleLabel:    "開關按鈕樣式",
       toggleBtnIconLabel:     "圖示",
       toggleBtnIconEmoji:     "🔍 Emoji",
@@ -547,7 +563,7 @@
         finish: "知道了！",
       },
       se: {
-        panelTitle: "搜尋引擎管理",
+        panelTitle: "t.panelTitle || \"Search Engine Manager\"",
         helpTooltip:
           "使用說明：所有引擎在同一列表中。\n• 排在第 1–5 位的引擎會在頂部列顯示為快速圖示。\n• 拖曳 ⠿ 調整順序——移到前 5 個就會顯示為頂部圖示。\n• 點擊 → 可用目前關鍵字跳轉。\n• 點擊 ✕ 刪除引擎。",
         lockLabel: "🔒 鎖定引擎提示",
@@ -578,9 +594,9 @@
         newWindowBtn: "⧉",
         newWindowTitle: "在新視窗開啟",
         dpTitle: {
-          pinned: "面板永遠顯示（已固定）\n點擊可切換",
-          on: "預設開啟面板（ON）\n點擊可切換",
-          off: "預設關閉面板（OFF）\n點擊可切換",
+          pinned: "Panel always visible (Pinned)\nClick to change",
+          on: "Panel opens by default (ON)\nClick to change",
+          off: "Panel closed by default (OFF)\nClick to change",
           offToast: "⛔ OFF — 面板目前仍開著，點擊 🔍 或面板外側可關閉。",
         },
       },
@@ -597,6 +613,10 @@
         ["inurl:登入","intitle:指南","filetype:pdf","intext:隱私","-關鍵字","site:example.com"]
       ),
       timeUnsupported: "⚠️ 此搜尋引擎不支援時間篩選",
+      unknownQueryParam: "⚠️ 無法識別此引擎的查詢參數",
+      dateFormatError: "⚠️ 日期格式錯誤，請使用 YYYY-MM-DD",
+      resizeHandle: "拖曳調整大小",
+      resetToDefault: "重置為預設值",
     },
     zh_CN: {
       siteTitle: "站点群组",
@@ -684,6 +704,10 @@
       seBarOffsetLabel: "引擎列上移 50px",
       hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
       hideBlacklistBtnLabel: "隱藏 🚫 黑名单按钮",
+      hideAddGroupBtnLabel: "隐藏 ➕ 新增分组按钮",
+      hideAddressToggleBtnLabel: "隐藏 🔁 显示/隐藏网址按钮",
+      hideExportBtnLabel: "隐藏 📤 导出按钮",
+      hideImportBtnLabel: "隐藏 📥 导入按钮",
       toggleBtnStyleLabel:    "开关按钮样式",
       toggleBtnIconLabel:     "图标",
       toggleBtnIconEmoji:     "🔍 Emoji",
@@ -852,6 +876,10 @@
         ["inurl:登录","intitle:指南","filetype:pdf","intext:隐私","-关键字","site:example.com"]
       ),
       timeUnsupported: "⚠️ 此搜索引擎不支持时间筛选",
+      unknownQueryParam: "⚠️ 无法识别此引擎的查询参数",
+      dateFormatError: "⚠️ 日期格式错误，请使用 YYYY-MM-DD",
+      resizeHandle: "拖曳调整大小",
+      resetToDefault: "重置为默认值",
     },
     ja: {
       siteTitle: "ｻｲﾄｸﾞﾙｰﾌﾟ",
@@ -940,6 +968,10 @@
       seBarOffsetLabel: "ｴﾝｼﾞﾝ列+50px上移",
       hideSyntaxBtnLabel: "📖 構文ﾍﾙﾌﾟを非表示",
       hideBlacklistBtnLabel: "🚫 除外域ﾎﾞﾀﾝを非表示",
+      hideAddGroupBtnLabel: "➕ ｸﾞﾙｰﾌﾟ追加ﾎﾞﾀﾝを非表示",
+      hideAddressToggleBtnLabel: "🔁 ｱﾄﾞﾚｽ切替ﾎﾞﾀﾝを非表示",
+      hideExportBtnLabel: "📤 ｴｸｽﾎﾟｰﾄﾎﾞﾀﾝを非表示",
+      hideImportBtnLabel: "📥 ｲﾝﾎﾟｰﾄﾎﾞﾀﾝを非表示",
       toggleBtnStyleLabel:    "ﾄｸﾞﾙﾎﾞﾀﾝｽﾀｲﾙ",
       toggleBtnIconLabel:     "ｱｲｺﾝ",
       toggleBtnIconEmoji:     "🔍 Emoji",
@@ -1109,6 +1141,10 @@
         ["inurl:ﾛｸﾞｲﾝ","intitle:ｶﾞｲﾄﾞ","filetype:pdf","intext:ﾌﾟﾗｲﾊﾞｼｰ","-ｷｰﾜｰﾄﾞ","site:example.com"]
       ),
       timeUnsupported: "⚠️ この検索エンジンは時間ﾌｨﾙﾀｰに対応していません",
+      unknownQueryParam: "⚠️ このエンジンのクエリパラメータを検出できません",
+      dateFormatError: "⚠️ 日付形式が正しくありません。YYYY-MM-DDを使用してください",
+      resizeHandle: "ドラッグしてサイズ変更",
+      resetToDefault: "デフォルトにリセット",
     },
     ko: {
       siteTitle: "사이트 그룹",
@@ -1196,6 +1232,10 @@
       seBarOffsetLabel: "엔진 바 +50px 위로",
       hideSyntaxBtnLabel: "📖 문법 도움말 숨기기",
       hideBlacklistBtnLabel: "🚫 차단목록 버튼 숨기기",
+      hideAddGroupBtnLabel: "➕ 그룹 추가 버튼 숨기기",
+      hideAddressToggleBtnLabel: "🔁 주소 토글 버튼 숨기기",
+      hideExportBtnLabel: "📤 내보내기 버튼 숨기기",
+      hideImportBtnLabel: "📥 가져오기 버튼 숨기기",
       toggleBtnStyleLabel:    "토글 버튼 스타일",
       toggleBtnIconLabel:     "아이콘",
       toggleBtnIconEmoji:     "🔍 Emoji",
@@ -1364,6 +1404,10 @@
         ["inurl:login","intitle:가이드","filetype:pdf","intext:개인정보","-키워드","site:example.com"]
       ),
       timeUnsupported: "⚠️ 이 검색 엔진은 시간 필터를 지원하지 않습니다",
+      unknownQueryParam: "⚠️ 이 엔진의 쿼리 파라미터를 감지할 수 없습니다",
+      dateFormatError: "⚠️ 날짜 형식이 잘못되었습니다. YYYY-MM-DD를 사용하세요",
+      resizeHandle: "드래그하여 크기 조정",
+      resetToDefault: "기본값으로 재설정",
     },
   };
 
@@ -1390,6 +1434,10 @@
     timeLabel: "🕐 Time Filter",
     unlimited: "Unlimited",
     timeUnsupported: "⚠️ Time filter is not supported on this search engine",
+    unknownQueryParam: "⚠️ Cannot detect query parameter for this engine",
+    dateFormatError: "⚠️ Invalid date format, use YYYY-MM-DD",
+    resizeHandle: "Drag to resize",
+    resetToDefault: "Reset to Default",
     expand: "🎨Expand",
     collapse: "Collapse",
     toggleShow: "Show Addresses",
@@ -2012,7 +2060,7 @@
     const kw = se_extractKeyword();
     const st = t.se || {};
     if (!kw) {
-      showToast(st.noKeyword || "無法取得搜尋關鍵字");
+      showToast(st.noKeyword || "Cannot extract search keyword");
       return;
     }
     if (isImageSearchPage()) {
@@ -2112,6 +2160,10 @@
       siteButtonWidth: 0,
       hideSyntaxBtn: false,
       hideBlacklistBtn: false,
+      hideAddGroupBtn: false,
+      hideAddressToggleBtn: false,
+      hideExportBtn: false,
+      hideImportBtn: false,
       iconStyle: "emoji",
       toggleBtnBg: "",
       toggleBtnBgOpacity: 0,
@@ -2167,13 +2219,133 @@
 
   }
 
-  {
-    let _applyTimer = null;
-    window._debouncedApply = function () {
-      clearTimeout(_applyTimer);
-      _applyTimer = setTimeout(() => applyTheme(panelTheme), 16);
-    };
+  let _applyTimer = null;
+  function _debouncedApply() {
+    clearTimeout(_applyTimer);
+    _applyTimer = setTimeout(() => applyTheme(panelTheme), 16);
   }
+
+  let _shiftDeleteMode  = false;
+  let _panelHovered     = false;
+  let _shiftDeleteNoticedOnce = GM_getValue("shiftDeleteNoticedOnce", false);
+
+  function _enterDelMode(delEl) {
+    if (delEl.dataset.sdOrigHtml !== undefined) return;
+    delEl.dataset.sdOrigHtml     = delEl.innerHTML;
+    delEl.dataset.sdOrigFontSize = delEl.style.fontSize;
+    delEl.dataset.sdOrigTitle    = delEl.title;
+    delEl.style.fontSize = "";
+    delEl.textContent = "❌";
+    delEl.title = "Click to delete";
+    delEl.style.opacity = "0.85";
+  }
+
+  function _exitDelMode(delEl) {
+    if (delEl.dataset.sdOrigHtml === undefined) return;
+    delEl.innerHTML   = delEl.dataset.sdOrigHtml;
+    delEl.style.fontSize = delEl.dataset.sdOrigFontSize;
+    delEl.title       = delEl.dataset.sdOrigTitle;
+    delEl.style.opacity = "0.4";
+    delete delEl.dataset.sdOrigHtml;
+    delete delEl.dataset.sdOrigFontSize;
+    delete delEl.dataset.sdOrigTitle;
+  }
+
+  function _applyShiftDeleteMode(enable) {
+    const panel = document.getElementById("site-group-panel");
+    if (!panel) return;
+    const anyMultiSelect = panel.querySelector(".group-block[data-multi-select-active='true']");
+    if (anyMultiSelect) return;
+    panel.querySelectorAll(".site-del").forEach(enable ? _enterDelMode : _exitDelMode);
+  }
+
+  function _showShiftDeleteNotice(onConfirm) {
+    if (_shiftDeleteNoticedOnce) { onConfirm(); return; }
+    const isDark   = panelTheme === "dark";
+    const bg       = styleSettings.customBackgroundColor || (isDark ? "#2a2a2a" : "#fff");
+    const fg       = styleSettings.textColor             || (isDark ? "#eee"    : "#222");
+    const border   = isDark ? "#444" : "#ddd";
+    const accent   = "#d94040";
+
+    const overlay = document.createElement("div");
+    overlay.style.cssText = `
+      position:fixed; inset:0; z-index:2147483665;
+      background:rgba(0,0,0,${isDark ? "0.65" : "0.45"});
+      display:flex; align-items:center; justify-content:center;
+    `;
+
+    const card = document.createElement("div");
+    Object.assign(card.style, {
+      background: bg, color: fg,
+      border: `1px solid ${border}`,
+      borderRadius: "12px",
+      boxShadow: `0 10px 36px rgba(0,0,0,${isDark ? "0.6" : "0.22"})`,
+      padding: "22px 24px 18px",
+      minWidth: "280px", maxWidth: "340px",
+      fontFamily: "sans-serif",
+      fontSize: (styleSettings.fontSize || 12) + "px",
+    });
+
+    const title = document.createElement("div");
+    title.textContent = "⚠️ Shift + Delete Mode";
+    Object.assign(title.style, {
+      fontWeight: "600", fontSize: "14px", marginBottom: "10px", color: accent,
+    });
+
+    const body = document.createElement("div");
+    body.textContent =
+      "While holding Shift with your cursor over the panel, all ⋯ buttons turn into ❌. " +
+      "Clicking ❌ will immediately delete that site (an Undo bar will appear).";
+    body.style.cssText = "line-height:1.55; margin-bottom:14px;";
+
+    const chkRow = document.createElement("label");
+    chkRow.style.cssText = "display:flex; align-items:center; gap:7px; cursor:pointer; margin-bottom:16px; font-size:11px; opacity:0.8;";
+    const chk = document.createElement("input");
+    chk.type = "checkbox";
+    chk.style.cursor = "pointer";
+    chkRow.appendChild(chk);
+    chkRow.appendChild(document.createTextNode("Don't show this again"));
+
+    const okBtn = document.createElement("button");
+    okBtn.textContent = "Got it";
+    Object.assign(okBtn.style, {
+      display: "block", width: "100%",
+      padding: "8px 0", borderRadius: "7px",
+      border: "none", background: accent, color: "#fff",
+      fontWeight: "600", fontSize: "13px", cursor: "pointer",
+    });
+    okBtn.addEventListener("click", () => {
+      if (chk.checked) {
+        _shiftDeleteNoticedOnce = true;
+        GM_setValue("shiftDeleteNoticedOnce", true);
+      }
+      overlay.remove();
+      onConfirm();
+    });
+
+    card.appendChild(title);
+    card.appendChild(body);
+    card.appendChild(chkRow);
+    card.appendChild(okBtn);
+    overlay.appendChild(card);
+
+    document.body.appendChild(overlay);
+    okBtn.focus();
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Shift" || _shiftDeleteMode) return;
+    if (!_panelHovered) return;
+    if (isPromptActive) return;
+    _shiftDeleteMode = true;
+    _applyShiftDeleteMode(true);
+  });
+
+  document.addEventListener("keyup", (e) => {
+    if (e.key !== "Shift" || !_shiftDeleteMode) return;
+    _shiftDeleteMode = false;
+    _applyShiftDeleteMode(false);
+  });
 
   function showPanel(panel) {
     if (!panel) return;
@@ -2511,7 +2683,7 @@
     const engine = getTimeFilterEngine();
     if (!engine) {
       if (val) {
-        showToast(t.timeUnsupported || "⚠️ 此搜尋引擎不支援時間篩選", 2500);
+        showToast(t.timeUnsupported || "⚠️ Time filter is not supported on this search engine", 2500);
       }
       return;
     }
@@ -2622,7 +2794,7 @@
     hideInput = false,
   ) {
     if (window.__customPromptOpen) {
-      log("提示框已在顯示，忽略新的提示請求");
+      log("[Prompt] Another prompt is already active, ignoring new request");
       return;
     }
 
@@ -2702,7 +2874,7 @@
     const confirmBtn = document.createElement("button");
     confirmBtn.className = "custom-prompt-confirm";
     confirmBtn.textContent =
-      typeof t !== "undefined" && t.confirm ? t.confirm : "確認";
+      typeof t !== "undefined" && t.confirm ? t.confirm : "Confirm";
     Object.assign(confirmBtn.style, {
       padding: "4px 12px",
       borderRadius: radius + "px",
@@ -2715,7 +2887,7 @@
     const cancelBtn = document.createElement("button");
     cancelBtn.className = "custom-prompt-cancel";
     cancelBtn.textContent =
-      typeof t !== "undefined" && t.cancel ? t.cancel : "取消";
+      typeof t !== "undefined" && t.cancel ? t.cancel : "Cancel";
     Object.assign(cancelBtn.style, {
       padding: "4px 12px",
       borderRadius: radius + "px",
@@ -2750,13 +2922,13 @@
         showToast(t.emptyInput || "Input cannot be empty!");
         return;
       }
-      log("提示框關閉，輸入值：", raw);
+      log("[Prompt] Closed, value:", raw);
       cleanup();
       if (typeof onConfirm === "function") onConfirm(raw);
     }
 
     function doCancel() {
-      log("提示框因點擊外部或取消按鈕關閉");
+      log("[Prompt] Dismissed by outside click or cancel");
       cleanup();
       if (typeof onCancel === "function") onCancel();
     }
@@ -3567,7 +3739,7 @@
       let sendBtn  = multiPill.querySelector(".multi-send-btn");
 
       if (!multiBtn) {
-        multiBtn = mkPillBtn("☑", t.multiSelectMode || "複選");
+        multiBtn = mkPillBtn("☑", t.multiSelectMode || "Multi-select");
         multiBtn.className += " multi-btn";
         multiPill.appendChild(multiBtn);
 
@@ -3576,7 +3748,7 @@
         pillSep.className = "multi-pill-sep";
         multiPill.appendChild(pillSep);
 
-        sendBtn = mkPillBtn("↗", t.multiSelectSend || "開啟已選");
+        sendBtn = mkPillBtn("↗", t.multiSelectSend || "Open selected");
         sendBtn.className += " multi-send-btn";
         sendBtn.style.display = "none";
         sendBtn.style.color = "#e08000";
@@ -3631,7 +3803,7 @@
 
       let editBtn = rightContainer.querySelector(".edit-btn");
       if (!editBtn) {
-        editBtn = mkIconBtn("✎", t.enterGroupName || "重新命名");
+        editBtn = mkIconBtn("✎", t.editGroup || "Rename ✏️");
         editBtn.className += " edit-btn";
         rightContainer.appendChild(editBtn);
         rightContainer.appendChild(mkSep());
@@ -3657,7 +3829,7 @@
 
       let addSiteBtnInline = rightContainer.querySelector(".add-site-btn");
       if (!addSiteBtnInline) {
-        addSiteBtnInline = mkIconBtn("➕", t.addSite || "新增站台");
+        addSiteBtnInline = mkIconBtn("➕", t.addSite || "Add Site ➕");
         addSiteBtnInline.className += " add-site-btn";
         rightContainer.appendChild(addSiteBtnInline);
         rightContainer.appendChild(mkSep());
@@ -3669,22 +3841,22 @@
           const parsed = parseSmartDomain(siteInput);
           if (parsed) {
             showCustomPrompt(
-              t.enterSiteNote || "請輸入站台註解（建議4個字以內）：",
+              t.enterSiteNote || "Enter site note (recommended: within 4 characters):",
               "",
               (note) => {
                 group.sites.push({ url: parsed, note: note.trim() || "" });
                 save();
                 renderSites(panel);
-                showToast(`${t.addSite} 成功！`);
+                showToast(`${t.addSite || "Added"} ✅`);
               },
             );
-          } else showToast(t.invalidSite || "請輸入有效網址！");
+          } else showToast(t.invalidSite || "Please enter a valid URL (e.g., example.com)!");
         });
       };
 
       let delBtn = rightContainer.querySelector(".del-btn");
       if (!delBtn) {
-        delBtn = mkIconBtn("🗑️", t.confirmDel ? t.confirmDel(group.name) : "刪除群組");
+        delBtn = mkIconBtn("🗑️", t.confirmDel ? t.confirmDel(group.name) : `Delete "${group.name}"?`);
         delBtn.className += " del-btn";
         rightContainer.appendChild(delBtn);
       }
@@ -3712,7 +3884,7 @@
             else {
               _exitMultiSelect(blk, mBtn, sBtn);
               blk.querySelector(".multi-pill-sep").style.display = "none";
-              showToast((t.multiSelectMode || "複選") + " OFF");
+              showToast((t.multiSelectMode || "Multi-select") + " OFF");
             }
           } else {
             blk.dataset.multiSelectActive = "true";
@@ -3724,7 +3896,7 @@
             mBtn.style.borderRadius = "0";
             sBtn.style.display = "";
             blk.querySelector(".multi-pill-sep").style.display = "";
-            showToast((t.multiSelectMode || "複選") + " ON ☑");
+            showToast((t.multiSelectMode || "Multi-select") + " ON ☑");
             panel.dataset.multiSelectLock = "true";
 
             const _grpSelKey = `ms_sel_${blk.dataset.groupIndex}`;
@@ -3762,7 +3934,7 @@
             blk._msExit = () => {
               _exitMultiSelect(blk, mBtn, sBtn);
               blk.querySelector(".multi-pill-sep").style.display = "none";
-              showToast((t.multiSelectMode || "複選") + " OFF");
+              showToast((t.multiSelectMode || "Multi-select") + " OFF");
               document.removeEventListener("keydown", blk._msEscHandler);
             };
 
@@ -3787,7 +3959,7 @@
                 border:1px solid ${_bDark ? "rgba(124,106,247,0.28)" : "rgba(79,70,229,0.2)"};
                 letter-spacing:0.2px; line-height:1.7;
               `;
-              banner.textContent = t.multiSelectBanner || "☑ 複選模式 — 點擊站點選取 · 再按 ☑ 或送出 ↗ 退出";
+              banner.textContent = t.multiSelectBanner || "☑ Multi-select mode — click sites to select · click ☑ or ↗ to exit";
               blk.appendChild(banner);
             }
             const overlayId = `ms-overlay-${blk.dataset.groupIndex}`;
@@ -3830,7 +4002,7 @@
         return function () {
           const selected = Array.from(blk._multiSelected);
           if (selected.length === 0) {
-            showToast(t.multiSelectNone || "尚未選取任何站點！");
+            showToast(t.multiSelectNone || "No sites selected!");
             return;
           }
           if (window.__customPromptOpen) return;
@@ -3874,7 +4046,7 @@
           });
 
           const dlgTitle = document.createElement("div");
-          dlgTitle.textContent = (t.multiSelectSendTitle || "開啟已選站台") + ` (${selected.length})`;
+          dlgTitle.textContent = (t.multiSelectSendTitle || "Open Selected Sites") + ` (${selected.length})`;
           dlgTitle.style.cssText = "font-weight:bold; margin-bottom:10px; font-size:13px;";
           box.appendChild(dlgTitle);
 
@@ -3889,15 +4061,15 @@
           box.appendChild(urlList);
 
           const modeLabel = document.createElement("div");
-          modeLabel.textContent = t.multiSelectModeLabel || "送出方式：";
+          modeLabel.textContent = t.multiSelectModeLabel || "Send mode (mutually exclusive):";
           modeLabel.style.cssText = "font-size:11px; font-weight:bold; margin-bottom:5px; opacity:0.75;";
           box.appendChild(modeLabel);
 
           const _savedMode = GM_getValue("ms_sendMode", "site_same");
           const modes = [
-            { id:"site_same", label: t.modeSiteSearch    || "site:A OR site:B 搜尋（當前分頁）" },
-            { id:"site_new",  label: t.modeSiteSearchNew || "site:A OR site:B 搜尋（新分頁）" },
-            { id:"open_only", label: t.modeOpenOnly      || "直接開啟各站點（不搜尋）" },
+            { id:"site_same", label: t.modeSiteSearch || "site:A OR site:B search (same tab)" },
+            { id:"site_new",  label: t.modeSiteSearchNew || "site:A OR site:B search (new tab)" },
+            { id:"open_only", label: t.modeOpenOnly || "Open each site without search keyword" },
           ];
           const radioGroup = {};
           modes.forEach(m => {
@@ -3920,12 +4092,12 @@
           const kwRow = document.createElement("div");
           kwRow.style.cssText = "display:flex; align-items:center; gap:6px; margin-bottom:8px;";
           const kwLabel = document.createElement("label");
-          kwLabel.textContent = t.multiSelectKeyword || "搜尋關鍵字（可選）";
+          kwLabel.textContent = t.multiSelectKeyword || "Search keyword (optional)";
           kwLabel.style.cssText = "font-size:11px; flex-shrink:0; white-space:nowrap;";
           const kwInput = document.createElement("input");
           kwInput.type = "text";
           kwInput.value = keyword;
-          kwInput.placeholder = keyword || "（目前無關鍵字）";
+          kwInput.placeholder = keyword || "(no keyword)";
           Object.assign(kwInput.style, {
             flex: "1", fontSize: "11px",
             padding: "3px 6px", borderRadius: radius + "px",
@@ -3939,7 +4111,7 @@
           const timeRow = document.createElement("div");
           timeRow.style.cssText = "display:flex; align-items:center; gap:6px; margin-bottom:8px;";
           const timeRowLabel = document.createElement("label");
-          timeRowLabel.textContent = t.timeLabel || "時間篩選";
+          timeRowLabel.textContent = t.timeLabel || "🕐 Time Filter";
           timeRowLabel.style.cssText = "font-size:11px; flex-shrink:0; white-space:nowrap;";
           const msTimeSelect = document.createElement("select");
           Object.assign(msTimeSelect.style, {
@@ -3956,7 +4128,7 @@
               return m ? m[1] : "";
             } catch(_) { return ""; }
           })();
-          msTimeSelect.innerHTML = `<option value="">${t.unlimited || "無限制"}</option>`;
+          msTimeSelect.innerHTML = `<option value="">${t.unlimited || "Unlimited"}</option>`;
           (t.timeOptions || []).forEach(({ label, value }) => {
             const opt = document.createElement("option");
             opt.value = value; opt.textContent = label;
@@ -3967,7 +4139,7 @@
             msTimeSelect.disabled = true;
             msTimeSelect.style.opacity = "0.45";
             msTimeSelect.style.cursor = "not-allowed";
-            msTimeSelect.title = t.timeUnsupported || "⚠️ 此搜尋引擎不支援時間篩選";
+            msTimeSelect.title = t.timeUnsupported || "⚠️ Time filter is not supported on this search engine";
           }
           timeRow.appendChild(timeRowLabel);
           timeRow.appendChild(msTimeSelect);
@@ -3980,7 +4152,7 @@
           optClearChk.checked = GM_getValue("ms_clearAfterSend", true);
           optClearRow.appendChild(optClearChk);
           optClearRow.appendChild(Object.assign(document.createElement("span"), {
-            textContent: t.multiSelectClearAfter || "送出後退出複選模式"
+            textContent: t.multiSelectClearAfter || "Exit multi-select after sending"
           }));
           box.appendChild(optClearRow);
 
@@ -3992,21 +4164,21 @@
           optRemSelChk.checked = !!GM_getValue(_grpSelKey, null);
           optRemSelRow.appendChild(optRemSelChk);
           optRemSelRow.appendChild(Object.assign(document.createElement("span"), {
-            textContent: t.multiSelectRememberSel || "記憶此群組的複選選取"
+            textContent: t.multiSelectRememberSel || "Remember selected sites for this group"
           }));
           box.appendChild(optRemSelRow);
 
           const btnRow = document.createElement("div");
           btnRow.style.cssText = "display:flex; gap:8px; justify-content:flex-end;";
           const confirmBtn = document.createElement("button");
-          confirmBtn.textContent = t.confirm || "確認";
+          confirmBtn.textContent = t.confirm || "Confirm";
           Object.assign(confirmBtn.style, {
             padding:"5px 18px", borderRadius:radius+"px",
             cursor:"pointer", background:"#e08000",
             border:"none", color:"#fff", fontWeight:"bold",
           });
           const cancelBtn = document.createElement("button");
-          cancelBtn.textContent = t.cancel || "取消";
+          cancelBtn.textContent = t.cancel || "Cancel";
           Object.assign(cancelBtn.style, {
             padding:"5px 14px", borderRadius:radius+"px",
             cursor:"pointer", background:btnBg,
@@ -4199,6 +4371,10 @@
           if (b.contains(e.relatedTarget)) return;
           const bg = b.dataset.baseBg || "";
           if (bg) b.style.background = adjustColor(bg, 10);
+          if (styleSettings.textBackgroundColor) {
+            const lbl = b.querySelector(".site-label");
+            if (lbl) lbl.style.backgroundColor = "transparent";
+          }
         });
 
         siteContainer.addEventListener("mouseout", (e) => {
@@ -4209,6 +4385,10 @@
           if (bg) b.style.background = bg;
           b.style.transform  = "translateY(0)";
           b.style.boxShadow  = "0 1px 2px rgba(0,0,0,0.15)";
+          if (styleSettings.textBackgroundColor) {
+            const lbl = b.querySelector(".site-label");
+            if (lbl) lbl.style.backgroundColor = styleSettings.textBackgroundColor;
+          }
         });
 
         siteContainer.addEventListener("mousedown", (e) => {
@@ -4349,7 +4529,7 @@
           line-height:1; transition:opacity 0.15s; user-select:none;
           display:inline-flex; align-items:center;
         `;
-        del.title = t.siteEditHint || "點擊開啟選單";
+        del.title = t.siteEditHint || "Open menu";
         _applyGrpIcon(del, "⋯");
         del.addEventListener("mouseenter", () => { del.style.opacity = "0.9"; });
         del.addEventListener("mouseleave", () => { del.style.opacity = "0.4"; });
@@ -4384,10 +4564,10 @@
           `;
 
           const menuItems = [
-            { label: t.siteMenuEdit      || "✏️ 編輯",           action: "edit"      },
-            { label: t.siteMenuDelete    || "🗑️ 刪除",           action: "delete"    },
-            { label: t.siteMenuOpenSame  || "🔗 開啟（當前分頁）", action: "open_same" },
-            { label: t.siteMenuOpenNew   || "↗ 開啟（新分頁）",   action: "open_new"  },
+            { label: t.siteMenuEdit || "✏️ Edit",           action: "edit"      },
+            { label: t.siteMenuDelete || "🗑️ Delete",           action: "delete"    },
+            { label: t.siteMenuOpenSame || "🔗 Open (same tab)", action: "open_same" },
+            { label: t.siteMenuOpenNew || "↗ Open (new tab)",   action: "open_new"  },
           ];
 
           menuItems.forEach((item, idx) => {
@@ -4415,11 +4595,11 @@
                   if (newUrl && newUrl.trim()) {
                     const cleanUrl = parseSmartDomain(newUrl);
                     if (!cleanUrl) {
-                      showToast(t.invalidSite || "請輸入有效網址！");
+                      showToast(t.invalidSite || "Please enter a valid URL (e.g., example.com)!");
                       return;
                     }
                     showCustomPrompt(
-                      t.enterSiteNote || "請輸入站台註解：",
+                      t.enterSiteNote || "Enter site note:",
                       site.note || "",
                       (newNote) => {
                         group.sites[siteIndex] = { url: cleanUrl, note: newNote?.trim() || "" };
@@ -4477,7 +4657,23 @@
           setTimeout(() => document.addEventListener("mousedown", _closeMenu, true), 0);
         };
 
-        del.addEventListener("click", _showSiteMenu);
+        del.addEventListener("click", (e) => {
+          if (_shiftDeleteMode) {
+            e.stopPropagation();
+            e.preventDefault();
+            const _blk2 = btn.closest(".group-block");
+            if (_blk2 && _blk2.dataset.multiSelectActive === "true") return;
+            _showShiftDeleteNotice(() => {
+              const displayName = site.note || site.url;
+              group.sites.splice(siteIndex, 1);
+              groups[groupIndex].sites = group.sites;
+              save(); renderSites(panel);
+              showShiftDeletedToast(displayName);
+            });
+          } else {
+            _showSiteMenu(e);
+          }
+        });
         del.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); };
 
         const msChk = document.createElement("input");
@@ -4509,6 +4705,8 @@
     });
 
     updateAddressesVisibility();
+
+    if (_shiftDeleteMode && _panelHovered) _applyShiftDeleteMode(true);
   }
 
   const langWidths = {
@@ -4623,8 +4821,18 @@
       }
     });
 
+    panel.addEventListener("mouseenter", () => { _panelHovered = true;  });
+    panel.addEventListener("mouseleave", () => {
+      _panelHovered = false;
+      if (_shiftDeleteMode) {
+        _shiftDeleteMode = false;
+        _applyShiftDeleteMode(false);
+      }
+    });
+
     const closePanelOnClickOutside = (event) => {
       if (!panel || isPromptActive) return;
+      if (event.target && !event.target.isConnected) return;
       if (searchConfig.isExpanded) {
         const _sfWrap = document.getElementById("style-config-wrap");
         const _sfBtn  = document.getElementById("sf-close-btn");
@@ -4746,7 +4954,7 @@
       "display:flex; align-items:center; gap:6px; flex-shrink:0;";
 
     const siteTitle = document.createElement("div");
-    siteTitle.textContent = t.siteTitle || "站台快捷";
+    siteTitle.textContent = t.siteTitle || "Site Groups";
     siteTitle.style.cssText = "font-weight:600; font-size:13px; letter-spacing:0.01em;";
     headerLeft.appendChild(siteTitle);
 
@@ -5057,10 +5265,10 @@
                   t = LANGUAGES.custom;
                   overlay.remove();
                   createPanel();
-                  showToast(cl.importSuccess + " ✅ (3/3 段已合併)");
+                  showToast(cl.importSuccess + " ✅ (3/3 segments merged)");
                 } else {
                   const parts = [hasCore ? "1" : "?", hasSe ? "2" : "?", hasArray ? "3" : "?"].join("/");
-                  showToast(`📦 分段已暫存 (${parts})，請繼續匯入其餘分段`);
+                  showToast(`📦 Segment saved (${parts}), please import remaining segments`);
                 }
                 return;
               }
@@ -5068,11 +5276,11 @@
               if (!raw.name || typeof raw.name !== "string") throw new Error("missing name");
 
               if ("_completionCheck" in raw && raw._completionCheck !== "COMPLETE") {
-                showToast("⚠️ 檔案可能被截斷（_completionCheck 異常），請重新由 AI 取得完整 JSON");
+                showToast("⚠️ File may be truncated (_completionCheck error), please re-fetch complete JSON from AI");
                 return;
               }
               if (Array.isArray(raw.timeOptions) && raw.timeOptions.length !== 22) {
-                showToast(`⚠️ timeOptions 應有 22 項，目前只有 ${raw.timeOptions.length} 項，AI 可能截斷了輸出`);
+                showToast(`⚠️ timeOptions should have 22 items, got ${raw.timeOptions.length} — AI output may be truncated`);
                 return;
               }
 
@@ -5187,7 +5395,7 @@
     const plusBtn = document.createElement("button");
     plusBtn.className = "se-plus-btn";
     plusBtn.textContent = "⊕";
-    plusBtn.title = (t.se || {}).panelTitle || "搜尋引擎管理";
+    plusBtn.title = (t.se || {}).panelTitle || t.panelTitle || "Search Engine Manager";
     plusBtn.style.cssText = `
       width:22px; height:22px; font-size:11px; line-height:1;
       cursor:pointer; border:1px solid #aaa; border-radius:3px;
@@ -5214,19 +5422,19 @@
       const _dpEmoji = (styleSettings.iconStyle || "emoji") === "emoji";
       if (defaultPanelOpen === "pinned") {
         if (_dpEmoji) dpBtn.textContent = "📌";
-        dpBtn.title = dpT.pinned || "面板永遠顯示（已固定）\n點擊可切換";
+        dpBtn.title = dpT.pinned || "Panel always visible (Pinned)\nClick to change";
         dpBtn.style.opacity = "1";
         dpBtn.style.filter = "none";
         dpBtn.style.borderColor = "#f80";
       } else if (defaultPanelOpen === true) {
         if (_dpEmoji) dpBtn.textContent = "📌";
-        dpBtn.title = dpT.on || "預設開啟面板（ON）\n點擊可切換";
+        dpBtn.title = dpT.on || "Panel opens by default (ON)\nClick to change";
         dpBtn.style.opacity = "1";
         dpBtn.style.filter = "none";
         dpBtn.style.borderColor = "#4a9";
       } else {
         if (_dpEmoji) dpBtn.textContent = "📌";
-        dpBtn.title = dpT.off || "預設關閉面板（OFF）\n點擊可切換";
+        dpBtn.title = dpT.off || "Panel closed by default (OFF)\nClick to change";
         dpBtn.style.opacity = "0.3";
         dpBtn.style.filter = "grayscale(1)";
         dpBtn.style.borderColor = "transparent";
@@ -5464,7 +5672,7 @@
         background:${accent};display:inline-block;box-shadow:0 0 6px ${accent}88;`;
 
       const epTitleText = document.createElement("span");
-      epTitleText.textContent = st.panelTitle || "搜尋引擎管理";
+      epTitleText.textContent = st.panelTitle || t.panelTitle || "Search Engine Manager";
       epTitleText.style.cssText = `font-weight:600;font-size:${styleSettings.fontSize + 1}px;color:${fg};letter-spacing:0.3px;`;
 
       const helpBtn = document.createElement("span");
@@ -5656,7 +5864,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       }
 
       epBody.appendChild(
-        mkDivider(st.allEnginesLabel || "所有引擎（前4個顯示為圖示）"),
+        mkDivider(st.allEnginesLabel || "All Engines (top 5 shown as icons)"),
       );
       const epList = document.createElement("div");
       epList.style.cssText = "display:flex; flex-direction:column; gap:3px;";
@@ -5667,7 +5875,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
         if (se_engines.length === 0) {
           const empty = document.createElement("div");
-          empty.textContent = st.emptyList || "（尚無引擎）";
+          empty.textContent = st.emptyList || "(No engines yet — add one below)";
           empty.style.cssText = `color:${isDark ? "#555" : "#ccc"};font-size:${styleSettings.fontSize - 1}px;padding:4px 0;`;
           epList.appendChild(empty);
           return;
@@ -5758,7 +5966,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           const newWinBtn = document.createElement("button");
           newWinBtn.textContent = st.newWindowBtn || "⧉";
           newWinBtn.title =
-            (st.newWindowTitle || "新視窗") + " — " + engine.name;
+            (st.newWindowTitle || "New Window") + " — " + engine.name;
           newWinBtn.style.cssText = `
             background:${isDark ? "#2a3a2a" : "#f0fff0"};
             border:1px solid ${isDark ? "#3a6a3a" : "#b0d8b0"};
@@ -5780,7 +5988,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
             const kw = se_extractKeyword();
             const st2 = t.se || {};
             if (!kw) {
-              showToast(st2.noKeyword || "無法取得關鍵字");
+              showToast(st2.noKeyword || "Cannot extract search keyword");
               return;
             }
             const w = Math.min(1280, screen.availWidth || 1280);
@@ -6251,7 +6459,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const historyBtn = document.createElement("button");
     historyBtn.id = "se-history-btn";
     historyBtn.textContent = "🕐";
-    historyBtn.title = t.searchHistory || "搜尋歷史";
+    historyBtn.title = t.searchHistory || "Search History";
     historyBtn.style.cssText = `
       position: absolute;
       right: 3px;
@@ -6616,27 +6824,29 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const _tlbRad = Math.max(styleSettings.borderRadius, 6) + "px";
 
     const addGroupBtn = document.createElement("button");
-    addGroupBtn.textContent = t.addGroup || "新增群組";
+    addGroupBtn.id = "toolbar-add-group-btn";
+    addGroupBtn.textContent = t.addGroup || "Add Group ➕";
     addGroupBtn.style.cssText = `
       padding:3px 8px; border-radius:${_tlbRad};
       cursor:pointer; white-space:nowrap; font-size:11px;
       background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
     `;
+    addGroupBtn.style.display = styleSettings.hideAddGroupBtn ? "none" : "";
     addGroupBtn.onclick = () => {
       if (isPromptActive) {
-        warn("提示框已在顯示，忽略新增群組請求");
+        warn("[Prompt] Another prompt is active, ignoring add-group request");
         return;
       }
-      showCustomPrompt(t.enterGroupName || "輸入群組名稱", "", (name) => {
+      showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
         if (!name || !name.trim()) {
-          showToast(t.emptyGroupName || "群組名稱不能為空！");
+          showToast(t.emptyGroupName || "Group name cannot be empty!");
           return;
         }
         groups.push({ name: name.trim(), sites: [] });
         save();
         renderSites(panel);
         panel.style.display = "block";
-        showToast(`${t.addGroup} 成功！`);
+        showToast(`${t.addGroup || "Group added"} ✅`);
       });
     };
     buttonContainer.appendChild(addGroupBtn);
@@ -6647,12 +6857,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       padding:3px 8px; border-radius:${_tlbRad};
       cursor:pointer; white-space:nowrap; font-size:11px;
       background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
-      display:inline-flex; align-items:center; gap:4px;
+      display:${styleSettings.hideAddressToggleBtn ? "none" : "inline-flex"}; align-items:center; gap:4px;
     `;
 
     function _updateAddrBtn() {
       const _ic = styleSettings.iconStyle || "emoji";
-      const _lbl = showAddresses ? (t.toggleHide || "顯示註解") : (t.toggleShow || "顯示網址");
+      const _lbl = showAddresses ? (t.toggleHide || "Hide Addresses") : (t.toggleShow || "Show Addresses");
       if (_ic === "emoji") {
         toggleAddressBtn.textContent = ICONS.toggleAddress.emoji + "\u202F" + _lbl;
         toggleAddressBtn.style.fontSize = "11px";
@@ -6677,7 +6887,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     buttonContainer.appendChild(toggleAddressBtn);
 
     const exportBtn = document.createElement("button");
-    exportBtn.textContent = t.exportConfig || "匯出設定";
+    exportBtn.id = "toolbar-export-btn";
+    exportBtn.textContent = t.exportConfig || "Export Config 📤";
     exportBtn.style.padding = "4px 8px";
     exportBtn.style.borderRadius = _tlbRad;
     exportBtn.style.cursor = "pointer";
@@ -6686,6 +6897,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     exportBtn.style.background = _tlbBg;
     exportBtn.style.color = _tlbFg;
     exportBtn.style.border = `1px solid ${_tlbBd}`;
+    exportBtn.style.display = styleSettings.hideExportBtn ? "none" : "";
     exportBtn.onclick = () => {
       const config = {
         siteGroups: groups,
@@ -6720,18 +6932,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       navigator.clipboard
         .writeText(jsonString)
         .then(() => {
-          showToast(t.exportConfigSuccess || "匯出設定成功！");
+          showToast(t.exportConfigSuccess || "Configuration exported successfully! 📤");
           log("Configuration exported and copied to clipboard");
         })
         .catch((err) => {
           console.error("Failed to copy to clipboard:", err);
-          showToast(t.copied || "已複製到剪貼簿");
+          showToast(t.copied || "Copied! 📋");
         });
     };
     buttonContainer.appendChild(exportBtn);
 
     const importBtn = document.createElement("button");
-    importBtn.textContent = t.importConfig || "匯入設定";
+    importBtn.id = "toolbar-import-btn";
+    importBtn.textContent = t.importConfig || "Import Config 📥";
     importBtn.style.padding = "4px 8px";
     importBtn.style.borderRadius = _tlbRad;
     importBtn.style.cursor = "pointer";
@@ -6740,6 +6953,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     importBtn.style.background = _tlbBg;
     importBtn.style.color = _tlbFg;
     importBtn.style.border = `1px solid ${_tlbBd}`;
+    importBtn.style.display = styleSettings.hideImportBtn ? "none" : "";
     importBtn.onclick = () => {
       const fileInput = document.createElement("input");
       fileInput.type = "file";
@@ -6749,7 +6963,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const file = fileInput.files[0];
         if (!file) return;
         if (!file.name.endsWith(".json")) {
-          showToast(t.invalidFileType || "檔案必須是 JSON 格式！");
+          showToast(t.invalidFileType || "Please select a valid JSON file!");
           fileInput.remove();
           return;
         }
@@ -6773,7 +6987,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               ? config.siteGroups.filter(_isValidGroup)
               : [];
             Object.assign(groups, _importedGroups);
-            searchConfig = config.searchConfig || searchConfig;
+            if (config.searchConfig && typeof config.searchConfig === "object") {
+              const _cfgKeys = ["isExpanded", "resetOnReload", "exclude1", "exclude2"];
+              for (const k of _cfgKeys) {
+                if (k in config.searchConfig) searchConfig[k] = config.searchConfig[k];
+              }
+            }
             safeSearchEnabled  = config.safeSearchEnabled  ?? safeSearchEnabled;
             searchRegionEnabled = config.searchRegionEnabled ?? searchRegionEnabled;
             defaultPanelOpen = config.defaultPanelOpen ?? defaultPanelOpen;
@@ -6795,10 +7014,25 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               GM_setValue("searchRegionNoticedOnce", searchRegionNoticedOnce);
             }
             if (Array.isArray(config.se_engines) && config.se_engines.length > 0) {
-              se_engines = config.se_engines;
+              const _isValidEngine = (e) => {
+                if (!e || typeof e !== "object") return false;
+                if (typeof e.name !== "string" || e.name.length === 0) return false;
+                if (typeof e.url !== "string") return false;
+                try {
+                  const _u = new URL(e.url);
+                  return _u.protocol === "https:" || _u.protocol === "http:";
+                } catch { return false; }
+              };
+              const _filtered = config.se_engines.filter(_isValidEngine);
+              if (_filtered.length > 0) se_engines = _filtered;
             }
             if (config.se_panelPinned !== undefined) se_panelPinned = config.se_panelPinned;
-            if (config.se_panelPos !== undefined) se_panelPos = config.se_panelPos;
+            if (config.se_panelPos !== null && typeof config.se_panelPos === "object") {
+              const { left: _l, top: _t } = config.se_panelPos;
+              if (typeof _l === "number" && typeof _t === "number") {
+                se_panelPos = { left: _l, top: _t };
+              }
+            }
             if (config.showAddresses !== undefined) {
               showAddresses = config.showAddresses;
               GM_setValue("showAddresses", showAddresses);
@@ -6820,10 +7054,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
             se_save();
             save();
             createPanel();
-            showToast(t.importConfigSuccess || "匯入成功！");
+            showToast(t.importConfigSuccess || "Configuration imported successfully!");
             log("Configuration imported successfully");
           } catch (err) {
-            showToast(t.importConfigFailed || "匯入失敗：無效的 JSON 格式！");
+            showToast(t.importConfigFailed || "Import failed: Invalid JSON format!");
             console.error("Import failed:", err);
           } finally {
             fileInput.remove();
@@ -6939,30 +7173,30 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       { label: "1w",  value: "w"  },
       { label: "1m",  value: "m"  },
       { label: "1y",  value: "y"  },
-      { label: t.timeCustom || "…", value: "__custom__" },
     ];
     const _isDark = panelTheme === "dark";
     const _segBg = _isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
     const _segActiveBg = _isDark ? "rgba(255,255,255,0.18)" : "rgba(0,0,0,0.13)";
     const _segBorder = _isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)";
 
+    if (!_tsEngine) {
+      timeFilterRow.style.filter = "grayscale(1)";
+      timeFilterRow.style.opacity = "0.5";
+      timeFilterRow.style.cursor = "not-allowed";
+      timeFilterRow.title = t.timeUnsupported || "⚠️ Time filter is not supported on this search engine";
+      timeFilterRow.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showToast(t.timeUnsupported || "⚠️ Time filter is not supported on this search engine", 2500);
+      });
+    }
+
     const segWrap = document.createElement("div");
     segWrap.style.cssText = `
       display:flex; flex:1; border:1px solid ${_segBorder};
-      border-radius:8px; overflow:hidden; flex-shrink:0;
+      border-radius:999px; overflow:hidden; flex-shrink:0;
       background:${_segBg};
-      opacity:${_tsEngine ? "1" : "0.45"};
       pointer-events:${_tsEngine ? "auto" : "none"};
     `;
-    if (!_tsEngine) {
-      segWrap.title = t.timeUnsupported || "⚠️ 此搜尋引擎不支援時間篩選";
-      segWrap.style.pointerEvents = "auto";
-      segWrap.style.cursor = "not-allowed";
-      segWrap.addEventListener("click", (e) => {
-        e.stopPropagation();
-        showToast(t.timeUnsupported || "⚠️ 此搜尋引擎不支援時間篩選", 2500);
-      });
-    }
 
     const customDateRow = document.createElement("div");
     customDateRow.style.cssText = `
@@ -7014,10 +7248,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         if (before) newQ += ` before:${before}`;
         if (u.searchParams.has("q"))     u.searchParams.set("q", newQ.trim());
         else if (u.searchParams.has("query")) u.searchParams.set("query", newQ.trim());
-        else { showToast("⚠️ 無法識別此引擎的查詢參數", 2000); return; }
+        else { showToast(t.unknownQueryParam || "⚠️ Cannot detect query parameter for this engine", 2000); return; }
         location.href = u.toString();
       } catch(_) {
-        showToast("⚠️ 日期格式錯誤，請使用 YYYY-MM-DD", 2000);
+        showToast(t.dateFormatError || "⚠️ Invalid date format, use YYYY-MM-DD", 2000);
       }
     });
     customDateRow.appendChild(_afterField.wrap);
@@ -7046,20 +7280,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           b.style.background = _a ? _segActiveBg : "transparent";
           b.style.fontWeight = _a ? "600" : "400";
         });
-        if (value === "__custom__") {
-          const _shown = customDateRow.style.display !== "none";
-          customDateRow.style.display = _shown ? "none" : "flex";
-        } else {
-          customDateRow.style.display = "none";
-          applyTimeFilter(value);
-        }
+        customDateRow.style.display = "none";
+        applyTimeFilter(value);
       });
       segWrap.appendChild(opt);
     });
     const _lastSeg = segWrap.lastElementChild;
-    if (_lastSeg) _lastSeg.style.borderRight = "none";
-
-    timeFilterRow.appendChild(segWrap);
+    if (_lastSeg) _lastSeg.style.borderRight = `1px solid ${_segBorder}`;
 
     {
       const _yearExtOptions = TIME_OPTIONS.filter(o => /^y[2-9]$/.test(o.value));
@@ -7067,28 +7294,24 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const _yearSel = document.createElement("select");
         _yearSel.title = "2–9 years";
         _yearSel.style.cssText = `
-          flex-shrink:0; font-size:10px; padding:3px 4px;
-          border:1px solid ${_segBorder}; border-radius:7px;
-          background:${_segBg}; color:inherit; cursor:pointer;
-          opacity:${_tsEngine ? "1" : "0.45"};
-          pointer-events:${_tsEngine ? "auto" : "none"};
+          flex-shrink:0; font-size:10px; padding:3px 5px;
+          border:none; border-left:1px solid ${_segBorder}; border-radius:0;
+          background:transparent; color:inherit;
+          cursor:${_tsEngine ? "pointer" : "not-allowed"};
+          outline:none; appearance:auto;
         `;
-
         const _ph = document.createElement("option");
         _ph.value = "";
         _ph.textContent = "2y+";
         _ph.disabled = true;
         _yearSel.appendChild(_ph);
-
         _yearExtOptions.forEach(({ label, value }) => {
           const opt = document.createElement("option");
           opt.value = value;
           opt.textContent = label;
           _yearSel.appendChild(opt);
         });
-
         _yearSel.value = /^y[2-9]$/.test(_initTimeVal) ? _initTimeVal : "";
-
         _yearSel.addEventListener("change", (e) => {
           if (!_tsEngine) return;
           const val = e.target.value;
@@ -7100,11 +7323,44 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           customDateRow.style.display = "none";
           applyTimeFilter(val);
         });
-
         segWrap.addEventListener("click", () => { _yearSel.value = ""; });
-
-        timeFilterRow.appendChild(_yearSel);
+        segWrap.appendChild(_yearSel);
       }
+    }
+
+    timeFilterRow.appendChild(segWrap);
+
+    {
+      const _customBtn = document.createElement("button");
+      _customBtn.className = "icon-btn seg-time-btn";
+      _customBtn.dataset.value = "__custom__";
+      _customBtn.textContent = t.timeCustom || "…";
+      _customBtn.title = t.timeCustomLabel || "Custom date range";
+      _customBtn.style.cssText = `
+        flex-shrink:0; border:1px solid ${_segBorder}; border-radius:999px;
+        background:${_initTimeVal === "__custom__" ? _segActiveBg : _segBg};
+        color:inherit; font-size:11px; font-weight:${_initTimeVal === "__custom__" ? "600" : "400"};
+        padding:3px 7px; cursor:${_tsEngine ? "pointer" : "not-allowed"};
+        transition:background 0.12s;
+        pointer-events:${_tsEngine ? "auto" : "none"};
+      `;
+      _customBtn.addEventListener("click", (e) => {
+        if (!_tsEngine) return;
+        e.stopPropagation();
+        const _shown = customDateRow.style.display !== "none";
+        customDateRow.style.display = _shown ? "none" : "flex";
+        segWrap.querySelectorAll(".seg-time-btn").forEach(b => {
+          b.style.background = "transparent";
+          b.style.fontWeight = "400";
+        });
+        _customBtn.style.background = _shown ? _segBg : _segActiveBg;
+        _customBtn.style.fontWeight = _shown ? "400" : "600";
+      });
+      segWrap.addEventListener("click", () => {
+        _customBtn.style.background = _segBg;
+        _customBtn.style.fontWeight = "400";
+      });
+      timeFilterRow.appendChild(_customBtn);
     }
 
     timeFilterRow.style.flexWrap = "wrap";
@@ -7138,7 +7394,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     {
       const grip = document.createElement("div");
       grip.id = "panel-resize-grip";
-      grip.title = "拖曳調整大小";
+      grip.title = t.resizeHandle || "Drag to resize";
       grip.style.cssText = `
         position:sticky; bottom:0; right:0;
         width:100%; height:14px;
@@ -7413,7 +7669,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     sfDragHandle.onmouseout  = () => sfDragHandle.style.opacity = "0.45";
 
     const styleConfigHeader = document.createElement("div");
-    styleConfigHeader.textContent = t.styleConfig || "樣式設定";
+    styleConfigHeader.textContent = t.styleConfig || "Style Settings 🎨";
     styleConfigHeader.style.cssText = "font-weight:bold; flex:1;";
     styleConfigHeaderRow.appendChild(sfDragHandle);
     styleConfigHeaderRow.appendChild(styleConfigHeader);
@@ -7439,7 +7695,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     styleConfigHeaderRow.appendChild(themeSelect);
 
     const resetStylesBtn = document.createElement("button");
-    resetStylesBtn.textContent = t.resetStyles || "重置樣式 🔄";
+    resetStylesBtn.textContent = t.resetStyles || "Reset Styles 🔄";
     resetStylesBtn.style.padding = "4px 8px";
     resetStylesBtn.style.borderRadius = styleSettings.borderRadius + "px";
     resetStylesBtn.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
@@ -7447,7 +7703,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     resetStylesBtn.style.whiteSpace = "nowrap";
     resetStylesBtn.onclick = () => {
       showCustomPrompt(
-        t.resetStylesConfirm || "確定要重置所有樣式設定嗎？\n（面板佈局、字體、透明度等全部恢復預設值）",
+        t.resetStylesConfirm || "Reset all style settings?\n(Layout, font, opacity etc. will be restored to defaults)",
         null,
         () => {
           _doResetStyles();
@@ -7494,6 +7750,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         siteButtonWidth: 0,
         hideSyntaxBtn:    false,
         hideBlacklistBtn: false,
+        hideAddGroupBtn: false, hideAddressToggleBtn: false,
+        hideExportBtn: false,   hideImportBtn: false,
         isExpanded:       false,
         iconStyle:          "emoji",
         toggleBtnBg:        "",
@@ -7526,7 +7784,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           _rp.style.maxWidth = _w + "px";
         }
       });
-      showToast(t.resetStylesSuccess || "樣式已重置！");
+      showToast(t.resetStylesSuccess || "Style reset successfully!");
     }
     styleConfigHeaderRow.appendChild(resetStylesBtn);
 
@@ -7595,7 +7853,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       siteButtonWidth: 0,
       hideSyntaxBtn: false,
       hideBlacklistBtn: false,
-      iconStyle: "emoji",
+      hideAddGroupBtn: false, hideAddressToggleBtn: false,
+      hideExportBtn: false,   hideImportBtn: false,
       toggleBtnBg: "",
       toggleBtnBgOpacity: 0,
       svgIconColor: "",
@@ -7623,7 +7882,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     function makeResetBtn(defaultVal, callback) {
       const btn = document.createElement("button");
       btn.textContent = "↺";
-      btn.title = "重置為預設值";
+      btn.title = t.resetToDefault || "Reset to Default";
       btn.style.cssText = "background: transparent; border: none; cursor: pointer; padding: 0 4px; font-size: 14px; margin-left: 2px; flex-shrink: 0; color: inherit; opacity: 0.7;";
       btn.onmouseover = () => btn.style.opacity = "1";
       btn.onmouseout = () => btn.style.opacity = "0.7";
@@ -7644,7 +7903,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     panelLayoutContainer.style.maxWidth = "490px";
 
     const panelLayoutHeader = document.createElement("div");
-    panelLayoutHeader.textContent = t.panelLayout || "面板佈局";
+    panelLayoutHeader.textContent = t.panelLayout || "Panel Layout";
     panelLayoutHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
     panelLayoutContainer.appendChild(panelLayoutHeader);
 
@@ -7707,8 +7966,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       return row;
     }
 
-    panelLayoutContainer.appendChild(makeNumRow(t.panelTopLabel    || "距頂部",   "panelTop",       0, 2000, 1,  "px", 80));
-    panelLayoutContainer.appendChild(makeNumRow(t.panelRightLabel  || "距右側",   "panelRight",     0, 2000, 1,  "px", 20));
+    panelLayoutContainer.appendChild(makeNumRow(t.panelTopLabel || "Top Offset",   "panelTop",       0, 2000, 1,  "px", 80));
+    panelLayoutContainer.appendChild(makeNumRow(t.panelRightLabel || "Right Offset",   "panelRight",     0, 2000, 1,  "px", 20));
 
     (function() {
       const _localeW = langWidths[lang] || 410;
@@ -7716,7 +7975,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const row = document.createElement("div");
       row.style.cssText = rowCss();
       const lbl = document.createElement("label");
-      lbl.textContent = t.panelWidthLabel || "最大寬度";
+      lbl.textContent = t.panelWidthLabel || "Max Width";
       lbl.style.cssText = labelCss();
       row.appendChild(lbl);
       const inp = document.createElement("input");
@@ -7746,10 +8005,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       panelLayoutContainer.appendChild(row);
     })();
 
-    panelLayoutContainer.appendChild(makeNumRow(t.panelHeightLabel || "最大高度", "panelMaxHeight", 10, 100,  1,  "vh", 87));
+    panelLayoutContainer.appendChild(makeNumRow(t.panelHeightLabel || "Max Height", "panelMaxHeight", 10, 100,  1,  "vh", 87));
 
     const widthHint = document.createElement("div");
-    widthHint.textContent = t.panelWidthHint || "↺ 重置 = 恢復語系預設寬度";
+    widthHint.textContent = t.panelWidthHint || "↺ Resets to locale default width";
     widthHint.style.cssText = `font-size:10px; color:${panelTheme === "dark" ? "#aaa" : "#888"}; margin-top:2px; padding-left:4px;`;
     panelLayoutContainer.appendChild(widthHint);
 
@@ -7763,7 +8022,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       chk.style.cssText = "cursor:pointer; flex-shrink:0;";
       const lbl = document.createElement("label");
       lbl.htmlFor = "hide-syntax-btn-chk";
-      lbl.textContent = t.hideSyntaxBtnLabel || "隱藏 📖 語法說明按鈕";
+      lbl.textContent = t.hideSyntaxBtnLabel || "Hide 📖 Syntax Help Button";
       lbl.style.cssText = "cursor:pointer; font-size:12px; user-select:none; flex:1;";
       chk.onchange = () => {
         styleSettings.hideSyntaxBtn = chk.checked;
@@ -7806,7 +8065,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       chk.style.cssText = "cursor:pointer; flex-shrink:0;";
       const lbl = document.createElement("label");
       lbl.htmlFor = "hide-blacklist-btn-chk";
-      lbl.textContent = t.hideBlacklistBtnLabel || "隱藏 🚫 黑名單按鈕";
+      lbl.textContent = t.hideBlacklistBtnLabel || "Hide 🚫 Blacklist Button";
       lbl.style.cssText = "cursor:pointer; font-size:12px; user-select:none; flex:1;";
       chk.onchange = () => {
         styleSettings.hideBlacklistBtn = chk.checked;
@@ -7839,6 +8098,96 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       panelLayoutContainer.appendChild(row);
     })();
 
+    function _makeHideRow(key, labelText, icon, title, onOpen) {
+      const _isDk = panelTheme === "dark";
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex; align-items:center; gap:6px; margin-top:4px; padding-left:2px;";
+      const chk = document.createElement("input");
+      chk.type = "checkbox";
+      chk.checked = !!styleSettings[key];
+      chk.style.cssText = "cursor:pointer; flex-shrink:0;";
+      const lbl = document.createElement("label");
+      lbl.textContent = labelText;
+      lbl.style.cssText = "cursor:pointer; font-size:12px; user-select:none; flex:1;";
+      lbl.addEventListener("click", () => { chk.checked = !chk.checked; chk.dispatchEvent(new Event("change")); });
+      chk.onchange = () => {
+        styleSettings[key] = chk.checked;
+        save();
+        const _idMap = {
+          hideAddGroupBtn:      "toolbar-add-group-btn",
+          hideAddressToggleBtn: "se-toggle-address-btn",
+          hideExportBtn:        "toolbar-export-btn",
+          hideImportBtn:        "toolbar-import-btn",
+        };
+        const el = document.getElementById(_idMap[key]);
+        if (el) el.style.display = chk.checked ? "none" : "";
+      };
+      const _openBtn = document.createElement("button");
+      _openBtn.textContent = icon;
+      _openBtn.title = title;
+      _openBtn.style.cssText = `
+        padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
+        border:1px solid ${_isDk ? "#555" : "#ccc"};
+        background:transparent; font-size:12px; line-height:1.6;
+        transition:background .15s;
+      `;
+      _openBtn.addEventListener("mouseenter", () => {
+        _openBtn.style.background = _isDk ? "#333" : "#f0f0f0";
+      });
+      _openBtn.addEventListener("mouseleave", () => {
+        _openBtn.style.background = "transparent";
+      });
+      _openBtn.addEventListener("click", (e) => { e.stopPropagation(); onOpen(); });
+      row.appendChild(chk);
+      row.appendChild(lbl);
+      row.appendChild(_openBtn);
+      panelLayoutContainer.appendChild(row);
+    }
+
+    _makeHideRow(
+      "hideAddGroupBtn",
+      t.hideAddGroupBtnLabel || "Hide ➕ Add Group Button",
+      "➕", t.addGroup || "Add Group",
+      () => {
+        if (isPromptActive) return;
+        showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
+          if (!name || !name.trim()) { showToast(t.emptyGroupName || "Group name cannot be empty!"); return; }
+          groups.push({ name: name.trim(), sites: [] });
+          save(); renderSites(panel);
+          showToast(`${t.addGroup || "Group added"} ✅`);
+        });
+      }
+    );
+
+    _makeHideRow(
+      "hideAddressToggleBtn",
+      t.hideAddressToggleBtnLabel || "Hide 🔁 Address Toggle Button",
+      "🔁", t.toggleShow || "Show Addresses",
+      () => {
+        const btn = document.getElementById("se-toggle-address-btn");
+        if (btn) btn.click();
+      }
+    );
+
+    _makeHideRow(
+      "hideExportBtn",
+      t.hideExportBtnLabel || "Hide 📤 Export Button",
+      "📤", t.exportConfig || "Export Config",
+      () => {
+        const btn = document.getElementById("toolbar-export-btn");
+        if (btn) btn.click(); else exportBtn.onclick?.();
+      }
+    );
+
+    _makeHideRow(
+      "hideImportBtn",
+      t.hideImportBtnLabel || "Hide 📥 Import Button",
+      "📥", t.importConfig || "Import Config",
+      () => {
+        const btn = document.getElementById("toolbar-import-btn");
+        if (btn) btn.click(); else importBtn.onclick?.();
+      }
+    );
     const generalStyleContainer = document.createElement("div");
     generalStyleContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
     generalStyleContainer.style.borderRadius =
@@ -7850,7 +8199,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     generalStyleContainer.style.maxWidth = "490px";
 
     const generalStyleHeader = document.createElement("div");
-    generalStyleHeader.textContent = t.style || "整體樣式";
+    generalStyleHeader.textContent = t.style || "Style";
     generalStyleHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
     generalStyleContainer.appendChild(generalStyleHeader);
 
@@ -7858,7 +8207,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     styleRow.style.cssText = rowCss();
 
     const styleLabel = document.createElement("label");
-    styleLabel.textContent = t.style || "風格";
+    styleLabel.textContent = t.style || "Style";
     styleLabel.style.cssText = labelCss();
     styleRow.appendChild(styleLabel);
 
@@ -7963,7 +8312,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     borderRadiusRow.style.cssText = rowCss();
 
     const borderRadiusLabel = document.createElement("label");
-    borderRadiusLabel.textContent = t.borderRadius || "圓角";
+    borderRadiusLabel.textContent = t.borderRadius || "Border Radius";
     borderRadiusLabel.style.cssText = labelCss();
     borderRadiusRow.appendChild(borderRadiusLabel);
 
@@ -7995,7 +8344,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     contrastRow.style.cssText = rowCss();
 
     const contrastLabel = document.createElement("label");
-    contrastLabel.textContent = t.contrast || "對比度";
+    contrastLabel.textContent = t.contrast || "Contrast";
     contrastLabel.style.cssText = labelCss();
     contrastRow.appendChild(contrastLabel);
 
@@ -8027,7 +8376,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     opacityRow.style.cssText = rowCss();
 
     const opacityLabel = document.createElement("label");
-    opacityLabel.textContent = t.opacity || "面板透明度";
+    opacityLabel.textContent = t.opacity || "Opacity";
     opacityLabel.style.cssText = labelCss();
     opacityRow.appendChild(opacityLabel);
 
@@ -8060,7 +8409,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     groupOpacityRow.style.cssText = rowCss();
 
     const groupOpacityLabel = document.createElement("label");
-    groupOpacityLabel.textContent = t.groupOpacity || "群組透明度";
+    groupOpacityLabel.textContent = t.groupOpacity || "Group Opacity";
     groupOpacityLabel.style.cssText = labelCss();
     groupOpacityRow.appendChild(groupOpacityLabel);
 
@@ -8093,7 +8442,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     buttonOpacityRow.style.cssText = rowCss();
 
     const buttonOpacityLabel = document.createElement("label");
-    buttonOpacityLabel.textContent = t.buttonOpacity || "按鈕透明度";
+    buttonOpacityLabel.textContent = t.buttonOpacity || "Button Opacity";
     buttonOpacityLabel.style.cssText = labelCss();
     buttonOpacityRow.appendChild(buttonOpacityLabel);
 
@@ -8125,7 +8474,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const siteButtonWidthRow = document.createElement("div");
     siteButtonWidthRow.style.cssText = rowCss();
     const siteButtonWidthLabel = document.createElement("label");
-    siteButtonWidthLabel.textContent = t.siteButtonWidth || "站點按鈕寬度";
+    siteButtonWidthLabel.textContent = t.siteButtonWidth || "Site Button Width";
     siteButtonWidthLabel.style.cssText = labelCss();
     siteButtonWidthRow.appendChild(siteButtonWidthLabel);
     const siteButtonWidthInput = document.createElement("input");
@@ -8184,7 +8533,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const panelBgColorRow = document.createElement("div");
     panelBgColorRow.style.cssText = rowCss();
     const panelBgColorLabel = document.createElement("label");
-    panelBgColorLabel.textContent = t.panelBgColor || "面板背景色";
+    panelBgColorLabel.textContent = t.panelBgColor || "Panel Background Color";
     panelBgColorLabel.style.cssText = labelCss();
     panelBgColorRow.appendChild(panelBgColorLabel);
     const panelBgColorInput = document.createElement("input");
@@ -8210,7 +8559,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const panelBgAlphaRow = document.createElement("div");
     panelBgAlphaRow.style.cssText = rowCss();
     const panelBgAlphaLabel = document.createElement("label");
-    panelBgAlphaLabel.textContent = t.panelBgAlpha || "背景透明度";
+    panelBgAlphaLabel.textContent = t.panelBgAlpha || "Background Opacity";
     panelBgAlphaLabel.style.cssText = labelCss();
     panelBgAlphaRow.appendChild(panelBgAlphaLabel);
     const panelBgAlphaInput = document.createElement("input");
@@ -8247,14 +8596,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       flex-direction:column; gap:4px;
     `;
     const glowHeader = document.createElement("div");
-    glowHeader.textContent = "✨ " + (t.glowLabel || "外框光澤 / 高光");
+    glowHeader.textContent = "✨ " + (t.glowLabel || "Border Glow / Sheen");
     glowHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
     glowSection.appendChild(glowHeader);
 
     const glowToggleRow = document.createElement("div");
     glowToggleRow.style.cssText = rowCss();
     const glowToggleLbl = document.createElement("label");
-    glowToggleLbl.textContent = t.enableBorderGlow || "外框光暈";
+    glowToggleLbl.textContent = t.enableBorderGlow || "Border Glow";
     glowToggleLbl.style.cssText = labelCss();
     glowToggleRow.appendChild(glowToggleLbl);
     const glowToggle = document.createElement("input");
@@ -8270,7 +8619,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const glowColorRow = document.createElement("div");
     glowColorRow.style.cssText = rowCss();
     const glowColorLbl = document.createElement("label");
-    glowColorLbl.textContent = t.borderGlowColor || "光暈顏色";
+    glowColorLbl.textContent = t.borderGlowColor || "Glow Color";
     glowColorLbl.style.cssText = labelCss();
     glowColorRow.appendChild(glowColorLbl);
     const glowColorInput = document.createElement("input");
@@ -8292,7 +8641,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const glowStrRow = document.createElement("div");
     glowStrRow.style.cssText = rowCss();
     const glowStrLbl = document.createElement("label");
-    glowStrLbl.textContent = t.borderGlowStrength || "光暈強度";
+    glowStrLbl.textContent = t.borderGlowStrength || "Glow Strength";
     glowStrLbl.style.cssText = labelCss();
     glowStrRow.appendChild(glowStrLbl);
     const glowStrInput = document.createElement("input");
@@ -8312,7 +8661,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const glowInsetRow = document.createElement("div");
     glowInsetRow.style.cssText = rowCss();
     const glowInsetLbl = document.createElement("label");
-    glowInsetLbl.textContent = t.borderGlowInset || "內壁光";
+    glowInsetLbl.textContent = t.borderGlowInset || "Inset Glow";
     glowInsetLbl.style.cssText = labelCss();
     glowInsetRow.appendChild(glowInsetLbl);
     const glowInsetToggle = document.createElement("input");
@@ -8329,7 +8678,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     sheenToggleRow.style.cssText = rowCss() + "margin-top:4px;border-top:1px solid " +
       (panelTheme === "dark" ? "#444" : "#eee") + ";padding-top:5px;";
     const sheenToggleLbl = document.createElement("label");
-    sheenToggleLbl.textContent = t.enableSheen || "高光光澤 (Sheen)";
+    sheenToggleLbl.textContent = t.enableSheen || "Sheen Effect";
     sheenToggleLbl.style.cssText = labelCss();
     sheenToggleRow.appendChild(sheenToggleLbl);
     const sheenToggle = document.createElement("input");
@@ -8345,7 +8694,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const sheenAngleRow = document.createElement("div");
     sheenAngleRow.style.cssText = rowCss();
     const sheenAngleLbl = document.createElement("label");
-    sheenAngleLbl.textContent = t.sheenAngle || "光澤角度";
+    sheenAngleLbl.textContent = t.sheenAngle || "Sheen Angle";
     sheenAngleLbl.style.cssText = labelCss();
     sheenAngleRow.appendChild(sheenAngleLbl);
     const sheenAngleInput = document.createElement("input");
@@ -8365,7 +8714,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const sheenOpRow = document.createElement("div");
     sheenOpRow.style.cssText = rowCss();
     const sheenOpLbl = document.createElement("label");
-    sheenOpLbl.textContent = t.sheenOpacity || "光澤強度";
+    sheenOpLbl.textContent = t.sheenOpacity || "Sheen Intensity";
     sheenOpLbl.style.cssText = labelCss();
     sheenOpRow.appendChild(sheenOpLbl);
     const sheenOpInput = document.createElement("input");
@@ -8385,7 +8734,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const siteGlowRow = document.createElement("div");
     siteGlowRow.style.cssText = rowCss();
     const siteGlowLbl = document.createElement("label");
-    siteGlowLbl.textContent = t.enableSiteGlow || "站台按鈕光暈";
+    siteGlowLbl.textContent = t.enableSiteGlow || "Site Button Glow";
     siteGlowLbl.style.cssText = labelCss();
     siteGlowRow.appendChild(siteGlowLbl);
     const siteGlowToggle = document.createElement("input");
@@ -8407,7 +8756,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const groupGlowRow = document.createElement("div");
     groupGlowRow.style.cssText = rowCss();
     const groupGlowLbl = document.createElement("label");
-    groupGlowLbl.textContent = t.enableGroupGlow || "群組區塊光暈";
+    groupGlowLbl.textContent = t.enableGroupGlow || "Group Block Glow";
     groupGlowLbl.style.cssText = labelCss();
     groupGlowRow.appendChild(groupGlowLbl);
     const groupGlowToggle = document.createElement("input");
@@ -8436,14 +8785,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       flex-direction:column; gap:4px;
     `;
     const _sbsHeader = document.createElement("div");
-    _sbsHeader.textContent = "🔍 " + (t.searchBarStyleLabel || "搜尋列樣式");
+    _sbsHeader.textContent = "🔍 " + (t.searchBarStyleLabel || "Search Bar Style");
     _sbsHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
     searchBarSection.appendChild(_sbsHeader);
 
     const _sbsPresetRow = document.createElement("div");
     _sbsPresetRow.style.cssText = rowCss();
     const _sbsPresetLbl = document.createElement("label");
-    _sbsPresetLbl.textContent = t.searchBarPreset || "快速套色";
+    _sbsPresetLbl.textContent = t.searchBarPreset || "Quick Preset";
     _sbsPresetLbl.style.cssText = labelCss();
     _sbsPresetRow.appendChild(_sbsPresetLbl);
     const _presetBtnWrap = document.createElement("div");
@@ -8480,7 +8829,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const _sbsBgRow = document.createElement("div");
     _sbsBgRow.style.cssText = rowCss();
     const _sbsBgLbl = document.createElement("label");
-    _sbsBgLbl.textContent = t.searchBarBgColor || "列背景色";
+    _sbsBgLbl.textContent = t.searchBarBgColor || "Bar BG Color";
     _sbsBgLbl.style.cssText = labelCss();
     _sbsBgRow.appendChild(_sbsBgLbl);
     const sbsBgInput = document.createElement("input");
@@ -8503,7 +8852,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const _sbsBgOpRow = document.createElement("div");
     _sbsBgOpRow.style.cssText = rowCss();
     const _sbsBgOpLbl = document.createElement("label");
-    _sbsBgOpLbl.textContent = t.searchBarBgOpacity || "列背景透明度";
+    _sbsBgOpLbl.textContent = t.searchBarBgOpacity || "Bar BG Opacity";
     _sbsBgOpLbl.style.cssText = labelCss();
     _sbsBgOpRow.appendChild(_sbsBgOpLbl);
     const sbsBgOpInput = document.createElement("input");
@@ -8532,7 +8881,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const _sbsFgRow = document.createElement("div");
     _sbsFgRow.style.cssText = rowCss();
     const _sbsFgLbl = document.createElement("label");
-    _sbsFgLbl.textContent = t.searchBarFgColor || "列文字顏色";
+    _sbsFgLbl.textContent = t.searchBarFgColor || "Bar Text Color";
     _sbsFgLbl.style.cssText = labelCss();
     _sbsFgRow.appendChild(_sbsFgLbl);
     const sbsFgInput = document.createElement("input");
@@ -8556,7 +8905,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _sbsGlowToggleRow.style.cssText = rowCss() + "margin-top:4px;border-top:1px solid " +
       (panelTheme === "dark" ? "#444" : "#eee") + ";padding-top:5px;";
     const _sbsGlowToggleLbl = document.createElement("label");
-    _sbsGlowToggleLbl.textContent = t.searchBarGlowEnabled || "搜尋列光暈";
+    _sbsGlowToggleLbl.textContent = t.searchBarGlowEnabled || "Bar Glow";
     _sbsGlowToggleLbl.style.cssText = labelCss();
     _sbsGlowToggleRow.appendChild(_sbsGlowToggleLbl);
     const _sbsGlowToggle = document.createElement("input");
@@ -8572,7 +8921,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const _sbsGlowColorRow = document.createElement("div");
     _sbsGlowColorRow.style.cssText = rowCss();
     const _sbsGlowColorLbl = document.createElement("label");
-    _sbsGlowColorLbl.textContent = t.searchBarGlowColor || "光暈顏色";
+    _sbsGlowColorLbl.textContent = t.searchBarGlowColor || "Glow Color";
     _sbsGlowColorLbl.style.cssText = labelCss();
     _sbsGlowColorRow.appendChild(_sbsGlowColorLbl);
     const _sbsGlowColorInput = document.createElement("input");
@@ -8594,7 +8943,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const _sbsGlowStrRow = document.createElement("div");
     _sbsGlowStrRow.style.cssText = rowCss();
     const _sbsGlowStrLbl = document.createElement("label");
-    _sbsGlowStrLbl.textContent = t.searchBarGlowStrength || "光暈強度";
+    _sbsGlowStrLbl.textContent = t.searchBarGlowStrength || "Glow Strength";
     _sbsGlowStrLbl.style.cssText = labelCss();
     _sbsGlowStrRow.appendChild(_sbsGlowStrLbl);
     const _sbsGlowStrInput = document.createElement("input");
@@ -8627,7 +8976,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       gap:0; max-width:490px; margin-top:0;
     `;
     const _tbsHeader = document.createElement("div");
-    _tbsHeader.textContent = t.toggleBtnStyleLabel || "開關按鈕樣式";
+    _tbsHeader.textContent = t.toggleBtnStyleLabel || "Toggle Button Style";
     _tbsHeader.style.cssText = "font-weight:bold; margin-bottom:6px; font-size:11px;";
     toggleBtnStyleContainer.appendChild(_tbsHeader);
 
@@ -8635,15 +8984,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const row = document.createElement("div");
       row.style.cssText = rowCss() + "flex-wrap:wrap; gap:4px;";
       const lbl = document.createElement("label");
-      lbl.textContent = t.toggleBtnIconLabel || "圖示";
+      lbl.textContent = t.toggleBtnIconLabel || "Icon";
       lbl.style.cssText = labelCss();
       row.appendChild(lbl);
       const _wrap = document.createElement("div");
       _wrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
       const _opts = [
         { v: "emoji",    lb: t.toggleBtnIconEmoji   || "🔍 Emoji" },
-        { v: "svg-line", lb: t.toggleBtnIconSvgLine || "SVG 線框" },
-        { v: "svg-fill", lb: t.toggleBtnIconSvgFill || "SVG 填色" },
+        { v: "svg-line", lb: t.toggleBtnIconSvgLine || "SVG Outline" },
+        { v: "svg-fill", lb: t.toggleBtnIconSvgFill || "SVG Filled" },
       ];
       _opts.forEach(({ v, lb }) => {
         const b = document.createElement("button");
@@ -8686,7 +9035,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const row = document.createElement("div");
       row.style.cssText = rowCss() + "flex-wrap:wrap; align-items:center; gap:4px;";
       const lbl = document.createElement("label");
-      lbl.textContent = t.svgIconColorLabel || "SVG 圖示顏色";
+      lbl.textContent = t.svgIconColorLabel || "SVG Icon Color";
       lbl.style.cssText = labelCss();
       row.appendChild(lbl);
       const _cRow = document.createElement("div");
@@ -8754,7 +9103,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const row = document.createElement("div");
       row.style.cssText = rowCss();
       const lbl = document.createElement("label");
-      lbl.textContent = t.toggleBtnBgColorLabel || "背景顏色";
+      lbl.textContent = t.toggleBtnBgColorLabel || "BG Color";
       lbl.style.cssText = labelCss();
       row.appendChild(lbl);
       const _cWrap = document.createElement("div");
@@ -8786,7 +9135,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const row = document.createElement("div");
       row.style.cssText = rowCss();
       const lbl = document.createElement("label");
-      lbl.textContent = t.toggleBtnBgOpacityLabel || "背景透明度";
+      lbl.textContent = t.toggleBtnBgOpacityLabel || "BG Opacity";
       lbl.style.cssText = labelCss();
       row.appendChild(lbl);
       const _si = document.createElement("input");
@@ -8828,7 +9177,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     textStyleContainer.style.maxWidth = "490px";
 
     const textStyleHeader = document.createElement("div");
-    textStyleHeader.textContent = t.fontSize || "文字設定";
+    textStyleHeader.textContent = t.fontSize || "Text Settings";
     textStyleHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
     textStyleContainer.appendChild(textStyleHeader);
 
@@ -8836,7 +9185,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     fontSizeRow.style.cssText = rowCss();
 
     const fontSizeLabel = document.createElement("label");
-    fontSizeLabel.textContent = t.fontSize || "文字大小";
+    fontSizeLabel.textContent = t.fontSize || "Font Size";
     fontSizeLabel.style.cssText = labelCss();
     fontSizeRow.appendChild(fontSizeLabel);
 
@@ -8869,7 +9218,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const textBackgroundColorLabel = document.createElement("label");
     textBackgroundColorLabel.textContent =
-      t.textBackgroundColor || "文字背景色";
+      t.textBackgroundColor || "Text Background Color";
     textBackgroundColorLabel.style.cssText = labelCss();
     textBackgroundColorRow.appendChild(textBackgroundColorLabel);
 
@@ -8889,7 +9238,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     textBorderRow.style.cssText = rowCss();
 
     const textBorderLabel = document.createElement("label");
-    textBorderLabel.textContent = t.textBorder || "文字邊框";
+    textBorderLabel.textContent = t.textBorder || "Enable Text Border";
     textBorderLabel.style.cssText = labelCss();
     textBorderRow.appendChild(textBorderLabel);
 
@@ -8915,7 +9264,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const textOpacityCompensationLabel = document.createElement("label");
     textOpacityCompensationLabel.textContent =
-      t.textOpacityCompensation || "文字清晰強化";
+      t.textOpacityCompensation || "Text Clarity Boost";
     textOpacityCompensationLabel.style.cssText = labelCss();
     textOpacityCompensationRow.appendChild(textOpacityCompensationLabel);
 
@@ -8957,7 +9306,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     backgroundOverlayContainer.style.maxWidth = "490px";
 
     const backgroundOverlayHeader = document.createElement("div");
-    backgroundOverlayHeader.textContent = t.backgroundImage || "背景與黑幕";
+    backgroundOverlayHeader.textContent = t.backgroundImage || "Background & Overlay";
     backgroundOverlayHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
     backgroundOverlayContainer.appendChild(backgroundOverlayHeader);
 
@@ -8965,7 +9314,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     overlayDarkeningRow.style.cssText = rowCss();
 
     const overlayDarkeningLabel = document.createElement("label");
-    overlayDarkeningLabel.textContent = t.enableOverlayDarkening || "黑幕效果";
+    overlayDarkeningLabel.textContent = t.enableOverlayDarkening || "Overlay Darkening";
     overlayDarkeningLabel.style.cssText = labelCss();
     overlayDarkeningRow.appendChild(overlayDarkeningLabel);
 
@@ -8990,7 +9339,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     overlayStrengthRow.style.cssText = rowCss();
 
     const overlayStrengthLabel = document.createElement("label");
-    overlayStrengthLabel.textContent = t.overlayStrength || "黑幕強度";
+    overlayStrengthLabel.textContent = t.overlayStrength || "Overlay Strength";
     overlayStrengthLabel.style.cssText = labelCss();
     overlayStrengthRow.appendChild(overlayStrengthLabel);
 
@@ -9023,7 +9372,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageRow.style.cssText = rowCss();
 
     const imageLabel = document.createElement("label");
-    imageLabel.textContent = t.backgroundImage || "背景圖片";
+    imageLabel.textContent = t.backgroundImage || "Background Image";
     imageLabel.style.cssText = labelCss();
     imageRow.appendChild(imageLabel);
 
@@ -9046,7 +9395,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageRow.appendChild(imageInput);
 
     const clearImageBtn = document.createElement("button");
-    clearImageBtn.textContent = t.clearImage || "清除圖片";
+    clearImageBtn.textContent = t.clearImage || "Clear Image🗑️";
     clearImageBtn.style.padding = "2px 6px";
     clearImageBtn.style.borderRadius = styleSettings.borderRadius + "px";
     clearImageBtn.style.cursor = "pointer";
@@ -9064,7 +9413,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageModeRow.style.cssText = rowCss();
 
     const imageModeLabel = document.createElement("label");
-    imageModeLabel.textContent = t.imageMode || "圖片模式";
+    imageModeLabel.textContent = t.imageMode || "Image Mode";
     imageModeLabel.style.cssText = labelCss();
     imageModeRow.appendChild(imageModeLabel);
 
@@ -9097,7 +9446,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageOffsetXRow.style.cssText = rowCss();
 
     const imageOffsetXLabel = document.createElement("label");
-    imageOffsetXLabel.textContent = t.imageOffsetX || "圖片 X 偏移";
+    imageOffsetXLabel.textContent = t.imageOffsetX || "Image X Offset";
     imageOffsetXLabel.style.cssText = labelCss();
     imageOffsetXRow.appendChild(imageOffsetXLabel);
 
@@ -9130,7 +9479,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageOffsetYRow.style.cssText = rowCss();
 
     const imageOffsetYLabel = document.createElement("label");
-    imageOffsetYLabel.textContent = t.imageOffsetY || "圖片 Y 偏移";
+    imageOffsetYLabel.textContent = t.imageOffsetY || "Image Y Offset";
     imageOffsetYLabel.style.cssText = labelCss();
     imageOffsetYRow.appendChild(imageOffsetYLabel);
 
@@ -9164,7 +9513,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageScaleRow.style.cssText = rowCss();
 
     const imageScaleLabel = document.createElement("label");
-    imageScaleLabel.textContent = t.imageScale || "圖片縮放";
+    imageScaleLabel.textContent = t.imageScale || "Image Scale";
     imageScaleLabel.style.cssText = labelCss();
     imageScaleRow.appendChild(imageScaleLabel);
 
@@ -9197,7 +9546,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageOpacityRow.style.cssText = rowCss();
 
     const imageOpacityLabel = document.createElement("label");
-    imageOpacityLabel.textContent = t.imageOpacity || "圖片透明度";
+    imageOpacityLabel.textContent = t.imageOpacity || "Image Opacity";
     imageOpacityLabel.style.cssText = labelCss();
     imageOpacityRow.appendChild(imageOpacityLabel);
 
@@ -9236,14 +9585,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     multiSelectContainer.style.maxWidth = "490px";
 
     const multiSelectHeader = document.createElement("div");
-    multiSelectHeader.textContent = t.multiSelectMode || "複選模式";
+    multiSelectHeader.textContent = t.multiSelectMode || "Multi-select Mode";
     multiSelectHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
     multiSelectContainer.appendChild(multiSelectHeader);
 
     const msColorRow = document.createElement("div");
     msColorRow.style.cssText = rowCss();
     const msColorLabel = document.createElement("label");
-    msColorLabel.textContent = t.multiSelectColor || "選取高亮顏色";
+    msColorLabel.textContent = t.multiSelectColor || "Select Highlight Color";
     msColorLabel.style.cssText = labelCss();
     msColorRow.appendChild(msColorLabel);
     const msColorInput = document.createElement("input");
@@ -9259,7 +9608,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const msOpacityRow = document.createElement("div");
     msOpacityRow.style.cssText = rowCss();
     const msOpacityLabel = document.createElement("label");
-    msOpacityLabel.textContent = t.multiSelectOpacity || "高亮透明度";
+    msOpacityLabel.textContent = t.multiSelectOpacity || "Highlight Opacity";
     msOpacityLabel.style.cssText = labelCss();
     msOpacityRow.appendChild(msOpacityLabel);
     const msOpacityInput = document.createElement("input");
@@ -9304,7 +9653,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     backgroundColorRow.style.cssText = rowCss();
 
     const backgroundColorLabel = document.createElement("label");
-    backgroundColorLabel.textContent = t.backgroundColor || "背景色";
+    backgroundColorLabel.textContent = t.backgroundColor || "Background Color";
     backgroundColorLabel.style.cssText = labelCss();
     backgroundColorRow.appendChild(backgroundColorLabel);
 
@@ -9323,7 +9672,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     textColorRow.style.cssText = rowCss();
 
     const textColorLabel = document.createElement("label");
-    textColorLabel.textContent = t.textColor || "文字色";
+    textColorLabel.textContent = t.textColor || "Text Color";
     textColorLabel.style.cssText = labelCss();
     textColorRow.appendChild(textColorLabel);
 
@@ -9342,7 +9691,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     buttonBgRow.style.cssText = rowCss();
 
     const buttonBgLabel = document.createElement("label");
-    buttonBgLabel.textContent = t.customButtonBg || "按鈕背景";
+    buttonBgLabel.textContent = t.customButtonBg || "Button Background";
 
     buttonBgLabel.style.cssText = labelCss();
     buttonBgRow.appendChild(buttonBgLabel);
@@ -9714,12 +10063,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     if (!input) {
       console.error("Search input not found with any selector!");
-      showToast(t.notFound || "搜尋輸入框未找到！");
+      showToast(t.notFound || "Search input not found!");
       return;
     }
     if (!keyword.trim()) {
       console.error("Keyword is empty!");
-      showToast(t.invalidSite || "請輸入有效網址！");
+      showToast(t.invalidSite || "Please enter a valid URL (e.g., example.com)!");
       return;
     }
 
@@ -9936,6 +10285,77 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     setTimeout(() => textarea.focus(), 50);
   }
 
+  function showShiftDeletedToast(displayName) {
+    const existing = document.getElementById("shift-deleted-toast");
+    if (existing) existing.remove();
+
+    const isDark      = panelTheme === "dark";
+    const _bg         = isDark ? "rgba(180,28,28,0.28)" : "rgba(185,28,28,0.90)";
+    const _border     = isDark ? "1px solid rgba(220,50,50,0.50)" : "1px solid rgba(185,28,28,0.65)";
+    const _radius     = Math.max(styleSettings.borderRadius ?? 6, 8) + "px";
+    const _fontSize   = (styleSettings.fontSize ?? 13) + "px";
+
+    const toast = document.createElement("div");
+    toast.id = "shift-deleted-toast";
+    toast.style.cssText = `
+      position:fixed; bottom:30px; left:50%;
+      transform:translateX(-50%);
+      background:${_bg}; color:#fff;
+      border:${_border}; border-radius:${_radius};
+      box-shadow:0 8px 28px rgba(0,0,0,0.32);
+      z-index:2147483650;
+      display:flex; align-items:center; gap:12px;
+      padding:13px 20px;
+      font-size:${_fontSize}; font-weight:500;
+      animation:slideUp 0.3s ease-out;
+      backdrop-filter:blur(10px);
+      pointer-events:none;
+    `;
+
+    if (!document.getElementById("undo-animation-style")) {
+      const style = document.createElement("style");
+      style.id = "undo-animation-style";
+      style.textContent = `
+        @keyframes slideUp {
+          from { transform:translateX(-50%) translateY(100px); opacity:0; }
+          to   { transform:translateX(-50%) translateY(0);     opacity:1; }
+        }
+        @keyframes slideDown {
+          from { transform:translateX(-50%) translateY(0);     opacity:1; }
+          to   { transform:translateX(-50%) translateY(100px); opacity:0; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    const icon = document.createElement("span");
+    icon.textContent = "🗑️";
+    icon.style.fontSize = "15px";
+
+    const msg = document.createElement("span");
+    msg.textContent = `Permanently deleted "${displayName}"`;
+    msg.style.flex = "1";
+
+    const note = document.createElement("span");
+    note.textContent = "Cannot undo";
+    note.style.cssText = `
+      font-size:10px; opacity:0.7; white-space:nowrap;
+      border:1px solid rgba(255,255,255,0.3);
+      border-radius:4px; padding:2px 6px;
+    `;
+
+    toast.appendChild(icon);
+    toast.appendChild(msg);
+    toast.appendChild(note);
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      if (!toast.parentNode) return;
+      toast.style.animation = "slideDown 0.3s ease-out";
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
   function showUndoMessage(deletedSite, groupIndex, siteIndex) {
     const currentLangData = LANGUAGES[lang] || LANGUAGES["zh_TW"];
     const existingMsg = document.getElementById("undo-message");
@@ -10040,7 +10460,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         setTimeout(() => {
           removeUndoMessage(undoMsg);
         }, 2000);
-        log("站點已恢復:", {
+        log("Site restored:", {
           群組: targetGroup.name,
           站點: deletedSite.url,
           位置: siteIndex,
@@ -10405,7 +10825,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       if (location.href !== lastUrl) {
         lastUrl = location.href;
         checkAttempts = 0;
-        log("偵測到網址變更,執行環境檢查...");
+        log("URL change detected, running environment check...");
 
         const panel = document.getElementById("site-group-panel");
         if (!panel) return;
@@ -10416,7 +10836,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           checkAttempts++;
 
           if (checkAttempts > MAX_ATTEMPTS) {
-            warn("已達最大嘗試次數,放棄渲染");
+            warn("Max retries reached, giving up render");
             return;
           }
 
@@ -10447,7 +10867,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
             const _tb = document.getElementById("site-toggle-simple");
             if (_tb) applyToggleBtnStyle(_tb);
           } catch (err) {
-            console.error("渲染過程發生錯誤:", err);
+            console.error("Render error:", err);
           }
         };
 
