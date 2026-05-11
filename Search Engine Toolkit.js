@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.1.0
+// @version      2.2.0
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -56,7 +56,7 @@
   const warn = (...args) => DEBUG && console.warn(...args);
 
   function isValidPixelValue(value) {
-    return typeof value === "string" && /^\d+(\.\d)?px$/.test(value);
+    return typeof value === "string" && /^\d+(\.\d+)?px$/.test(value);
   }
 
   const TIME_VALUES = [
@@ -170,10 +170,6 @@
       seBarOffsetLabel: "Raise Engine Bar (+50px)",
       hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
       hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
-      hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
-      hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
-      hideExportBtnLabel: "Hide 📤 Export Button",
-      hideImportBtnLabel: "Hide 📥 Import Button",
       hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
       hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
       hideExportBtnLabel: "Hide 📤 Export Button",
@@ -563,7 +559,7 @@
         finish: "知道了！",
       },
       se: {
-        panelTitle: "t.panelTitle || \"Search Engine Manager\"",
+        panelTitle: "搜尋引擎管理",
         helpTooltip:
           "使用說明：所有引擎在同一列表中。\n• 排在第 1–5 位的引擎會在頂部列顯示為快速圖示。\n• 拖曳 ⠿ 調整順序——移到前 5 個就會顯示為頂部圖示。\n• 點擊 → 可用目前關鍵字跳轉。\n• 點擊 ✕ 刪除引擎。",
         lockLabel: "🔒 鎖定引擎提示",
@@ -594,9 +590,9 @@
         newWindowBtn: "⧉",
         newWindowTitle: "在新視窗開啟",
         dpTitle: {
-          pinned: "Panel always visible (Pinned)\nClick to change",
-          on: "Panel opens by default (ON)\nClick to change",
-          off: "Panel closed by default (OFF)\nClick to change",
+          pinned: "面板永遠顯示（釘選）\n點擊以變更",
+          on: "面板預設開啟（ON）\n點擊以變更",
+          off: "面板預設關閉（OFF）\n點擊以變更",
           offToast: "⛔ OFF — 面板目前仍開著，點擊 🔍 或面板外側可關閉。",
         },
       },
@@ -2033,13 +2029,16 @@
         if (baiduInput && baiduInput.value.trim()) return baiduInput.value.trim();
       }
       const u = new URL(location.href);
+      const host = u.hostname;
+      for (const { host: h, param } of ENGINE_QUERY_PARAMS) {
+        if (host.includes(h)) {
+          const v = u.searchParams.get(param);
+          if (v) return v;
+        }
+      }
       return (
-        u.searchParams.get("q")     ||
-        u.searchParams.get("p")     ||
-        u.searchParams.get("wd")    ||
-        u.searchParams.get("text")  ||
-        u.searchParams.get("query") ||
-        u.searchParams.get("word")  ||
+        u.searchParams.get("q")    ||
+        u.searchParams.get("word") ||
         ""
       );
     } catch (e) {
@@ -2565,18 +2564,23 @@
 
   const TIME_OPTIONS = t.timeOptions;
 
-  function getBingFreshness(val) {
-    const freshnessMap = {
-      h: "past hour", h2: "past hour", h3: "past hour",
-      h6: "past hour", h12: "past hour",
-      d: "past day",  d2: "past day",  d3: "past day",
-      w: "past week", w3: "past week",
-      m: "past month",m3: "past month",m6: "past month",
-      y: "past year", y2: "past year", y3: "past year",
-      y4: "past year",y5: "past year", y6: "past year",
-      y7: "past year",y8: "past year", y9: "past year",
+  function getBingFilters(val) {
+    if (!val) return null;
+    if (val.startsWith("h") || val === "d" || val === "d2") return 'ex1:"ez1"';
+    if (val === "d3" || val.startsWith("w"))                return 'ex1:"ez2"';
+    if (val === "m")                                         return 'ex1:"ez3"';
+    const daysMap = {
+      m3: 90, m6: 180,
+      y: 365, y2: 730, y3: 1095, y4: 1461, y5: 1826,
+      y6: 2191, y7: 2556, y8: 2922, y9: 3287,
     };
-    return freshnessMap[val] || "past year";
+    const days = daysMap[val];
+    if (days !== undefined) {
+      const today    = Math.floor(Date.now() / 86400000);
+      const startDay = today - days;
+      return `ex1:"ez5_${startDay}_${today}"`;
+    }
+    return 'ex1:"ez3"';
   }
 
   function getTimeFilterEngine() {
@@ -2699,8 +2703,9 @@
         else         url.searchParams.delete("qft");
       }
     } else if (engine === "bing") {
-      if (val) url.searchParams.set("freshness", getBingFreshness(val));
-      else     url.searchParams.delete("freshness");
+      url.searchParams.delete("freshness");
+      if (val) url.searchParams.set("filters", getBingFilters(val));
+      else     url.searchParams.delete("filters");
     } else if (engine === "yahoo") {
       const age = val ? getYahooAge(val) : null;
       if (age) url.searchParams.set("age", age);
@@ -4210,7 +4215,8 @@
               const _eng = getTimeFilterEngine();
               if (finalTime && _eng) {
                 if (_eng === "bing") {
-                  url.searchParams.set("freshness", getBingFreshness(finalTime));
+                  url.searchParams.delete("freshness");
+                  url.searchParams.set("filters", getBingFilters(finalTime));
                 } else if (_eng === "yahoo") {
                   const _age = getYahooAge(finalTime);
                   if (_age) url.searchParams.set("age", _age);
@@ -4220,6 +4226,7 @@
               } else {
                 url.searchParams.delete("tbs");
                 url.searchParams.delete("freshness");
+                url.searchParams.delete("filters");
                 url.searchParams.delete("age");
               }
               return url;
@@ -4931,22 +4938,26 @@
         headerContainer.style.cursor = "grabbing";
         e.preventDefault();
       });
-      document.addEventListener("mousemove", (e) => {
+      function _hOnMove(e) {
         if (!_hDragging) return;
         const nx = Math.max(0, Math.min(e.clientX - _hOx, window.innerWidth  - panel.offsetWidth));
         const ny = Math.max(0, Math.min(e.clientY - _hOy, window.innerHeight - panel.offsetHeight));
         panel.style.left = nx + "px";
         panel.style.top  = ny + "px";
         panel.style.right = "auto";
-      });
-      document.addEventListener("mouseup", () => {
+      }
+      function _hOnUp() {
         if (!_hDragging) return;
         _hDragging = false;
         headerContainer.style.cursor = "grab";
         styleSettings.panelLeft = parseInt(panel.style.left) || 0;
         styleSettings.panelTop  = parseInt(panel.style.top)  || 0;
         GM_setValue("styleSettings", styleSettings);
-      });
+        document.removeEventListener("mousemove", _hOnMove);
+        document.removeEventListener("mouseup",   _hOnUp);
+      }
+      document.addEventListener("mousemove", _hOnMove);
+      document.addEventListener("mouseup",   _hOnUp);
     }
 
     const headerLeft = document.createElement("div");
@@ -5808,7 +5819,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         epTitleBar.style.cursor = "grabbing";
         e.preventDefault();
       });
-      document.addEventListener("mousemove", (e) => {
+      function _epOnMove(e) {
         if (!epDragging || !seExtraPanel) return;
         const nx = Math.max(
           0,
@@ -5827,8 +5838,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         seExtraPanel.style.left = nx + "px";
         seExtraPanel.style.top = ny + "px";
         seExtraPanel.style.right = "auto";
-      });
-      document.addEventListener("mouseup", () => {
+      }
+      function _epOnUp() {
         if (!epDragging) return;
         epDragging = false;
         epTitleBar.style.cursor = "grab";
@@ -5839,7 +5850,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           };
           se_save();
         }
-      });
+        document.removeEventListener("mousemove", _epOnMove);
+        document.removeEventListener("mouseup",   _epOnUp);
+      }
+      document.addEventListener("mousemove", _epOnMove);
+      document.addEventListener("mouseup",   _epOnUp);
 
       const epBody = document.createElement("div");
       epBody.style.cssText =
@@ -6321,7 +6336,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           showToast(st.nameEmpty || "Name and URL cannot be empty!");
           return;
         }
-        if (!url.startsWith("http")) {
+        try {
+          const _u = new URL(url);
+          if (_u.protocol !== "https:" && _u.protocol !== "http:") throw new Error("invalid scheme");
+        } catch (_) {
           showToast(st.urlInvalid || "URL must start with http!");
           return;
         }
@@ -7154,8 +7172,21 @@ KR │ 패널 고정 (won't disappear after navigation)`;
             _initTimeVal = _found ? _found[1] : "y";
           }
         } else if (_tsEngine === "bing") {
-          const _freshnessRev = { "past hour":"h","past day":"d","past week":"w","past month":"m","past year":"y" };
-          _initTimeVal = _freshnessRev[(_u.searchParams.get("freshness")||"").toLowerCase()] || "";
+          const _bingFiltersRev = { 'ex1:"ez1"': "d", 'ex1:"ez2"': "w", 'ex1:"ez3"': "m" };
+          const _rawFilters = _u.searchParams.get("filters") || "";
+          if (_bingFiltersRev[_rawFilters]) {
+            _initTimeVal = _bingFiltersRev[_rawFilters];
+          } else if (/ex1:"ez5_(\d+)_(\d+)"/.test(_rawFilters)) {
+            const [, s, e] = _rawFilters.match(/ex1:"ez5_(\d+)_(\d+)"/);
+            const _span = parseInt(e) - parseInt(s);
+            const _rangeMap = [[1,"d"],[7,"w"],[30,"m"],[90,"m3"],[180,"m6"],
+              [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],[2191,"y6"],
+              [2556,"y7"],[2922,"y8"],[3287,"y9"]];
+            const _found = _rangeMap.find(([n]) => _span <= n);
+            _initTimeVal = _found ? _found[1] : "y9";
+          } else {
+            _initTimeVal = "";
+          }
         } else if (_tsEngine === "yahoo") {
           const _ageRev = { "1d":"d","1w":"w","1m":"m","1y":"y" };
           _initTimeVal = _ageRev[_u.searchParams.get("age")||""] || "";
@@ -7421,14 +7452,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         document.body.style.cursor = "se-resize";
         e.preventDefault(); e.stopPropagation();
       });
-      document.addEventListener("mousemove", (e) => {
+      function _rOnMove(e) {
         if (!_rDragging) return;
         const nw = Math.max(260, _rStartW + (e.clientX - _rStartX));
         const nh = Math.max(200, _rStartH + (e.clientY - _rStartY));
         panel.style.width = nw + "px"; panel.style.maxWidth = nw + "px";
         panel.style.maxHeight = Math.min(95, Math.round(nh / window.innerHeight * 100)) + "vh";
-      });
-      document.addEventListener("mouseup", () => {
+      }
+      function _rOnUp() {
         if (!_rDragging) return;
         _rDragging = false;
         document.body.style.cursor = "";
@@ -7436,7 +7467,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         styleSettings.panelMaxHeight = parseInt(panel.style.maxHeight) || 87;
         styleSettings.panelUserSized = true;
         GM_setValue("styleSettings", styleSettings);
-      });
+        document.removeEventListener("mousemove", _rOnMove);
+        document.removeEventListener("mouseup",   _rOnUp);
+      }
+      document.addEventListener("mousemove", _rOnMove);
+      document.addEventListener("mouseup",   _rOnUp);
     }
 
     const expandCollapseBtn = document.createElement("button");
@@ -7559,24 +7594,27 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleConfigHeaderRow.style.cursor = "grabbing";
       e.preventDefault();
     });
-    document.addEventListener("mousemove", (e) => {
+    function _sfOnMove(e) {
       if (!_sfDragging) return;
       const nx = Math.max(0, Math.min(e.clientX - _sfOx, window.innerWidth  - styleConfigWrap.offsetWidth));
       const ny = Math.max(0, Math.min(e.clientY - _sfOy, window.innerHeight - styleConfigWrap.offsetHeight));
       styleConfigWrap.style.left  = nx + "px";
       styleConfigWrap.style.top   = ny + "px";
       styleConfigWrap.style.right = "auto";
-    });
-    document.addEventListener("mouseup", () => {
-      if (_sfDragging) {
-        _sfDragging = false;
-        styleConfigHeaderRow.style.cursor = "grab";
-        GM_setValue("styleFloatPos", {
-          top:  styleConfigWrap.style.top,
-          left: styleConfigWrap.style.left,
-        });
-      }
-    });
+    }
+    function _sfOnUp() {
+      if (!_sfDragging) return;
+      _sfDragging = false;
+      styleConfigHeaderRow.style.cursor = "grab";
+      GM_setValue("styleFloatPos", {
+        top:  styleConfigWrap.style.top,
+        left: styleConfigWrap.style.left,
+      });
+      document.removeEventListener("mousemove", _sfOnMove);
+      document.removeEventListener("mouseup",   _sfOnUp);
+    }
+    document.addEventListener("mousemove", _sfOnMove);
+    document.addEventListener("mouseup",   _sfOnUp);
 
     const styleFloatBody = document.createElement("div");
     styleFloatBody.style.padding = "6px";
@@ -8237,7 +8275,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _qsContainer.style.cssText = `
         border:1px solid ${_qsDark ? "#555" : "#ccc"};
         border-radius:${styleSettings.borderRadius}px;
-        padding:6px 8px; display:none; flex-direction:column; gap:4px; margin-top:0;
+        padding:6px 8px; display:flex; flex-direction:column; gap:4px; margin-top:0;
       `;
       _qsHeader = document.createElement("div");
       _qsHeader.textContent = t.quickSchemeLabel || "🎨 Quick Scheme";
@@ -8270,6 +8308,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       };
 
       const _qsDefs = [
+        { key: "reset",  label: t.quickSchemeReset || "↺ Reset" },
+        { key: "light",  label: t.quickSchemeLight  || "☀️ Light" },
+        { key: "dark",   label: t.quickSchemeDark   || "🌑 Dark" },
       ];
 
       _qsDefs.forEach(def => {
@@ -10009,6 +10050,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     { host: "yahoo.com", param: "p"     },
     { host: "naver.com", param: "query" },
     { host: "ask.com",   param: "q"     },
+    { host: "sogou.com", param: "query" },
   ];
 
   function getEngineQueryParam() {
