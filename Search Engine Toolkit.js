@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.3.0.18
+// @version      2.3.0.21
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -86,7 +86,8 @@
   const LANGUAGES = {
     en: {
       siteTitle: "Site Groups",
-      timeLabel: "🕐 Time Filter",      unlimited: "Unlimited",
+      timeLabel: "🕐 Time Filter",
+      unlimited: "Unlimited",
       expand: "🎨Expand",
       collapse: "Collapse",
       toggleShow: "Show Addresses",
@@ -1038,6 +1039,7 @@
       quickSchemeLight:       "☀️ ﾗｲﾄ",
       quickSchemeDark:        "🌑 ﾀﾞｰｸ",
       quickSchemeReset:       "↺ ﾘｾｯﾄ",
+      glowLabel:              "枠ｸﾞﾛｳ / 光沢",
       enableBorderGlow:       "枠ｸﾞﾛｳ",
       borderGlowColor:        "ｸﾞﾛｳ色",
       borderGlowStrength:     "ｸﾞﾛｳ強度",
@@ -1800,6 +1802,11 @@
         }
       }
 
+      if (host.includes("duckduckgo.com")) {
+        if (params.has("t"))      { params.delete("t");      updated = true; }
+        if (params.has("origin")) { params.delete("origin"); updated = true; }
+      }
+
       if (updated) {
         params.set("__sse_or", "1");
         url.search = params.toString();
@@ -2167,6 +2174,12 @@
   function _debouncedApply() {
     clearTimeout(_applyTimer);
     _applyTimer = setTimeout(() => applyTheme(panelTheme), 16);
+  }
+
+  let _saveTimer = null;
+  function _debouncedSave() {
+    clearTimeout(_saveTimer);
+    _saveTimer = setTimeout(() => save(), 300);
   }
 
   let _shiftDeleteMode  = false;
@@ -3574,6 +3587,28 @@
     return s;
   }
 
+  function _exitMultiSelect(blk, mBtn, sBtn) {
+    blk.dataset.multiSelectActive = "false";
+    blk._multiSelected.clear();
+    mBtn.style.opacity = "0.6";
+    mBtn.style.background = "none";
+    mBtn.style.color = "";
+    mBtn.style.fontWeight = "";
+    mBtn._activeStyle = null;
+    sBtn.style.display = "none";
+    sBtn.textContent = "↗";
+    sBtn.style.background = "none";
+    sBtn.style.color = "#e08000";
+    sBtn.style.fontWeight = "";
+    sBtn.style.opacity = "";
+    blk.querySelectorAll(".site-ms-chk").forEach(c => { c.style.display = "none"; c.checked = false; });
+    const ov = document.getElementById(`ms-overlay-${blk.dataset.groupIndex}`);
+    if (ov) ov.remove();
+    const banner = document.getElementById(`ms-banner-${blk.dataset.groupIndex}`);
+    if (banner) banner.remove();
+    panel.dataset.multiSelectLock = "";
+  }
+
   function _setupMultiSelectOnClick(blk, mBtn, sBtn) {
     const isActive = blk.dataset.multiSelectActive === "true";
     if (isActive) {
@@ -4362,28 +4397,6 @@
       };
       const _hlColor  = () => styleSettings.multiSelectColor  || "#ffc400";
       const _hlOpacity = () => styleSettings.multiSelectOpacity != null ? styleSettings.multiSelectOpacity : 0.85;
-
-      const _exitMultiSelect = (blk, mBtn, sBtn) => {
-        blk.dataset.multiSelectActive = "false";
-        blk._multiSelected.clear();
-        mBtn.style.opacity = "0.6";
-        mBtn.style.background = "none";
-        mBtn.style.color = "";
-        mBtn.style.fontWeight = "";
-        mBtn._activeStyle = null;
-        sBtn.style.display = "none";
-        sBtn.textContent = "↗";
-        sBtn.style.background = "none";
-        sBtn.style.color = "#e08000";
-        sBtn.style.fontWeight = "";
-        sBtn.style.opacity = "";
-        blk.querySelectorAll(".site-ms-chk").forEach(c => { c.style.display = "none"; c.checked = false; });
-        const ov = document.getElementById(`ms-overlay-${blk.dataset.groupIndex}`);
-        if (ov) ov.remove();
-        const banner = document.getElementById(`ms-banner-${blk.dataset.groupIndex}`);
-        if (banner) banner.remove();
-        panel.dataset.multiSelectLock = "";
-      };
 
       let multiPill = leftContainer.querySelector(".multi-pill");
       if (!multiPill) {
@@ -7891,7 +7904,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const siteGlowToggle = document.createElement("input");
     siteGlowToggle.type = "checkbox";
     siteGlowToggle.checked = !!styleSettings.enableSiteGlow;
-    siteGlowToggle.oninput = () => {
+    siteGlowToggle.onchange = () => {
       styleSettings.enableSiteGlow = siteGlowToggle.checked;
       save(); applyTheme(panelTheme);
     };
@@ -7913,7 +7926,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const groupGlowToggle = document.createElement("input");
     groupGlowToggle.type = "checkbox";
     groupGlowToggle.checked = !!styleSettings.enableGroupGlow;
-    groupGlowToggle.oninput = () => {
+    groupGlowToggle.onchange = () => {
       styleSettings.enableGroupGlow = groupGlowToggle.checked;
       save(); applyTheme(panelTheme);
     };
@@ -8242,7 +8255,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _cci.style.cssText = "width:22px; height:18px; border:none; cursor:pointer; padding:0; border-radius:3px; flex-shrink:0;";
       _cci.oninput = () => {
         styleSettings.svgIconColor = _cci.value;
-        save();
+        _debouncedSave();
         applyAllBtnIcons();
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
@@ -8270,7 +8283,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _ci.style.cssText = "width:36px; height:24px; border:none; cursor:pointer; padding:0; border-radius:3px;";
       _ci.oninput = () => {
         styleSettings.toggleBtnBg = _ci.value;
-        save();
+        _debouncedSave();
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
       };
@@ -8305,7 +8318,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _si.oninput = () => {
         styleSettings.toggleBtnBgOpacity = parseFloat(_si.value);
         _vs.textContent = parseFloat(_si.value).toFixed(2);
-        save();
+        _debouncedSave();
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
       };
