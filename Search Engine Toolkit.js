@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.0.2
+// @version      2.4.1.0
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -2679,7 +2679,18 @@
     return `https://www.google.com/s2/favicons?sz=16&domain=${domain}`;
   }
 
-  function getDragAfterElement(container, y, selector) {
+  function getDragAfterElement(container, y, selector, cachedMidpoints) {
+    if (cachedMidpoints && cachedMidpoints.length) {
+      let closest = { offset: Number.NEGATIVE_INFINITY, element: null };
+      for (const { mid, element } of cachedMidpoints) {
+        if (element.classList.contains("dragging")) continue;
+        const offset = y - mid;
+        if (offset < 0 && offset > closest.offset) {
+          closest = { offset, element };
+        }
+      }
+      return closest.element;
+    }
     const draggableElements = [
       ...container.querySelectorAll(`${selector}:not(.dragging)`),
     ];
@@ -2730,6 +2741,7 @@
   let __blacklistDialogOpen    = false;
   let __styleFloatResizeHandler = null;
   let __toggleButtonObserver   = null;
+  let _isDraggingPanel         = false;
 
   function parseSmartDomain(raw) {
     if (!raw || typeof raw !== "string") return null;
@@ -3214,6 +3226,7 @@
       }
       panel.style.right = "auto";
       panel.style.transform = "translate(0,0)";
+      panel.style.willChange = "transform";
       panel.style.transition = "opacity 0.2s ease, transform 0.2s ease";
       panel.style.maxHeight = (styleSettings.panelMaxHeight ?? 87) + "vh";
       panel.style.overflowY = "auto";
@@ -4096,6 +4109,11 @@
     e.dataTransfer.setData("groupIndex", groupIndex);
     e.dataTransfer.setData("siteIndex", siteIndex);
     try { if (e.dataTransfer.items) {  } } catch(_) {}
+    const sc = siteContainer;
+    sc._dragMidpoints = [...sc.querySelectorAll(".draggable-site")].map(el => ({
+      mid: el.getBoundingClientRect().top + el.getBoundingClientRect().height / 2,
+      element: el,
+    }));
   });
 
   btn.addEventListener("dragend", (e) => {
@@ -4104,6 +4122,7 @@
     btn.style.opacity = "";
     btn.blur();
     document.activeElement?.blur();
+    if (siteContainer._dragMidpoints) siteContainer._dragMidpoints = null;
   });
 
   const favicon = document.createElement("img");
@@ -4369,12 +4388,21 @@
           e.dataTransfer.effectAllowed = "move";
           e.dataTransfer.setData("text/plain", "group");
           e.dataTransfer.setData("groupIndex", block.dataset.groupIndex);
+          const panelEl = document.getElementById("site-group-panel");
+          if (panelEl) {
+            panelEl._groupDragMidpoints = [...panelEl.querySelectorAll(".group-block")].map(el => ({
+              mid: el.getBoundingClientRect().top + el.getBoundingClientRect().height / 2,
+              element: el,
+            }));
+          }
         });
 
         block.addEventListener("dragend", (e) => {
           e.stopPropagation();
           block.classList.remove("dragging");
           block.style.opacity = "";
+          const panelEl = document.getElementById("site-group-panel");
+          if (panelEl) panelEl._groupDragMidpoints = null;
         });
 
         _bodyTarget.appendChild(block);
@@ -4580,20 +4608,24 @@
         siteContainer.style.minHeight = "18px";
         siteContainer.dataset.groupIndex = groupIndex;
 
+        let _scDragRAF = 0;
         siteContainer.addEventListener("dragover", (e) => {
           e.preventDefault();
           e.stopPropagation();
-          const draggingSite = document.querySelector(
-            ".dragging.draggable-site",
-          );
-          if (!draggingSite) return;
-          const afterElement = getDragAfterElement(
-            siteContainer,
-            e.clientY,
-            ".draggable-site",
-          );
-          if (!afterElement) siteContainer.appendChild(draggingSite);
-          else siteContainer.insertBefore(draggingSite, afterElement);
+          if (_scDragRAF) return;
+          _scDragRAF = requestAnimationFrame(() => {
+            _scDragRAF = 0;
+            const draggingSite = document.querySelector(".dragging.draggable-site");
+            if (!draggingSite) return;
+            const afterElement = getDragAfterElement(
+              siteContainer,
+              e.clientY,
+              ".draggable-site",
+              siteContainer._dragMidpoints,
+            );
+            if (!afterElement) siteContainer.appendChild(draggingSite);
+            else siteContainer.insertBefore(draggingSite, afterElement);
+          });
         });
 
         siteContainer.addEventListener("drop", (e) => {
@@ -4815,6 +4847,7 @@
 
   const closePanelOnClickOutside = (event) => {
     if (!panel || isPromptActive) return;
+    if (_isDraggingPanel) return;
     if (event.target && !event.target.isConnected) return;
     if (searchConfig.isExpanded) {
       const _sfWrap = document.getElementById("style-config-wrap");
@@ -4907,35 +4940,59 @@
 
   {
     let _hDragging = false, _hOx = 0, _hOy = 0;
+    let _hBaseLeft = 0, _hBaseTop = 0;
+    let _hPW = 0, _hPH = 0;
+    let _hRAF = 0;
+    let _hNextX = 0, _hNextY = 0;
+
     headerContainer.addEventListener("mousedown", (e) => {
       if (e.target.closest("button,input,select,a,[role=button]")) return;
       _hDragging = true;
+      _isDraggingPanel = true;
       const rect = panel.getBoundingClientRect();
+      _hBaseLeft = rect.left;
+      _hBaseTop  = rect.top;
+      _hPW = rect.width;
+      _hPH = rect.height;
       _hOx = e.clientX - rect.left;
       _hOy = e.clientY - rect.top;
+      _hNextX = 0; _hNextY = 0;
+      panel.style.transform = "translate(0,0)";
       headerContainer.style.cursor = "grabbing";
       e.preventDefault();
     });
     function _hOnMove(e) {
       if (!_hDragging) return;
-      const nx = Math.max(0, Math.min(e.clientX - _hOx, window.innerWidth  - panel.offsetWidth));
-      const ny = Math.max(0, Math.min(e.clientY - _hOy, window.innerHeight - panel.offsetHeight));
-      panel.style.left = nx + "px";
-      panel.style.top  = ny + "px";
-      panel.style.right = "auto";
+      const tx = Math.max(-_hBaseLeft, Math.min(e.clientX - _hOx - _hBaseLeft, window.innerWidth  - _hBaseLeft - _hPW));
+      const ty = Math.max(-_hBaseTop,  Math.min(e.clientY - _hOy - _hBaseTop,  window.innerHeight - _hBaseTop  - _hPH));
+      _hNextX = tx;
+      _hNextY = ty;
+      if (_hRAF) return;
+      _hRAF = requestAnimationFrame(() => {
+        _hRAF = 0;
+        panel.style.transform = `translate(${_hNextX}px,${_hNextY}px)`;
+      });
     }
     function _hOnUp() {
       if (!_hDragging) return;
       _hDragging = false;
+      if (_hRAF) { cancelAnimationFrame(_hRAF); _hRAF = 0; }
       headerContainer.style.cursor = "grab";
-      styleSettings.panelLeft = parseInt(panel.style.left) || 0;
-      styleSettings.panelTop  = parseInt(panel.style.top)  || 0;
+      const finalLeft = Math.max(0, Math.min(_hBaseLeft + _hNextX, window.innerWidth  - _hPW));
+      const finalTop  = Math.max(0, Math.min(_hBaseTop  + _hNextY, window.innerHeight - _hPH));
+      panel.style.left      = finalLeft + "px";
+      panel.style.top       = finalTop  + "px";
+      panel.style.right     = "auto";
+      panel.style.transform = "translate(0,0)";
+      styleSettings.panelLeft = finalLeft;
+      styleSettings.panelTop  = finalTop;
       GM_setValue("styleSettings", styleSettings);
-      document.removeEventListener("mousemove", _hOnMove);
-      document.removeEventListener("mouseup",   _hOnUp);
+      window.removeEventListener("mousemove", _hOnMove, true);
+      window.removeEventListener("mouseup",   _hOnUp,   true);
+      setTimeout(() => { _isDraggingPanel = false; }, 50);
     }
-    document.addEventListener("mousemove", _hOnMove);
-    document.addEventListener("mouseup",   _hOnUp);
+    window.addEventListener("mousemove", _hOnMove, true);
+    window.addEventListener("mouseup",   _hOnUp,   true);
   }
 
   const headerLeft = document.createElement("div");
@@ -10128,33 +10185,43 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     panel.appendChild(grip);
 
     let _rDragging = false, _rStartX = 0, _rStartY = 0, _rStartW = 0, _rStartH = 0;
+    let _rRAF = 0, _rNextW = 0, _rNextH = 0;
     grip.addEventListener("mousedown", (e) => {
       _rDragging = true;
+      _isDraggingPanel = true;
       _rStartX = e.clientX; _rStartY = e.clientY;
       _rStartW = panel.offsetWidth; _rStartH = panel.offsetHeight;
+      _rNextW = _rStartW; _rNextH = _rStartH;
       document.body.style.cursor = "se-resize";
       e.preventDefault(); e.stopPropagation();
     });
     function _rOnMove(e) {
       if (!_rDragging) return;
-      const nw = Math.max(260, _rStartW + (e.clientX - _rStartX));
-      const nh = Math.max(200, _rStartH + (e.clientY - _rStartY));
-      panel.style.width = nw + "px"; panel.style.maxWidth = nw + "px";
-      panel.style.maxHeight = Math.min(95, Math.round(nh / window.innerHeight * 100)) + "vh";
+      _rNextW = Math.max(260, _rStartW + (e.clientX - _rStartX));
+      _rNextH = Math.max(200, _rStartH + (e.clientY - _rStartY));
+      if (_rRAF) return;
+      _rRAF = requestAnimationFrame(() => {
+        _rRAF = 0;
+        panel.style.width    = _rNextW + "px";
+        panel.style.maxWidth = _rNextW + "px";
+        panel.style.maxHeight = Math.min(95, Math.round(_rNextH / window.innerHeight * 100)) + "vh";
+      });
     }
     function _rOnUp() {
       if (!_rDragging) return;
       _rDragging = false;
+      if (_rRAF) { cancelAnimationFrame(_rRAF); _rRAF = 0; }
       document.body.style.cursor = "";
       styleSettings.panelWidth     = parseInt(panel.style.width)     || getEffectivePanelWidth();
       styleSettings.panelMaxHeight = parseInt(panel.style.maxHeight) || 87;
       styleSettings.panelUserSized = true;
       GM_setValue("styleSettings", styleSettings);
-      document.removeEventListener("mousemove", _rOnMove);
-      document.removeEventListener("mouseup",   _rOnUp);
+      window.removeEventListener("mousemove", _rOnMove, true);
+      window.removeEventListener("mouseup",   _rOnUp,   true);
+      setTimeout(() => { _isDraggingPanel = false; }, 50);
     }
-    document.addEventListener("mousemove", _rOnMove);
-    document.addEventListener("mouseup",   _rOnUp);
+    window.addEventListener("mousemove", _rOnMove, true);
+    window.addEventListener("mouseup",   _rOnUp,   true);
   }
 
   function rebuildPanel() {
@@ -10217,23 +10284,24 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     panelBody.insertBefore(searchConfigWrap, groupSlot);
     panelBody.insertBefore(buttonContainer,  groupSlot);
 
+    let _grpDragRAF = 0;
     panel.addEventListener("dragover", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const draggingGroup = document.querySelector(".dragging.draggable-group");
-      if (!draggingGroup) return;
-
-      const afterElement = getDragAfterElement(
-        panel,
-        e.clientY,
-        ".group-block",
-      );
-
-      if (afterElement == null) {
-        panel.appendChild(draggingGroup);
-      } else {
-        panel.insertBefore(draggingGroup, afterElement);
-      }
+      if (_grpDragRAF) return;
+      _grpDragRAF = requestAnimationFrame(() => {
+        _grpDragRAF = 0;
+        const draggingGroup = document.querySelector(".dragging.draggable-group");
+        if (!draggingGroup) return;
+        const afterElement = getDragAfterElement(
+          panel,
+          e.clientY,
+          ".group-block",
+          panel._groupDragMidpoints,
+        );
+        if (afterElement == null) panel.appendChild(draggingGroup);
+        else panel.insertBefore(draggingGroup, afterElement);
+      });
     });
 
     panel.addEventListener("drop", (e) => {
