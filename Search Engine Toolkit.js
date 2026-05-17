@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.3.0.21
+// @version      2.4.0.2
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -2766,6 +2766,7 @@
     }
 
     __customPromptOpen = true;
+    isPromptActive     = true;
 
     const theme =
       typeof panelTheme !== "undefined" && panelTheme ? panelTheme : "light";
@@ -2880,6 +2881,7 @@
       if (overlay && overlay.parentNode) overlay.remove();
       document.removeEventListener("keydown", onKeydown);
       __customPromptOpen = false;
+      isPromptActive     = false;
     }
 
     function doConfirm() {
@@ -3137,6 +3139,43 @@
              panelOpacity, groupOpacity, r, g, b };
   }
 
+  function _injectThemeCss() {
+    if (document.getElementById("set-theme-css")) return;
+    const s = document.createElement("style");
+    s.id = "set-theme-css";
+    s.textContent = `
+      #site-group-panel .group-block {
+        background:    var(--set-group-bg);
+        border-color:  var(--set-border);
+        border-radius: var(--set-radius);
+      }
+      #site-group-panel button:not(.icon-btn) {
+        background:    var(--set-btn-bg);
+        border-color:  var(--set-border);
+        border-radius: var(--set-radius);
+        color:         var(--set-text);
+        opacity:       var(--set-btn-opacity);
+        font-size:     var(--set-font-size);
+      }
+      #site-group-panel button:not(.icon-btn):hover {
+        background: var(--set-btn-hover-bg);
+      }
+      #site-group-panel .draggable-site {
+        background:    var(--set-btn-bg);
+        color:         var(--set-text);
+        border-radius: var(--set-radius);
+        opacity:       var(--set-btn-opacity);
+      }
+      #site-group-panel .draggable-site:hover {
+        background: var(--set-btn-hover-bg);
+      }
+      #site-group-panel .site-container {
+        grid-template-columns: var(--set-grid-cols);
+      }
+    `;
+    document.head.appendChild(s);
+  }
+
   function applyThemeToDom(v) {
     const {
       textColor, buttonBg, borderColor, borderRadius,
@@ -3145,6 +3184,18 @@
 
     const panel = document.getElementById("site-group-panel");
     if (panel) {
+      _injectThemeCss();
+      const _sbwCss = styleSettings.siteButtonWidth ?? 0;
+      panel.style.setProperty("--set-text",         textColor);
+      panel.style.setProperty("--set-btn-bg",        buttonBg);
+      panel.style.setProperty("--set-btn-hover-bg",  adjustColor(v.baseButtonBg, styleSettings.contrast + 10));
+      panel.style.setProperty("--set-border",        borderColor);
+      panel.style.setProperty("--set-radius",        borderRadius);
+      panel.style.setProperty("--set-font-size",     fontSize);
+      panel.style.setProperty("--set-btn-opacity",   String(buttonOpacity));
+      panel.style.setProperty("--set-group-bg",      `rgba(${r},${g},${b},${groupOpacity})`);
+      panel.style.setProperty("--set-grid-cols",     `repeat(auto-fill, minmax(${_sbwCss > 0 ? _sbwCss : 104}px, 1fr))`);
+
       panel.style.background = styleSettings.backgroundImage
         ? "transparent"
         : `rgba(${r},${g},${b},${panelOpacity})`;
@@ -3248,10 +3299,6 @@
       }
 
       panel.querySelectorAll(".group-block").forEach((el) => {
-        el.style.background = `rgba(${r},${g},${b},${groupOpacity})`;
-        el.style.borderColor = borderColor;
-        el.style.borderRadius = borderRadius;
-
         {
           const _gc = styleSettings.borderGlowColor || "#00bfff";
           const _gs = Math.max(2, Math.min(20, (styleSettings.borderGlowStrength || 12) * 0.5));
@@ -3285,34 +3332,7 @@
         }
       });
 
-      panel.querySelectorAll("button:not(.icon-btn)").forEach((el) => {
-        el.style.background = buttonBg;
-        el.style.borderColor = borderColor;
-        el.style.borderRadius = borderRadius;
-        el.style.color = textColor;
-        el.style.opacity = buttonOpacity;
-        el.style.fontSize = fontSize;
-        el.onmouseover = () => {
-          el.style.background = adjustColor(buttonBg, 10);
-        };
-        el.onmouseout = () => {
-          el.style.background = buttonBg;
-        };
-      });
-
-      {
-        const _sbw = styleSettings.siteButtonWidth ?? 0;
-        const _minCell = _sbw > 0 ? _sbw : 104;
-        panel.querySelectorAll(".site-container").forEach(sc => {
-          sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(${_minCell}px, 1fr))`;
-        });
-      }
-
       panel.querySelectorAll(".draggable-site").forEach((el) => {
-        el.style.opacity    = buttonOpacity;
-        el.style.background = buttonBg;
-        el.style.color      = textColor;
-        el.dataset.baseBg   = buttonBg;
         const _sbw = styleSettings.siteButtonWidth ?? 0;
         if (_sbw > 0) {
           el.style.width    = _sbw + "px";
@@ -3736,6 +3756,7 @@
     }
     if (__customPromptOpen) return;
     __customPromptOpen = true;
+    isPromptActive     = true;
 
     const keyword = (() => {
       const sels = [
@@ -3923,7 +3944,7 @@
     document.body.appendChild(dlgOverlay);
     box.addEventListener("click", e => e.stopPropagation());
 
-    const closeDlg = () => { dlgOverlay.remove(); __customPromptOpen = false; };
+    const closeDlg = () => { dlgOverlay.remove(); __customPromptOpen = false; isPromptActive = false; };
 
     confirmBtn.onclick = () => {
       const mode = Object.entries(radioGroup).find(([, r]) => r.checked)?.[0] || "site_same";
@@ -4013,10 +4034,6 @@
   const baseBg = panelTheme === "custom"
     ? (styleSettings.customButtonBg || "#f5f5f5")
     : (panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5");
-  const textColor =
-    styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000");
-  const borderColor = styleSettings.contrast > 0 ? "#888" : "#ccc";
-
   btn.dataset.baseBg = baseBg;
 
   Object.assign(btn.style, {
@@ -4027,19 +4044,14 @@
     gap: "5px",
     width:    (styleSettings.siteButtonWidth > 0 ? styleSettings.siteButtonWidth + "px" : ""),
     maxWidth: (styleSettings.siteButtonWidth > 0 ? styleSettings.siteButtonWidth + "px" : "none"),
-    borderRadius: Math.max(styleSettings.borderRadius, 8) + "px",
-    border: `0.5px solid ${borderColor}`,
-    background: baseBg,
-    color: textColor,
+    border: `0.5px solid ${styleSettings.contrast > 0 ? "#888" : "#ccc"}`,
     cursor: "pointer",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    opacity: styleSettings.buttonOpacity.toString(),
     boxShadow: "0 1px 3px rgba(0,0,0,0.10)",
     transition: "background 0.12s ease, box-shadow 0.12s ease",
     userSelect: "none",
-    fontSize: styleSettings.fontSize + "px",
   });
 
   let pressStartTime = 0;
@@ -4089,7 +4101,7 @@
   btn.addEventListener("dragend", (e) => {
     e.stopPropagation();
     btn.classList.remove("dragging");
-    btn.style.opacity = styleSettings.buttonOpacity.toString();
+    btn.style.opacity = "";
     btn.blur();
     document.activeElement?.blur();
   });
@@ -4197,7 +4209,12 @@
                 t.enterSiteNote || "Enter site note:",
                 site.note || "",
                 (newNote) => {
-                  group.sites[siteIndex] = { url: cleanUrl, note: newNote?.trim() || "" };
+                  const trimNote = newNote?.trim() || "";
+                  if ([...trimNote].length > 4) {
+                    showToast(t.noteTooLong || "Note cannot exceed 4 characters!");
+                    return;
+                  }
+                  group.sites[siteIndex] = { url: cleanUrl, note: trimNote };
                   save(); renderSites(panel); showToast(t.editSiteSuccess);
                 }, null, true
               );
@@ -4303,12 +4320,21 @@
       || document.getElementById("panel-body")
       || panel;
 
+    const _msHexToRgba = (hex, a) => {
+      const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+      return `rgba(${r},${g},${b},${a})`;
+    };
+    const _hlColor   = () => styleSettings.multiSelectColor  || "#ffc400";
+    const _hlOpacity = () => styleSettings.multiSelectOpacity != null ? styleSettings.multiSelectOpacity : 0.85;
+
+    let _migrated = false;
     groups.forEach((group) => {
-      group.sites = group.sites.map((site) =>
-        typeof site === "string" ? { url: site, note: "" } : site,
-      );
+      group.sites = group.sites.map((site) => {
+        if (typeof site === "string") { _migrated = true; return { url: site, note: "" }; }
+        return site;
+      });
     });
-    save();
+    if (_migrated) save();
 
     const existingBlocks = new Map();
     _bodyTarget.querySelectorAll(".group-block").forEach((block) => {
@@ -4390,13 +4416,6 @@
       nameSpan.textContent = group.name;
 
       if (!block._multiSelected) block._multiSelected = new Set();
-
-      const _msHexToRgba = (hex, a) => {
-        const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-        return `rgba(${r},${g},${b},${a})`;
-      };
-      const _hlColor  = () => styleSettings.multiSelectColor  || "#ffc400";
-      const _hlOpacity = () => styleSettings.multiSelectOpacity != null ? styleSettings.multiSelectOpacity : 0.85;
 
       let multiPill = leftContainer.querySelector(".multi-pill");
       if (!multiPill) {
@@ -4497,7 +4516,12 @@
               t.enterSiteNote || "Enter site note (recommended: within 4 characters):",
               "",
               (note) => {
-                group.sites.push({ url: parsed, note: note.trim() || "" });
+                const trimNote = note.trim();
+                if ([...trimNote].length > 4) {
+                  showToast(t.noteTooLong || "Note cannot exceed 4 characters!");
+                  return;
+                }
+                group.sites.push({ url: parsed, note: trimNote || "" });
                 save();
                 renderSites(panel);
                 showToast(`${t.addSite || "Added"} ✅`);
@@ -4610,7 +4634,7 @@
           draggingSite.dataset.groupIndex = targetGroupIndex;
 
           draggingSite.classList.remove("dragging");
-          draggingSite.style.opacity = styleSettings.buttonOpacity.toString();
+          draggingSite.style.opacity = "";
           draggingSite.style.transform = "";
           draggingSite.style.boxShadow = "";
           void draggingSite.offsetHeight;
@@ -4647,8 +4671,7 @@
           const b = e.target.closest(".draggable-site");
           if (!b) return;
           if (b.contains(e.relatedTarget)) return;
-          const bg = b.dataset.baseBg || "";
-          if (bg) b.style.background = bg;
+          b.style.background = "";
           b.style.transform  = "translateY(0)";
           b.style.boxShadow  = "0 1px 2px rgba(0,0,0,0.15)";
           if (styleSettings.textBackgroundColor) {
@@ -6667,6 +6690,27 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     user-select: none;
   `;
 
+  {
+    const _existSel = document.getElementById("set-style-panel-select-css");
+    if (_existSel) _existSel.remove();
+    const _scSelStyle = document.createElement("style");
+    _scSelStyle.id = "set-style-panel-select-css";
+    const _scSelBg = panelTheme === "dark" ? "#3a3a3a" : "#ffffff";
+    const _scSelFg = panelTheme === "dark" ? "#e8e8e8" : "#111111";
+    const _scSelScheme = panelTheme === "dark" ? "dark" : "light";
+    _scSelStyle.textContent = `
+      #style-config-wrap select {
+        background: ${_scSelBg};
+        color: ${_scSelFg};
+        color-scheme: ${_scSelScheme};
+        border: 1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+        border-radius: 4px;
+        padding: 2px 4px;
+      }
+    `;
+    document.head.appendChild(_scSelStyle);
+  }
+
   const _scHdrBg = (panelTheme === "custom" && styleSettings.customBackgroundColor)
     ? (styleSettings.customBackgroundColor + "cc")
     : panelTheme === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
@@ -7656,7 +7700,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.siteButtonWidth = v;
       _vs_siteButtonWidth.textContent = v > 0 ? v + "px" : (t.siteButtonWidthAuto || "Auto");
       save();
-      document.querySelectorAll(".site-generalStyleContainer").forEach(sc => {
+      document.querySelectorAll(".site-container").forEach(sc => {
         const _minCell = v > 0 ? v : 104;
         sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(${_minCell}px, 1fr))`;
       });
@@ -7679,7 +7723,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.siteButtonWidth = dv;
       _vs_siteButtonWidth.textContent = t.siteButtonWidthAuto || "Auto";
       save();
-      document.querySelectorAll(".site-generalStyleContainer").forEach(sc => {
+      document.querySelectorAll(".site-container").forEach(sc => {
         sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(104px, 1fr))`;
       });
       document.querySelectorAll(".draggable-site").forEach(el => {
@@ -9456,13 +9500,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     if (_ic === "emoji") {
       toggleAddressBtn.textContent = ICONS.toggleAddress.emoji + "\u202F" + _lbl;
       toggleAddressBtn.style.fontSize = "11px";
-    } else if (_ic === "svg-line") {
-      toggleAddressBtn.innerHTML =
-        ICONS.toggleAddress.line + `<span style="font-size:11px;line-height:1">${_lbl}</span>`;
-      toggleAddressBtn.style.color = styleSettings.svgIconColor || "";
     } else {
-      toggleAddressBtn.innerHTML =
-        ICONS.toggleAddress.fill + `<span style="font-size:11px;line-height:1">${_lbl}</span>`;
+      const svgSrc = _ic === "svg-line" ? ICONS.toggleAddress.line : ICONS.toggleAddress.fill;
+      toggleAddressBtn.innerHTML = svgSrc;
+      const lblSpan = document.createElement("span");
+      lblSpan.style.cssText = "font-size:11px;line-height:1";
+      lblSpan.textContent = _lbl;
+      toggleAddressBtn.appendChild(lblSpan);
       toggleAddressBtn.style.color = styleSettings.svgIconColor || "";
     }
   }
@@ -9526,7 +9570,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         log("Configuration exported and copied to clipboard");
       })
       .catch((err) => {
-        console.error("Failed to copy to clipboard:", err);
+        warn("Failed to copy to clipboard:", err);
         showToast(t.copied || "Copied! 📋");
       });
   };
@@ -9658,7 +9702,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           if (config.manuallyClosed !== undefined)
             GM_setValue("manuallyClosed", config.manuallyClosed);
           if (Array.isArray(config.domainBlacklist)) {
-            domainBlacklist = config.domainBlacklist;
+            domainBlacklist = [...new Set(
+              config.domainBlacklist
+                .map(d => (typeof d === "string" ? parseSmartDomain(d.trim()) : null))
+                .filter(Boolean)
+            )];
             GM_setValue("domainBlacklist", domainBlacklist);
           }
           se_save();
@@ -9668,7 +9716,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           log("Configuration imported successfully");
         } catch (err) {
           showToast(t.importConfigFailed || "Import failed: Invalid JSON format!");
-          console.error("Import failed:", err);
+          warn("Import failed:", err);
         } finally {
           fileInput.remove();
         }
@@ -9919,10 +9967,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     if (_yearExtOptions.length > 0) {
       const _yearSel = document.createElement("select");
       _yearSel.title = "2–9 years";
+      const _selBg  = _isDark ? "#3a3a3a" : "#ffffff";
+      const _selFg  = _isDark ? "#e8e8e8" : "#111111";
       _yearSel.style.cssText = `
         flex-shrink:0; font-size:10px; padding:3px 5px;
         border:none; border-left:1px solid ${_segBorder}; border-radius:0;
-        background:transparent; color:inherit;
+        background:${_selBg}; color:${_selFg};
+        color-scheme:${_isDark ? "dark" : "light"};
         cursor:${_tsEngine ? "pointer" : "not-allowed"};
         outline:none; appearance:auto;
       `;
@@ -10295,12 +10346,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
 
     if (!input) {
-      console.error("Search input not found with any selector!");
+      warn("Search input not found with any selector!");
       showToast(t.notFound || "Search input not found!");
       return;
     }
     if (!keyword.trim()) {
-      console.error("Keyword is empty!");
+      warn("Keyword is empty!");
       showToast(t.invalidSite || "Please enter a valid URL (e.g., example.com)!");
       return;
     }
@@ -10999,6 +11050,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
         if (!panel) {
           log("Panel not found, creating and showing new one");
+          e.stopPropagation();
           createPanel();
           panel = document.getElementById("site-group-panel");
           if (panel) {
@@ -11029,7 +11081,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     if (document.body) {
       document.body.appendChild(toggleBtnSimple);
     } else {
-      console.error("document.body is not available");
+      warn("document.body is not available");
     }
 
     setTimeout(() => {
@@ -11047,6 +11099,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         }
       }
     }, 100);
+
+    if (!defaultPanelOpen) {
+      setTimeout(() => {
+        if (!document.body) return;
+        if (!document.getElementById("site-group-panel")) {
+          createPanel();
+          log("OFF mode: panel pre-built in background for instant first-click");
+        }
+      }, 800);
+    }
   }
   (function (global) {
     let lastUrl = location.href;
