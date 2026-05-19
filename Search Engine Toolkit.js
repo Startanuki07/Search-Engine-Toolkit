@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.1.0
+// @version      2.4.2.0
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -120,7 +120,7 @@
       siteButtonWidth: "Site Button Width",
       siteButtonWidthAuto: "Auto",
       multiSelectNone: "No sites selected!",
-      panelHelp: "📋 Site Groups Panel — Help\n\n▸ Group header buttons:\n  ✎  Rename the group\n  ➕  Add a site to the group\n  🗑️  Delete the group\n  ☑  Enter multi-select mode\n  ↗  Open selected sites (shown in multi-select mode)\n\n▸ Site buttons:\n  Left-click    — Apply site:filter to current search\n  Long-press drag — Reorder sites within the group\n  ⋯ (three dots) — Open site menu:\n      ✏️ Edit URL / note\n      🗑️ Delete site\n      🔗 Open (same tab)\n      ↗ Open (new tab)\n\n▸ Multi-select mode:\n  Click sites to select / deselect (gold highlight).\n  Click ☑ again, or click ↗ Send to exit.\n\n▸ Engine bar (top icon row):\n  Click an icon to jump to that engine with the current keyword.\n  Drag ⠿ in the engine panel to reorder — top 5 show as icons.\n\n▸ Time filter (dropdown below engine bar):\n  Restricts results to a specific time range (1 hour – 9 years).\n  Select \"Unlimited\" to clear the filter.\n\n▸ Search Settings ⚙️:\n  Set exclude keywords, toggle syntax help, import/export config.\n\n▸ 📌 Button (top-right):\n  Controls whether the panel opens automatically.\n  ⛔ OFF — closed by default  ✅ ON — opens on load\n  📌 Pinned — always visible\n  Also contains: 🔒 Safe Search OFF and 🌐 Search Region toggles.",
+      panelHelp: "📋 Site Groups Panel — Help\n\n▸ Group header buttons:\n  ✎  Rename the group\n  ➕  Add a site to the group\n  🗑️  Delete the group\n  ☑  Enter multi-select mode\n  ↗  Open selected sites (shown in multi-select mode)\n\n▸ Site buttons:\n  Left-click    — Apply site:filter to current search\n  Long-press drag — Reorder sites within the group\n  ⋯ (three dots) — Open site menu:\n      ✏️ Edit URL / note\n      🗑️ Delete site\n      🔗 Open (same tab)\n      ↗ Open (new tab)\n\n▸ Shift + Delete mode (rapid delete):\n  Hold Shift while the cursor is inside the panel.\n  All ⋯ buttons turn into ❌.\n  Click ❌ repeatedly to delete sites one by one without any confirmation.\n  Release Shift to exit this mode.\n\n▸ Multi-select mode:\n  Click sites to select / deselect (gold highlight).\n  Click ☑ again, or click ↗ Send to exit.\n\n▸ Engine bar (top icon row):\n  Click an icon to jump to that engine with the current keyword.\n  Drag ⠿ in the engine panel to reorder — top 5 show as icons.\n\n▸ Time filter (dropdown below engine bar):\n  Restricts results to a specific time range (1 hour – 9 years).\n  Select \"Unlimited\" to clear the filter.\n\n▸ Search Settings ⚙️:\n  Set exclude keywords, toggle syntax help, import/export config.\n\n▸ 📌 Button (top-right):\n  Controls whether the panel opens automatically.\n  ⛔ OFF — closed by default  ✅ ON — opens on load\n  📌 Pinned — always visible\n  Also contains: 🔒 Safe Search OFF and 🌐 Search Region toggles.",
       dpItemHint: {
         off:          "Panel stays closed by default. Click 🔍 to open manually.",
         on:           "Panel opens automatically on every page load.",
@@ -387,7 +387,7 @@
       siteButtonWidth: "站點按鈕寬度",
       siteButtonWidthAuto: "自動",
       multiSelectNone: "尚未選取任何站點！",
-      panelHelp: "📋 站台群組面板說明\n\n▸ 群組標頭按鈕：\n  ✎  重新命名群組\n  ➕  新增站台至群組\n  🗑️  刪除群組\n  ☑  進入複選模式\n  ↗  開啟已選站台（複選模式中才顯示）\n\n▸ 站台按鈕：\n  左鍵點擊      — 套用 site: 篩選搜尋\n  長按拖曳      — 在群組內重新排序\n  ⋯（三點選單）— 開啟站台選單：\n      ✏️ 編輯 URL / 備註\n      🗑️ 刪除站台\n      🔗 開啟（當前分頁）\n      ↗ 開啟（新分頁）\n\n▸ 複選模式：\n  點擊站台按鈕可選取/取消選取（金色光暈）。\n  再次點擊 ☑，或點擊 ↗ 送出後退出。\n\n▸ 引擎列（頂部圖示列）：\n  點擊圖示，以當前關鍵字跳轉至對應引擎。\n  在引擎管理面板拖曳 ⠿ 排序，前 5 個顯示為圖示。\n\n▸ 時間篩選（引擎列下方下拉選單）：\n  將搜尋結果限定在特定時間範圍（1小時 ~ 9年）。\n  選擇「無限制」可清除篩選。\n\n▸ 搜尋設定 ⚙️：\n  設定排除關鍵字、語法參考、匯入/匯出設定。\n\n▸ 📌 按鈕（右上角）：\n  控制面板是否自動開啟。\n  ⛔ OFF — 預設關閉  ✅ ON — 頁面載入時開啟\n  📌 釘選 — 永遠顯示\n  另有：🔒 安全搜尋 OFF 與 🌐 搜尋地區開關。",
+      panelHelp: "📋 站台群組面板說明\n\n▸ 群組標頭按鈕：\n  ✎  重新命名群組\n  ➕  新增站台至群組\n  🗑️  刪除群組\n  ☑  進入複選模式\n  ↗  開啟已選站台（複選模式中才顯示）\n\n▸ 站台按鈕：\n  左鍵點擊      — 套用 site: 篩選搜尋\n  長按拖曳      — 在群組內重新排序\n  ⋯（三點選單）— 開啟站台選單：\n      ✏️ 編輯 URL / 備註\n      🗑️ 刪除站台\n      🔗 開啟（當前分頁）\n      ↗ 開啟（新分頁）\n\n▸ Shift + 連續刪除模式：\n  滑鼠移至面板內，按住 Shift 鍵。\n  所有 ⋯ 按鈕會變成 ❌。\n  可連續點擊 ❌ 逐一刪除站台，無需二次確認。\n  放開 Shift 鍵即可離開此模式。\n\n▸ 複選模式：\n  點擊站台按鈕可選取/取消選取（金色光暈）。\n  再次點擊 ☑，或點擊 ↗ 送出後退出。\n\n▸ 引擎列（頂部圖示列）：\n  點擊圖示，以當前關鍵字跳轉至對應引擎。\n  在引擎管理面板拖曳 ⠿ 排序，前 5 個顯示為圖示。\n\n▸ 時間篩選（引擎列下方下拉選單）：\n  將搜尋結果限定在特定時間範圍（1小時 ~ 9年）。\n  選擇「無限制」可清除篩選。\n\n▸ 搜尋設定 ⚙️：\n  設定排除關鍵字、語法參考、匯入/匯出設定。\n\n▸ 📌 按鈕（右上角）：\n  控制面板是否自動開啟。\n  ⛔ OFF — 預設關閉  ✅ ON — 頁面載入時開啟\n  📌 釘選 — 永遠顯示\n  另有：🔒 安全搜尋 OFF 與 🌐 搜尋地區開關。",
       dpItemHint: {
         off:          "面板預設關閉，需手動點擊 🔍 開啟。",
         on:           "每次頁面載入時自動開啟面板。",
@@ -650,7 +650,7 @@
       siteButtonWidth: "站点按钮宽度",
       siteButtonWidthAuto: "自动",
       multiSelectNone: "尚未选取任何站点！",
-      panelHelp: "📋 站点群组面板说明\n\n▸ 群组标头按钮：\n  ✎  重命名群组\n  ➕  新增站点至群组\n  🗑️  删除群组\n  ☑  进入多选模式\n  ↗  打开已选站点（多选模式中才显示）\n\n▸ 站点按钮：\n  左键点击      — 套用 site: 筛选搜索\n  长按拖曳      — 在群组内重新排序\n  ⋯（三点菜单）— 打开站点菜单：\n      ✏️ 编辑 URL / 备注\n      🗑️ 删除站点\n      🔗 打开（当前标签页）\n      ↗ 打开（新标签页）\n\n▸ 多选模式：\n  点击站点按钮可选取/取消选取（金色光晕）。\n  再次点击 ☑，或点击 ↗ 发送后退出。\n\n▸ 引擎列（顶部图标列）：\n  点击图标，以当前关键字跳转至对应引擎。\n  在引擎管理面板拖拽 ⠿ 排序，前 5 个显示为图标。\n\n▸ 时间筛选（引擎列下方下拉菜单）：\n  将搜索结果限定在特定时间范围（1小时 ~ 9年）。\n  选择「无限制」可清除筛选。\n\n▸ 搜索设置 ⚙️：\n  设置排除关键字、语法参考、导入/导出设置。\n\n▸ 📌 按钮（右上角）：\n  控制面板是否自动打开。\n  ⛔ OFF — 默认关闭  ✅ ON — 页面加载时打开\n  📌 固定 — 始终显示\n  另有：🔒 安全搜索 OFF 与 🌐 搜索地区开关。",
+      panelHelp: "📋 站点群组面板说明\n\n▸ 群组标头按钮：\n  ✎  重命名群组\n  ➕  新增站点至群组\n  🗑️  删除群组\n  ☑  进入多选模式\n  ↗  打开已选站点（多选模式中才显示）\n\n▸ 站点按钮：\n  左键点击      — 套用 site: 筛选搜索\n  长按拖曳      — 在群组内重新排序\n  ⋯（三点菜单）— 打开站点菜单：\n      ✏️ 编辑 URL / 备注\n      🗑️ 删除站点\n      🔗 打开（当前标签页）\n      ↗ 打开（新标签页）\n\n▸ Shift + 连续删除模式：\n  鼠标移至面板内，按住 Shift 键。\n  所有 ⋯ 按钮会变成 ❌。\n  可连续点击 ❌ 逐一删除站点，无需二次确认。\n  松开 Shift 键即可退出此模式。\n\n▸ 多选模式：\n  点击站点按钮可选取/取消选取（金色光晕）。\n  再次点击 ☑，或点击 ↗ 发送后退出。\n\n▸ 引擎列（顶部图标列）：\n  点击图标，以当前关键字跳转至对应引擎。\n  在引擎管理面板拖拽 ⠿ 排序，前 5 个显示为图标。\n\n▸ 时间筛选（引擎列下方下拉菜单）：\n  将搜索结果限定在特定时间范围（1小时 ~ 9年）。\n  选择「无限制」可清除筛选。\n\n▸ 搜索设置 ⚙️：\n  设置排除关键字、语法参考、导入/导出设置。\n\n▸ 📌 按钮（右上角）：\n  控制面板是否自动打开。\n  ⛔ OFF — 默认关闭  ✅ ON — 页面加载时打开\n  📌 固定 — 始终显示\n  另有：🔒 安全搜索 OFF 与 🌐 搜索地区开关。",
       dpItemHint: {
         off:          "面板默认关闭，需手动点击 🔍 打开。",
         on:           "每次页面加载时自动打开面板。",
@@ -914,7 +914,7 @@
       siteButtonWidth: "ｻｲﾄﾎﾞﾀﾝ幅",
       siteButtonWidthAuto: "自動",
       multiSelectNone: "サイトが選択されていません！",
-      panelHelp: "📋 サイトグループパネル説明\n\n▸ グループヘッダーボタン：\n  ✎  グループ名を変更\n  ➕  グループにサイトを追加\n  🗑️  グループを削除\n  ☑  複数選択モードに入る\n  ↗  選択済みサイトを開く（複数選択モード時のみ）\n\n▸ サイトボタン：\n  左クリック        — site: フィルターを適用して検索\n  長押しドラッグ    — グループ内で並び替え\n  ⋯（三点メニュー）— サイトメニューを開く：\n      ✏️ URL / メモを編集\n      🗑️ サイトを削除\n      🔗 開く（現在のタブ）\n      ↗ 開く（新しいタブ）\n\n▸ 複数選択モード：\n  サイトをクリックして選択/解除（ゴールドハイライト）。\n  ☑ を再クリック、または ↗ 送信後に解除。\n\n▸ エンジン列（上部アイコン列）：\n  アイコンをクリックすると現在のキーワードで遷移。\n  エンジン管理で ⠿ ドラッグして並び替え、上位5件がアイコン表示。\n\n▸ 時間フィルター（エンジン列下のドロップダウン）：\n  検索結果を特定の期間に限定（1時間〜9年）。\n  「無制限」を選択するとフィルター解除。\n\n▸ 検索設定 ⚙️：\n  除外キーワード設定・構文リファレンス・設定インポート/エクスポート。\n\n▸ 📌 ボタン（右上）：\n  パネルの自動表示を制御します。\n  ⛔ OFF — デフォルト非表示  ✅ ON — ページ読み込み時に開く\n  📌 固定 — 常に表示\n  その他：🔒 セーフサーチ OFF・🌐 検索地域 の切り替えも含む。",
+      panelHelp: "📋 サイトグループパネル説明\n\n▸ グループヘッダーボタン：\n  ✎  グループ名を変更\n  ➕  グループにサイトを追加\n  🗑️  グループを削除\n  ☑  複数選択モードに入る\n  ↗  選択済みサイトを開く（複数選択モード時のみ）\n\n▸ サイトボタン：\n  左クリック        — site: フィルターを適用して検索\n  長押しドラッグ    — グループ内で並び替え\n  ⋯（三点メニュー）— サイトメニューを開く：\n      ✏️ URL / メモを編集\n      🗑️ サイトを削除\n      🔗 開く（現在のタブ）\n      ↗ 開く（新しいタブ）\n\n▸ Shift + 連続削除モード：\n  カーソルをパネル内に移動し、Shift キーを押し続ける。\n  すべての ⋯ ボタンが ❌ に変わる。\n  ❌ を連続クリックすると、確認なしでサイトを一つずつ削除できる。\n  Shift キーを放すとモードを終了。\n\n▸ 複数選択モード：\n  サイトをクリックして選択/解除（ゴールドハイライト）。\n  ☑ を再クリック、または ↗ 送信後に解除。\n\n▸ エンジン列（上部アイコン列）：\n  アイコンをクリックすると現在のキーワードで遷移。\n  エンジン管理で ⠿ ドラッグして並び替え、上位5件がアイコン表示。\n\n▸ 時間フィルター（エンジン列下のドロップダウン）：\n  検索結果を特定の期間に限定（1時間〜9年）。\n  「無制限」を選択するとフィルター解除。\n\n▸ 検索設定 ⚙️：\n  除外キーワード設定・構文リファレンス・設定インポート/エクスポート。\n\n▸ 📌 ボタン（右上）：\n  パネルの自動表示を制御します。\n  ⛔ OFF — デフォルト非表示  ✅ ON — ページ読み込み時に開く\n  📌 固定 — 常に表示\n  その他：🔒 セーフサーチ OFF・🌐 検索地域 の切り替えも含む。",
       dpItemHint: {
         off:          "パネルはデフォルトで非表示。🔍 をクリックして手動で開きます。",
         on:           "ページ読み込みのたびにパネルを自動表示します。",
@@ -1179,7 +1179,7 @@
       siteButtonWidth: "사이트 버튼 너비",
       siteButtonWidthAuto: "자동",
       multiSelectNone: "선택된 사이트가 없습니다！",
-      panelHelp: "📋 사이트 그룹 패널 안내\n\n▸ 그룹 헤더 버튼：\n  ✎  그룹 이름 변경\n  ➕  그룹에 사이트 추가\n  🗑️  그룹 삭제\n  ☑  다중 선택 모드 진입\n  ↗  선택한 사이트 열기（다중 선택 모드에서만 표시）\n\n▸ 사이트 버튼：\n  좌클릭          — site: 필터 적용하여 검색\n  길게 드래그      — 그룹 내 순서 변경\n  ⋯（세 점 메뉴）  — 사이트 메뉴 열기：\n      ✏️ URL / 메모 편집\n      🗑️ 사이트 삭제\n      🔗 열기（현재 탭）\n      ↗ 열기（새 탭）\n\n▸ 다중 선택 모드：\n  사이트 버튼을 클릭하여 선택/해제（금색 하이라이트）。\n  ☑ 를 다시 클릭하거나 ↗ 전송 후 모드 해제。\n\n▸ 엔진 바（상단 아이콘 열）：\n  아이콘 클릭 시 현재 키워드로 해당 엔진으로 이동。\n  엔진 관리에서 ⠿ 드래그로 순서 변경, 상위 5개가 아이콘 표시。\n\n▸ 시간 필터（엔진 바 아래 드롭다운）：\n  검색 결과를 특정 기간으로 제한（1시간 ~ 9년）。\n  「제한 없음」 선택 시 필터 해제。\n\n▸ 검색 설정 ⚙️：\n  제외 키워드 설정, 문법 참고서, 설정 가져오기/내보내기。\n\n▸ 📌 버튼（우상단）：\n  패널 자동 표시 여부를 제어합니다。\n  ⛔ OFF — 기본 닫힘  ✅ ON — 페이지 로드 시 열림\n  📌 고정 — 항상 표시\n  그 외：🔒 세이프서치 OFF・🌐 검색 지역 전환도 포함。",
+      panelHelp: "📋 사이트 그룹 패널 안내\n\n▸ 그룹 헤더 버튼：\n  ✎  그룹 이름 변경\n  ➕  그룹에 사이트 추가\n  🗑️  그룹 삭제\n  ☑  다중 선택 모드 진입\n  ↗  선택한 사이트 열기（다중 선택 모드에서만 표시）\n\n▸ 사이트 버튼：\n  좌클릭          — site: 필터 적용하여 검색\n  길게 드래그      — 그룹 내 순서 변경\n  ⋯（세 점 메뉴）  — 사이트 메뉴 열기：\n      ✏️ URL / 메모 편집\n      🗑️ 사이트 삭제\n      🔗 열기（현재 탭）\n      ↗ 열기（새 탭）\n\n▸ Shift + 연속 삭제 모드：\n  커서를 패널 안으로 이동한 후 Shift 키를 누른 채로 유지.\n  모든 ⋯ 버튼이 ❌ 로 바뀜.\n  ❌ 를 연속으로 클릭하면 확인 없이 사이트를 하나씩 삭제 가능.\n  Shift 키를 놓으면 모드 종료.\n\n▸ 다중 선택 모드：\n  사이트 버튼을 클릭하여 선택/해제（금색 하이라이트）。\n  ☑ 를 다시 클릭하거나 ↗ 전송 후 모드 해제。\n\n▸ 엔진 바（상단 아이콘 열）：\n  아이콘 클릭 시 현재 키워드로 해당 엔진으로 이동。\n  엔진 관리에서 ⠿ 드래그로 순서 변경, 상위 5개가 아이콘 표시。\n\n▸ 시간 필터（엔진 바 아래 드롭다운）：\n  검색 결과를 특정 기간으로 제한（1시간 ~ 9년）。\n  「제한 없음」 선택 시 필터 해제。\n\n▸ 검색 설정 ⚙️：\n  제외 키워드 설정, 문법 참고서, 설정 가져오기/내보내기。\n\n▸ 📌 버튼（우상단）：\n  패널 자동 표시 여부를 제어합니다。\n  ⛔ OFF — 기본 닫힘  ✅ ON — 페이지 로드 시 열림\n  📌 고정 — 항상 표시\n  그 외：🔒 세이프서치 OFF・🌐 검색 지역 전환도 포함。",
       dpItemHint: {
         off:          "패널이 기본으로 닫혀 있습니다。🔍 를 클릭하여 수동으로 열 수 있습니다。",
         on:           "페이지를 불러올 때마다 패널이 자동으로 열립니다。",
@@ -1467,7 +1467,7 @@
     siteButtonWidth: "Site Button Width",
     siteButtonWidthAuto: "Auto",
     multiSelectNone: "No sites selected!",
-    panelHelp: "📋 Site Groups Panel — Help\n\n▸ Group header buttons:\n  ✎  Rename the group\n  ➕  Add a site to the group\n  🗑️  Delete the group\n  ☑  Enter multi-select mode\n  ↗  Open selected sites (shown in multi-select mode)\n\n▸ Site buttons:\n  Left-click    — Apply site:filter to current search\n  Long-press drag — Reorder sites within the group\n  ⋯ (three dots) — Open site menu:\n      ✏️ Edit URL / note\n      🗑️ Delete site\n      🔗 Open (same tab)\n      ↗ Open (new tab)\n\n▸ Multi-select mode:\n  Click sites to select / deselect (gold highlight).\n  Click ☑ again, or click ↗ Send to exit.\n\n▸ Engine bar (top icon row):\n  Click an icon to jump to that engine with the current keyword.\n  Drag ⠿ in the engine panel to reorder — top 5 show as icons.\n\n▸ Time filter (dropdown below engine bar):\n  Restricts results to a specific time range (1 hour – 9 years).\n  Select \"Unlimited\" to clear the filter.\n\n▸ Search Settings ⚙️:\n  Set exclude keywords, toggle syntax help, import/export config.\n\n▸ 📌 Button (top-right):\n  Controls whether the panel opens automatically.\n  ⛔ OFF — closed by default  ✅ ON — opens on load\n  📌 Pinned — always visible\n  Also contains: 🔒 Safe Search OFF and 🌐 Search Region toggles.",
+    panelHelp: "📋 Site Groups Panel — Help\n\n▸ Group header buttons:\n  ✎  Rename the group\n  ➕  Add a site to the group\n  🗑️  Delete the group\n  ☑  Enter multi-select mode\n  ↗  Open selected sites (shown in multi-select mode)\n\n▸ Site buttons:\n  Left-click    — Apply site:filter to current search\n  Long-press drag — Reorder sites within the group\n  ⋯ (three dots) — Open site menu:\n      ✏️ Edit URL / note\n      🗑️ Delete site\n      🔗 Open (same tab)\n      ↗ Open (new tab)\n\n▸ Shift + Delete mode (rapid delete):\n  Hold Shift while the cursor is inside the panel.\n  All ⋯ buttons turn into ❌.\n  Click ❌ repeatedly to delete sites one by one without any confirmation.\n  Release Shift to exit this mode.\n\n▸ Multi-select mode:\n  Click sites to select / deselect (gold highlight).\n  Click ☑ again, or click ↗ Send to exit.\n\n▸ Engine bar (top icon row):\n  Click an icon to jump to that engine with the current keyword.\n  Drag ⠿ in the engine panel to reorder — top 5 show as icons.\n\n▸ Time filter (dropdown below engine bar):\n  Restricts results to a specific time range (1 hour – 9 years).\n  Select \"Unlimited\" to clear the filter.\n\n▸ Search Settings ⚙️:\n  Set exclude keywords, toggle syntax help, import/export config.\n\n▸ 📌 Button (top-right):\n  Controls whether the panel opens automatically.\n  ⛔ OFF — closed by default  ✅ ON — opens on load\n  📌 Pinned — always visible\n  Also contains: 🔒 Safe Search OFF and 🌐 Search Region toggles.",
     multiSelectSendTitle: "Open Selected Sites",
     multiSelectSendMsg: "Open {n} site(s) in new tabs?\n\n{urls}",
     multiSelectRemember: "Remember this choice",
@@ -2894,6 +2894,7 @@
       document.removeEventListener("keydown", onKeydown);
       __customPromptOpen = false;
       isPromptActive     = false;
+      restoreScroll();
     }
 
     function doConfirm() {
@@ -2934,7 +2935,6 @@
     const restoreScroll = () => {
       document.documentElement.style.overflow = prevOverflow;
     };
-    overlay.addEventListener("remove", restoreScroll, { once: true });
 
     setTimeout(() => input.focus(), 0);
   }
@@ -3151,10 +3151,15 @@
              panelOpacity, groupOpacity, r, g, b };
   }
 
+  const _THEME_CSS_VER = "3";
+
   function _injectThemeCss() {
-    if (document.getElementById("set-theme-css")) return;
+    const existing = document.getElementById("set-theme-css");
+    if (existing && existing.dataset.ver === _THEME_CSS_VER) return;
+    if (existing) existing.remove();
     const s = document.createElement("style");
     s.id = "set-theme-css";
+    s.dataset.ver = _THEME_CSS_VER;
     s.textContent = `
       #site-group-panel .group-block {
         background:    var(--set-group-bg);
@@ -3208,7 +3213,7 @@
       panel.style.setProperty("--set-group-bg",      `rgba(${r},${g},${b},${groupOpacity})`);
       panel.style.setProperty("--set-grid-cols",     `repeat(auto-fill, minmax(${_sbwCss > 0 ? _sbwCss : 104}px, 1fr))`);
 
-      panel.style.background = styleSettings.backgroundImage
+      panel.style.backgroundColor = styleSettings.backgroundImage
         ? "transparent"
         : `rgba(${r},${g},${b},${panelOpacity})`;
       panel.style.color = textColor;
@@ -3309,6 +3314,11 @@
             ? "center"
             : `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY || 0}px`;
         panel.style.backgroundSize = `${styleSettings.imageScale * 100}%`;
+      } else {
+        panel.style.backgroundImage  = "";
+        panel.style.backgroundRepeat = "";
+        panel.style.backgroundPosition = "";
+        panel.style.backgroundSize   = "";
       }
 
       panel.querySelectorAll(".group-block").forEach((el) => {
@@ -3415,7 +3425,7 @@
 
     const syntaxPanel = document.getElementById("syntax-panel");
     if (syntaxPanel) {
-      syntaxPanel.style.background = styleSettings.backgroundImage
+      syntaxPanel.style.backgroundColor = styleSettings.backgroundImage
         ? "transparent"
         : `rgba(${r},${g},${b},${panelOpacity})`;
       syntaxPanel.style.color        = textColor;
@@ -4233,7 +4243,7 @@
                     showToast(t.noteTooLong || "Note cannot exceed 4 characters!");
                     return;
                   }
-                  group.sites[siteIndex] = { url: cleanUrl, note: trimNote };
+                  groups[groupIndex].sites[siteIndex] = { url: cleanUrl, note: trimNote };
                   save(); renderSites(panel); showToast(t.editSiteSuccess);
                 }, null, true
               );
@@ -4242,8 +4252,7 @@
 
         } else if (item.action === "delete") {
           const deletedSite = { url: site.url, note: site.note || "" };
-          group.sites.splice(siteIndex, 1);
-          groups[groupIndex].sites = group.sites;
+          groups[groupIndex].sites.splice(siteIndex, 1);
           save(); renderSites(panel);
           showUndoMessage(deletedSite, groupIndex, siteIndex);
 
@@ -4296,8 +4305,7 @@
       if (_blk2 && _blk2.dataset.multiSelectActive === "true") return;
       _showShiftDeleteNotice(() => {
         const displayName = site.note || site.url;
-        group.sites.splice(siteIndex, 1);
-        groups[groupIndex].sites = group.sites;
+        groups[groupIndex].sites.splice(siteIndex, 1);
         save(); renderSites(panel);
         showShiftDeletedToast(displayName);
       });
@@ -4785,6 +4793,11 @@
     if (oldClickHandler) {
       document.removeEventListener("click", oldClickHandler);
     }
+    if (existingPanel.__reposDD) {
+      window.removeEventListener("scroll", existingPanel.__reposDD, true);
+      window.removeEventListener("resize", existingPanel.__reposDD);
+      existingPanel.__reposDD = null;
+    }
     existingPanel.remove();
   }
 
@@ -4800,7 +4813,7 @@
     panel.style.left = Math.max(8, window.innerWidth - _initRight - _initW) + "px";
   }
   panel.style.right = "auto";
-  panel.style.background = styleSettings.backgroundImage
+  panel.style.backgroundColor = styleSettings.backgroundImage
     ? "transparent"
     : styleSettings.backgroundColor ||
       (panelTheme === "dark" ? "#333" : "#fff");
@@ -4945,22 +4958,6 @@
     let _hRAF = 0;
     let _hNextX = 0, _hNextY = 0;
 
-    headerContainer.addEventListener("mousedown", (e) => {
-      if (e.target.closest("button,input,select,a,[role=button]")) return;
-      _hDragging = true;
-      _isDraggingPanel = true;
-      const rect = panel.getBoundingClientRect();
-      _hBaseLeft = rect.left;
-      _hBaseTop  = rect.top;
-      _hPW = rect.width;
-      _hPH = rect.height;
-      _hOx = e.clientX - rect.left;
-      _hOy = e.clientY - rect.top;
-      _hNextX = 0; _hNextY = 0;
-      panel.style.transform = "translate(0,0)";
-      headerContainer.style.cursor = "grabbing";
-      e.preventDefault();
-    });
     function _hOnMove(e) {
       if (!_hDragging) return;
       const tx = Math.max(-_hBaseLeft, Math.min(e.clientX - _hOx - _hBaseLeft, window.innerWidth  - _hBaseLeft - _hPW));
@@ -4991,8 +4988,25 @@
       window.removeEventListener("mouseup",   _hOnUp,   true);
       setTimeout(() => { _isDraggingPanel = false; }, 50);
     }
-    window.addEventListener("mousemove", _hOnMove, true);
-    window.addEventListener("mouseup",   _hOnUp,   true);
+
+    headerContainer.addEventListener("mousedown", (e) => {
+      if (e.target.closest("button,input,select,a,[role=button]")) return;
+      _hDragging = true;
+      _isDraggingPanel = true;
+      const rect = panel.getBoundingClientRect();
+      _hBaseLeft = rect.left;
+      _hBaseTop  = rect.top;
+      _hPW = rect.width;
+      _hPH = rect.height;
+      _hOx = e.clientX - rect.left;
+      _hOy = e.clientY - rect.top;
+      _hNextX = 0; _hNextY = 0;
+      panel.style.transform = "translate(0,0)";
+      headerContainer.style.cursor = "grabbing";
+      e.preventDefault();
+      window.addEventListener("mousemove", _hOnMove, true);
+      window.addEventListener("mouseup",   _hOnUp,   true);
+    });
   }
 
   const headerLeft = document.createElement("div");
@@ -5007,7 +5021,10 @@
   const panelHelpBtn = document.createElement("span");
   panelHelpBtn.textContent = "❓";
   panelHelpBtn.style.cssText = "cursor:help; font-size:12px; opacity:0.55; flex-shrink:0;";
+  const _oldHelpTip = document.getElementById("set-panel-help-tip");
+  if (_oldHelpTip) _oldHelpTip.remove();
   const panelHelpTip = document.createElement("div");
+  panelHelpTip.id = "set-panel-help-tip";
   panelHelpTip.style.cssText = `
     display:none; position:fixed;
     background:${panelTheme === "dark" ? "#2a2a4a" : "#f8f8ff"};
@@ -5040,7 +5057,6 @@
     });
   });
   panelHelpBtn.addEventListener("mouseleave", () => { panelHelpTip.style.display = "none"; });
-  panel.addEventListener("remove", () => panelHelpTip.remove(), { once: true });
   headerLeft.appendChild(panelHelpBtn);
 
   const langBtn = document.createElement("button");
@@ -7183,7 +7199,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const v = parseFloat(inp.value);
         if (!isNaN(v)) {
           styleSettings[key] = v;
-          save();
+          _debouncedSave();
           const p = document.getElementById("site-group-panel");
           if (!p) return;
           if (key === "panelTop")    p.style.top  = v + "px";
@@ -7246,7 +7262,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const v = parseInt(inp.value, 10);
         if (!isNaN(v) && v >= 200) {
           styleSettings.panelWidth = (v === _localeW) ? 0 : v;
-          save();
+          _debouncedSave();
           const p = document.getElementById("site-group-panel");
           if (p) { p.style.width = v + "px"; p.style.maxWidth = v + "px"; }
         }
@@ -7589,7 +7605,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     borderRadiusInput.style.cssText = sliderCss();
     borderRadiusInput.oninput = () => {
       styleSettings.borderRadius = parseInt(borderRadiusInput.value);
-      save();
+      _debouncedSave();
       _debouncedApply();
       _vs_borderRadiusInput.textContent = borderRadiusInput.value+"px";
     };
@@ -7621,7 +7637,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     contrastInput.style.cssText = sliderCss();
     contrastInput.oninput = () => {
       styleSettings.contrast = parseInt(contrastInput.value);
-      save();
+      _debouncedSave();
       _debouncedApply();
       _vs_contrastInput.textContent = contrastInput.value;
     };
@@ -7654,7 +7670,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     opacityInput.style.cssText = sliderCss();
     opacityInput.oninput = () => {
       styleSettings.opacity = parseFloat(opacityInput.value);
-      save();
+      _debouncedSave();
       _debouncedApply();
       _vs_opacityInput.textContent = parseFloat(opacityInput.value).toFixed(1);
     };
@@ -7687,7 +7703,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     groupOpacityInput.style.cssText = sliderCss();
     groupOpacityInput.oninput = () => {
       styleSettings.groupOpacity = parseFloat(groupOpacityInput.value);
-      save();
+      _debouncedSave();
       _debouncedApply();
       _vs_groupOpacityInput.textContent = parseFloat(groupOpacityInput.value).toFixed(1);
     };
@@ -7720,7 +7736,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     buttonOpacityInput.style.cssText = sliderCss();
     buttonOpacityInput.oninput = () => {
       styleSettings.buttonOpacity = parseFloat(buttonOpacityInput.value);
-      save();
+      _debouncedSave();
       _debouncedApply();
       _vs_buttonOpacityInput.textContent = parseFloat(buttonOpacityInput.value).toFixed(1);
     };
@@ -7756,7 +7772,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const v = parseInt(siteButtonWidthInput.value, 10);
       styleSettings.siteButtonWidth = v;
       _vs_siteButtonWidth.textContent = v > 0 ? v + "px" : (t.siteButtonWidthAuto || "Auto");
-      save();
+      _debouncedSave();
       document.querySelectorAll(".site-container").forEach(sc => {
         const _minCell = v > 0 ? v : 104;
         sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(${_minCell}px, 1fr))`;
@@ -7807,7 +7823,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       || (panelTheme === "dark" ? "#333333" : "#ffffff");
     panelBgColorInput.oninput = () => {
       styleSettings.backgroundColor = panelBgColorInput.value;
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     const panelBgColorReset = makeResetBtn(
       panelTheme === "dark" ? "#333333" : "#ffffff",
@@ -7840,7 +7856,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     panelBgAlphaInput.oninput = () => {
       styleSettings.opacity = parseFloat(panelBgAlphaInput.value);
       _vs_panelBgAlpha.textContent = styleSettings.opacity.toFixed(2);
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     const _rb_panelBgAlpha = makeResetBtn(0.9, (dv) => {
       panelBgAlphaInput.value = dv;
@@ -7892,7 +7908,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     glowColorInput.value = styleSettings.borderGlowColor || "#00bfff";
     glowColorInput.oninput = () => {
       styleSettings.borderGlowColor = glowColorInput.value;
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     const glowColorReset = makeResetBtn("#00bfff", (dv) => {
       glowColorInput.value = dv;
@@ -7917,7 +7933,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     glowStrInput.oninput = () => {
       styleSettings.borderGlowStrength = parseInt(glowStrInput.value);
       _vs_glowStr.textContent = glowStrInput.value + "px";
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     glowStrRow.appendChild(glowStrInput);
     glowStrRow.appendChild(_vs_glowStr);
@@ -7970,7 +7986,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     sheenAngleInput.oninput = () => {
       styleSettings.sheenAngle = parseInt(sheenAngleInput.value);
       _vs_sheenAngle.textContent = sheenAngleInput.value + "°";
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     sheenAngleRow.appendChild(sheenAngleInput);
     sheenAngleRow.appendChild(_vs_sheenAngle);
@@ -7990,7 +8006,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     sheenOpInput.oninput = () => {
       styleSettings.sheenOpacity = parseFloat(sheenOpInput.value);
       _vs_sheenOp.textContent = styleSettings.sheenOpacity.toFixed(2);
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     sheenOpRow.appendChild(sheenOpInput);
     sheenOpRow.appendChild(_vs_sheenOp);
@@ -8102,7 +8118,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     sbsBgInput.value = styleSettings.searchBarBg || "#333333";
     sbsBgInput.oninput = () => {
       styleSettings.searchBarBg = sbsBgInput.value;
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     _sbsBgInputRef = sbsBgInput;
     const _rb_sbsBg = makeResetBtn("", (dv) => {
@@ -8128,7 +8144,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     sbsBgOpInput.oninput = () => {
       styleSettings.searchBarBgOpacity = parseFloat(sbsBgOpInput.value);
       sbsBgOpSpan.textContent = styleSettings.searchBarBgOpacity.toFixed(2);
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     _sbsBgOpInputRef = sbsBgOpInput;
     _sbsBgOpSpanRef  = sbsBgOpSpan;
@@ -8154,7 +8170,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     sbsFgInput.value = styleSettings.searchBarFg || "#eeeeee";
     sbsFgInput.oninput = () => {
       styleSettings.searchBarFg = sbsFgInput.value;
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     _sbsFgInputRef = sbsFgInput;
     const _rb_sbsFg = makeResetBtn("", (dv) => {
@@ -8194,7 +8210,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _sbsGlowColorInput.value = styleSettings.searchBarGlowColor || "#5599ff";
     _sbsGlowColorInput.oninput = () => {
       styleSettings.searchBarGlowColor = _sbsGlowColorInput.value;
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     const _rb_sbsGlowColor = makeResetBtn("#5599ff", (dv) => {
       _sbsGlowColorInput.value = dv;
@@ -8219,7 +8235,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _sbsGlowStrInput.oninput = () => {
       styleSettings.searchBarGlowStrength = parseInt(_sbsGlowStrInput.value);
       _vs_sbsGlowStr.textContent = _sbsGlowStrInput.value + "px";
-      save(); _debouncedApply();
+      _debouncedSave();
     };
     const _rb_sbsGlowStr = makeResetBtn(6, (dv) => {
       _sbsGlowStrInput.value = dv;
@@ -8471,7 +8487,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     fontSizeInput.style.cssText = sliderCss();
     fontSizeInput.oninput = () => {
       styleSettings.fontSize = parseInt(fontSizeInput.value);
-      save();
+      _debouncedSave();
       _debouncedApply();
       _vs_fontSizeInput.textContent = fontSizeInput.value+"px";
     };
@@ -8502,7 +8518,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.textBackgroundColor || "#ffffff";
     textBackgroundColorInput.oninput = () => {
       styleSettings.textBackgroundColor = textBackgroundColorInput.value;
-      save();
+      _debouncedSave();
       _debouncedApply();
     };
     textBackgroundColorRow.appendChild(textBackgroundColorInput);
@@ -8553,7 +8569,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.textOpacityCompensation = parseFloat(
         textOpacityCompensationInput.value,
       );
-      save();
+      _debouncedSave();
       _debouncedApply();
       _vs_textOpacityCompensationInput.textContent = parseFloat(textOpacityCompensationInput.value).toFixed(1);
     };
@@ -8630,7 +8646,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     overlayStrengthInput.style.cssText = sliderCss();
     overlayStrengthInput.oninput = () => {
       styleSettings.overlayStrength = parseFloat(overlayStrengthInput.value);
-      save();
+      _debouncedSave();
       _debouncedApply();
       _vs_overlayStrengthInput.textContent = parseFloat(overlayStrengthInput.value).toFixed(1);
     };
@@ -8736,9 +8752,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageOffsetXInput.style.cssText = sliderCss();
     imageOffsetXInput.oninput = () => {
       styleSettings.imageOffsetX = parseInt(imageOffsetXInput.value);
-      log("X Offset updated:", styleSettings.imageOffsetX);
-      save();
-      _debouncedApply();
+      _debouncedSave();
+      const p = document.getElementById("site-group-panel");
+      if (p && styleSettings.backgroundImage && styleSettings.imageMode !== "center") {
+        p.style.backgroundPosition = `${styleSettings.imageOffsetX}px ${styleSettings.imageOffsetY || 0}px`;
+      }
       _vs_imageOffsetXInput.textContent = imageOffsetXInput.value+"px";
     };
     const _vs_imageOffsetXInput = makeValueSpan(imageOffsetXInput.value+"px");
@@ -8769,9 +8787,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageOffsetYInput.style.cssText = sliderCss();
     imageOffsetYInput.oninput = () => {
       styleSettings.imageOffsetY = parseInt(imageOffsetYInput.value);
-      log("Y Offset updated:", styleSettings.imageOffsetY);
-      save();
-      _debouncedApply();
+      _debouncedSave();
+      const p = document.getElementById("site-group-panel");
+      if (p && styleSettings.backgroundImage && styleSettings.imageMode !== "center") {
+        p.style.backgroundPosition = `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY}px`;
+      }
       _vs_imageOffsetYInput.textContent = imageOffsetYInput.value+"px";
     };
     const _vs_imageOffsetYInput = makeValueSpan(imageOffsetYInput.value+"px");
@@ -8804,8 +8824,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageScaleInput.style.cssText = sliderCss();
     imageScaleInput.oninput = () => {
       styleSettings.imageScale = parseFloat(imageScaleInput.value);
-      save();
-      _debouncedApply();
+      _debouncedSave();
+      const p = document.getElementById("site-group-panel");
+      if (p && styleSettings.backgroundImage) {
+        p.style.backgroundSize = `${styleSettings.imageScale * 100}%`;
+      }
       _vs_imageScaleInput.textContent = parseFloat(imageScaleInput.value).toFixed(1)+"x";
     };
     const _vs_imageScaleInput = makeValueSpan(parseFloat(imageScaleInput.value).toFixed(1)+"x");
@@ -8837,8 +8860,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageOpacityInput.style.cssText = sliderCss();
     imageOpacityInput.oninput = () => {
       styleSettings.imageOpacity = parseFloat(imageOpacityInput.value);
-      save();
-      _debouncedApply();
+      _debouncedSave();
+      const p = document.getElementById("site-group-panel");
+      if (p && styleSettings.backgroundImage) {
+        const _safe = /^(https?:|data:image\/)/.test(styleSettings.backgroundImage) ? styleSettings.backgroundImage : "";
+        if (_safe) {
+          const dim = 1 - styleSettings.imageOpacity;
+          p.style.backgroundImage = `linear-gradient(rgba(0,0,0,${dim}), rgba(0,0,0,${dim})), url(${_safe})`;
+        }
+      }
       _vs_imageOpacityInput.textContent = parseFloat(imageOpacityInput.value).toFixed(1);
     };
     const _vs_imageOpacityInput = makeValueSpan(parseFloat(imageOpacityInput.value).toFixed(1));
@@ -8882,7 +8912,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     msColorInput.value = styleSettings.multiSelectColor || "#ffc400";
     msColorInput.oninput = () => {
       styleSettings.multiSelectColor = msColorInput.value;
-      save();
+      _debouncedSave();
     };
     msColorRow.appendChild(msColorInput);
     multiSelectContainer.appendChild(msColorRow);
@@ -8903,7 +8933,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     msOpacityInput.oninput = () => {
       styleSettings.multiSelectOpacity = parseFloat(msOpacityInput.value);
       _vs_msOpacity.textContent = parseFloat(msOpacityInput.value).toFixed(2);
-      save();
+      _debouncedSave();
     };
     const _vs_msOpacity = makeValueSpan(parseFloat(msOpacityInput.value).toFixed(2));
     const _rb_msOpacity = makeResetBtn(0.85, (dv) => {
@@ -9411,11 +9441,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   };
   window.addEventListener("scroll", _reposDD, true);
   window.addEventListener("resize", _reposDD);
-  panel.addEventListener("remove", () => {
-    window.removeEventListener("scroll", _reposDD, true);
-    window.removeEventListener("resize", _reposDD);
-    historyDropdown.remove();
-  }, { once: true });
+  panel.__reposDD = _reposDD;
 
   const _debouncedFilterSites = debounce(filterSites, 200);
   let _historyDebounceTimer = null;
@@ -10186,15 +10212,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     let _rDragging = false, _rStartX = 0, _rStartY = 0, _rStartW = 0, _rStartH = 0;
     let _rRAF = 0, _rNextW = 0, _rNextH = 0;
-    grip.addEventListener("mousedown", (e) => {
-      _rDragging = true;
-      _isDraggingPanel = true;
-      _rStartX = e.clientX; _rStartY = e.clientY;
-      _rStartW = panel.offsetWidth; _rStartH = panel.offsetHeight;
-      _rNextW = _rStartW; _rNextH = _rStartH;
-      document.body.style.cursor = "se-resize";
-      e.preventDefault(); e.stopPropagation();
-    });
     function _rOnMove(e) {
       if (!_rDragging) return;
       _rNextW = Math.max(260, _rStartW + (e.clientX - _rStartX));
@@ -10220,8 +10237,17 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       window.removeEventListener("mouseup",   _rOnUp,   true);
       setTimeout(() => { _isDraggingPanel = false; }, 50);
     }
-    window.addEventListener("mousemove", _rOnMove, true);
-    window.addEventListener("mouseup",   _rOnUp,   true);
+    grip.addEventListener("mousedown", (e) => {
+      _rDragging = true;
+      _isDraggingPanel = true;
+      _rStartX = e.clientX; _rStartY = e.clientY;
+      _rStartW = panel.offsetWidth; _rStartH = panel.offsetHeight;
+      _rNextW = _rStartW; _rNextH = _rStartH;
+      document.body.style.cursor = "se-resize";
+      e.preventDefault(); e.stopPropagation();
+      window.addEventListener("mousemove", _rOnMove, true);
+      window.addEventListener("mouseup",   _rOnUp,   true);
+    });
   }
 
   function rebuildPanel() {
