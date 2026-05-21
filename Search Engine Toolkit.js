@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.2.9
+// @version      2.4.3.1
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -239,6 +239,16 @@
       quickSchemeLight:       "☀️ Light",
       quickSchemeDark:        "🌑 Dark",
       quickSchemeReset:       "↺ Reset",
+      panelBgColor:           "Panel BG Color",
+      vignetteLabel:      "Vignette",
+      vignetteCorners:    "Corners",
+      vignetteCornerTL:   "Top-L",
+      vignetteCornerTR:   "Top-R",
+      vignetteCornerBL:   "Bot-L",
+      vignetteCornerBR:   "Bot-R",
+      vignetteSize:       "Size",
+      vignetteColor:      "Color",
+      vignetteOpacity:    "Opacity",
       glowLabel:              "Border Glow / Sheen",
       enableBorderGlow:       "Border Glow",
       borderGlowColor:        "Glow Color",
@@ -500,6 +510,16 @@
       quickSchemeLight:       "☀️ 亮色",
       quickSchemeDark:        "🌑 深色",
       quickSchemeReset:       "↺ 重置",
+      panelBgColor:     "面板背景顏色",
+      vignetteLabel:    "暗角效果",
+      vignetteCorners:  "啟用角落",
+      vignetteCornerTL: "左上",
+      vignetteCornerTR: "右上",
+      vignetteCornerBL: "左下",
+      vignetteCornerBR: "右下",
+      vignetteSize:     "大小",
+      vignetteColor:    "顏色",
+      vignetteOpacity:  "透明度",
       glowLabel:              "外框光澤 / 高光",
       enableBorderGlow:       "外框光暈",
       borderGlowColor:        "光暈顏色",
@@ -757,6 +777,16 @@
       quickSchemeLight:       "☀️ 亮色",
       quickSchemeDark:        "🌑 深色",
       quickSchemeReset:       "↺ 重置",
+      panelBgColor:     "面板背景颜色",
+      vignetteLabel:    "暗角效果",
+      vignetteCorners:  "启用角落",
+      vignetteCornerTL: "左上",
+      vignetteCornerTR: "右上",
+      vignetteCornerBL: "左下",
+      vignetteCornerBR: "右下",
+      vignetteSize:     "大小",
+      vignetteColor:    "颜色",
+      vignetteOpacity:  "透明度",
       glowLabel:              "边框光泽 / 高光",
       enableBorderGlow:       "边框光晕",
       borderGlowColor:        "光晕颜色",
@@ -1015,6 +1045,16 @@
       quickSchemeLight:       "☀️ ﾗｲﾄ",
       quickSchemeDark:        "🌑 ﾀﾞｰｸ",
       quickSchemeReset:       "↺ ﾘｾｯﾄ",
+      panelBgColor:   "ﾊﾟﾈﾙ背景色",
+      vignetteLabel:    "暗角効果",
+      vignetteCorners:  "有効角",
+      vignetteCornerTL: "左上",
+      vignetteCornerTR: "右上",
+      vignetteCornerBL: "左下",
+      vignetteCornerBR: "右下",
+      vignetteSize:     "サイズ",
+      vignetteColor:    "カラー",
+      vignetteOpacity:  "透明度",
       glowLabel:              "枠ｸﾞﾛｳ / 光沢",
       enableBorderGlow:       "枠ｸﾞﾛｳ",
       borderGlowColor:        "ｸﾞﾛｳ色",
@@ -1274,6 +1314,16 @@
       quickSchemeLight:       "☀️ 라이트",
       quickSchemeDark:        "🌑 다크",
       quickSchemeReset:       "↺ 초기화",
+      panelBgColor:   "패널 배경색",
+      vignetteLabel:    "어두운 모서리",
+      vignetteCorners:  "활성 모서리",
+      vignetteCornerTL: "좌상",
+      vignetteCornerTR: "우상",
+      vignetteCornerBL: "좌하",
+      vignetteCornerBR: "우하",
+      vignetteSize:     "크기",
+      vignetteColor:    "색상",
+      vignetteOpacity:  "투명도",
       glowLabel:              "테두리 글로우 / 쉰",
       enableBorderGlow:       "테두리 글로우",
       borderGlowColor:        "글로우 색",
@@ -1548,6 +1598,16 @@
     quickSchemeLight:       "☀️ Light",
     quickSchemeDark:        "🌑 Dark",
     quickSchemeReset:       "↺ Reset",
+    panelBgColor:   "Panel BG Color",
+    vignetteLabel:    "Vignette",
+    vignetteCorners:  "Corners",
+    vignetteCornerTL: "Top-L",
+    vignetteCornerTR: "Top-R",
+    vignetteCornerBL: "Bot-L",
+    vignetteCornerBR: "Bot-R",
+    vignetteSize:     "Size",
+    vignetteColor:    "Color",
+    vignetteOpacity:  "Opacity",
     glowLabel:              "Border Glow / Sheen",
     enableBorderGlow:       "Border Glow",
     borderGlowColor:        "Glow Color",
@@ -2100,6 +2160,14 @@
       searchBarGlowEnabled: false,
       searchBarGlowColor: "#5599ff",
       searchBarGlowStrength: 6,
+      enableVignette: false,
+      vignetteCornerTL: true,
+      vignetteCornerTR: true,
+      vignetteCornerBL: true,
+      vignetteCornerBR: true,
+      vignetteSize: 120,
+      vignetteColor: "#000000",
+      vignetteOpacity: 0.45,
     };
     for (const k of Object.keys(_ssDefaults)) {
       if (styleSettings[k] === undefined) styleSettings[k] = _ssDefaults[k];
@@ -3216,6 +3284,46 @@
     }
   }
 
+  function _applyVignetteEffect(el) {
+    let vigEl = el.querySelector(".panel-vignette");
+    if (!styleSettings.enableVignette) {
+      if (vigEl) vigEl.style.display = "none";
+      return;
+    }
+    const _vc   = styleSettings.vignetteColor   || "#000000";
+    const _vop  = Math.max(0.05, Math.min(1.0, styleSettings.vignetteOpacity ?? 0.45));
+    const _vsz  = Math.max(20, Math.min(600, styleSettings.vignetteSize ?? 120));
+    const _vr   = parseInt(_vc.slice(1, 3), 16) || 0;
+    const _vg   = parseInt(_vc.slice(3, 5), 16) || 0;
+    const _vb   = parseInt(_vc.slice(5, 7), 16) || 0;
+    const _rgba = `rgba(${_vr},${_vg},${_vb},${_vop})`;
+
+    const gradients = [];
+    if (styleSettings.vignetteCornerTL !== false)
+      gradients.push(`radial-gradient(ellipse at 0% 0%, ${_rgba} 0%, transparent ${_vsz}px)`);
+    if (styleSettings.vignetteCornerTR !== false)
+      gradients.push(`radial-gradient(ellipse at 100% 0%, ${_rgba} 0%, transparent ${_vsz}px)`);
+    if (styleSettings.vignetteCornerBL !== false)
+      gradients.push(`radial-gradient(ellipse at 0% 100%, ${_rgba} 0%, transparent ${_vsz}px)`);
+    if (styleSettings.vignetteCornerBR !== false)
+      gradients.push(`radial-gradient(ellipse at 100% 100%, ${_rgba} 0%, transparent ${_vsz}px)`);
+
+    if (gradients.length === 0) {
+      if (vigEl) vigEl.style.display = "none";
+      return;
+    }
+    if (!vigEl) {
+      vigEl = document.createElement("div");
+      vigEl.className = "panel-vignette";
+      vigEl.style.cssText =
+        "position:absolute; inset:0; pointer-events:none; border-radius:inherit; z-index:0;";
+      el.style.position = el.style.position || "relative";
+      el.insertBefore(vigEl, el.firstChild);
+    }
+    vigEl.style.background = gradients.join(", ");
+    vigEl.style.display    = "block";
+  }
+
   function applyThemeToDom(v) {
     const {
       textColor, buttonBg, borderColor, borderRadius,
@@ -3258,6 +3366,8 @@
       });
 
       _applySheenEffect(panel, "panel-sheen", "55%");
+
+      _applyVignetteEffect(panel);
 
       if (styleSettings.enableOverlayDarkening) {
         let overlayStyle = document.querySelector("style[data-overlay-style]");
@@ -3641,13 +3751,23 @@
         banner.id = bannerId;
         const _bDark = panelTheme === "dark";
         banner.style.cssText = `
-          margin-top:5px; padding:4px 12px;
-          background:${_bDark ? "rgba(124,106,247,0.13)" : "rgba(79,70,229,0.07)"};
-          color:${_bDark ? "#b8aaff" : "#4f46e5"};
-          font-size:10px; font-weight:600;
-          border-radius:6px; text-align:center;
-          border:1px solid ${_bDark ? "rgba(124,106,247,0.28)" : "rgba(79,70,229,0.2)"};
-          letter-spacing:0.2px; line-height:1.7;
+          margin-top:6px; padding:6px 14px;
+          background:${_bDark
+            ? "rgba(99,80,220,0.55)"
+            : "rgba(79,70,229,0.22)"};
+          color:${_bDark ? "#e4dcff" : "#2e27a8"};
+          font-size:10.5px; font-weight:700;
+          border-radius:7px; text-align:center;
+          border:1.5px dashed ${_bDark
+            ? "rgba(178,162,255,0.80)"
+            : "rgba(79,70,229,0.65)"};
+          letter-spacing:0.3px; line-height:1.75;
+          backdrop-filter:blur(6px);
+          -webkit-backdrop-filter:blur(6px);
+          box-shadow:0 2px 8px ${_bDark
+            ? "rgba(80,60,200,0.45)"
+            : "rgba(79,70,229,0.18)"};
+          text-shadow:${_bDark ? "0 1px 3px rgba(0,0,0,0.5)" : "none"};
         `;
         banner.textContent = t.multiSelectBanner || "☑ Multi-select mode — click sites to select · click ☑ or ↗ to exit";
         blk.appendChild(banner);
@@ -6416,6 +6536,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       sheenOpLbl,
       siteGlowLbl,
       groupGlowLbl,
+      vignetteHeader,
       _sbsHeader,
       _sbsPresetLbl,
       _sbsBgLbl,
@@ -6504,6 +6625,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   );
 
   _bind(glowHeader,
+    () => _hlPanel(true),
+    () => _hlPanel(false)
+  );
+
+  _bind(vignetteHeader,
     () => _hlPanel(true),
     () => _hlPanel(false)
   );
@@ -7049,6 +7175,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     searchBarGlowEnabled: false,
     searchBarGlowColor: "#5599ff",
     searchBarGlowStrength: 6,
+    enableVignette: false,
+    vignetteCornerTL: true,
+    vignetteCornerTR: true,
+    vignetteCornerBL: true,
+    vignetteCornerBR: true,
+    vignetteSize: 120,
+    vignetteColor: "#000000",
+    vignetteOpacity: 0.45,
   };
 
   function rowCss() {
@@ -7602,6 +7736,158 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       };
     }
 
+    function _buildGsVignetteSection(parent) {
+      const _isDark = panelTheme === "dark";
+      const vigSection = document.createElement("div");
+      vigSection.style.cssText = `
+        border:1px solid ${_isDark ? "#555" : "#ccc"};
+        border-radius:${styleSettings.borderRadius}px;
+        padding:7px 8px; margin-top:6px; display:flex;
+        flex-direction:column; gap:4px;
+      `;
+
+      const vigHeaderRow = document.createElement("div");
+      vigHeaderRow.style.cssText = rowCss() + "margin-bottom:0;";
+      const vignetteHeader = document.createElement("div");
+      vignetteHeader.textContent = "🌑 " + (t.vignetteLabel || "Vignette");
+      vignetteHeader.style.cssText = "font-weight:bold; font-size:11px; flex:1;";
+      const vigToggle = document.createElement("input");
+      vigToggle.type = "checkbox";
+      vigToggle.checked = !!styleSettings.enableVignette;
+      vigHeaderRow.appendChild(vignetteHeader);
+      vigHeaderRow.appendChild(vigToggle);
+      vigSection.appendChild(vigHeaderRow);
+
+      const cornerRow = document.createElement("div");
+      cornerRow.style.cssText = rowCss();
+      const cornerLbl = document.createElement("label");
+      cornerLbl.textContent = t.vignetteCorners || "Corners";
+      cornerLbl.style.cssText = labelCss();
+      cornerRow.appendChild(cornerLbl);
+
+      const cornerGrid = document.createElement("div");
+      cornerGrid.style.cssText = `
+        display:grid; grid-template-columns:1fr 1fr; gap:3px 8px;
+        flex:1; font-size:11px;
+      `;
+      const _corners = [
+        { key: "vignetteCornerTL", label: "↖ " + (t.vignetteCornerTL || "Top-L") },
+        { key: "vignetteCornerTR", label: "↗ " + (t.vignetteCornerTR || "Top-R") },
+        { key: "vignetteCornerBL", label: "↙ " + (t.vignetteCornerBL || "Bot-L") },
+        { key: "vignetteCornerBR", label: "↘ " + (t.vignetteCornerBR || "Bot-R") },
+      ];
+      const _cornerChecks = {};
+      _corners.forEach(({ key, label }) => {
+        const wrap = document.createElement("label");
+        wrap.style.cssText = "display:flex; align-items:center; gap:3px; cursor:pointer;";
+        const chk = document.createElement("input");
+        chk.type = "checkbox";
+        chk.checked = styleSettings[key] !== false;
+        chk.onchange = () => {
+          styleSettings[key] = chk.checked;
+          save(); applyTheme(panelTheme);
+        };
+        const span = document.createElement("span");
+        span.textContent = label;
+        wrap.appendChild(chk);
+        wrap.appendChild(span);
+        cornerGrid.appendChild(wrap);
+        _cornerChecks[key] = chk;
+      });
+      cornerRow.appendChild(cornerGrid);
+      vigSection.appendChild(cornerRow);
+
+      const sizeRow = document.createElement("div");
+      sizeRow.style.cssText = rowCss();
+      const sizeLbl = document.createElement("label");
+      sizeLbl.textContent = t.vignetteSize || "Size";
+      sizeLbl.style.cssText = labelCss();
+      sizeRow.appendChild(sizeLbl);
+      const sizeInput = document.createElement("input");
+      sizeInput.type = "range"; sizeInput.min = "20"; sizeInput.max = "600"; sizeInput.step = "10";
+      sizeInput.value = styleSettings.vignetteSize ?? 120;
+      sizeInput.style.cssText = sliderCss();
+      const _vs_size = makeValueSpan(sizeInput.value + "px");
+      sizeInput.oninput = () => {
+        styleSettings.vignetteSize = parseInt(sizeInput.value);
+        _vs_size.textContent = sizeInput.value + "px";
+        _debouncedSave();
+        applyTheme(panelTheme);
+      };
+      const _rb_size = makeResetBtn(120, (dv) => {
+        sizeInput.value = dv;
+        _vs_size.textContent = dv + "px";
+        styleSettings.vignetteSize = dv;
+        save(); applyTheme(panelTheme);
+      });
+      sizeRow.appendChild(sizeInput);
+      sizeRow.appendChild(_vs_size);
+      sizeRow.appendChild(_rb_size);
+      vigSection.appendChild(sizeRow);
+
+      const colorRow = document.createElement("div");
+      colorRow.style.cssText = rowCss();
+      const colorLbl = document.createElement("label");
+      colorLbl.textContent = t.vignetteColor || "Color";
+      colorLbl.style.cssText = labelCss();
+      colorRow.appendChild(colorLbl);
+      const colorInput = document.createElement("input");
+      colorInput.type = "color";
+      colorInput.value = styleSettings.vignetteColor || "#000000";
+      colorInput.oninput = () => {
+        styleSettings.vignetteColor = colorInput.value;
+        _debouncedSave();
+        applyTheme(panelTheme);
+      };
+      const _rb_color = makeResetBtn("#000000", (dv) => {
+        colorInput.value = dv;
+        styleSettings.vignetteColor = dv;
+        save(); applyTheme(panelTheme);
+      });
+      colorRow.appendChild(colorInput);
+      colorRow.appendChild(_rb_color);
+      vigSection.appendChild(colorRow);
+
+      const opRow = document.createElement("div");
+      opRow.style.cssText = rowCss();
+      const opLbl = document.createElement("label");
+      opLbl.textContent = t.vignetteOpacity || "Opacity";
+      opLbl.style.cssText = labelCss();
+      opRow.appendChild(opLbl);
+      const opInput = document.createElement("input");
+      opInput.type = "range"; opInput.min = "0.05"; opInput.max = "1.0"; opInput.step = "0.05";
+      opInput.value = styleSettings.vignetteOpacity ?? 0.45;
+      opInput.style.cssText = sliderCss();
+      const _vs_op = makeValueSpan(parseFloat(opInput.value).toFixed(2));
+      opInput.oninput = () => {
+        styleSettings.vignetteOpacity = parseFloat(opInput.value);
+        _vs_op.textContent = styleSettings.vignetteOpacity.toFixed(2);
+        _debouncedSave();
+        applyTheme(panelTheme);
+      };
+      const _rb_op = makeResetBtn(0.45, (dv) => {
+        opInput.value = dv;
+        _vs_op.textContent = parseFloat(dv).toFixed(2);
+        styleSettings.vignetteOpacity = dv;
+        save(); applyTheme(panelTheme);
+      });
+      opRow.appendChild(opInput);
+      opRow.appendChild(_vs_op);
+      opRow.appendChild(_rb_op);
+      vigSection.appendChild(opRow);
+
+      const _subRows = [cornerRow, sizeRow, colorRow, opRow];
+      vigToggle.onchange = () => {
+        styleSettings.enableVignette = vigToggle.checked;
+        _setGroupEnabled(vigToggle.checked, ..._subRows);
+        save(); applyTheme(panelTheme);
+      };
+
+      parent.appendChild(vigSection);
+      _setGroupEnabled(!!styleSettings.enableVignette, ..._subRows);
+      return { vignetteHeader };
+    }
+
     function _buildGsSearchBarSection(parent) {
       const _isDark = panelTheme === "dark";
       const searchBarSection = document.createElement("div");
@@ -8102,12 +8388,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl,
     } = _buildGsGlowSheenSection(generalStyleContainer);
 
+    const { vignetteHeader } = _buildGsVignetteSection(generalStyleContainer);
+
     const {
       _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
       _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl,
     } = _buildGsSearchBarSection(generalStyleContainer);
 
-    return { generalStyleContainer, generalStyleHeader, _qsHeader, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl };
+    return { generalStyleContainer, generalStyleHeader, _qsHeader, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl };
     }
 
     function _buildToggleBtnStyleSection() {
@@ -8889,7 +9177,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
 
     const { panelLayoutContainer, panelLayoutHeader } = _buildPanelLayoutSection();
-    const { generalStyleContainer, generalStyleHeader, _qsHeader, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl } = _buildGeneralStyleSection();
+    const { generalStyleContainer, generalStyleHeader, _qsHeader, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl } = _buildGeneralStyleSection();
     const { toggleBtnStyleContainer, _tbsHeader } = _buildToggleBtnStyleSection();
     const { textStyleContainer, textStyleHeader, fontSizeLabel, textBackgroundColorLabel, textBorderLabel, textOpacityCompensationLabel } = _buildTextStyleSection();
     const { backgroundOverlayContainer, backgroundOverlayHeader, overlayDarkeningLabel, overlayStrengthLabel, imageLabel, imageModeLabel, imageOffsetXLabel, imageOffsetYLabel, imageScaleLabel, imageOpacityLabel } = _buildBgOverlaySection();
