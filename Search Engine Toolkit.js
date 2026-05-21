@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.2.1
+// @version      2.4.2.9
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -162,12 +162,6 @@
       searchRegionOff: "🌐 Search Region: All — OFF",
       searchRegionWarning: "🌐 Search Region: All — How it works\n\n▸ ON  → When you navigate to a search engine, this script tries to remove or replace country/region URL parameters (e.g. gl, mkt, kl) so results are not filtered to a specific country.\n▸ OFF → The script does nothing and leaves region settings untouched.\n\n⚠️ No guarantee: engines may override this with their own detection. Baidu and Naver are not supported.\n\nThis notice only appears once.",
       styleConfig: "Style Settings 🎨",
-      panelLayout: "Panel Layout",
-      panelTopLabel: "Top Offset",
-      panelRightLabel: "Right Offset",
-      panelWidthLabel: "Max Width",
-      panelHeightLabel: "Max Height",
-      panelWidthHint: "↺ Resets to locale default width",
       seBarOffsetLabel: "Raise Engine Bar (+50px)",
       hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
       hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
@@ -429,12 +423,6 @@
       searchRegionOff: "🌐 搜尋地區：全部 — 已關閉",
       searchRegionWarning: "🌐 搜尋地區：全部 — 運作說明\n\n▸ 開啟 → 每次跳轉到搜尋引擎時，腳本會嘗試移除或置換網址中的國家/地區參數（如 gl、mkt、kl），讓搜尋結果不被限定在特定國家。\n▸ 關閉 → 腳本完全不介入，地區設定維持原狀。\n\n⚠️ 不保證有效：部分引擎可能透過瀏覽器 IP 或 Cookie 自動偵測地區。百度與 Naver 不支援此功能。\n\n此提示只出現一次。",
       styleConfig: "樣式設定 🎨",
-      panelLayout: "面板佈局",
-      panelTopLabel: "距頂部",
-      panelRightLabel: "距右側",
-      panelWidthLabel: "最大寬度",
-      panelHeightLabel: "最大高度",
-      panelWidthHint: "↺ 重置 = 恢復語系預設寬度",
       seBarOffsetLabel: "引擎列上移 50px",
       hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
       hideBlacklistBtnLabel: "隱藏 🚫 黑名單按鈕",
@@ -692,12 +680,6 @@
       searchRegionOff: "🌐 搜索地区：全部 — 已关闭",
       searchRegionWarning: "🌐 搜索地区：全部 — 运作说明\n\n▸ 开启 → 每次跳转到搜索引擎时，脚本会尝试移除或替换网址中的国家/地区参数（如 gl、mkt、kl），让搜索结果不被限定在特定国家。\n▸ 关闭 → 脚本完全不介入，地区设置保持原状。\n\n⚠️ 不保证有效：部分引擎可能通过 IP 或 Cookie 自动检测地区。百度与 Naver 不支持此功能。\n\n此提示只出现一次。",
       styleConfig: "样式设置 🎨",
-      panelLayout: "面板布局",
-      panelTopLabel: "距顶部",
-      panelRightLabel: "距右侧",
-      panelWidthLabel: "最大宽度",
-      panelHeightLabel: "最大高度",
-      panelWidthHint: "↺ 重置 = 恢复语系默认宽度",
       seBarOffsetLabel: "引擎列上移 50px",
       hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
       hideBlacklistBtnLabel: "隱藏 🚫 黑名单按钮",
@@ -956,12 +938,6 @@
       searchRegionOff: "🌐 検索地域：全地域 — OFF",
       searchRegionWarning: "🌐 検索地域：全地域 — 動作説明\n\n▸ ON  → 検索エンジンに移動するたびに、地域/国のURLパラメータ（gl、mkt、kl など）を削除または置換し、特定の国に限定されない結果を表示しようとします。\n▸ OFF → スクリプトは一切介入せず、地域設定をそのまま維持します。\n\n⚠️ 効果の保証なし：エンジンがIPやCookieで地域を自動検出する場合があります。BaiduおよびNaverは非対応。\n\nこの通知は一度だけ表示されます。",
       styleConfig: "スタイル設定 🎨",
-      panelLayout: "ﾊﾟﾈﾙ配置",
-      panelTopLabel: "上余白",
-      panelRightLabel: "右余白",
-      panelWidthLabel: "最大幅",
-      panelHeightLabel: "最大高さ",
-      panelWidthHint: "↺ リセット = 言語別デフォルト幅",
       seBarOffsetLabel: "ｴﾝｼﾞﾝ列+50px上移",
       hideSyntaxBtnLabel: "📖 構文ﾍﾙﾌﾟを非表示",
       hideBlacklistBtnLabel: "🚫 除外域ﾎﾞﾀﾝを非表示",
@@ -1221,12 +1197,6 @@
       searchRegionOff: "🌐 검색 지역: 전체 — OFF",
       searchRegionWarning: "🌐 검색 지역: 전체 — 작동 설명\n\n▸ ON  → 검색 엔진으로 이동할 때마다, 스크립트가 URL의 국가/지역 파라미터(gl, mkt, kl 등)를 제거하거나 교체하여 특정 국가로 제한되지 않은 검색 결과를 표시하려고 시도합니다.\n▸ OFF → 스크립트는 아무것도 개입하지 않으며, 지역 설정을 그대로 유지합니다.\n\n⚠️ 효과 보장 없음: 일부 엔진은 IP 또는 쿠키로 지역을 자동 감지할 수 있습니다. Baidu 및 Naver는 지원되지 않습니다.\n\n이 안내는 한 번만 표시됩니다.",
       styleConfig: "스타일 설정 🎨",
-      panelLayout: "패널 레이아웃",
-      panelTopLabel: "상단 여백",
-      panelRightLabel: "우측 여백",
-      panelWidthLabel: "최대 너비",
-      panelHeightLabel: "최대 높이",
-      panelWidthHint: "↺ 초기화 = 언어 기본 너비 복원",
       seBarOffsetLabel: "엔진 바 +50px 위로",
       hideSyntaxBtnLabel: "📖 문법 도움말 숨기기",
       hideBlacklistBtnLabel: "🚫 차단목록 버튼 숨기기",
@@ -1502,12 +1472,6 @@
     searchRegionOff: "🌐 Search Region: All — OFF",
     searchRegionWarning: "🌐 Search Region: All — How it works\n\n▸ ON → remove region URL parameters.\n▸ OFF → no intervention.",
     styleConfig: "Style Settings 🎨",
-    panelLayout: "Panel Layout",
-    panelTopLabel: "Top Offset",
-    panelRightLabel: "Right Offset",
-    panelWidthLabel: "Max Width",
-    panelHeightLabel: "Max Height",
-    panelWidthHint: "↺ Resets to locale default width",
     seBarOffsetLabel: "Raise Engine Bar (+50px)",
     hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
     hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
@@ -2021,8 +1985,10 @@
   let headerContainer = null;
   let dpBtn           = null;
   let seBar           = null;
-  let seExtraPanel = null;
-  let seHelpTip    = null;
+  let seExtraPanel   = null;
+  let seHelpTip      = null;
+  let _epDrag        = { active: false, x: 0, y: 0 };
+  let _epTitleBarRef = null;
   let manuallyClosed = false;
   if (window.performance && !searchConfig.resetOnReload) {
     const navigationType = performance.getEntriesByType("navigation")[0]?.type;
@@ -3193,6 +3159,63 @@
     document.head.appendChild(s);
   }
 
+  function _applyGlowEffect(el, opts) {
+    const _gc = styleSettings.borderGlowColor || "#00bfff";
+    const _gs = Math.max(opts.minStr, Math.min(opts.maxStr,
+      (styleSettings.borderGlowStrength || 12) * opts.scale));
+    if (styleSettings[opts.enableKey]) {
+      let _shadow = opts.shadowBase + `, 0 0 ${_gs}px ${_gc}, 0 0 ${_gs * 2}px ${_gc}44`;
+      if (opts.inset && styleSettings.borderGlowInset) {
+        _shadow += `, inset 0 0 ${Math.round(_gs * 0.6)}px ${_gc}33`;
+      }
+      el.style.boxShadow = _shadow;
+    } else {
+      el.style.boxShadow = opts.disableShadow ?? "";
+    }
+  }
+
+  function _applySheenEffect(el, className, gradientStop) {
+    let sheenEl = el.querySelector("." + className);
+    if (styleSettings.enableSheen) {
+      if (!sheenEl) {
+        sheenEl = document.createElement("div");
+        sheenEl.className = className;
+        sheenEl.style.cssText =
+          "position:absolute; inset:0; pointer-events:none; border-radius:inherit; z-index:0;";
+        el.style.position = el.style.position || "relative";
+        el.insertBefore(sheenEl, el.firstChild);
+      }
+      const _angle = styleSettings.sheenAngle ?? 135;
+      const _op    = Math.max(0.02, Math.min(0.25, styleSettings.sheenOpacity ?? 0.08));
+      sheenEl.style.background =
+        `linear-gradient(${_angle}deg, rgba(255,255,255,${_op}) 0%, transparent ${gradientStop})`;
+      sheenEl.style.display = "block";
+    } else if (sheenEl) {
+      sheenEl.style.display = "none";
+    }
+  }
+
+  function _applyBgImage(el, fallbackBg) {
+    const _img  = styleSettings.backgroundImage;
+    const _safe = (_img && /^(https?:|data:image\/)/.test(_img)) ? _img : "";
+    if (_safe) {
+      const _ov = 1 - styleSettings.imageOpacity;
+      el.style.backgroundColor    = "transparent";
+      el.style.backgroundImage    = `linear-gradient(rgba(0,0,0,${_ov}), rgba(0,0,0,${_ov})), url(${_safe})`;
+      el.style.backgroundRepeat   = styleSettings.imageMode === "tile" ? "repeat" : "no-repeat";
+      el.style.backgroundPosition = styleSettings.imageMode === "center"
+        ? "center"
+        : `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY || 0}px`;
+      el.style.backgroundSize     = `${styleSettings.imageScale * 100}%`;
+    } else {
+      if (fallbackBg !== undefined) el.style.backgroundColor = fallbackBg;
+      el.style.backgroundImage    = "";
+      el.style.backgroundRepeat   = "";
+      el.style.backgroundPosition = "";
+      el.style.backgroundSize     = "";
+    }
+  }
+
   function applyThemeToDom(v) {
     const {
       textColor, buttonBg, borderColor, borderRadius,
@@ -3213,64 +3236,28 @@
       panel.style.setProperty("--set-group-bg",      `rgba(${r},${g},${b},${groupOpacity})`);
       panel.style.setProperty("--set-grid-cols",     `repeat(auto-fill, minmax(${_sbwCss > 0 ? _sbwCss : 104}px, 1fr))`);
 
-      panel.style.backgroundColor = styleSettings.backgroundImage
-        ? "transparent"
-        : `rgba(${r},${g},${b},${panelOpacity})`;
       panel.style.color = textColor;
       panel.style.borderColor = borderColor;
       panel.style.borderRadius = Math.max(parseInt(borderRadius) || 6, 10) + "px";
       panel.style.fontSize = fontSize;
       panel.style.position = "fixed";
-      panel.style.top    = (styleSettings.panelTop    ?? 80)  + "px";
-      if (styleSettings.panelLeft >= 0) {
-        panel.style.left  = styleSettings.panelLeft + "px";
-      } else {
-        const _r = styleSettings.panelRight ?? 20;
-        const _w = parseInt(panel.style.width) || getEffectivePanelWidth();
-        panel.style.left = Math.max(8, window.innerWidth - _r - _w) + "px";
-      }
-      panel.style.right = "auto";
+      panel.style.right     = "auto";
       panel.style.transform = "translate(0,0)";
       panel.style.willChange = "transform";
       panel.style.transition = "opacity 0.2s ease, transform 0.2s ease";
-      panel.style.maxHeight = (styleSettings.panelMaxHeight ?? 87) + "vh";
       panel.style.overflowY = "auto";
-      panel.style.opacity = panelOpacity;
 
-      {
-        const _gc = styleSettings.borderGlowColor || "#00bfff";
-        const _gs = Math.max(4, Math.min(32, styleSettings.borderGlowStrength || 12));
-        let _shadow = "0 4px 20px rgba(0,0,0,0.35)";
-        if (styleSettings.enableBorderGlow) {
-          _shadow += `, 0 0 ${_gs}px ${_gc}, 0 0 ${_gs * 2}px ${_gc}44`;
-          if (styleSettings.borderGlowInset) {
-            _shadow += `, inset 0 0 ${Math.round(_gs * 0.6)}px ${_gc}33`;
-          }
-        }
-        panel.style.boxShadow = _shadow;
-      }
+      _applyGlowEffect(panel, {
+        minStr:        4,
+        maxStr:        32,
+        scale:         1,
+        shadowBase:    "0 4px 20px rgba(0,0,0,0.35)",
+        enableKey:     "enableBorderGlow",
+        inset:         true,
+        disableShadow: "0 4px 20px rgba(0,0,0,0.35)",
+      });
 
-      {
-        let sheenEl = panel.querySelector(".panel-sheen");
-        if (styleSettings.enableSheen) {
-          if (!sheenEl) {
-            sheenEl = document.createElement("div");
-            sheenEl.className = "panel-sheen";
-            sheenEl.style.cssText = `
-              position:absolute; inset:0; pointer-events:none;
-              border-radius:inherit; z-index:0;
-            `;
-            panel.insertBefore(sheenEl, panel.firstChild);
-          }
-          const _angle = styleSettings.sheenAngle ?? 135;
-          const _op    = Math.max(0.02, Math.min(0.25, styleSettings.sheenOpacity ?? 0.08));
-          sheenEl.style.background =
-            `linear-gradient(${_angle}deg, rgba(255,255,255,${_op}) 0%, transparent 55%)`;
-          sheenEl.style.display = "block";
-        } else if (sheenEl) {
-          sheenEl.style.display = "none";
-        }
-      }
+      _applySheenEffect(panel, "panel-sheen", "55%");
 
       if (styleSettings.enableOverlayDarkening) {
         let overlayStyle = document.querySelector("style[data-overlay-style]");
@@ -3303,56 +3290,18 @@
         if (overlayStyle) overlayStyle.remove();
       }
 
-      const _bgImgMain = styleSettings.backgroundImage;
-      const _bgImgMainSafe = (_bgImgMain && /^(https?:|data:image\/)/.test(_bgImgMain)) ? _bgImgMain : "";
-      if (_bgImgMainSafe) {
-        panel.style.backgroundImage = `linear-gradient(rgba(0,0,0,${1 - styleSettings.imageOpacity}), rgba(0,0,0,${1 - styleSettings.imageOpacity})), url(${_bgImgMainSafe})`;
-        panel.style.backgroundRepeat =
-          styleSettings.imageMode === "tile" ? "repeat" : "no-repeat";
-        panel.style.backgroundPosition =
-          styleSettings.imageMode === "center"
-            ? "center"
-            : `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY || 0}px`;
-        panel.style.backgroundSize = `${styleSettings.imageScale * 100}%`;
-      } else {
-        panel.style.backgroundImage  = "";
-        panel.style.backgroundRepeat = "";
-        panel.style.backgroundPosition = "";
-        panel.style.backgroundSize   = "";
-      }
+      _applyBgImage(panel, `rgba(${r},${g},${b},${panelOpacity})`);
 
       panel.querySelectorAll(".group-block").forEach((el) => {
-        {
-          const _gc = styleSettings.borderGlowColor || "#00bfff";
-          const _gs = Math.max(2, Math.min(20, (styleSettings.borderGlowStrength || 12) * 0.5));
-          if (styleSettings.enableGroupGlow) {
-            el.style.boxShadow =
-              `0 2px 8px rgba(0,0,0,0.18), 0 0 ${_gs}px ${_gc}, 0 0 ${_gs * 2}px ${_gc}44`;
-          } else {
-            el.style.boxShadow = "";
-          }
-        }
+        _applyGlowEffect(el, {
+          minStr:     2,
+          maxStr:     20,
+          scale:      0.5,
+          shadowBase: "0 2px 8px rgba(0,0,0,0.18)",
+          enableKey:  "enableGroupGlow",
+        });
 
-        {
-          let sheenEl = el.querySelector(".group-sheen");
-          if (styleSettings.enableSheen) {
-            if (!sheenEl) {
-              sheenEl = document.createElement("div");
-              sheenEl.className = "group-sheen";
-              sheenEl.style.cssText =
-                "position:absolute; inset:0; pointer-events:none; border-radius:inherit; z-index:0;";
-              el.style.position = el.style.position || "relative";
-              el.insertBefore(sheenEl, el.firstChild);
-            }
-            const _angle = styleSettings.sheenAngle ?? 135;
-            const _op    = Math.max(0.02, Math.min(0.25, styleSettings.sheenOpacity ?? 0.08));
-            sheenEl.style.background =
-              `linear-gradient(${_angle}deg, rgba(255,255,255,${_op}) 0%, transparent 55%)`;
-            sheenEl.style.display = "block";
-          } else if (sheenEl) {
-            sheenEl.style.display = "none";
-          }
-        }
+        _applySheenEffect(el, "group-sheen", "55%");
       });
 
       panel.querySelectorAll(".draggable-site").forEach((el) => {
@@ -3367,37 +3316,16 @@
         const _lbl = el.querySelector(".site-label");
         if (_lbl) _lbl.style.display = (_sbw > 0 && _sbw <= 28) ? "none" : "";
 
-        {
-          const _gc = styleSettings.borderGlowColor || "#00bfff";
-          const _gs = Math.max(2, Math.min(14, (styleSettings.borderGlowStrength || 12) * 0.35));
-          if (styleSettings.enableSiteGlow) {
-            el.style.boxShadow =
-              `0 1px 3px rgba(0,0,0,0.15), 0 0 ${_gs}px ${_gc}, 0 0 ${_gs * 2}px ${_gc}44`;
-          } else {
-            el.style.boxShadow = "0 1px 3px rgba(0,0,0,0.10)";
-          }
-        }
+        _applyGlowEffect(el, {
+          minStr:        2,
+          maxStr:        14,
+          scale:         0.35,
+          shadowBase:    "0 1px 3px rgba(0,0,0,0.15)",
+          enableKey:     "enableSiteGlow",
+          disableShadow: "0 1px 3px rgba(0,0,0,0.10)",
+        });
 
-        {
-          let sheenEl = el.querySelector(".site-sheen");
-          if (styleSettings.enableSheen) {
-            if (!sheenEl) {
-              sheenEl = document.createElement("div");
-              sheenEl.className = "site-sheen";
-              sheenEl.style.cssText =
-                "position:absolute; inset:0; pointer-events:none; border-radius:inherit; z-index:0;";
-              el.style.position = "relative";
-              el.insertBefore(sheenEl, el.firstChild);
-            }
-            const _angle = styleSettings.sheenAngle ?? 135;
-            const _op    = Math.max(0.02, Math.min(0.25, styleSettings.sheenOpacity ?? 0.08));
-            sheenEl.style.background =
-              `linear-gradient(${_angle}deg, rgba(255,255,255,${_op}) 0%, transparent 60%)`;
-            sheenEl.style.display = "block";
-          } else if (sheenEl) {
-            sheenEl.style.display = "none";
-          }
-        }
+        _applySheenEffect(el, "site-sheen", "60%");
       });
 
       const textBorderVal = styleSettings.textBorder;
@@ -3425,9 +3353,6 @@
 
     const syntaxPanel = document.getElementById("syntax-panel");
     if (syntaxPanel) {
-      syntaxPanel.style.backgroundColor = styleSettings.backgroundImage
-        ? "transparent"
-        : `rgba(${r},${g},${b},${panelOpacity})`;
       syntaxPanel.style.color        = textColor;
       syntaxPanel.style.borderColor  = borderColor;
       syntaxPanel.style.borderRadius = borderRadius;
@@ -3436,18 +3361,8 @@
       syntaxPanel.style.transition   = "opacity 0.2s ease, transform 0.2s ease";
       syntaxPanel.style.maxHeight    = "87vh";
       syntaxPanel.style.overflowY    = "auto";
-      syntaxPanel.style.opacity      = panelOpacity;
 
-      if (styleSettings.backgroundImage) {
-        syntaxPanel.style.backgroundImage = `linear-gradient(rgba(0,0,0,${1 - styleSettings.imageOpacity}), rgba(0,0,0,${1 - styleSettings.imageOpacity})), url(${styleSettings.backgroundImage})`;
-        syntaxPanel.style.backgroundRepeat =
-          styleSettings.imageMode === "tile" ? "repeat" : "no-repeat";
-        syntaxPanel.style.backgroundPosition =
-          styleSettings.imageMode === "center"
-            ? "center"
-            : `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY || 0}px`;
-        syntaxPanel.style.backgroundSize = `${styleSettings.imageScale * 100}%`;
-      }
+      _applyBgImage(syntaxPanel, `rgba(${r},${g},${b},${panelOpacity})`);
 
       syntaxPanel.querySelectorAll("button").forEach((el) => {
         el.style.background = buttonBg;
@@ -4783,6 +4698,41 @@
     }
   }
 
+  function _positionExtraPanel(plusBtn) {
+    seExtraPanel.style.left = "-9999px";
+    seExtraPanel.style.top  = "-9999px";
+    requestAnimationFrame(() => {
+      if (!seExtraPanel) return;
+      const epW    = seExtraPanel.offsetWidth  || 280;
+      const epH    = seExtraPanel.offsetHeight || 320;
+      const margin = 6;
+
+      if (
+        se_panelPos &&
+        se_panelPos.left >= 0 &&
+        se_panelPos.top  >= 0 &&
+        se_panelPos.left + epW <= window.innerWidth  + margin &&
+        se_panelPos.top  + epH <= window.innerHeight + margin
+      ) {
+        seExtraPanel.style.left =
+          Math.min(se_panelPos.left, window.innerWidth  - epW - margin) + "px";
+        seExtraPanel.style.top  =
+          Math.min(se_panelPos.top,  window.innerHeight - epH - margin) + "px";
+      } else {
+        const btnRect = plusBtn.getBoundingClientRect();
+        let left = btnRect.right  - epW;
+        let top  = btnRect.bottom + margin;
+        if (left < margin) left = margin;
+        if (top + epH > window.innerHeight - margin)
+          top = btnRect.top - epH - margin;
+        if (top < margin) top = margin;
+        seExtraPanel.style.left = left + "px";
+        seExtraPanel.style.top  = top  + "px";
+      }
+      seExtraPanel.style.right = "auto";
+    });
+  }
+
   function buildMainPanelShell() {
   log("Creating panel with defaultPanelOpen:", defaultPanelOpen);
   searchConfig.isExpanded = false;
@@ -4832,7 +4782,6 @@
   panel.style.overflowX = "hidden";
   panel.style.fontFamily = "sans-serif";
   panel.style.fontSize = styleSettings.fontSize + "px";
-  panel.style.opacity = styleSettings.opacity;
   panel.style.display = "none";
   panel.style.transition = "opacity 0.2s ease, transform 0.2s ease";
   panel.style.boxSizing = "border-box";
@@ -5662,6 +5611,10 @@
   function closeExtraPanel(force) {
     if (seExtraPanel) {
       if (se_panelPinned && !force) return;
+      document.removeEventListener("mousemove", _epOnMove);
+      document.removeEventListener("mouseup",   _epOnUp);
+      _epDrag.active = false;
+      _epTitleBarRef = null;
       seExtraPanel.remove();
       seExtraPanel = null;
     }
@@ -5705,6 +5658,130 @@
       wrap.appendChild(btn);
       seBar.insertBefore(wrap, plusBtnEl || null);
     });
+  }
+
+  function _seRunDetect(st) {
+    let detectedName = "";
+    let detectedUrl  = "";
+
+    try {
+      const u    = new URL(location.href);
+      const host = u.hostname.replace(/^www\./, "");
+
+      const knownParams = [
+        { param: "q",     suffix: "?q=" },
+        { param: "wd",    suffix: "?wd=" },
+        { param: "text",  suffix: "?text=" },
+        { param: "query", suffix: "?query=" },
+        { param: "p",     suffix: "?p=" },
+        { param: "s",     suffix: "?s=" },
+        { param: "k",     suffix: "?k=" },
+      ];
+
+      for (const { param, suffix } of knownParams) {
+        if (u.searchParams.has(param)) {
+          const base   = u.origin + u.pathname;
+          detectedUrl  = base + suffix;
+          detectedName = host.split(".")[0];
+          detectedName = detectedName.charAt(0).toUpperCase() + detectedName.slice(1);
+          break;
+        }
+      }
+    } catch (_) {}
+
+    if (!detectedUrl) {
+      showToast(st.detectFail || "❌ Cannot detect search URL.");
+      return;
+    }
+
+    const confirmMsg = typeof st.detectConfirm === "function"
+      ? st.detectConfirm(detectedName, detectedUrl)
+      : `${detectedName}\n${detectedUrl}`;
+
+    showCustomPrompt(
+      `【${st.detectConfirmTitle || "Add Search Engine?"}】\n\n${confirmMsg}`,
+      detectedName,
+      (finalName) => {
+        if (!finalName || !finalName.trim()) return;
+        if (se_engines.some(eng => eng.url === detectedUrl)) {
+          showToast("⚠️ " + detectedUrl + " already exists.");
+          return;
+        }
+        se_engines.push({ name: finalName.trim(), url: detectedUrl });
+        se_save();
+        seExtraPanel?.__renderEngineList?.();
+        renderPinnedEngines();
+        const msg = typeof st.detectSuccess === "function"
+          ? st.detectSuccess(finalName.trim())
+          : `✅ ${finalName.trim()}`;
+        showToast(msg);
+      },
+      null,
+      false,
+    );
+  }
+
+  function _epOnMove(e) {
+    if (!_epDrag.active || !seExtraPanel) return;
+    const nx = Math.max(
+      0,
+      Math.min(e.clientX - _epDrag.x, window.innerWidth  - seExtraPanel.offsetWidth),
+    );
+    const ny = Math.max(
+      0,
+      Math.min(e.clientY - _epDrag.y, window.innerHeight - seExtraPanel.offsetHeight),
+    );
+    seExtraPanel.style.left  = nx + "px";
+    seExtraPanel.style.top   = ny + "px";
+    seExtraPanel.style.right = "auto";
+  }
+  function _epOnUp() {
+    if (!_epDrag.active) return;
+    _epDrag.active = false;
+    if (_epTitleBarRef) _epTitleBarRef.style.cursor = "grab";
+    if (seExtraPanel) {
+      se_panelPos = {
+        left: parseInt(seExtraPanel.style.left),
+        top:  parseInt(seExtraPanel.style.top),
+      };
+      se_save();
+    }
+    document.removeEventListener("mousemove", _epOnMove);
+    document.removeEventListener("mouseup",   _epOnUp);
+  }
+
+  function _buildEpUsageBanner(isDark, st) {
+    if (GM_getValue("hideSeAdviceBanner", false)) return null;
+    const adviceBanner = document.createElement("div");
+    adviceBanner.style.cssText = `
+      background:${isDark ? "#1a2a1a" : "#f0fff4"};
+      color:${isDark ? "#8fce8f" : "#2d6a2d"};
+      border:1px dashed ${isDark ? "#3a6a3a" : "#90e090"};
+      border-radius:8px; padding:8px 10px;
+      font-size:${styleSettings.fontSize - 1}px;
+      line-height:1.55; display:flex; align-items:flex-start; gap:6px;
+    `;
+    const adviceText = document.createElement("span");
+    adviceText.style.flex = "1";
+    adviceText.textContent = st.adviceBannerText || "💡 This script works best as a shortcut helper for major search engines.";
+    const adviceClose = document.createElement("button");
+    adviceClose.textContent = "❌";
+    adviceClose.title = st.adviceBannerTitle || "Usage tip";
+    adviceClose.style.cssText = `
+      background:none;border:none;cursor:pointer;
+      font-size:12px;padding:0 2px;flex-shrink:0;
+      opacity:0.55;transition:opacity 0.15s;line-height:1;
+    `;
+    adviceClose.addEventListener("mouseenter", () => { adviceClose.style.opacity = "1"; });
+    adviceClose.addEventListener("mouseleave", () => { adviceClose.style.opacity = "0.55"; });
+    adviceClose.addEventListener("click", (e) => {
+      e.stopPropagation();
+      GM_setValue("hideSeAdviceBanner", true);
+      adviceBanner.remove();
+    });
+    adviceBanner.appendChild(adviceText);
+    adviceBanner.appendChild(adviceClose);
+    return adviceBanner;
   }
 
   function buildExtraPanel() {
@@ -5878,52 +5955,17 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     epTitleBar.appendChild(epTitleRight);
     seExtraPanel.appendChild(epTitleBar);
 
-    let epDragging = false,
-      epDragX = 0,
-      epDragY = 0;
+    _epTitleBarRef = epTitleBar;
+    _epDrag.active = false;
     epTitleBar.addEventListener("mousedown", (e) => {
       if (e.target === epCloseBtn || e.target === helpBtn) return;
-      epDragging = true;
       const rect = seExtraPanel.getBoundingClientRect();
-      epDragX = e.clientX - rect.left;
-      epDragY = e.clientY - rect.top;
+      _epDrag.active = true;
+      _epDrag.x = e.clientX - rect.left;
+      _epDrag.y = e.clientY - rect.top;
       epTitleBar.style.cursor = "grabbing";
       e.preventDefault();
     });
-    function _epOnMove(e) {
-      if (!epDragging || !seExtraPanel) return;
-      const nx = Math.max(
-        0,
-        Math.min(
-          e.clientX - epDragX,
-          window.innerWidth - seExtraPanel.offsetWidth,
-        ),
-      );
-      const ny = Math.max(
-        0,
-        Math.min(
-          e.clientY - epDragY,
-          window.innerHeight - seExtraPanel.offsetHeight,
-        ),
-      );
-      seExtraPanel.style.left = nx + "px";
-      seExtraPanel.style.top = ny + "px";
-      seExtraPanel.style.right = "auto";
-    }
-    function _epOnUp() {
-      if (!epDragging) return;
-      epDragging = false;
-      epTitleBar.style.cursor = "grab";
-      if (seExtraPanel) {
-        se_panelPos = {
-          left: parseInt(seExtraPanel.style.left),
-          top: parseInt(seExtraPanel.style.top),
-        };
-        se_save();
-      }
-      document.removeEventListener("mousemove", _epOnMove);
-      document.removeEventListener("mouseup",   _epOnUp);
-    }
     document.addEventListener("mousemove", _epOnMove);
     document.addEventListener("mouseup",   _epOnUp);
 
@@ -6162,38 +6204,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     seExtraPanel.__renderEngineList = renderEngineList;
 
-    if (!GM_getValue("hideSeAdviceBanner", false)) {
-      const adviceBanner = document.createElement("div");
-      adviceBanner.style.cssText = `
-        background:${isDark ? "#1a2a1a" : "#f0fff4"};
-        color:${isDark ? "#8fce8f" : "#2d6a2d"};
-        border:1px dashed ${isDark ? "#3a6a3a" : "#90e090"};
-        border-radius:8px; padding:8px 10px;
-        font-size:${styleSettings.fontSize - 1}px;
-        line-height:1.55; display:flex; align-items:flex-start; gap:6px;
-      `;
-      const adviceText = document.createElement("span");
-      adviceText.style.flex = "1";
-      adviceText.textContent = st.adviceBannerText || "💡 This script works best as a shortcut helper for major search engines.";
-      const adviceClose = document.createElement("button");
-      adviceClose.textContent = "❌";
-      adviceClose.title = st.adviceBannerTitle || "Usage tip";
-      adviceClose.style.cssText = `
-        background:none;border:none;cursor:pointer;
-        font-size:12px;padding:0 2px;flex-shrink:0;
-        opacity:0.55;transition:opacity 0.15s;line-height:1;
-      `;
-      adviceClose.addEventListener("mouseenter", () => { adviceClose.style.opacity = "1"; });
-      adviceClose.addEventListener("mouseleave", () => { adviceClose.style.opacity = "0.55"; });
-      adviceClose.addEventListener("click", (e) => {
-        e.stopPropagation();
-        GM_setValue("hideSeAdviceBanner", true);
-        adviceBanner.remove();
-      });
-      adviceBanner.appendChild(adviceText);
-      adviceBanner.appendChild(adviceClose);
-      epBody.appendChild(adviceBanner);
-    }
+    const _adviceBanner = _buildEpUsageBanner(isDark, st);
+    if (_adviceBanner) epBody.appendChild(_adviceBanner);
 
     epBody.appendChild(mkDivider(st.detectBtn || "🔍 Auto-Detect"));
 
@@ -6217,67 +6229,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     detectBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-
-      function runDetect() {
-        let detectedName = "";
-        let detectedUrl  = "";
-
-        try {
-          const u = new URL(location.href);
-          const host = u.hostname.replace(/^www\./, "");
-
-          const knownParams = [
-            { param: "q",     suffix: "?q=" },
-            { param: "wd",    suffix: "?wd=" },
-            { param: "text",  suffix: "?text=" },
-            { param: "query", suffix: "?query=" },
-            { param: "p",     suffix: "?p=" },
-            { param: "s",     suffix: "?s=" },
-            { param: "k",     suffix: "?k=" },
-          ];
-
-          for (const { param, suffix } of knownParams) {
-            if (u.searchParams.has(param)) {
-              const base = u.origin + u.pathname;
-              detectedUrl  = base + suffix;
-              detectedName = host.split(".")[0];
-              detectedName = detectedName.charAt(0).toUpperCase() + detectedName.slice(1);
-              break;
-            }
-          }
-        } catch (_) {}
-
-        if (!detectedUrl) {
-          showToast(st.detectFail || "❌ Cannot detect search URL.");
-          return;
-        }
-
-        const confirmMsg = typeof st.detectConfirm === "function"
-          ? st.detectConfirm(detectedName, detectedUrl)
-          : `${detectedName}\n${detectedUrl}`;
-
-        showCustomPrompt(
-          `【${st.detectConfirmTitle || "Add Search Engine?"}】\n\n${confirmMsg}`,
-          detectedName,
-          (finalName) => {
-            if (!finalName || !finalName.trim()) return;
-            if (se_engines.some(eng => eng.url === detectedUrl)) {
-              showToast("⚠️ " + detectedUrl + " already exists.");
-              return;
-            }
-            se_engines.push({ name: finalName.trim(), url: detectedUrl });
-            se_save();
-            renderEngineList();
-            renderPinnedEngines();
-            const msg = typeof st.detectSuccess === "function"
-              ? st.detectSuccess(finalName.trim())
-              : `✅ ${finalName.trim()}`;
-            showToast(msg);
-          },
-          null,
-          false,
-        );
-      }
 
       if (!GM_getValue("seDetectFirstSeen", false)) {
         const tipOverlay = document.createElement("div");
@@ -6315,7 +6266,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           ev.stopPropagation();
           GM_setValue("seDetectFirstSeen", true);
           tipOverlay.remove();
-          runDetect();
+          _seRunDetect(st);
         });
         tipBox.appendChild(tipTitle);
         tipBox.appendChild(tipBody);
@@ -6327,7 +6278,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           if (ev.target === tipOverlay) tipOverlay.remove();
         });
       } else {
-        runDetect();
+        _seRunDetect(st);
       }
     });
     epBody.appendChild(detectBtn);
@@ -6436,42 +6387,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     epBody.appendChild(_buildAddEngineForm());
 
-    seExtraPanel.style.left = "-9999px";
-    seExtraPanel.style.top = "-9999px";
     document.body.appendChild(seExtraPanel);
     shieldFromFileDrop(seExtraPanel);
     renderEngineList();
-
-    requestAnimationFrame(() => {
-      if (!seExtraPanel) return;
-      const epW = seExtraPanel.offsetWidth || 280;
-      const epH = seExtraPanel.offsetHeight || 320;
-      const margin = 6;
-
-      if (
-        se_panelPos &&
-        se_panelPos.left >= 0 &&
-        se_panelPos.top >= 0 &&
-        se_panelPos.left + epW <= window.innerWidth + margin &&
-        se_panelPos.top + epH <= window.innerHeight + margin
-      ) {
-        seExtraPanel.style.left =
-          Math.min(se_panelPos.left, window.innerWidth - epW - margin) + "px";
-        seExtraPanel.style.top =
-          Math.min(se_panelPos.top, window.innerHeight - epH - margin) + "px";
-      } else {
-        const btnRect = plusBtn.getBoundingClientRect();
-        let left = btnRect.right - epW;
-        let top = btnRect.bottom + margin;
-        if (left < margin) left = margin;
-        if (top + epH > window.innerHeight - margin)
-          top = btnRect.top - epH - margin;
-        if (top < margin) top = margin;
-        seExtraPanel.style.left = left + "px";
-        seExtraPanel.style.top = top + "px";
-      }
-      seExtraPanel.style.right = "auto";
-    });
+    _positionExtraPanel(plusBtn);
   }
 
   function _bindStylePanel(refs) {
@@ -6487,7 +6406,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       buttonOpacityLabel,
       siteButtonWidthLabel,
       panelBgColorLabel,
-      panelBgAlphaLabel,
       glowHeader,
       glowToggleLbl,
       glowColorLbl,
@@ -6646,7 +6564,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   );
 
   _bind(panelBgColorLabel,  () => _hlPanel(true), () => _hlPanel(false));
-  _bind(panelBgAlphaLabel,  () => _hlPanel(true), () => _hlPanel(false));
 
   _bind(glowToggleLbl,  () => _hlPanel(true), () => _hlPanel(false));
   _bind(glowColorLbl,   () => _hlPanel(true), () => _hlPanel(false));
@@ -7167,6 +7084,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     return btn;
   }
 
+  function _setGroupEnabled(enabled, ...rows) {
+    rows.forEach(row => {
+      if (!row) return;
+      row.style.opacity       = enabled ? "1"    : "0.38";
+      row.style.pointerEvents = enabled ? ""     : "none";
+      row.style.transition    = "opacity 0.18s";
+    });
+  }
+
     function _buildPanelLayoutSection() {
     const panelLayoutContainer = document.createElement("div");
     panelLayoutContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
@@ -7178,7 +7104,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     panelLayoutContainer.style.maxWidth = "490px";
 
     const panelLayoutHeader = document.createElement("div");
-    panelLayoutHeader.textContent = t.panelLayout || "Panel Layout";
+    panelLayoutHeader.textContent = "Panel Layout";
     panelLayoutHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
     panelLayoutContainer.appendChild(panelLayoutHeader);
 
@@ -7202,90 +7128,18 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         if (!isNaN(v)) {
           styleSettings[key] = v;
           _debouncedSave();
-          const p = document.getElementById("site-group-panel");
-          if (!p) return;
-          if (key === "panelTop")    p.style.top  = v + "px";
-          if (key === "panelRight") {
-            const _w = parseInt(p.style.width) || getEffectivePanelWidth();
-            const _newLeft = Math.max(8, window.innerWidth - v - _w);
-            p.style.left = _newLeft + "px";
-            p.style.right = "auto";
-            styleSettings.panelLeft = _newLeft;
-            save();
-          }
-          if (key === "panelWidth") { const _w = v > 0 ? v : getEffectivePanelWidth(); p.style.width = _w + "px"; p.style.maxWidth = _w + "px"; }
-          if (key === "panelMaxHeight") p.style.maxHeight = v + "vh";
         }
       };
       const resetBtn = makeResetBtn(defaultVal, (dv) => {
         inp.value = dv;
         styleSettings[key] = dv;
         save();
-        const p = document.getElementById("site-group-panel");
-        if (!p) return;
-        if (key === "panelTop")    p.style.top  = dv + "px";
-        if (key === "panelRight") {
-          const _w = parseInt(p.style.width) || getEffectivePanelWidth();
-          const _newLeft = Math.max(8, window.innerWidth - dv - _w);
-          p.style.left = _newLeft + "px";
-          p.style.right = "auto";
-          styleSettings.panelLeft = _newLeft;
-          save();
-        }
-        if (key === "panelWidth") { const _dw = dv > 0 ? dv : getEffectivePanelWidth(); p.style.width = _dw + "px"; p.style.maxWidth = _dw + "px"; }
-        if (key === "panelMaxHeight") p.style.maxHeight = dv + "vh";
       });
       row.appendChild(inp);
       row.appendChild(unitSpan);
       row.appendChild(resetBtn);
       return row;
     }
-
-    panelLayoutContainer.appendChild(makeNumRow(t.panelTopLabel || "Top Offset",   "panelTop",       0, 2000, 1,  "px", 80));
-    panelLayoutContainer.appendChild(makeNumRow(t.panelRightLabel || "Right Offset",   "panelRight",     0, 2000, 1,  "px", 20));
-
-    (function() {
-      const _localeW = langWidths[lang] || 410;
-      const _initW   = styleSettings.panelWidth > 0 ? styleSettings.panelWidth : _localeW;
-      const row = document.createElement("div");
-      row.style.cssText = rowCss();
-      const lbl = document.createElement("label");
-      lbl.textContent = t.panelWidthLabel || "Max Width";
-      lbl.style.cssText = labelCss();
-      row.appendChild(lbl);
-      const inp = document.createElement("input");
-      inp.type = "number"; inp.min = 200; inp.max = 2000; inp.step = 10;
-      inp.value = _initW;
-      inp.style.cssText = "flex:1; min-width:50px; margin:0 6px; padding:2px 4px; box-sizing:border-box;";
-      const unitSpan = document.createElement("span");
-      unitSpan.textContent = "px";
-      unitSpan.style.cssText = "width:28px; font-size:11px; flex-shrink:0; text-align:left;";
-      inp.oninput = () => {
-        const v = parseInt(inp.value, 10);
-        if (!isNaN(v) && v >= 200) {
-          styleSettings.panelWidth = (v === _localeW) ? 0 : v;
-          _debouncedSave();
-          const p = document.getElementById("site-group-panel");
-          if (p) { p.style.width = v + "px"; p.style.maxWidth = v + "px"; }
-        }
-      };
-      const resetBtn = makeResetBtn(_localeW, (dv) => {
-        inp.value = dv;
-        styleSettings.panelWidth = 0;
-        save();
-        const p = document.getElementById("site-group-panel");
-        if (p) { p.style.width = dv + "px"; p.style.maxWidth = dv + "px"; }
-      });
-      row.appendChild(inp); row.appendChild(unitSpan); row.appendChild(resetBtn);
-      panelLayoutContainer.appendChild(row);
-    })();
-
-    panelLayoutContainer.appendChild(makeNumRow(t.panelHeightLabel || "Max Height", "panelMaxHeight", 10, 100,  1,  "vh", 87));
-
-    const widthHint = document.createElement("div");
-    widthHint.textContent = t.panelWidthHint || "↺ Resets to locale default width";
-    widthHint.style.cssText = `font-size:10px; color:${panelTheme === "dark" ? "#aaa" : "#888"}; margin-top:2px; padding-left:4px;`;
-    panelLayoutContainer.appendChild(widthHint);
 
     (function() {
       const row = document.createElement("div");
@@ -7467,6 +7321,488 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     return { panelLayoutContainer, panelLayoutHeader };
     }
 
+    function _buildGsQuickSchemeSection(parent) {
+      const _qsDark = panelTheme === "dark";
+      const qsContainer = document.createElement("div");
+      qsContainer.style.cssText = `
+        border:1px solid ${_qsDark ? "#555" : "#ccc"};
+        border-radius:${styleSettings.borderRadius}px;
+        padding:6px 8px; display:flex; flex-direction:column; gap:4px; margin-top:0;
+      `;
+      const qsHeader = document.createElement("div");
+      qsHeader.textContent = t.quickSchemeLabel || "🎨 Quick Scheme";
+      qsHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
+      qsContainer.appendChild(qsHeader);
+
+      const _qsRow = document.createElement("div");
+      _qsRow.style.cssText = "display:flex; gap:5px; flex-wrap:wrap;";
+
+      const _SCHEMES = {
+        light: {
+          panelTheme:            "light",
+          searchBarBg:           "#ffffff",
+          searchBarBgOpacity:    0.85,
+          searchBarFg:           "#111111",
+          customBackgroundColor: "#ffffff",
+          customTextColor:       "#111111",
+          customButtonBg:        "#f0f0f0",
+        },
+        dark: {
+          panelTheme:            "dark",
+          searchBarBg:           "#1a1a1a",
+          searchBarBgOpacity:    0.75,
+          searchBarFg:           "#eeeeee",
+          customBackgroundColor: "#1e1e1e",
+          customTextColor:       "#eeeeee",
+          customButtonBg:        "#3c3c3c",
+        },
+        reset: null,
+      };
+
+      const _qsDefs = [
+        { key: "reset", label: t.quickSchemeReset || "↺ Reset" },
+        { key: "light", label: t.quickSchemeLight  || "☀️ Light" },
+        { key: "dark",  label: t.quickSchemeDark   || "🌑 Dark" },
+      ];
+
+      _qsDefs.forEach(def => {
+        const pb = document.createElement("button");
+        pb.textContent = def.label;
+        pb.title = def.label;
+        pb.className = "icon-btn";
+        pb.style.cssText = `flex:1; padding:3px 6px; border-radius:5px; font-size:11px;
+          cursor:pointer; white-space:nowrap;
+          background:${_qsDark ? "#4a4a4a" : "#eee"};
+          border:1px solid ${_qsDark ? "#666" : "#ccc"}; color:inherit;`;
+        pb.onclick = () => {
+          if (def.key === "reset") {
+            styleSettings.searchBarBg           = "";
+            styleSettings.searchBarBgOpacity    = 0;
+            styleSettings.searchBarFg           = "";
+            styleSettings.searchBarGlowEnabled  = false;
+          } else {
+            const s = _SCHEMES[def.key];
+            styleSettings.searchBarBg        = s.searchBarBg;
+            styleSettings.searchBarBgOpacity = s.searchBarBgOpacity;
+            styleSettings.searchBarFg        = s.searchBarFg;
+            if (panelTheme === "custom") {
+              styleSettings.customBackgroundColor = s.customBackgroundColor;
+              styleSettings.customTextColor       = s.customTextColor;
+              styleSettings.customButtonBg        = s.customButtonBg;
+            }
+          }
+          save();
+          applyTheme(panelTheme);
+        };
+        _qsRow.appendChild(pb);
+      });
+
+      qsContainer.appendChild(_qsRow);
+      parent.appendChild(qsContainer);
+      return { qsContainer, qsHeader };
+    }
+
+    function _buildGsGlowSheenSection(parent) {
+      const _isDark = panelTheme === "dark";
+      const glowSection = document.createElement("div");
+      glowSection.style.cssText = `
+        border:1px solid ${_isDark ? "#555" : "#ccc"};
+        border-radius:${styleSettings.borderRadius}px;
+        padding:7px 8px; margin-top:6px; display:flex;
+        flex-direction:column; gap:4px;
+      `;
+      const glowHeader = document.createElement("div");
+      glowHeader.textContent = "✨ " + (t.glowLabel || "Border Glow / Sheen");
+      glowHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
+      glowSection.appendChild(glowHeader);
+
+      const glowToggleRow = document.createElement("div");
+      glowToggleRow.style.cssText = rowCss();
+      const glowToggleLbl = document.createElement("label");
+      glowToggleLbl.textContent = t.enableBorderGlow || "Border Glow";
+      glowToggleLbl.style.cssText = labelCss();
+      glowToggleRow.appendChild(glowToggleLbl);
+      const glowToggle = document.createElement("input");
+      glowToggle.type = "checkbox";
+      glowToggle.checked = !!styleSettings.enableBorderGlow;
+      glowToggle.onchange = () => {
+        styleSettings.enableBorderGlow = glowToggle.checked;
+        _setGroupEnabled(glowToggle.checked, glowColorRow, glowStrRow, glowInsetRow);
+        save(); applyTheme(panelTheme);
+      };
+      glowToggleRow.appendChild(glowToggle);
+      glowSection.appendChild(glowToggleRow);
+
+      const glowColorRow = document.createElement("div");
+      glowColorRow.style.cssText = rowCss();
+      const glowColorLbl = document.createElement("label");
+      glowColorLbl.textContent = t.borderGlowColor || "Glow Color";
+      glowColorLbl.style.cssText = labelCss();
+      glowColorRow.appendChild(glowColorLbl);
+      const glowColorInput = document.createElement("input");
+      glowColorInput.type = "color";
+      glowColorInput.value = styleSettings.borderGlowColor || "#00bfff";
+      glowColorInput.oninput = () => {
+        styleSettings.borderGlowColor = glowColorInput.value;
+        _debouncedSave();
+      };
+      const glowColorReset = makeResetBtn("#00bfff", (dv) => {
+        glowColorInput.value = dv;
+        styleSettings.borderGlowColor = dv;
+        save(); applyTheme(panelTheme);
+      });
+      glowColorRow.appendChild(glowColorInput);
+      glowColorRow.appendChild(glowColorReset);
+      glowSection.appendChild(glowColorRow);
+
+      const glowStrRow = document.createElement("div");
+      glowStrRow.style.cssText = rowCss();
+      const glowStrLbl = document.createElement("label");
+      glowStrLbl.textContent = t.borderGlowStrength || "Glow Strength";
+      glowStrLbl.style.cssText = labelCss();
+      glowStrRow.appendChild(glowStrLbl);
+      const glowStrInput = document.createElement("input");
+      glowStrInput.type = "range"; glowStrInput.min = "4"; glowStrInput.max = "32"; glowStrInput.step = "1";
+      glowStrInput.value = styleSettings.borderGlowStrength || 12;
+      glowStrInput.style.cssText = sliderCss();
+      const _vs_glowStr = makeValueSpan(glowStrInput.value + "px");
+      glowStrInput.oninput = () => {
+        styleSettings.borderGlowStrength = parseInt(glowStrInput.value);
+        _vs_glowStr.textContent = glowStrInput.value + "px";
+        _debouncedSave();
+      };
+      glowStrRow.appendChild(glowStrInput);
+      glowStrRow.appendChild(_vs_glowStr);
+      glowSection.appendChild(glowStrRow);
+
+      const glowInsetRow = document.createElement("div");
+      glowInsetRow.style.cssText = rowCss();
+      const glowInsetLbl = document.createElement("label");
+      glowInsetLbl.textContent = t.borderGlowInset || "Inset Glow";
+      glowInsetLbl.style.cssText = labelCss();
+      glowInsetRow.appendChild(glowInsetLbl);
+      const glowInsetToggle = document.createElement("input");
+      glowInsetToggle.type = "checkbox";
+      glowInsetToggle.checked = styleSettings.borderGlowInset !== false;
+      glowInsetToggle.onchange = () => {
+        styleSettings.borderGlowInset = glowInsetToggle.checked;
+        save(); applyTheme(panelTheme);
+      };
+      glowInsetRow.appendChild(glowInsetToggle);
+      glowSection.appendChild(glowInsetRow);
+
+      const sheenToggleRow = document.createElement("div");
+      sheenToggleRow.style.cssText = rowCss() + "margin-top:4px;border-top:1px solid " +
+        (_isDark ? "#444" : "#eee") + ";padding-top:5px;";
+      const sheenToggleLbl = document.createElement("label");
+      sheenToggleLbl.textContent = t.enableSheen || "Sheen Effect";
+      sheenToggleLbl.style.cssText = labelCss();
+      sheenToggleRow.appendChild(sheenToggleLbl);
+      const sheenToggle = document.createElement("input");
+      sheenToggle.type = "checkbox";
+      sheenToggle.checked = !!styleSettings.enableSheen;
+      sheenToggle.onchange = () => {
+        styleSettings.enableSheen = sheenToggle.checked;
+        _setGroupEnabled(sheenToggle.checked, sheenAngleRow, sheenOpRow);
+        save(); applyTheme(panelTheme);
+      };
+      sheenToggleRow.appendChild(sheenToggle);
+      glowSection.appendChild(sheenToggleRow);
+
+      const sheenAngleRow = document.createElement("div");
+      sheenAngleRow.style.cssText = rowCss();
+      const sheenAngleLbl = document.createElement("label");
+      sheenAngleLbl.textContent = t.sheenAngle || "Sheen Angle";
+      sheenAngleLbl.style.cssText = labelCss();
+      sheenAngleRow.appendChild(sheenAngleLbl);
+      const sheenAngleInput = document.createElement("input");
+      sheenAngleInput.type = "range"; sheenAngleInput.min = "0"; sheenAngleInput.max = "360"; sheenAngleInput.step = "5";
+      sheenAngleInput.value = styleSettings.sheenAngle ?? 135;
+      sheenAngleInput.style.cssText = sliderCss();
+      const _vs_sheenAngle = makeValueSpan(sheenAngleInput.value + "°");
+      sheenAngleInput.oninput = () => {
+        styleSettings.sheenAngle = parseInt(sheenAngleInput.value);
+        _vs_sheenAngle.textContent = sheenAngleInput.value + "°";
+        _debouncedSave();
+      };
+      sheenAngleRow.appendChild(sheenAngleInput);
+      sheenAngleRow.appendChild(_vs_sheenAngle);
+      glowSection.appendChild(sheenAngleRow);
+
+      const sheenOpRow = document.createElement("div");
+      sheenOpRow.style.cssText = rowCss();
+      const sheenOpLbl = document.createElement("label");
+      sheenOpLbl.textContent = t.sheenOpacity || "Sheen Intensity";
+      sheenOpLbl.style.cssText = labelCss();
+      sheenOpRow.appendChild(sheenOpLbl);
+      const sheenOpInput = document.createElement("input");
+      sheenOpInput.type = "range"; sheenOpInput.min = "0.02"; sheenOpInput.max = "0.25"; sheenOpInput.step = "0.01";
+      sheenOpInput.value = styleSettings.sheenOpacity ?? 0.08;
+      sheenOpInput.style.cssText = sliderCss();
+      const _vs_sheenOp = makeValueSpan(parseFloat(sheenOpInput.value).toFixed(2));
+      sheenOpInput.oninput = () => {
+        styleSettings.sheenOpacity = parseFloat(sheenOpInput.value);
+        _vs_sheenOp.textContent = styleSettings.sheenOpacity.toFixed(2);
+        _debouncedSave();
+      };
+      sheenOpRow.appendChild(sheenOpInput);
+      sheenOpRow.appendChild(_vs_sheenOp);
+      glowSection.appendChild(sheenOpRow);
+
+      const siteGlowRow = document.createElement("div");
+      siteGlowRow.style.cssText = rowCss();
+      const siteGlowLbl = document.createElement("label");
+      siteGlowLbl.textContent = t.enableSiteGlow || "Site Button Glow";
+      siteGlowLbl.style.cssText = labelCss();
+      siteGlowRow.appendChild(siteGlowLbl);
+      const siteGlowToggle = document.createElement("input");
+      siteGlowToggle.type = "checkbox";
+      siteGlowToggle.checked = !!styleSettings.enableSiteGlow;
+      siteGlowToggle.onchange = () => {
+        styleSettings.enableSiteGlow = siteGlowToggle.checked;
+        save(); applyTheme(panelTheme);
+      };
+      const _rb_siteGlow = makeResetBtn(false, (dv) => {
+        siteGlowToggle.checked = dv;
+        styleSettings.enableSiteGlow = dv;
+        save(); applyTheme(panelTheme);
+      });
+      siteGlowRow.appendChild(siteGlowToggle);
+      siteGlowRow.appendChild(_rb_siteGlow);
+      glowSection.appendChild(siteGlowRow);
+
+      const groupGlowRow = document.createElement("div");
+      groupGlowRow.style.cssText = rowCss();
+      const groupGlowLbl = document.createElement("label");
+      groupGlowLbl.textContent = t.enableGroupGlow || "Group Block Glow";
+      groupGlowLbl.style.cssText = labelCss();
+      groupGlowRow.appendChild(groupGlowLbl);
+      const groupGlowToggle = document.createElement("input");
+      groupGlowToggle.type = "checkbox";
+      groupGlowToggle.checked = !!styleSettings.enableGroupGlow;
+      groupGlowToggle.onchange = () => {
+        styleSettings.enableGroupGlow = groupGlowToggle.checked;
+        save(); applyTheme(panelTheme);
+      };
+      const _rb_groupGlow = makeResetBtn(false, (dv) => {
+        groupGlowToggle.checked = dv;
+        styleSettings.enableGroupGlow = dv;
+        save(); applyTheme(panelTheme);
+      });
+      groupGlowRow.appendChild(groupGlowToggle);
+      groupGlowRow.appendChild(_rb_groupGlow);
+      glowSection.appendChild(groupGlowRow);
+
+      parent.appendChild(glowSection);
+      _setGroupEnabled(!!styleSettings.enableBorderGlow,  glowColorRow, glowStrRow, glowInsetRow);
+      _setGroupEnabled(!!styleSettings.enableSheen,        sheenAngleRow, sheenOpRow);
+      return {
+        glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl,
+        sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl,
+      };
+    }
+
+    function _buildGsSearchBarSection(parent) {
+      const _isDark = panelTheme === "dark";
+      const searchBarSection = document.createElement("div");
+      searchBarSection.style.cssText = `
+        border:1px solid ${_isDark ? "#555" : "#ccc"};
+        border-radius:${styleSettings.borderRadius}px;
+        padding:7px 8px; margin-top:6px; display:flex;
+        flex-direction:column; gap:4px;
+      `;
+      const _sbsHeader = document.createElement("div");
+      _sbsHeader.textContent = "🔍 " + (t.searchBarStyleLabel || "Search Bar Style");
+      _sbsHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
+      searchBarSection.appendChild(_sbsHeader);
+
+      const _sbsPresetRow = document.createElement("div");
+      _sbsPresetRow.style.cssText = rowCss();
+      const _sbsPresetLbl = document.createElement("label");
+      _sbsPresetLbl.textContent = t.searchBarPreset || "Quick Preset";
+      _sbsPresetLbl.style.cssText = labelCss();
+      _sbsPresetRow.appendChild(_sbsPresetLbl);
+      const _presetBtnWrap = document.createElement("div");
+      _presetBtnWrap.style.cssText = "display:flex;gap:4px;flex:1;justify-content:flex-end;";
+      const _sbsPresets = [
+        { icon:"↺",  title:"重置 / Reset",    bg:"",        bgOp:0,    fg:"" },
+        { icon:"🌑",  title:"暗底 / Dark BG",  bg:"#1a1a1a", bgOp:0.75, fg:"#eeeeee" },
+        { icon:"☀️",  title:"亮底 / Light BG", bg:"#ffffff", bgOp:0.85, fg:"#111111" },
+      ];
+      let _sbsBgInputRef, _sbsBgOpInputRef, _sbsBgOpSpanRef, _sbsFgInputRef;
+      _sbsPresets.forEach(p => {
+        const pb = document.createElement("button");
+        pb.textContent = p.icon;
+        pb.title = p.title;
+        pb.className = "icon-btn";
+        pb.style.cssText = `padding:2px 7px;border-radius:5px;font-size:12px;cursor:pointer;
+          background:${_isDark?"#4a4a4a":"#eee"};
+          border:1px solid ${_isDark?"#666":"#ccc"};color:inherit;`;
+        pb.onclick = () => {
+          styleSettings.searchBarBg        = p.bg;
+          styleSettings.searchBarBgOpacity = p.bgOp;
+          styleSettings.searchBarFg        = p.fg;
+          if (_sbsBgInputRef)   _sbsBgInputRef.value          = p.bg   || "#333333";
+          if (_sbsBgOpInputRef) _sbsBgOpInputRef.value         = p.bgOp;
+          if (_sbsBgOpSpanRef)  _sbsBgOpSpanRef.textContent   = p.bgOp.toFixed(2);
+          if (_sbsFgInputRef)   _sbsFgInputRef.value          = p.fg   || "#eeeeee";
+          save(); applyTheme(panelTheme);
+        };
+        _presetBtnWrap.appendChild(pb);
+      });
+      _sbsPresetRow.appendChild(_presetBtnWrap);
+      searchBarSection.appendChild(_sbsPresetRow);
+
+      const _sbsBgRow = document.createElement("div");
+      _sbsBgRow.style.cssText = rowCss();
+      const _sbsBgLbl = document.createElement("label");
+      _sbsBgLbl.textContent = t.searchBarBgColor || "Bar BG Color";
+      _sbsBgLbl.style.cssText = labelCss();
+      _sbsBgRow.appendChild(_sbsBgLbl);
+      const sbsBgInput = document.createElement("input");
+      sbsBgInput.type = "color";
+      sbsBgInput.value = styleSettings.searchBarBg || "#333333";
+      sbsBgInput.oninput = () => {
+        styleSettings.searchBarBg = sbsBgInput.value;
+        _debouncedSave();
+      };
+      _sbsBgInputRef = sbsBgInput;
+      const _rb_sbsBg = makeResetBtn("", (dv) => {
+        sbsBgInput.value = dv || "#333333";
+        styleSettings.searchBarBg = dv;
+        save(); applyTheme(panelTheme);
+      });
+      _sbsBgRow.appendChild(sbsBgInput);
+      _sbsBgRow.appendChild(_rb_sbsBg);
+      searchBarSection.appendChild(_sbsBgRow);
+
+      const _sbsBgOpRow = document.createElement("div");
+      _sbsBgOpRow.style.cssText = rowCss();
+      const _sbsBgOpLbl = document.createElement("label");
+      _sbsBgOpLbl.textContent = t.searchBarBgOpacity || "Bar BG Opacity";
+      _sbsBgOpLbl.style.cssText = labelCss();
+      _sbsBgOpRow.appendChild(_sbsBgOpLbl);
+      const sbsBgOpInput = document.createElement("input");
+      sbsBgOpInput.type = "range"; sbsBgOpInput.min = "0"; sbsBgOpInput.max = "1"; sbsBgOpInput.step = "0.05";
+      sbsBgOpInput.value = styleSettings.searchBarBgOpacity ?? 0;
+      sbsBgOpInput.style.cssText = sliderCss();
+      const sbsBgOpSpan = makeValueSpan(parseFloat(sbsBgOpInput.value).toFixed(2));
+      sbsBgOpInput.oninput = () => {
+        styleSettings.searchBarBgOpacity = parseFloat(sbsBgOpInput.value);
+        sbsBgOpSpan.textContent = styleSettings.searchBarBgOpacity.toFixed(2);
+        _debouncedSave();
+      };
+      _sbsBgOpInputRef = sbsBgOpInput;
+      _sbsBgOpSpanRef  = sbsBgOpSpan;
+      const _rb_sbsBgOp = makeResetBtn(0, (dv) => {
+        sbsBgOpInput.value = dv;
+        sbsBgOpSpan.textContent = parseFloat(dv).toFixed(2);
+        styleSettings.searchBarBgOpacity = dv;
+        save(); applyTheme(panelTheme);
+      });
+      _sbsBgOpRow.appendChild(sbsBgOpInput);
+      _sbsBgOpRow.appendChild(sbsBgOpSpan);
+      _sbsBgOpRow.appendChild(_rb_sbsBgOp);
+      searchBarSection.appendChild(_sbsBgOpRow);
+
+      const _sbsFgRow = document.createElement("div");
+      _sbsFgRow.style.cssText = rowCss();
+      const _sbsFgLbl = document.createElement("label");
+      _sbsFgLbl.textContent = t.searchBarFgColor || "Bar Text Color";
+      _sbsFgLbl.style.cssText = labelCss();
+      _sbsFgRow.appendChild(_sbsFgLbl);
+      const sbsFgInput = document.createElement("input");
+      sbsFgInput.type = "color";
+      sbsFgInput.value = styleSettings.searchBarFg || "#eeeeee";
+      sbsFgInput.oninput = () => {
+        styleSettings.searchBarFg = sbsFgInput.value;
+        _debouncedSave();
+      };
+      _sbsFgInputRef = sbsFgInput;
+      const _rb_sbsFg = makeResetBtn("", (dv) => {
+        sbsFgInput.value = dv || "#eeeeee";
+        styleSettings.searchBarFg = dv;
+        save(); applyTheme(panelTheme);
+      });
+      _sbsFgRow.appendChild(sbsFgInput);
+      _sbsFgRow.appendChild(_rb_sbsFg);
+      searchBarSection.appendChild(_sbsFgRow);
+
+      const _sbsGlowToggleRow = document.createElement("div");
+      _sbsGlowToggleRow.style.cssText = rowCss() + "margin-top:4px;border-top:1px solid " +
+        (_isDark ? "#444" : "#eee") + ";padding-top:5px;";
+      const _sbsGlowToggleLbl = document.createElement("label");
+      _sbsGlowToggleLbl.textContent = t.searchBarGlowEnabled || "Bar Glow";
+      _sbsGlowToggleLbl.style.cssText = labelCss();
+      _sbsGlowToggleRow.appendChild(_sbsGlowToggleLbl);
+      const _sbsGlowToggle = document.createElement("input");
+      _sbsGlowToggle.type = "checkbox";
+      _sbsGlowToggle.checked = !!styleSettings.searchBarGlowEnabled;
+      _sbsGlowToggle.onchange = () => {
+        styleSettings.searchBarGlowEnabled = _sbsGlowToggle.checked;
+        _setGroupEnabled(_sbsGlowToggle.checked, _sbsGlowColorRow, _sbsGlowStrRow);
+        save(); applyTheme(panelTheme);
+      };
+      _sbsGlowToggleRow.appendChild(_sbsGlowToggle);
+      searchBarSection.appendChild(_sbsGlowToggleRow);
+
+      const _sbsGlowColorRow = document.createElement("div");
+      _sbsGlowColorRow.style.cssText = rowCss();
+      const _sbsGlowColorLbl = document.createElement("label");
+      _sbsGlowColorLbl.textContent = t.searchBarGlowColor || "Glow Color";
+      _sbsGlowColorLbl.style.cssText = labelCss();
+      _sbsGlowColorRow.appendChild(_sbsGlowColorLbl);
+      const _sbsGlowColorInput = document.createElement("input");
+      _sbsGlowColorInput.type = "color";
+      _sbsGlowColorInput.value = styleSettings.searchBarGlowColor || "#5599ff";
+      _sbsGlowColorInput.oninput = () => {
+        styleSettings.searchBarGlowColor = _sbsGlowColorInput.value;
+        _debouncedSave();
+      };
+      const _rb_sbsGlowColor = makeResetBtn("#5599ff", (dv) => {
+        _sbsGlowColorInput.value = dv;
+        styleSettings.searchBarGlowColor = dv;
+        save(); applyTheme(panelTheme);
+      });
+      _sbsGlowColorRow.appendChild(_sbsGlowColorInput);
+      _sbsGlowColorRow.appendChild(_rb_sbsGlowColor);
+      searchBarSection.appendChild(_sbsGlowColorRow);
+
+      const _sbsGlowStrRow = document.createElement("div");
+      _sbsGlowStrRow.style.cssText = rowCss();
+      const _sbsGlowStrLbl = document.createElement("label");
+      _sbsGlowStrLbl.textContent = t.searchBarGlowStrength || "Glow Strength";
+      _sbsGlowStrLbl.style.cssText = labelCss();
+      _sbsGlowStrRow.appendChild(_sbsGlowStrLbl);
+      const _sbsGlowStrInput = document.createElement("input");
+      _sbsGlowStrInput.type = "range"; _sbsGlowStrInput.min = "2"; _sbsGlowStrInput.max = "16"; _sbsGlowStrInput.step = "1";
+      _sbsGlowStrInput.value = styleSettings.searchBarGlowStrength || 6;
+      _sbsGlowStrInput.style.cssText = sliderCss();
+      const _vs_sbsGlowStr = makeValueSpan(_sbsGlowStrInput.value + "px");
+      _sbsGlowStrInput.oninput = () => {
+        styleSettings.searchBarGlowStrength = parseInt(_sbsGlowStrInput.value);
+        _vs_sbsGlowStr.textContent = _sbsGlowStrInput.value + "px";
+        _debouncedSave();
+      };
+      const _rb_sbsGlowStr = makeResetBtn(6, (dv) => {
+        _sbsGlowStrInput.value = dv;
+        _vs_sbsGlowStr.textContent = dv + "px";
+        styleSettings.searchBarGlowStrength = dv;
+        save(); applyTheme(panelTheme);
+      });
+      _sbsGlowStrRow.appendChild(_sbsGlowStrInput);
+      _sbsGlowStrRow.appendChild(_vs_sbsGlowStr);
+      _sbsGlowStrRow.appendChild(_rb_sbsGlowStr);
+      searchBarSection.appendChild(_sbsGlowStrRow);
+
+      parent.appendChild(searchBarSection);
+      _setGroupEnabled(!!styleSettings.searchBarGlowEnabled, _sbsGlowColorRow, _sbsGlowStrRow);
+      return {
+        _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
+        _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl,
+      };
+    }
+
     function _buildGeneralStyleSection() {
     const generalStyleContainer = document.createElement("div");
     generalStyleContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
@@ -7510,86 +7846,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     styleRow.appendChild(styleSelect);
     generalStyleContainer.appendChild(styleRow);
 
-    let _qsHeader;
-    {
-      const _qsDark = panelTheme === "dark";
-      const _qsContainer = document.createElement("div");
-      _qsContainer.style.cssText = `
-        border:1px solid ${_qsDark ? "#555" : "#ccc"};
-        border-radius:${styleSettings.borderRadius}px;
-        padding:6px 8px; display:flex; flex-direction:column; gap:4px; margin-top:0;
-      `;
-      _qsHeader = document.createElement("div");
-      _qsHeader.textContent = t.quickSchemeLabel || "🎨 Quick Scheme";
-      _qsHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
-      _qsContainer.appendChild(_qsHeader);
-
-      const _qsRow = document.createElement("div");
-      _qsRow.style.cssText = "display:flex; gap:5px; flex-wrap:wrap;";
-
-      const _SCHEMES = {
-        light: {
-          panelTheme:        "light",
-          searchBarBg:       "#ffffff",
-          searchBarBgOpacity: 0.85,
-          searchBarFg:       "#111111",
-          customBackgroundColor: "#ffffff",
-          customTextColor:   "#111111",
-          customButtonBg:    "#f0f0f0",
-        },
-        dark: {
-          panelTheme:        "dark",
-          searchBarBg:       "#1a1a1a",
-          searchBarBgOpacity: 0.75,
-          searchBarFg:       "#eeeeee",
-          customBackgroundColor: "#1e1e1e",
-          customTextColor:   "#eeeeee",
-          customButtonBg:    "#3c3c3c",
-        },
-        reset: null,
-      };
-
-      const _qsDefs = [
-        { key: "reset",  label: t.quickSchemeReset || "↺ Reset" },
-        { key: "light",  label: t.quickSchemeLight  || "☀️ Light" },
-        { key: "dark",   label: t.quickSchemeDark   || "🌑 Dark" },
-      ];
-
-      _qsDefs.forEach(def => {
-        const pb = document.createElement("button");
-        pb.textContent = def.label;
-        pb.title = def.label;
-        pb.className = "icon-btn";
-        pb.style.cssText = `flex:1; padding:3px 6px; border-radius:5px; font-size:11px;
-          cursor:pointer; white-space:nowrap;
-          background:${_qsDark ? "#4a4a4a" : "#eee"};
-          border:1px solid ${_qsDark ? "#666" : "#ccc"}; color:inherit;`;
-        pb.onclick = () => {
-          if (def.key === "reset") {
-            styleSettings.searchBarBg        = "";
-            styleSettings.searchBarBgOpacity = 0;
-            styleSettings.searchBarFg        = "";
-            styleSettings.searchBarGlowEnabled = false;
-          } else {
-            const s = _SCHEMES[def.key];
-            styleSettings.searchBarBg        = s.searchBarBg;
-            styleSettings.searchBarBgOpacity = s.searchBarBgOpacity;
-            styleSettings.searchBarFg        = s.searchBarFg;
-            if (panelTheme === "custom") {
-              styleSettings.customBackgroundColor = s.customBackgroundColor;
-              styleSettings.customTextColor       = s.customTextColor;
-              styleSettings.customButtonBg        = s.customButtonBg;
-            }
-          }
-          save();
-          applyTheme(panelTheme);
-        };
-        _qsRow.appendChild(pb);
-      });
-
-      _qsContainer.appendChild(_qsRow);
-      generalStyleContainer.appendChild(_qsContainer);
-    }
+    const { qsHeader: _qsHeader } =
+      _buildGsQuickSchemeSection(generalStyleContainer);
 
     const borderRadiusRow = document.createElement("div");
     borderRadiusRow.style.cssText = rowCss();
@@ -7839,420 +8097,17 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     panelBgColorRow.appendChild(panelBgColorReset);
     generalStyleContainer.appendChild(panelBgColorRow);
 
-    const panelBgAlphaRow = document.createElement("div");
-    panelBgAlphaRow.style.cssText = rowCss();
-    const panelBgAlphaLabel = document.createElement("label");
-    panelBgAlphaLabel.textContent = t.panelBgAlpha || "Background Opacity";
-    panelBgAlphaLabel.style.cssText = labelCss();
-    panelBgAlphaRow.appendChild(panelBgAlphaLabel);
-    const panelBgAlphaInput = document.createElement("input");
-    panelBgAlphaInput.type = "range";
-    panelBgAlphaInput.min = "0.1";
-    panelBgAlphaInput.max = "1";
-    panelBgAlphaInput.step = "0.05";
-    panelBgAlphaInput.value = styleSettings.opacity ?? 0.9;
-    panelBgAlphaInput.style.cssText = sliderCss();
-    const _vs_panelBgAlpha = makeValueSpan(
-      parseFloat(panelBgAlphaInput.value).toFixed(2)
-    );
-    panelBgAlphaInput.oninput = () => {
-      styleSettings.opacity = parseFloat(panelBgAlphaInput.value);
-      _vs_panelBgAlpha.textContent = styleSettings.opacity.toFixed(2);
-      _debouncedSave();
-    };
-    const _rb_panelBgAlpha = makeResetBtn(0.9, (dv) => {
-      panelBgAlphaInput.value = dv;
-      styleSettings.opacity = dv;
-      _vs_panelBgAlpha.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    panelBgAlphaRow.appendChild(panelBgAlphaInput);
-    panelBgAlphaRow.appendChild(_vs_panelBgAlpha);
-    panelBgAlphaRow.appendChild(_rb_panelBgAlpha);
-    generalStyleContainer.appendChild(panelBgAlphaRow);
+    const {
+      glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl,
+      sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl,
+    } = _buildGsGlowSheenSection(generalStyleContainer);
 
-    const glowSection = document.createElement("div");
-    glowSection.style.cssText = `
-      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
-      border-radius:${styleSettings.borderRadius}px;
-      padding:7px 8px; margin-top:6px; display:flex;
-      flex-direction:column; gap:4px;
-    `;
-    const glowHeader = document.createElement("div");
-    glowHeader.textContent = "✨ " + (t.glowLabel || "Border Glow / Sheen");
-    glowHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
-    glowSection.appendChild(glowHeader);
+    const {
+      _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
+      _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl,
+    } = _buildGsSearchBarSection(generalStyleContainer);
 
-    const glowToggleRow = document.createElement("div");
-    glowToggleRow.style.cssText = rowCss();
-    const glowToggleLbl = document.createElement("label");
-    glowToggleLbl.textContent = t.enableBorderGlow || "Border Glow";
-    glowToggleLbl.style.cssText = labelCss();
-    glowToggleRow.appendChild(glowToggleLbl);
-    const glowToggle = document.createElement("input");
-    glowToggle.type = "checkbox";
-    glowToggle.checked = !!styleSettings.enableBorderGlow;
-    glowToggle.onchange = () => {
-      styleSettings.enableBorderGlow = glowToggle.checked;
-      save(); applyTheme(panelTheme);
-    };
-    glowToggleRow.appendChild(glowToggle);
-    glowSection.appendChild(glowToggleRow);
-
-    const glowColorRow = document.createElement("div");
-    glowColorRow.style.cssText = rowCss();
-    const glowColorLbl = document.createElement("label");
-    glowColorLbl.textContent = t.borderGlowColor || "Glow Color";
-    glowColorLbl.style.cssText = labelCss();
-    glowColorRow.appendChild(glowColorLbl);
-    const glowColorInput = document.createElement("input");
-    glowColorInput.type = "color";
-    glowColorInput.value = styleSettings.borderGlowColor || "#00bfff";
-    glowColorInput.oninput = () => {
-      styleSettings.borderGlowColor = glowColorInput.value;
-      _debouncedSave();
-    };
-    const glowColorReset = makeResetBtn("#00bfff", (dv) => {
-      glowColorInput.value = dv;
-      styleSettings.borderGlowColor = dv;
-      save(); applyTheme(panelTheme);
-    });
-    glowColorRow.appendChild(glowColorInput);
-    glowColorRow.appendChild(glowColorReset);
-    glowSection.appendChild(glowColorRow);
-
-    const glowStrRow = document.createElement("div");
-    glowStrRow.style.cssText = rowCss();
-    const glowStrLbl = document.createElement("label");
-    glowStrLbl.textContent = t.borderGlowStrength || "Glow Strength";
-    glowStrLbl.style.cssText = labelCss();
-    glowStrRow.appendChild(glowStrLbl);
-    const glowStrInput = document.createElement("input");
-    glowStrInput.type = "range"; glowStrInput.min = "4"; glowStrInput.max = "32"; glowStrInput.step = "1";
-    glowStrInput.value = styleSettings.borderGlowStrength || 12;
-    glowStrInput.style.cssText = sliderCss();
-    const _vs_glowStr = makeValueSpan(glowStrInput.value + "px");
-    glowStrInput.oninput = () => {
-      styleSettings.borderGlowStrength = parseInt(glowStrInput.value);
-      _vs_glowStr.textContent = glowStrInput.value + "px";
-      _debouncedSave();
-    };
-    glowStrRow.appendChild(glowStrInput);
-    glowStrRow.appendChild(_vs_glowStr);
-    glowSection.appendChild(glowStrRow);
-
-    const glowInsetRow = document.createElement("div");
-    glowInsetRow.style.cssText = rowCss();
-    const glowInsetLbl = document.createElement("label");
-    glowInsetLbl.textContent = t.borderGlowInset || "Inset Glow";
-    glowInsetLbl.style.cssText = labelCss();
-    glowInsetRow.appendChild(glowInsetLbl);
-    const glowInsetToggle = document.createElement("input");
-    glowInsetToggle.type = "checkbox";
-    glowInsetToggle.checked = styleSettings.borderGlowInset !== false;
-    glowInsetToggle.onchange = () => {
-      styleSettings.borderGlowInset = glowInsetToggle.checked;
-      save(); applyTheme(panelTheme);
-    };
-    glowInsetRow.appendChild(glowInsetToggle);
-    glowSection.appendChild(glowInsetRow);
-
-    const sheenToggleRow = document.createElement("div");
-    sheenToggleRow.style.cssText = rowCss() + "margin-top:4px;border-top:1px solid " +
-      (panelTheme === "dark" ? "#444" : "#eee") + ";padding-top:5px;";
-    const sheenToggleLbl = document.createElement("label");
-    sheenToggleLbl.textContent = t.enableSheen || "Sheen Effect";
-    sheenToggleLbl.style.cssText = labelCss();
-    sheenToggleRow.appendChild(sheenToggleLbl);
-    const sheenToggle = document.createElement("input");
-    sheenToggle.type = "checkbox";
-    sheenToggle.checked = !!styleSettings.enableSheen;
-    sheenToggle.onchange = () => {
-      styleSettings.enableSheen = sheenToggle.checked;
-      save(); applyTheme(panelTheme);
-    };
-    sheenToggleRow.appendChild(sheenToggle);
-    glowSection.appendChild(sheenToggleRow);
-
-    const sheenAngleRow = document.createElement("div");
-    sheenAngleRow.style.cssText = rowCss();
-    const sheenAngleLbl = document.createElement("label");
-    sheenAngleLbl.textContent = t.sheenAngle || "Sheen Angle";
-    sheenAngleLbl.style.cssText = labelCss();
-    sheenAngleRow.appendChild(sheenAngleLbl);
-    const sheenAngleInput = document.createElement("input");
-    sheenAngleInput.type = "range"; sheenAngleInput.min = "0"; sheenAngleInput.max = "360"; sheenAngleInput.step = "5";
-    sheenAngleInput.value = styleSettings.sheenAngle ?? 135;
-    sheenAngleInput.style.cssText = sliderCss();
-    const _vs_sheenAngle = makeValueSpan(sheenAngleInput.value + "°");
-    sheenAngleInput.oninput = () => {
-      styleSettings.sheenAngle = parseInt(sheenAngleInput.value);
-      _vs_sheenAngle.textContent = sheenAngleInput.value + "°";
-      _debouncedSave();
-    };
-    sheenAngleRow.appendChild(sheenAngleInput);
-    sheenAngleRow.appendChild(_vs_sheenAngle);
-    glowSection.appendChild(sheenAngleRow);
-
-    const sheenOpRow = document.createElement("div");
-    sheenOpRow.style.cssText = rowCss();
-    const sheenOpLbl = document.createElement("label");
-    sheenOpLbl.textContent = t.sheenOpacity || "Sheen Intensity";
-    sheenOpLbl.style.cssText = labelCss();
-    sheenOpRow.appendChild(sheenOpLbl);
-    const sheenOpInput = document.createElement("input");
-    sheenOpInput.type = "range"; sheenOpInput.min = "0.02"; sheenOpInput.max = "0.25"; sheenOpInput.step = "0.01";
-    sheenOpInput.value = styleSettings.sheenOpacity ?? 0.08;
-    sheenOpInput.style.cssText = sliderCss();
-    const _vs_sheenOp = makeValueSpan(parseFloat(sheenOpInput.value).toFixed(2));
-    sheenOpInput.oninput = () => {
-      styleSettings.sheenOpacity = parseFloat(sheenOpInput.value);
-      _vs_sheenOp.textContent = styleSettings.sheenOpacity.toFixed(2);
-      _debouncedSave();
-    };
-    sheenOpRow.appendChild(sheenOpInput);
-    sheenOpRow.appendChild(_vs_sheenOp);
-    glowSection.appendChild(sheenOpRow);
-
-    const siteGlowRow = document.createElement("div");
-    siteGlowRow.style.cssText = rowCss();
-    const siteGlowLbl = document.createElement("label");
-    siteGlowLbl.textContent = t.enableSiteGlow || "Site Button Glow";
-    siteGlowLbl.style.cssText = labelCss();
-    siteGlowRow.appendChild(siteGlowLbl);
-    const siteGlowToggle = document.createElement("input");
-    siteGlowToggle.type = "checkbox";
-    siteGlowToggle.checked = !!styleSettings.enableSiteGlow;
-    siteGlowToggle.onchange = () => {
-      styleSettings.enableSiteGlow = siteGlowToggle.checked;
-      save(); applyTheme(panelTheme);
-    };
-    const _rb_siteGlow = makeResetBtn(false, (dv) => {
-      siteGlowToggle.checked = dv;
-      styleSettings.enableSiteGlow = dv;
-      save(); applyTheme(panelTheme);
-    });
-    siteGlowRow.appendChild(siteGlowToggle);
-    siteGlowRow.appendChild(_rb_siteGlow);
-    glowSection.appendChild(siteGlowRow);
-
-    const groupGlowRow = document.createElement("div");
-    groupGlowRow.style.cssText = rowCss();
-    const groupGlowLbl = document.createElement("label");
-    groupGlowLbl.textContent = t.enableGroupGlow || "Group Block Glow";
-    groupGlowLbl.style.cssText = labelCss();
-    groupGlowRow.appendChild(groupGlowLbl);
-    const groupGlowToggle = document.createElement("input");
-    groupGlowToggle.type = "checkbox";
-    groupGlowToggle.checked = !!styleSettings.enableGroupGlow;
-    groupGlowToggle.onchange = () => {
-      styleSettings.enableGroupGlow = groupGlowToggle.checked;
-      save(); applyTheme(panelTheme);
-    };
-    const _rb_groupGlow = makeResetBtn(false, (dv) => {
-      groupGlowToggle.checked = dv;
-      styleSettings.enableGroupGlow = dv;
-      save(); applyTheme(panelTheme);
-    });
-    groupGlowRow.appendChild(groupGlowToggle);
-    groupGlowRow.appendChild(_rb_groupGlow);
-    glowSection.appendChild(groupGlowRow);
-
-    generalStyleContainer.appendChild(glowSection);
-
-    const searchBarSection = document.createElement("div");
-    searchBarSection.style.cssText = `
-      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
-      border-radius:${styleSettings.borderRadius}px;
-      padding:7px 8px; margin-top:6px; display:flex;
-      flex-direction:column; gap:4px;
-    `;
-    const _sbsHeader = document.createElement("div");
-    _sbsHeader.textContent = "🔍 " + (t.searchBarStyleLabel || "Search Bar Style");
-    _sbsHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
-    searchBarSection.appendChild(_sbsHeader);
-
-    const _sbsPresetRow = document.createElement("div");
-    _sbsPresetRow.style.cssText = rowCss();
-    const _sbsPresetLbl = document.createElement("label");
-    _sbsPresetLbl.textContent = t.searchBarPreset || "Quick Preset";
-    _sbsPresetLbl.style.cssText = labelCss();
-    _sbsPresetRow.appendChild(_sbsPresetLbl);
-    const _presetBtnWrap = document.createElement("div");
-    _presetBtnWrap.style.cssText = "display:flex;gap:4px;flex:1;justify-content:flex-end;";
-    const _sbsPresets = [
-      { icon:"↺",  title:"重置 / Reset",    bg:"",        bgOp:0,    fg:"" },
-      { icon:"🌑",  title:"暗底 / Dark BG",  bg:"#1a1a1a", bgOp:0.75, fg:"#eeeeee" },
-      { icon:"☀️",  title:"亮底 / Light BG", bg:"#ffffff", bgOp:0.85, fg:"#111111" },
-    ];
-    let _sbsBgInputRef, _sbsBgOpInputRef, _sbsBgOpSpanRef, _sbsFgInputRef;
-    _sbsPresets.forEach(p => {
-      const pb = document.createElement("button");
-      pb.textContent = p.icon;
-      pb.title = p.title;
-      pb.className = "icon-btn";
-      pb.style.cssText = `padding:2px 7px;border-radius:5px;font-size:12px;cursor:pointer;
-        background:${panelTheme==="dark"?"#4a4a4a":"#eee"};
-        border:1px solid ${panelTheme==="dark"?"#666":"#ccc"};color:inherit;`;
-      pb.onclick = () => {
-        styleSettings.searchBarBg        = p.bg;
-        styleSettings.searchBarBgOpacity = p.bgOp;
-        styleSettings.searchBarFg        = p.fg;
-        if (_sbsBgInputRef)   _sbsBgInputRef.value   = p.bg  || "#333333";
-        if (_sbsBgOpInputRef) _sbsBgOpInputRef.value  = p.bgOp;
-        if (_sbsBgOpSpanRef)  _sbsBgOpSpanRef.textContent = p.bgOp.toFixed(2);
-        if (_sbsFgInputRef)   _sbsFgInputRef.value    = p.fg  || "#eeeeee";
-        save(); applyTheme(panelTheme);
-      };
-      _presetBtnWrap.appendChild(pb);
-    });
-    _sbsPresetRow.appendChild(_presetBtnWrap);
-    searchBarSection.appendChild(_sbsPresetRow);
-
-    const _sbsBgRow = document.createElement("div");
-    _sbsBgRow.style.cssText = rowCss();
-    const _sbsBgLbl = document.createElement("label");
-    _sbsBgLbl.textContent = t.searchBarBgColor || "Bar BG Color";
-    _sbsBgLbl.style.cssText = labelCss();
-    _sbsBgRow.appendChild(_sbsBgLbl);
-    const sbsBgInput = document.createElement("input");
-    sbsBgInput.type = "color";
-    sbsBgInput.value = styleSettings.searchBarBg || "#333333";
-    sbsBgInput.oninput = () => {
-      styleSettings.searchBarBg = sbsBgInput.value;
-      _debouncedSave();
-    };
-    _sbsBgInputRef = sbsBgInput;
-    const _rb_sbsBg = makeResetBtn("", (dv) => {
-      sbsBgInput.value = dv || "#333333";
-      styleSettings.searchBarBg = dv;
-      save(); applyTheme(panelTheme);
-    });
-    _sbsBgRow.appendChild(sbsBgInput);
-    _sbsBgRow.appendChild(_rb_sbsBg);
-    searchBarSection.appendChild(_sbsBgRow);
-
-    const _sbsBgOpRow = document.createElement("div");
-    _sbsBgOpRow.style.cssText = rowCss();
-    const _sbsBgOpLbl = document.createElement("label");
-    _sbsBgOpLbl.textContent = t.searchBarBgOpacity || "Bar BG Opacity";
-    _sbsBgOpLbl.style.cssText = labelCss();
-    _sbsBgOpRow.appendChild(_sbsBgOpLbl);
-    const sbsBgOpInput = document.createElement("input");
-    sbsBgOpInput.type = "range"; sbsBgOpInput.min = "0"; sbsBgOpInput.max = "1"; sbsBgOpInput.step = "0.05";
-    sbsBgOpInput.value = styleSettings.searchBarBgOpacity ?? 0;
-    sbsBgOpInput.style.cssText = sliderCss();
-    const sbsBgOpSpan = makeValueSpan(parseFloat(sbsBgOpInput.value).toFixed(2));
-    sbsBgOpInput.oninput = () => {
-      styleSettings.searchBarBgOpacity = parseFloat(sbsBgOpInput.value);
-      sbsBgOpSpan.textContent = styleSettings.searchBarBgOpacity.toFixed(2);
-      _debouncedSave();
-    };
-    _sbsBgOpInputRef = sbsBgOpInput;
-    _sbsBgOpSpanRef  = sbsBgOpSpan;
-    const _rb_sbsBgOp = makeResetBtn(0, (dv) => {
-      sbsBgOpInput.value = dv;
-      sbsBgOpSpan.textContent = parseFloat(dv).toFixed(2);
-      styleSettings.searchBarBgOpacity = dv;
-      save(); applyTheme(panelTheme);
-    });
-    _sbsBgOpRow.appendChild(sbsBgOpInput);
-    _sbsBgOpRow.appendChild(sbsBgOpSpan);
-    _sbsBgOpRow.appendChild(_rb_sbsBgOp);
-    searchBarSection.appendChild(_sbsBgOpRow);
-
-    const _sbsFgRow = document.createElement("div");
-    _sbsFgRow.style.cssText = rowCss();
-    const _sbsFgLbl = document.createElement("label");
-    _sbsFgLbl.textContent = t.searchBarFgColor || "Bar Text Color";
-    _sbsFgLbl.style.cssText = labelCss();
-    _sbsFgRow.appendChild(_sbsFgLbl);
-    const sbsFgInput = document.createElement("input");
-    sbsFgInput.type = "color";
-    sbsFgInput.value = styleSettings.searchBarFg || "#eeeeee";
-    sbsFgInput.oninput = () => {
-      styleSettings.searchBarFg = sbsFgInput.value;
-      _debouncedSave();
-    };
-    _sbsFgInputRef = sbsFgInput;
-    const _rb_sbsFg = makeResetBtn("", (dv) => {
-      sbsFgInput.value = dv || "#eeeeee";
-      styleSettings.searchBarFg = dv;
-      save(); applyTheme(panelTheme);
-    });
-    _sbsFgRow.appendChild(sbsFgInput);
-    _sbsFgRow.appendChild(_rb_sbsFg);
-    searchBarSection.appendChild(_sbsFgRow);
-
-    const _sbsGlowToggleRow = document.createElement("div");
-    _sbsGlowToggleRow.style.cssText = rowCss() + "margin-top:4px;border-top:1px solid " +
-      (panelTheme === "dark" ? "#444" : "#eee") + ";padding-top:5px;";
-    const _sbsGlowToggleLbl = document.createElement("label");
-    _sbsGlowToggleLbl.textContent = t.searchBarGlowEnabled || "Bar Glow";
-    _sbsGlowToggleLbl.style.cssText = labelCss();
-    _sbsGlowToggleRow.appendChild(_sbsGlowToggleLbl);
-    const _sbsGlowToggle = document.createElement("input");
-    _sbsGlowToggle.type = "checkbox";
-    _sbsGlowToggle.checked = !!styleSettings.searchBarGlowEnabled;
-    _sbsGlowToggle.onchange = () => {
-      styleSettings.searchBarGlowEnabled = _sbsGlowToggle.checked;
-      save(); applyTheme(panelTheme);
-    };
-    _sbsGlowToggleRow.appendChild(_sbsGlowToggle);
-    searchBarSection.appendChild(_sbsGlowToggleRow);
-
-    const _sbsGlowColorRow = document.createElement("div");
-    _sbsGlowColorRow.style.cssText = rowCss();
-    const _sbsGlowColorLbl = document.createElement("label");
-    _sbsGlowColorLbl.textContent = t.searchBarGlowColor || "Glow Color";
-    _sbsGlowColorLbl.style.cssText = labelCss();
-    _sbsGlowColorRow.appendChild(_sbsGlowColorLbl);
-    const _sbsGlowColorInput = document.createElement("input");
-    _sbsGlowColorInput.type = "color";
-    _sbsGlowColorInput.value = styleSettings.searchBarGlowColor || "#5599ff";
-    _sbsGlowColorInput.oninput = () => {
-      styleSettings.searchBarGlowColor = _sbsGlowColorInput.value;
-      _debouncedSave();
-    };
-    const _rb_sbsGlowColor = makeResetBtn("#5599ff", (dv) => {
-      _sbsGlowColorInput.value = dv;
-      styleSettings.searchBarGlowColor = dv;
-      save(); applyTheme(panelTheme);
-    });
-    _sbsGlowColorRow.appendChild(_sbsGlowColorInput);
-    _sbsGlowColorRow.appendChild(_rb_sbsGlowColor);
-    searchBarSection.appendChild(_sbsGlowColorRow);
-
-    const _sbsGlowStrRow = document.createElement("div");
-    _sbsGlowStrRow.style.cssText = rowCss();
-    const _sbsGlowStrLbl = document.createElement("label");
-    _sbsGlowStrLbl.textContent = t.searchBarGlowStrength || "Glow Strength";
-    _sbsGlowStrLbl.style.cssText = labelCss();
-    _sbsGlowStrRow.appendChild(_sbsGlowStrLbl);
-    const _sbsGlowStrInput = document.createElement("input");
-    _sbsGlowStrInput.type = "range"; _sbsGlowStrInput.min = "2"; _sbsGlowStrInput.max = "16"; _sbsGlowStrInput.step = "1";
-    _sbsGlowStrInput.value = styleSettings.searchBarGlowStrength || 6;
-    _sbsGlowStrInput.style.cssText = sliderCss();
-    const _vs_sbsGlowStr = makeValueSpan(_sbsGlowStrInput.value + "px");
-    _sbsGlowStrInput.oninput = () => {
-      styleSettings.searchBarGlowStrength = parseInt(_sbsGlowStrInput.value);
-      _vs_sbsGlowStr.textContent = _sbsGlowStrInput.value + "px";
-      _debouncedSave();
-    };
-    const _rb_sbsGlowStr = makeResetBtn(6, (dv) => {
-      _sbsGlowStrInput.value = dv;
-      _vs_sbsGlowStr.textContent = dv + "px";
-      styleSettings.searchBarGlowStrength = dv;
-      save(); applyTheme(panelTheme);
-    });
-    _sbsGlowStrRow.appendChild(_sbsGlowStrInput);
-    _sbsGlowStrRow.appendChild(_vs_sbsGlowStr);
-    _sbsGlowStrRow.appendChild(_rb_sbsGlowStr);
-    searchBarSection.appendChild(_sbsGlowStrRow);
-
-    generalStyleContainer.appendChild(searchBarSection);
-
-    return { generalStyleContainer, generalStyleHeader, _qsHeader, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, panelBgAlphaLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl };
+    return { generalStyleContainer, generalStyleHeader, _qsHeader, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl };
     }
 
     function _buildToggleBtnStyleSection() {
@@ -8619,12 +8474,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     overlayDarkeningInput.checked = styleSettings.enableOverlayDarkening;
     overlayDarkeningInput.onchange = () => {
       styleSettings.enableOverlayDarkening = overlayDarkeningInput.checked;
+      _setGroupEnabled(overlayDarkeningInput.checked, overlayStrengthRow);
       save();
       applyTheme(panelTheme);
     };
     const _rb_overlayDarkeningInput = makeResetBtn(false, (dv) => {
       overlayDarkeningInput.checked = dv;
       styleSettings.enableOverlayDarkening = dv;
+      _setGroupEnabled(dv, overlayStrengthRow);
       save(); applyTheme(panelTheme);
     });
     overlayDarkeningRow.appendChild(overlayDarkeningInput);
@@ -8885,6 +8742,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     imageOpacityRow.appendChild(_rb_imageOpacityInput);
     backgroundOverlayContainer.appendChild(imageOpacityRow);
 
+    _setGroupEnabled(!!styleSettings.enableOverlayDarkening, overlayStrengthRow);
+
     return { backgroundOverlayContainer, backgroundOverlayHeader, overlayDarkeningLabel, overlayStrengthLabel, imageLabel, imageModeLabel, imageOffsetXLabel, imageOffsetYLabel, imageScaleLabel, imageOpacityLabel };
     }
 
@@ -9030,7 +8889,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
 
     const { panelLayoutContainer, panelLayoutHeader } = _buildPanelLayoutSection();
-    const { generalStyleContainer, generalStyleHeader, _qsHeader, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, panelBgAlphaLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl } = _buildGeneralStyleSection();
+    const { generalStyleContainer, generalStyleHeader, _qsHeader, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl } = _buildGeneralStyleSection();
     const { toggleBtnStyleContainer, _tbsHeader } = _buildToggleBtnStyleSection();
     const { textStyleContainer, textStyleHeader, fontSizeLabel, textBackgroundColorLabel, textBorderLabel, textOpacityCompensationLabel } = _buildTextStyleSection();
     const { backgroundOverlayContainer, backgroundOverlayHeader, overlayDarkeningLabel, overlayStrengthLabel, imageLabel, imageModeLabel, imageOffsetXLabel, imageOffsetYLabel, imageScaleLabel, imageOpacityLabel } = _buildBgOverlaySection();
@@ -9058,7 +8917,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       buttonOpacityLabel,
       siteButtonWidthLabel,
       panelBgColorLabel,
-      panelBgAlphaLabel,
       glowHeader,
       glowToggleLbl,
       glowColorLbl,
@@ -10253,6 +10111,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function rebuildPanel() {
+    document.removeEventListener("mousemove", _sfOnMove);
+    document.removeEventListener("mouseup",   _sfOnUp);
+    _sfDragging = false;
+
     const wasVisible = (() => {
       const p = document.getElementById("site-group-panel");
       return p && p.style.display !== "none";
