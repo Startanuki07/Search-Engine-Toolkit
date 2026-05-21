@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.3.1
+// @version      2.4.3.2
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -701,8 +701,8 @@
       searchRegionWarning: "🌐 搜索地区：全部 — 运作说明\n\n▸ 开启 → 每次跳转到搜索引擎时，脚本会尝试移除或替换网址中的国家/地区参数（如 gl、mkt、kl），让搜索结果不被限定在特定国家。\n▸ 关闭 → 脚本完全不介入，地区设置保持原状。\n\n⚠️ 不保证有效：部分引擎可能通过 IP 或 Cookie 自动检测地区。百度与 Naver 不支持此功能。\n\n此提示只出现一次。",
       styleConfig: "样式设置 🎨",
       seBarOffsetLabel: "引擎列上移 50px",
-      hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
-      hideBlacklistBtnLabel: "隱藏 🚫 黑名单按钮",
+      hideSyntaxBtnLabel: "隐藏 📖 语法说明按钮",
+      hideBlacklistBtnLabel: "隐藏 🚫 黑名单按钮",
       hideAddGroupBtnLabel: "隐藏 ➕ 新增分组按钮",
       hideAddressToggleBtnLabel: "隐藏 🔁 显示/隐藏网址按钮",
       hideExportBtnLabel: "隐藏 📤 导出按钮",
@@ -755,9 +755,9 @@
       high: "高",
       low: "低",
       enhancedClarity: "清晰度：",
-      enabled: "开啟",
+      enabled: "开启",
       disabled: "关闭",
-      groupBackgroundColor: "群组背景顏色",
+      groupBackgroundColor: "群组背景颜色",
       enableOverlayDarkening: "启用黑幕效果",
       overlayStrength: "黑幕强度",
       searchSites: "搜索站点...",
@@ -1810,6 +1810,8 @@
           if (params.has("mkt")) { params.delete("mkt"); updated = true; }
         } else if (host.includes("duckduckgo.com")) {
           if (params.get("kl") !== "wt-wt") { params.set("kl", "wt-wt"); updated = true; }
+          if (params.has("t"))      { params.delete("t");      updated = true; }
+          if (params.has("origin")) { params.delete("origin"); updated = true; }
         } else if (host.includes("yandex.")) {
           if (params.has("lr"))  { params.delete("lr");  updated = true; }
         } else if (host.includes("search.brave.com")) {
@@ -1824,11 +1826,6 @@
         else if (host.includes("searx")) {
           if (params.has("language")) { params.delete("language"); updated = true; }
         }
-      }
-
-      if (host.includes("duckduckgo.com")) {
-        if (params.has("t"))      { params.delete("t");      updated = true; }
-        if (params.has("origin")) { params.delete("origin"); updated = true; }
       }
 
       if (updated) {
@@ -7074,6 +7071,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       searchBarGlowEnabled:    false,
       searchBarGlowColor:      "#5599ff",
       searchBarGlowStrength:   6,
+      enableVignette:      false,
+      vignetteCornerTL:    true,
+      vignetteCornerTR:    true,
+      vignetteCornerBL:    true,
+      vignetteCornerBR:    true,
+      vignetteSize:        120,
+      vignetteColor:       "#000000",
+      vignetteOpacity:     0.45,
     };
     save();
     applyTheme(panelTheme);
