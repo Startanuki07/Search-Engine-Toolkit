@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.3.2
+// @version      2.4.5.6
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -3182,7 +3182,7 @@
              panelOpacity, groupOpacity, r, g, b };
   }
 
-  const _THEME_CSS_VER = "3";
+  const _THEME_CSS_VER = "4";
 
   function _injectThemeCss() {
     const existing = document.getElementById("set-theme-css");
@@ -3220,6 +3220,287 @@
       #site-group-panel .site-container {
         grid-template-columns: var(--set-grid-cols);
       }
+      
+      #site-group-panel {
+        scrollbar-width: thin;
+        scrollbar-color: var(--set-sb-thumb) var(--set-sb-track);
+      }
+      #site-group-panel::-webkit-scrollbar        { width: 5px; }
+      #site-group-panel:hover::-webkit-scrollbar  { width: 7px; }
+      #site-group-panel::-webkit-scrollbar-track {
+        background:    var(--set-sb-track);
+        border-radius: 99px;
+        margin:        4px 0;
+      }
+      #site-group-panel::-webkit-scrollbar-thumb {
+        background:    var(--set-sb-thumb);
+        border-radius: 99px;
+      }
+      #site-group-panel::-webkit-scrollbar-thumb:hover {
+        background:    var(--set-sb-thumb-hover);
+      }
+
+      #set-compact-btn {
+        position:   fixed;
+        width:      32px;
+        height:     32px;
+        border-radius: 50%;
+        border:     none;
+        cursor:     pointer;
+        z-index:    2147483648;
+        overflow:   visible;
+        display:    flex;
+        align-items: center;
+        justify-content: center;
+        font-size:  14px;
+        line-height: 1;
+        opacity:    0;
+        transform:  scale(0.6);
+        transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+        pointer-events: none;
+        user-select: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+      }
+      #set-compact-btn.set-cbt-visible {
+        opacity:        1;
+        transform:      scale(1);
+        pointer-events: auto;
+        animation:      setCbtFloat 2s ease-in-out infinite;
+      }
+      @keyframes setCbtFloat {
+        0%,100% { transform: scale(1) translateY(0);   }
+        50%      { transform: scale(1) translateY(-4px); }
+      }
+      #set-compact-btn::after {
+        content:          attr(data-label);
+        position:         absolute;
+        bottom:           calc(100% + 8px);
+        left:             50%;
+        transform:        translateX(-50%);
+        white-space:      nowrap;
+        font-size:        11px;
+        font-weight:      500;
+        padding:          4px 9px;
+        border-radius:    6px;
+        pointer-events:   none;
+        opacity:          0;
+        transition:       opacity 0.2s ease;
+        background:       rgba(30,30,40,0.88);
+        color:            #dde;
+        box-shadow:       0 2px 6px rgba(0,0,0,0.3);
+      }
+      #set-compact-btn[data-theme="light"]::after {
+        background: rgba(255,255,255,0.95);
+        color:      #334;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      }
+      #set-compact-btn.set-cbt-visible::after { opacity: 1; }
+
+      @keyframes setSpotlight {
+        0%   { box-shadow: 0 0 0  0   rgba(255,220,80,0),    0 0 0  0   rgba(255,180,40,0); }
+        20%  { box-shadow: 0 0 0 10px rgba(255,220,80,0.7),  0 0 0 20px rgba(255,180,40,0.25); }
+        50%  { box-shadow: 0 0 0 10px rgba(255,220,80,0.9),  0 0 0 22px rgba(255,180,40,0.35); }
+        80%  { box-shadow: 0 0 0 10px rgba(255,220,80,0.7),  0 0 0 20px rgba(255,180,40,0.25); }
+        100% { box-shadow: 0 0 0  0   rgba(255,220,80,0),    0 0 0  0   rgba(255,180,40,0); }
+      }
+      #site-toggle-simple.set-spotlight {
+        animation: setSpotlight 5s ease forwards;
+        z-index: 2147483649 !important;
+      }
+
+      #set-compact-panel {
+        position:   fixed;
+        z-index:    2147483646;
+        display:    flex;
+        flex-direction: column;
+        border-radius: 14px;
+        overflow:   hidden;
+        user-select: none;
+        box-sizing: border-box;
+        min-width:  0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      #set-compact-panel[data-cp-theme="dark"] {
+        background: rgba(22,22,30,0.96);
+        border:     1px solid rgba(255,255,255,0.13);
+        box-shadow: 0 2px 8px  rgba(0,0,0,0.5),
+                    0 12px 40px rgba(0,0,0,0.55),
+                    0 0 0 0.5px rgba(255,255,255,0.06),
+                    inset 0 1px 0 rgba(255,255,255,0.10),
+                    inset 0 -1px 0 rgba(0,0,0,0.25);
+        color:      rgba(220,220,235,0.92);
+      }
+      #set-compact-panel[data-cp-theme="light"] {
+        background: rgba(248,248,252,0.97);
+        border:     1px solid rgba(0,0,0,0.10);
+        box-shadow: 0 2px 8px  rgba(0,0,0,0.07),
+                    0 12px 40px rgba(0,0,0,0.10),
+                    inset 0 1px 0 rgba(255,255,255,0.95),
+                    inset 0 -1px 0 rgba(0,0,0,0.04);
+        color:      rgba(40,40,55,0.92);
+      }
+      
+      #set-compact-panel .scp-handle {
+        height:     32px;
+        display:    flex;
+        align-items: center;
+        gap:        6px;
+        padding:    0 8px 0 10px;
+        cursor:     grab;
+        flex-shrink: 0;
+      }
+      #set-compact-panel .scp-handle:active { cursor: grabbing; }
+      
+      #set-compact-panel .scp-handle-lines {
+        display: flex; flex-direction: column; gap: 3px;
+        opacity: 0.25; flex-shrink: 0;
+      }
+      #set-compact-panel .scp-handle-lines span {
+        width: 16px; height: 1.5px; border-radius: 2px;
+        background: currentColor; display: block;
+      }
+      
+      #set-compact-panel .scp-group-wrap {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        position: relative;
+        cursor: pointer;
+        margin-right: 2px;
+      }
+      #set-compact-panel .scp-group-select {
+        font-size:  11px;
+        font-weight: 500;
+        border:     none;
+        outline:    none;
+        background: transparent;
+        color:      currentColor;
+        cursor:     pointer;
+        opacity:    0.6;
+        max-width:  80px;
+        padding:    2px 16px 2px 5px;
+        border-radius: 5px;
+        appearance: none;
+        -webkit-appearance: none;
+        transition: opacity 0.15s, background 0.15s;
+      }
+      #set-compact-panel .scp-group-select:hover { opacity: 0.9; }
+      #set-compact-panel[data-cp-theme="dark"] .scp-group-select:hover {
+        background: rgba(255,255,255,0.08);
+      }
+      #set-compact-panel[data-cp-theme="light"] .scp-group-select:hover {
+        background: rgba(0,0,0,0.06);
+      }
+      
+      #set-compact-panel .scp-group-wrap::after {
+        content: "▾";
+        font-size: 9px;
+        position: absolute;
+        right: 4px;
+        opacity: 0.4;
+        pointer-events: none;
+      }
+      #set-compact-panel[data-cp-theme="dark"] .scp-group-select option {
+        background: #1e1e2a; color: #dde;
+      }
+      #set-compact-panel[data-cp-theme="light"] .scp-group-select option {
+        background: #f8f8fc; color: #334;
+      }
+      
+      #set-compact-panel .scp-theme-btn {
+        font-size: 13px; opacity: 0.35; cursor: pointer;
+        padding: 2px 4px; border-radius: 5px;
+        transition: opacity 0.15s; line-height: 1;
+        border: none; background: transparent; color: currentColor;
+        flex-shrink: 0;
+      }
+      #set-compact-panel .scp-theme-btn:hover { opacity: 0.85; }
+      #set-compact-panel .scp-handle-exit {
+        font-size: 12px; opacity: 0.3; cursor: pointer;
+        padding: 2px 4px; border-radius: 5px;
+        transition: opacity 0.15s; line-height: 1;
+        border: none; background: transparent; color: currentColor;
+        flex-shrink: 0;
+      }
+      #set-compact-panel .scp-handle-exit:hover { opacity: 0.88; }
+      
+      #set-compact-panel .scp-sites {
+        display:    grid;
+        grid-template-columns: repeat(4, 38px);
+        gap:        2px;
+        padding:    4px 6px 6px;
+        margin:     0 2px;
+        max-height: 228px;  
+        overflow-y: auto;
+        overflow-x: hidden;
+        
+        scrollbar-width: thin;
+        scrollbar-color: rgba(128,128,160,0.3) transparent;
+      }
+      
+      #set-compact-panel .scp-sites::-webkit-scrollbar        { width: 3px; }
+      #set-compact-panel .scp-sites::-webkit-scrollbar-track  { background: transparent; }
+      #set-compact-panel .scp-sites::-webkit-scrollbar-thumb  {
+        background: rgba(128,128,160,0.3); border-radius: 99px;
+      }
+      #set-compact-panel .scp-sites::-webkit-scrollbar-thumb:hover {
+        background: rgba(128,128,160,0.55);
+      }
+      #set-compact-panel[data-cp-theme="dark"] .scp-sites {
+        background: rgba(255,255,255,0.03);
+        border-radius: 10px;
+      }
+      #set-compact-panel[data-cp-theme="light"] .scp-sites {
+        background: rgba(0,0,0,0.025);
+        border-radius: 10px;
+      }
+      #set-compact-panel .scp-site {
+        width: 38px; height: 38px; border-radius: 9px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; position: relative;
+        border: none; background: transparent;
+        transition: background 0.12s ease, transform 0.1s ease;
+      }
+      #set-compact-panel[data-cp-theme="dark"] .scp-site:hover {
+        background: rgba(255,255,255,0.10); transform: scale(1.10);
+      }
+      #set-compact-panel[data-cp-theme="light"] .scp-site:hover {
+        background: rgba(0,0,0,0.07); transform: scale(1.10);
+      }
+      #set-compact-panel .scp-site img {
+        width: 22px; height: 22px; border-radius: 4px;
+        object-fit: contain; pointer-events: none;
+      }
+      #set-compact-panel .scp-site-fallback {
+        width: 22px; height: 22px; border-radius: 6px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px; font-weight: 600;
+        pointer-events: none;
+      }
+      #set-compact-panel[data-cp-theme="dark"] .scp-site-fallback {
+        background: rgba(255,255,255,0.10); color: rgba(220,220,235,0.8);
+      }
+      #set-compact-panel[data-cp-theme="light"] .scp-site-fallback {
+        background: rgba(0,0,0,0.08); color: rgba(40,40,55,0.7);
+      }
+      
+      #set-compact-panel .scp-engines {
+        display: flex; align-items: center; justify-content: center;
+        gap: 6px; padding: 5px 6px 7px;
+      }
+      #set-compact-panel[data-cp-theme="dark"] .scp-engines {
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+      #set-compact-panel[data-cp-theme="light"] .scp-engines {
+        border-top: 1px solid rgba(0,0,0,0.06);
+      }
+      #set-compact-panel .scp-engines img {
+        width: 18px; height: 18px; border-radius: 3px; cursor: pointer;
+        opacity: 0.6; transition: opacity 0.15s, transform 0.15s;
+        object-fit: contain;
+      }
+      #set-compact-panel .scp-engines img:hover { opacity: 1; transform: scale(1.18); }
     `;
     document.head.appendChild(s);
   }
@@ -3340,6 +3621,9 @@
       panel.style.setProperty("--set-btn-opacity",   String(buttonOpacity));
       panel.style.setProperty("--set-group-bg",      `rgba(${r},${g},${b},${groupOpacity})`);
       panel.style.setProperty("--set-grid-cols",     `repeat(auto-fill, minmax(${_sbwCss > 0 ? _sbwCss : 104}px, 1fr))`);
+      panel.style.setProperty("--set-sb-thumb",       adjustColor(v.baseButtonBg, styleSettings.contrast + 20));
+      panel.style.setProperty("--set-sb-thumb-hover", adjustColor(v.baseButtonBg, styleSettings.contrast + 35));
+      panel.style.setProperty("--set-sb-track",       `rgba(${r},${g},${b},0.25)`);
 
       panel.style.color = textColor;
       panel.style.borderColor = borderColor;
@@ -4531,6 +4815,7 @@
           pointer-events:none;
         `;
         header.addEventListener("mouseenter", () => {
+          if (_isDraggingPanel) return;
           rightContainer.style.opacity = "1";
           rightContainer.style.pointerEvents = "auto";
         });
@@ -10443,6 +10728,334 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     });
   }
 
+  function _applyCompactMode(on) {
+    const _mainPanel = document.getElementById("site-group-panel");
+    const _grip      = document.getElementById("panel-resize-grip");
+    const _btn       = document.getElementById("set-compact-btn");
+
+    if (on) {
+      _buildCompactPanel();
+      if (_mainPanel) hidePanel(_mainPanel);
+      if (_grip) { _grip.style.pointerEvents = "none"; _grip.style.opacity = "0"; }
+    } else {
+      const _cp = document.getElementById("set-compact-panel");
+      if (_cp) _cp.remove();
+      if (_mainPanel) showPanel(_mainPanel);
+      if (_grip) { _grip.style.pointerEvents = ""; _grip.style.opacity = ""; }
+    }
+
+    if (_btn) {
+      _btn.classList.remove("set-cbt-visible");
+      _btn.dataset.label = on
+        ? (t.compactOff || "Exit Compact")
+        : (t.compactOn  || "Compact Mode");
+    }
+
+    GM_setValue("compactMode", on);
+  }
+
+  function _buildCompactPanel() {
+    const _old = document.getElementById("set-compact-panel");
+    if (_old) _old.remove();
+
+    const _isDark = (styleSettings.theme || "dark") !== "light";
+    const _initTheme = GM_getValue("compactTheme", _isDark ? "dark" : "light");
+
+    const _savedLeft = GM_getValue("compactPanelLeft", null);
+    const _savedTop  = GM_getValue("compactPanelTop",  null);
+
+    const _cp = document.createElement("div");
+    _cp.id = "set-compact-panel";
+    _cp.dataset.cpTheme = _initTheme;
+
+    if (_savedLeft && _savedTop) {
+      _cp.style.left = _savedLeft;
+      _cp.style.top  = _savedTop;
+    } else {
+      const _tb = document.getElementById("site-toggle-simple");
+      if (_tb) {
+        const _r = _tb.getBoundingClientRect();
+        _cp.style.left = Math.max(4, _r.left - 10) + "px";
+        _cp.style.top  = Math.max(4, _r.top  - 10) + "px";
+      } else {
+        _cp.style.right = "20px";
+        _cp.style.top   = "80px";
+      }
+    }
+
+    const _handle = document.createElement("div");
+    _handle.className = "scp-handle";
+
+    const _lines = document.createElement("div");
+    _lines.className = "scp-handle-lines";
+    for (let i = 0; i < 3; i++) {
+      const s = document.createElement("span"); _lines.appendChild(s);
+    }
+
+    let _curTheme = GM_getValue("compactTheme", _isDark ? "dark" : "light");
+    const _themeBtn = document.createElement("button");    _themeBtn.className = "scp-theme-btn";
+    _themeBtn.textContent = _curTheme === "dark" ? "🌙" : "☀️";
+    _themeBtn.title = "Toggle theme";
+    _themeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      _curTheme = _curTheme === "dark" ? "light" : "dark";
+      GM_setValue("compactTheme", _curTheme);
+      _cp.dataset.cpTheme = _curTheme;
+      _themeBtn.textContent = _curTheme === "dark" ? "🌙" : "☀️";
+    });
+
+    const _exitBtn = document.createElement("button");
+    _exitBtn.className = "scp-handle-exit";
+    _exitBtn.textContent = "✕";
+    _exitBtn.title = t.compactOff || "Exit Compact";
+    _exitBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      _applyCompactMode(false);
+    });
+
+    _handle.appendChild(_lines);
+
+    const _grpWrap = document.createElement("div");
+    _grpWrap.className = "scp-group-wrap";
+
+    const _sel = document.createElement("select");
+    _sel.className = "scp-group-select";
+    _sel.title = "Switch group";
+    const _savedGrpIdx = Math.min(
+      GM_getValue("compactGroupIdx", 0),
+      Math.max(0, groups.length - 1)
+    );
+    groups.forEach((g, i) => {
+      const _opt = document.createElement("option");
+      _opt.value = i;
+      _opt.textContent = g.name || `Group ${i + 1}`;
+      if (i === _savedGrpIdx) _opt.selected = true;
+      _sel.appendChild(_opt);
+    });
+    _sel.addEventListener("mousedown", e => e.stopPropagation());
+
+    _grpWrap.appendChild(_sel);
+    _handle.appendChild(_grpWrap);
+    _handle.appendChild(_themeBtn);
+    _handle.appendChild(_exitBtn);
+    _cp.appendChild(_handle);
+
+    const _sitesEl = document.createElement("div");
+    _sitesEl.className = "scp-sites";
+    _cp.appendChild(_sitesEl);
+
+    function _renderSites(groupIdx) {
+      _sitesEl.innerHTML = "";
+      const _grp = groups[groupIdx];
+      const _sites = (_grp && _grp.sites) ? _grp.sites : [];
+
+      _sites.forEach(site => {
+        const _siteBtn = document.createElement("button");
+        _siteBtn.className = "scp-site";
+        _siteBtn.title = site.note || site.url;
+
+        const _fullUrl = /^https?:\/\//.test(site.url)
+          ? site.url : "https://" + site.url;
+        const _img = document.createElement("img");
+        _img.src = typeof se_faviconUrl === "function" ? se_faviconUrl(_fullUrl) : "";
+        _img.alt = "";
+        _img.onerror = () => {
+          _img.style.display = "none";
+          const _fb = document.createElement("span");
+          _fb.className = "scp-site-fallback";
+          const _domain = site.url.replace(/^https?:\/\//, "").split("/")[0];
+          _fb.textContent = _domain.charAt(0).toUpperCase();
+          _siteBtn.appendChild(_fb);
+        };
+        _siteBtn.appendChild(_img);
+
+        _siteBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (typeof applySiteFilter === "function") {
+            applySiteFilter(site.url);
+          } else {
+            window.open("https://" + site.url, "_blank");
+          }
+        });
+
+        _sitesEl.appendChild(_siteBtn);
+      });
+    }
+
+    _renderSites(_savedGrpIdx);
+
+    _sel.addEventListener("change", () => {
+      const _idx = parseInt(_sel.value, 10);
+      GM_setValue("compactGroupIdx", _idx);
+      _renderSites(_idx);
+    });
+
+    const _pinned = (typeof se_engines !== "undefined" ? se_engines : [])
+      .filter(e => e.pinned !== false)
+      .slice(0, 8);
+
+    if (_pinned.length > 0) {
+      const _engEl = document.createElement("div");
+      _engEl.className = "scp-engines";
+
+      _pinned.forEach(eng => {
+        const _img = document.createElement("img");
+        _img.src   = typeof se_faviconUrl === "function" ? se_faviconUrl(eng.url) : "";
+        _img.alt   = eng.name || "";
+        _img.title = eng.name || eng.url;
+        _img.addEventListener("click", () => {
+          const _qEl = document.querySelector(
+            "input[name='q'], input[name='query'], input[name='text'], input[name='search'], input[type='search']"
+          );
+          const _q = _qEl ? encodeURIComponent(_qEl.value.trim()) : "";
+          const _url = (eng.url || "").replace(/\{query\}|%s/, _q);
+          if (_url) window.open(_url, "_blank");
+        });
+        _engEl.appendChild(_img);
+      });
+
+      _cp.appendChild(_engEl);
+    }
+
+    document.body.appendChild(_cp);
+
+    requestAnimationFrame(() => {
+      const _w = _cp.offsetWidth  || 180;
+      const _h = _cp.offsetHeight || 100;
+      const _maxL = Math.max(0, window.innerWidth  - _w);
+      const _maxT = Math.max(0, window.innerHeight - _h);
+      const _curL = parseFloat(_cp.style.left) || 0;
+      const _curT = parseFloat(_cp.style.top)  || 0;
+      const _cl = Math.max(0, Math.min(_curL, _maxL));
+      const _ct = Math.max(0, Math.min(_curT, _maxT));
+      if (_cl !== _curL || _ct !== _curT) {
+        _cp.style.left  = _cl + "px";
+        _cp.style.top   = _ct + "px";
+        _cp.style.right = "auto";
+        GM_setValue("compactPanelLeft", _cp.style.left);
+        GM_setValue("compactPanelTop",  _cp.style.top);
+      }
+    });
+    let _dx = 0, _dy = 0, _dragging = false;
+
+    _handle.addEventListener("mousedown", (e) => {
+      if (e.target === _exitBtn) return;
+      _dragging = true;
+      const r = _cp.getBoundingClientRect();
+      _dx = e.clientX - r.left;
+      _dy = e.clientY - r.top;
+      _handle.style.cursor = "grabbing";
+      e.preventDefault();
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!_dragging) return;
+      const nl = Math.max(0, Math.min(e.clientX - _dx, window.innerWidth  - _cp.offsetWidth));
+      const nt = Math.max(0, Math.min(e.clientY - _dy, window.innerHeight - _cp.offsetHeight));
+      _cp.style.left  = nl + "px";
+      _cp.style.top   = nt + "px";
+      _cp.style.right = "auto";
+    });
+
+    document.addEventListener("mouseup", () => {
+      if (!_dragging) return;
+      _dragging = false;
+      _handle.style.cursor = "grab";
+      GM_setValue("compactPanelLeft", _cp.style.left);
+      GM_setValue("compactPanelTop",  _cp.style.top);
+    });
+  }
+
+  function _buildCompactBtn() {
+    const _old = document.getElementById("set-compact-btn");
+    if (_old) _old.remove();
+
+    const _tb = document.getElementById("site-toggle-simple");
+    if (!_tb) return;
+
+    const _isDark = (styleSettings.theme || "dark") !== "light";
+    const _btn = document.createElement("button");
+    _btn.id = "set-compact-btn";
+    _btn.dataset.theme = _isDark ? "dark" : "light";
+    const _isCompact = GM_getValue("compactMode", false);
+    _btn.textContent   = _isCompact ? "⊟" : "⊞";
+    _btn.dataset.label = _isCompact
+      ? (t.compactOff || "Exit Compact")
+      : (t.compactOn  || "Compact Mode");
+    _btn.style.background = _isDark ? "rgba(60,60,80,0.92)" : "rgba(240,240,248,0.95)";
+    _btn.style.color      = _isDark ? "#ccd" : "#445";
+
+    document.body.appendChild(_btn);
+
+    function _posBtn() {
+      const r = _tb.getBoundingClientRect();
+      _btn.style.top  = (r.top  - 10) + "px";
+      _btn.style.left = (r.left - 10) + "px";
+    }
+    requestAnimationFrame(_posBtn);
+
+    const _tbObserver = new MutationObserver(_posBtn);
+    _tbObserver.observe(_tb, { attributes: true, attributeFilter: ["style"] });
+
+    let _hoverTimer = null;
+    function _showBtn() {
+      _posBtn();
+      _btn.classList.add("set-cbt-visible");
+    }
+    function _hideBtn() {
+      _btn.classList.remove("set-cbt-visible");
+    }
+
+    let _tbIsDragging = false;
+    _tb.addEventListener("mousedown", () => {
+      _tbIsDragging = true;
+      clearTimeout(_hoverTimer);
+    });
+    document.addEventListener("mouseup", () => {
+      setTimeout(() => { _tbIsDragging = false; }, 50);
+    }, { passive: true });
+
+    _tb.addEventListener("mouseenter", () => {
+      if (_tbIsDragging) return;
+      _hoverTimer = setTimeout(_showBtn, 1000);
+    });
+    _tb.addEventListener("mouseleave", (e) => {
+      clearTimeout(_hoverTimer);
+      if (e.relatedTarget !== _btn) _hideBtn();
+    });
+    _btn.addEventListener("mouseleave", (e) => {
+      if (e.relatedTarget !== _tb) _hideBtn();
+    });
+
+    _btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const _on = !GM_getValue("compactMode", false);
+      _applyCompactMode(_on);
+    });
+
+    const _needHint = !GM_getValue("compactHintShown", false);
+    if (_needHint) {
+      GM_setValue("compactHintShown", true);
+      setTimeout(() => {
+        const _panel = document.getElementById("site-group-panel");
+        const _wasVisible = _panel && _panel.style.display !== "none";
+        if (_wasVisible) hidePanel(_panel);
+
+        _tb.classList.add("set-spotlight");
+        _posBtn();
+        _showBtn();
+
+        setTimeout(() => {
+          _hideBtn();
+          setTimeout(() => {
+            _tb.classList.remove("set-spotlight");
+            if (_wasVisible && _panel) showPanel(_panel);
+          }, 400);
+        }, 5500);
+      }, 1500);
+    }
+  }
+
   function createPanel() {
     buildMainPanelShell();
 
@@ -10534,6 +11147,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       applyTheme(panelTheme);
     } catch (e) {
       console.error("Error in applyTheme during createPanel:", e);
+    }
+
+    if (GM_getValue("compactMode", false)) {
+      _applyCompactMode(true);
     }
   }
 
@@ -11172,6 +11789,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     function finish() {
       GM_setValue("onboardingDone", true);
+      GM_setValue("compactHintShown", false);
       overlay.style.animation = "obFadeIn 0.2s ease reverse";
       setTimeout(() => overlay.remove(), 200);
     }
@@ -11297,6 +11915,18 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       e.preventDefault();
       const clickDuration = Date.now() - dragStartTime;
       if (clickDuration < 200 || !dragStartTime) {
+
+        if (GM_getValue("compactMode", false)) {
+          const _cp = document.getElementById("set-compact-panel");
+          if (_cp) {
+            const _cpHidden = _cp.style.display === "none";
+            _cp.style.display = _cpHidden ? "" : "none";
+          } else {
+            _buildCompactPanel();
+          }
+          return;
+        }
+
         let panel = document.getElementById("site-group-panel");
 
         if (!panel) {
@@ -11343,7 +11973,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           createPanel();
           panel = document.getElementById("site-group-panel");
         }
-        if (panel) {
+        if (panel && !GM_getValue("compactMode", false)) {
           showPanel(panel);
           manuallyClosed = false;
           GM_setValue("manuallyClosed", manuallyClosed);
@@ -11360,6 +11990,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         }
       }, 800);
     }
+
+    _buildCompactBtn();
   }
   (function (global) {
     let lastUrl = location.href;
@@ -11406,8 +12038,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
           try {
             renderSites(panel);
-            if (defaultPanelOpen && !manuallyClosed) {
+            if (defaultPanelOpen && !manuallyClosed && !GM_getValue("compactMode", false)) {
               showPanel(panel);
+            } else if (GM_getValue("compactMode", false)) {
+              if (!document.getElementById("set-compact-panel")) {
+                _buildCompactPanel();
+              }
             }
             applyAllBtnIcons();
             const _tb = document.getElementById("site-toggle-simple");
