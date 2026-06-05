@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.5.6
+// @version      2.4.5.8
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -355,6 +355,8 @@
       dateFormatError: "⚠️ Invalid date format, use YYYY-MM-DD",
       resizeHandle: "Drag to resize",
       resetToDefault: "Reset to Default",
+      compactOn:  "Compact Mode",
+      compactOff: "Exit Compact",
     },
     zh_TW: {
       siteTitle: "站台群組",
@@ -622,6 +624,8 @@
       dateFormatError: "⚠️ 日期格式錯誤，請使用 YYYY-MM-DD",
       resizeHandle: "拖曳調整大小",
       resetToDefault: "重置為預設值",
+      compactOn:  "精簡模式",
+      compactOff: "離開精簡模式",
     },
     zh_CN: {
       siteTitle: "站点群组",
@@ -889,6 +893,8 @@
       dateFormatError: "⚠️ 日期格式错误，请使用 YYYY-MM-DD",
       resizeHandle: "拖曳调整大小",
       resetToDefault: "重置为默认值",
+      compactOn:  "精简模式",
+      compactOff: "退出精简模式",
     },
     ja: {
       siteTitle: "ｻｲﾄｸﾞﾙｰﾌﾟ",
@@ -1159,6 +1165,8 @@
       dateFormatError: "⚠️ 日付形式が正しくありません。YYYY-MM-DDを使用してください",
       resizeHandle: "ドラッグしてサイズ変更",
       resetToDefault: "デフォルトにリセット",
+      compactOn:  "コンパクトモード",
+      compactOff: "コンパクトモード終了",
     },
     ko: {
       siteTitle: "사이트 그룹",
@@ -1426,6 +1434,8 @@
       dateFormatError: "⚠️ 날짜 형식이 잘못되었습니다. YYYY-MM-DD를 사용하세요",
       resizeHandle: "드래그하여 크기 조정",
       resetToDefault: "기본값으로 재설정",
+      compactOn:  "컴팩트 모드",
+      compactOff: "컴팩트 모드 종료",
     },
   };
 
@@ -1700,6 +1710,8 @@
       step3Body: "Click any site button to filter your search. Happy searching! 🚀",
       next: "Next →", skip: "Skip", finish: "Got it!",
     },
+    compactOn:  "Compact Mode",
+    compactOff: "Exit Compact",
     customLang: {
       menuLabel: "Custom Language",
       panelTitle: "Custom Language Translation",
@@ -2575,12 +2587,16 @@
   function getTimeFilterEngine() {
     const host = window.location.hostname;
     const path = window.location.pathname;
-    if (host.includes("google."))          return "google";
+    if (host.includes("google."))           return "google";
     if (host.includes("bing.com") &&
-        path.includes("/images/"))         return "bing-images";
-    if (host.includes("bing.com"))         return "bing";
+        path.includes("/images/"))          return "bing-images";
+    if (host.includes("bing.com"))          return "bing";
     if (host.includes("yahoo.com") ||
-        host.includes("yahoo.co.jp"))      return "yahoo";
+        host.includes("yahoo.co.jp"))       return "yahoo";
+    if (host.includes("duckduckgo.com"))    return "duckduckgo";
+    if (host.includes("search.brave.com"))  return "brave";
+    if (host.includes("yandex."))           return "yandex";
+    if (host.includes("naver.com"))         return "naver";
     return null;
   }
 
@@ -2672,6 +2688,59 @@
     return m[val] ?? null;
   }
 
+  function _calcFromDate(val) {
+    const DAYS_MAP = {
+      h:1,  h2:1,  h3:1,  h6:1, h12:1,
+      d:1,  d2:2,  d3:3,
+      w:7,  w3:21,
+      m:31, m3:92, m6:183,
+      y:365,
+    };
+    let days = DAYS_MAP[val];
+    if (!days) {
+      const _m = val.match(/^y(\d)$/);
+      days = _m ? parseInt(_m[1]) * 365 : 365;
+    }
+    const from = new Date(Date.now() - days * 86400000);
+    return from.toISOString().split("T")[0];
+  }
+
+  function getDDGDateParam(val) {
+    if (!val) return "";
+    const _PRESETS = { h:"d", h2:"d", h3:"d", h6:"d", h12:"d", d:"d", w:"w", m:"m", y:"y" };
+    if (_PRESETS[val]) return _PRESETS[val];
+    const today = new Date().toISOString().split("T")[0];
+    return `${_calcFromDate(val)}..${today}`;
+  }
+
+  function getBraveTf(val) {
+    if (!val) return "";
+    const _PRESETS = { h:"pd", h2:"pd", h3:"pd", h6:"pd", h12:"pd", d:"pd", w:"pw", m:"pm", y:"py" };
+    if (_PRESETS[val]) return _PRESETS[val];
+    const today = new Date().toISOString().split("T")[0];
+    return `${_calcFromDate(val)}to${today}`;
+  }
+
+  function getYandexWithin(val) {
+    if (!val) return null;
+    if (["h","h2","h3","h6","h12","d","d2","d3"].includes(val)) return 1;
+    if (["w","w3"].includes(val))                                return 2;
+    if (["m","m3","m6"].includes(val))                           return 3;
+    return 4;
+  }
+
+  function getNaverNso(val) {
+    if (!val) return "";
+    const _NSO = {
+      h:"so:r,p:1d", h2:"so:r,p:1d", h3:"so:r,p:1d", h6:"so:r,p:1d", h12:"so:r,p:1d",
+      d:"so:r,p:1d", d2:"so:r,p:1w", d3:"so:r,p:1w",
+      w:"so:r,p:1w", w3:"so:r,p:1m",
+      m:"so:r,p:1m", m3:"so:r,p:3m", m6:"so:r,p:6m",
+      y:"so:r,p:1y",
+    };
+    return _NSO[val] || "so:r,p:1y";
+  }
+
   function applyTimeFilter(val) {
     const engine = getTimeFilterEngine();
     if (!engine) {
@@ -2699,6 +2768,19 @@
       const age = val ? getYahooAge(val) : null;
       if (age) url.searchParams.set("age", age);
       else     url.searchParams.delete("age");
+    } else if (engine === "duckduckgo") {
+      if (val) url.searchParams.set("df", getDDGDateParam(val));
+      else     url.searchParams.delete("df");
+    } else if (engine === "brave") {
+      if (val) url.searchParams.set("tf", getBraveTf(val));
+      else     url.searchParams.delete("tf");
+    } else if (engine === "yandex") {
+      const _w = val ? getYandexWithin(val) : null;
+      if (_w !== null) url.searchParams.set("within", String(_w));
+      else             url.searchParams.delete("within");
+    } else if (engine === "naver") {
+      if (val) url.searchParams.set("nso", getNaverNso(val));
+      else     url.searchParams.delete("nso");
     } else {
       if (val) url.searchParams.set("tbs", `qdr:${val}`);
       else     url.searchParams.delete("tbs");
@@ -2707,7 +2789,8 @@
   }
 
   function getFaviconURL(domain) {
-    return `https://www.google.com/s2/favicons?sz=16&domain=${domain}`;
+    const host = domain.split("/")[0];
+    return `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(host)}`;
   }
 
   function getDragAfterElement(container, y, selector, cachedMidpoints) {
@@ -2772,6 +2855,8 @@
   let __blacklistDialogOpen    = false;
   let __styleFloatResizeHandler = null;
   let __toggleButtonObserver   = null;
+  let __compactBtnObserver     = null;
+  let __compactMouseupHandler  = null;
   let _isDraggingPanel         = false;
 
   function parseSmartDomain(raw) {
@@ -3045,23 +3130,10 @@
       border-radius:${styleSettings.borderRadius}px;
       border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
       box-shadow:0 4px 16px rgba(0,0,0,0.22);
-      background:${styleSettings.backgroundImage ? "transparent" : panelTheme === "dark" ? "#333" : "#fff"};
       color:${styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000")};
       opacity:1;
     `;
-
-    const _bgImgSyntax = styleSettings.backgroundImage;
-    const _bgImgSyntaxSafe = (_bgImgSyntax && /^(https?:|data:image\/)/.test(_bgImgSyntax)) ? _bgImgSyntax : "";
-    if (_bgImgSyntaxSafe) {
-      syntaxPanel.style.backgroundImage = `linear-gradient(rgba(0,0,0,${1 - styleSettings.imageOpacity}), rgba(0,0,0,${1 - styleSettings.imageOpacity})), url(${_bgImgSyntaxSafe})`;
-      syntaxPanel.style.backgroundRepeat =
-        styleSettings.imageMode === "tile" ? "repeat" : "no-repeat";
-      syntaxPanel.style.backgroundPosition =
-        styleSettings.imageMode === "center"
-          ? "center"
-          : `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY || 0}px`;
-      syntaxPanel.style.backgroundSize = `${styleSettings.imageScale * 100}%`;
-    }
+    _applyBgImage(syntaxPanel, panelTheme === "dark" ? "#333" : "#fff");
 
     const title = document.createElement("div");
     title.textContent = t.syntaxPanelTitle;
@@ -3543,7 +3615,9 @@
 
   function _applyBgImage(el, fallbackBg) {
     const _img  = styleSettings.backgroundImage;
-    const _safe = (_img && /^(https?:|data:image\/)/.test(_img)) ? _img : "";
+    const _safe = (_img && /^(https?:|data:image\/)/.test(_img))
+      ? _img.replace(/\)/g, "%29")
+      : "";
     if (_safe) {
       const _ov = 1 - styleSettings.imageOpacity;
       el.style.backgroundColor    = "transparent";
@@ -4211,9 +4285,45 @@
     });
     const _curTbs = (() => {
       try {
-        const u = new URL(location.href);
+        const u   = new URL(location.href);
+        const eng = getTimeFilterEngine();
+        if (eng === "duckduckgo") {
+          const _df = u.searchParams.get("df") || "";
+          const _p  = { d:"d", w:"w", m:"m", y:"y" };
+          if (_p[_df]) return _p[_df];
+          if (/^\d{4}-\d{2}-\d{2}\.\.\d{4}-\d{2}-\d{2}$/.test(_df)) {
+            const _s = Math.round((Date.now() - new Date(_df.split("..")[0]).getTime()) / 86400000);
+            const _rm = [[2,"d2"],[3,"d3"],[7,"w"],[21,"w3"],[31,"m"],[92,"m3"],[183,"m6"],
+                         [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],[2191,"y6"],[2556,"y7"],[2922,"y8"],[3287,"y9"]];
+            const _f = _rm.find(([n]) => _s <= n); return _f ? _f[1] : "y9";
+          }
+          return "";
+        }
+        if (eng === "brave") {
+          const _tf = u.searchParams.get("tf") || "";
+          const _p  = { pd:"d", pw:"w", pm:"m", py:"y" };
+          if (_p[_tf]) return _p[_tf];
+          if (/^\d{4}-\d{2}-\d{2}to\d{4}-\d{2}-\d{2}$/.test(_tf)) {
+            const _s = Math.round((Date.now() - new Date(_tf.split("to")[0]).getTime()) / 86400000);
+            const _rm = [[2,"d2"],[3,"d3"],[7,"w"],[21,"w3"],[31,"m"],[92,"m3"],[183,"m6"],
+                         [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],[2191,"y6"],[2556,"y7"],[2922,"y8"],[3287,"y9"]];
+            const _f = _rm.find(([n]) => _s <= n); return _f ? _f[1] : "y9";
+          }
+          return "";
+        }
+        if (eng === "yandex") {
+          return { "1":"d","2":"w","3":"m","4":"y" }[u.searchParams.get("within")||""] || "";
+        }
+        if (eng === "naver") {
+          const _nso  = u.searchParams.get("nso") || "";
+          const _pMatch = _nso.match(/p:([^,]+)/);
+          return _pMatch ? ({ "1d":"d","1w":"w","1m":"m","3m":"m3","6m":"m6","1y":"y" }[_pMatch[1]] || "") : "";
+        }
+        if (eng === "yahoo") {
+          return { "1d":"d","1w":"w","1m":"m","1y":"y" }[u.searchParams.get("age")||""] || "";
+        }
         const tbs = u.searchParams.get("tbs") || "";
-        const m = tbs.match(/qdr:([a-z0-9]+)/);
+        const m   = tbs.match(/qdr:([a-z0-9]+)/);
         return m ? m[1] : "";
       } catch(_) { return ""; }
     })();
@@ -4307,6 +4417,15 @@
           } else if (_eng === "yahoo") {
             const _age = getYahooAge(finalTime);
             if (_age) url.searchParams.set("age", _age);
+          } else if (_eng === "duckduckgo") {
+            url.searchParams.set("df", getDDGDateParam(finalTime));
+          } else if (_eng === "brave") {
+            url.searchParams.set("tf", getBraveTf(finalTime));
+          } else if (_eng === "yandex") {
+            const _w = getYandexWithin(finalTime);
+            if (_w !== null) url.searchParams.set("within", String(_w));
+          } else if (_eng === "naver") {
+            url.searchParams.set("nso", getNaverNso(finalTime));
           } else {
             url.searchParams.set("tbs", `qdr:${finalTime}`);
           }
@@ -4315,6 +4434,10 @@
           url.searchParams.delete("freshness");
           url.searchParams.delete("filters");
           url.searchParams.delete("age");
+          url.searchParams.delete("df");
+          url.searchParams.delete("tf");
+          url.searchParams.delete("within");
+          url.searchParams.delete("nso");
         }
         return url;
       };
@@ -10354,6 +10477,38 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       } else if (_tsEngine === "yahoo") {
         const _ageRev = { "1d":"d","1w":"w","1m":"m","1y":"y" };
         _initTimeVal = _ageRev[_u.searchParams.get("age")||""] || "";
+      } else if (_tsEngine === "duckduckgo") {
+        const _df = _u.searchParams.get("df") || "";
+        const _ddgPreset = { d:"d", w:"w", m:"m", y:"y" };
+        if (_ddgPreset[_df]) {
+          _initTimeVal = _ddgPreset[_df];
+        } else if (/^\d{4}-\d{2}-\d{2}\.\.\d{4}-\d{2}-\d{2}$/.test(_df)) {
+          const _span = Math.round((Date.now() - new Date(_df.split("..")[0]).getTime()) / 86400000);
+          const _rm = [[2,"d2"],[3,"d3"],[7,"w"],[21,"w3"],[31,"m"],[92,"m3"],[183,"m6"],
+                       [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],[2191,"y6"],[2556,"y7"],[2922,"y8"],[3287,"y9"]];
+          const _found = _rm.find(([n]) => _span <= n);
+          _initTimeVal = _found ? _found[1] : "y9";
+        }
+      } else if (_tsEngine === "brave") {
+        const _tf = _u.searchParams.get("tf") || "";
+        const _brPreset = { pd:"d", pw:"w", pm:"m", py:"y" };
+        if (_brPreset[_tf]) {
+          _initTimeVal = _brPreset[_tf];
+        } else if (/^\d{4}-\d{2}-\d{2}to\d{4}-\d{2}-\d{2}$/.test(_tf)) {
+          const _span = Math.round((Date.now() - new Date(_tf.split("to")[0]).getTime()) / 86400000);
+          const _rm = [[2,"d2"],[3,"d3"],[7,"w"],[21,"w3"],[31,"m"],[92,"m3"],[183,"m6"],
+                       [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],[2191,"y6"],[2556,"y7"],[2922,"y8"],[3287,"y9"]];
+          const _found = _rm.find(([n]) => _span <= n);
+          _initTimeVal = _found ? _found[1] : "y9";
+        }
+      } else if (_tsEngine === "yandex") {
+        const _wRev = { "1":"d", "2":"w", "3":"m", "4":"y" };
+        _initTimeVal = _wRev[_u.searchParams.get("within")||""] || "";
+      } else if (_tsEngine === "naver") {
+        const _nso = _u.searchParams.get("nso") || "";
+        const _pMatch = _nso.match(/p:([^,]+)/);
+        const _nsoRev = { "1d":"d","1w":"w","1m":"m","3m":"m3","6m":"m6","1y":"y" };
+        _initTimeVal = _pMatch ? (_nsoRev[_pMatch[1]] || "") : "";
       } else {
         const _m = (_u.searchParams.get("tbs")||"").match(/qdr:([a-z0-9]+)/);
         _initTimeVal = _m ? _m[1] : "";
@@ -10755,6 +10910,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function _buildCompactPanel() {
+    if (__compactBtnObserver) {
+      __compactBtnObserver.disconnect();
+      __compactBtnObserver = null;
+    }
+    if (__compactMouseupHandler) {
+      document.removeEventListener("mouseup", __compactMouseupHandler);
+      __compactMouseupHandler = null;
+    }
     const _old = document.getElementById("set-compact-panel");
     if (_old) _old.remove();
 
@@ -10994,8 +11157,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
     requestAnimationFrame(_posBtn);
 
-    const _tbObserver = new MutationObserver(_posBtn);
-    _tbObserver.observe(_tb, { attributes: true, attributeFilter: ["style"] });
+    __compactBtnObserver = new MutationObserver(_posBtn);
+    __compactBtnObserver.observe(_tb, { attributes: true, attributeFilter: ["style"] });
 
     let _hoverTimer = null;
     function _showBtn() {
@@ -11011,9 +11174,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _tbIsDragging = true;
       clearTimeout(_hoverTimer);
     });
-    document.addEventListener("mouseup", () => {
+    __compactMouseupHandler = () => {
       setTimeout(() => { _tbIsDragging = false; }, 50);
-    }, { passive: true });
+    };
+    document.addEventListener("mouseup", __compactMouseupHandler, { passive: true });
 
     _tb.addEventListener("mouseenter", () => {
       if (_tbIsDragging) return;
@@ -11836,6 +12000,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           __toggleButtonObserver.disconnect();
           __toggleButtonObserver = null;
         }
+        if (__compactBtnObserver) {
+          __compactBtnObserver.disconnect();
+          __compactBtnObserver = null;
+        }
+        if (__compactMouseupHandler) {
+          document.removeEventListener("mouseup", __compactMouseupHandler);
+          __compactMouseupHandler = null;
+        }
       },
       { once: true },
     );
@@ -12057,19 +12229,23 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       }
     };
 
-    const _push = history.pushState;
-    history.pushState = function () {
-      const ret = _push.apply(this, arguments);
-      triggerChange();
-      return ret;
-    };
+    if (!history._setPatchedBySET) {
+      const _push = history.pushState;
+      history.pushState = function () {
+        const ret = _push.apply(this, arguments);
+        triggerChange();
+        return ret;
+      };
 
-    const _replace = history.replaceState;
-    history.replaceState = function () {
-      const ret = _replace.apply(this, arguments);
-      triggerChange();
-      return ret;
-    };
+      const _replace = history.replaceState;
+      history.replaceState = function () {
+        const ret = _replace.apply(this, arguments);
+        triggerChange();
+        return ret;
+      };
+
+      history._setPatchedBySET = true;
+    }
 
     window.addEventListener("popstate", triggerChange);
     window.addEventListener("hashchange", triggerChange);
