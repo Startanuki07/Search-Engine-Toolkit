@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.5.8
+// @version      2.4.5.9
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -65,6 +65,12 @@
     "w","w3",
     "m","m3","m6",
     "y","y2","y3","y4","y5","y6","y7","y8","y9",
+  ];
+
+  const _DATE_SPAN_MAP = [
+    [2,"d2"],[3,"d3"],[7,"w"],[21,"w3"],[31,"m"],[92,"m3"],[183,"m6"],
+    [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],
+    [2191,"y6"],[2556,"y7"],[2922,"y8"],[3287,"y9"],
   ];
 
   function buildTimeOptions(labels) {
@@ -162,7 +168,6 @@
       searchRegionOff: "🌐 Search Region: All — OFF",
       searchRegionWarning: "🌐 Search Region: All — How it works\n\n▸ ON  → When you navigate to a search engine, this script tries to remove or replace country/region URL parameters (e.g. gl, mkt, kl) so results are not filtered to a specific country.\n▸ OFF → The script does nothing and leaves region settings untouched.\n\n⚠️ No guarantee: engines may override this with their own detection. Baidu and Naver are not supported.\n\nThis notice only appears once.",
       styleConfig: "Style Settings 🎨",
-      seBarOffsetLabel: "Raise Engine Bar (+50px)",
       hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
       hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
       hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
@@ -435,7 +440,6 @@
       searchRegionOff: "🌐 搜尋地區：全部 — 已關閉",
       searchRegionWarning: "🌐 搜尋地區：全部 — 運作說明\n\n▸ 開啟 → 每次跳轉到搜尋引擎時，腳本會嘗試移除或置換網址中的國家/地區參數（如 gl、mkt、kl），讓搜尋結果不被限定在特定國家。\n▸ 關閉 → 腳本完全不介入，地區設定維持原狀。\n\n⚠️ 不保證有效：部分引擎可能透過瀏覽器 IP 或 Cookie 自動偵測地區。百度與 Naver 不支援此功能。\n\n此提示只出現一次。",
       styleConfig: "樣式設定 🎨",
-      seBarOffsetLabel: "引擎列上移 50px",
       hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
       hideBlacklistBtnLabel: "隱藏 🚫 黑名單按鈕",
       hideAddGroupBtnLabel: "隱藏 ➕ 新增群組按鈕",
@@ -704,7 +708,6 @@
       searchRegionOff: "🌐 搜索地区：全部 — 已关闭",
       searchRegionWarning: "🌐 搜索地区：全部 — 运作说明\n\n▸ 开启 → 每次跳转到搜索引擎时，脚本会尝试移除或替换网址中的国家/地区参数（如 gl、mkt、kl），让搜索结果不被限定在特定国家。\n▸ 关闭 → 脚本完全不介入，地区设置保持原状。\n\n⚠️ 不保证有效：部分引擎可能通过 IP 或 Cookie 自动检测地区。百度与 Naver 不支持此功能。\n\n此提示只出现一次。",
       styleConfig: "样式设置 🎨",
-      seBarOffsetLabel: "引擎列上移 50px",
       hideSyntaxBtnLabel: "隐藏 📖 语法说明按钮",
       hideBlacklistBtnLabel: "隐藏 🚫 黑名单按钮",
       hideAddGroupBtnLabel: "隐藏 ➕ 新增分组按钮",
@@ -974,7 +977,6 @@
       searchRegionOff: "🌐 検索地域：全地域 — OFF",
       searchRegionWarning: "🌐 検索地域：全地域 — 動作説明\n\n▸ ON  → 検索エンジンに移動するたびに、地域/国のURLパラメータ（gl、mkt、kl など）を削除または置換し、特定の国に限定されない結果を表示しようとします。\n▸ OFF → スクリプトは一切介入せず、地域設定をそのまま維持します。\n\n⚠️ 効果の保証なし：エンジンがIPやCookieで地域を自動検出する場合があります。BaiduおよびNaverは非対応。\n\nこの通知は一度だけ表示されます。",
       styleConfig: "スタイル設定 🎨",
-      seBarOffsetLabel: "ｴﾝｼﾞﾝ列+50px上移",
       hideSyntaxBtnLabel: "📖 構文ﾍﾙﾌﾟを非表示",
       hideBlacklistBtnLabel: "🚫 除外域ﾎﾞﾀﾝを非表示",
       hideAddGroupBtnLabel: "➕ ｸﾞﾙｰﾌﾟ追加ﾎﾞﾀﾝを非表示",
@@ -1245,7 +1247,6 @@
       searchRegionOff: "🌐 검색 지역: 전체 — OFF",
       searchRegionWarning: "🌐 검색 지역: 전체 — 작동 설명\n\n▸ ON  → 검색 엔진으로 이동할 때마다, 스크립트가 URL의 국가/지역 파라미터(gl, mkt, kl 등)를 제거하거나 교체하여 특정 국가로 제한되지 않은 검색 결과를 표시하려고 시도합니다.\n▸ OFF → 스크립트는 아무것도 개입하지 않으며, 지역 설정을 그대로 유지합니다.\n\n⚠️ 효과 보장 없음: 일부 엔진은 IP 또는 쿠키로 지역을 자동 감지할 수 있습니다. Baidu 및 Naver는 지원되지 않습니다.\n\n이 안내는 한 번만 표시됩니다.",
       styleConfig: "스타일 설정 🎨",
-      seBarOffsetLabel: "엔진 바 +50px 위로",
       hideSyntaxBtnLabel: "📖 문법 도움말 숨기기",
       hideBlacklistBtnLabel: "🚫 차단목록 버튼 숨기기",
       hideAddGroupBtnLabel: "➕ 그룹 추가 버튼 숨기기",
@@ -1532,7 +1533,6 @@
     searchRegionOff: "🌐 Search Region: All — OFF",
     searchRegionWarning: "🌐 Search Region: All — How it works\n\n▸ ON → remove region URL parameters.\n▸ OFF → no intervention.",
     styleConfig: "Style Settings 🎨",
-    seBarOffsetLabel: "Raise Engine Bar (+50px)",
     hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
     hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
     hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
@@ -1769,7 +1769,6 @@
     isExpanded: false,
     resetOnReload: true,
   });
-  let deletedSiteHistory = null;
   let defaultPanelOpen = GM_getValue("defaultPanelOpen", false);
   let safeSearchEnabled     = GM_getValue("safeSearchEnabled",     false);
   let safeSearchNoticedOnce = GM_getValue("safeSearchNoticedOnce", false);
@@ -2858,6 +2857,7 @@
   let __compactBtnObserver     = null;
   let __compactMouseupHandler  = null;
   let _isDraggingPanel         = false;
+  let _sfDragging = false, _sfOx = 0, _sfOy = 0;
 
   function parseSmartDomain(raw) {
     if (!raw || typeof raw !== "string") return null;
@@ -4293,9 +4293,7 @@
           if (_p[_df]) return _p[_df];
           if (/^\d{4}-\d{2}-\d{2}\.\.\d{4}-\d{2}-\d{2}$/.test(_df)) {
             const _s = Math.round((Date.now() - new Date(_df.split("..")[0]).getTime()) / 86400000);
-            const _rm = [[2,"d2"],[3,"d3"],[7,"w"],[21,"w3"],[31,"m"],[92,"m3"],[183,"m6"],
-                         [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],[2191,"y6"],[2556,"y7"],[2922,"y8"],[3287,"y9"]];
-            const _f = _rm.find(([n]) => _s <= n); return _f ? _f[1] : "y9";
+            const _f = _DATE_SPAN_MAP.find(([n]) => _s <= n); return _f ? _f[1] : "y9";
           }
           return "";
         }
@@ -4305,9 +4303,7 @@
           if (_p[_tf]) return _p[_tf];
           if (/^\d{4}-\d{2}-\d{2}to\d{4}-\d{2}-\d{2}$/.test(_tf)) {
             const _s = Math.round((Date.now() - new Date(_tf.split("to")[0]).getTime()) / 86400000);
-            const _rm = [[2,"d2"],[3,"d3"],[7,"w"],[21,"w3"],[31,"m"],[92,"m3"],[183,"m6"],
-                         [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],[2191,"y6"],[2556,"y7"],[2922,"y8"],[3287,"y9"]];
-            const _f = _rm.find(([n]) => _s <= n); return _f ? _f[1] : "y9";
+            const _f = _DATE_SPAN_MAP.find(([n]) => _s <= n); return _f ? _f[1] : "y9";
           }
           return "";
         }
@@ -7254,7 +7250,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     z-index: 1;
   `;
 
-  let _sfDragging = false, _sfOx = 0, _sfOy = 0;
   styleConfigHeaderRow.addEventListener("mousedown", (e) => {
     if (e.target.tagName === "BUTTON" || e.target.tagName === "SELECT") return;
     _sfDragging = true;
@@ -10484,9 +10479,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           _initTimeVal = _ddgPreset[_df];
         } else if (/^\d{4}-\d{2}-\d{2}\.\.\d{4}-\d{2}-\d{2}$/.test(_df)) {
           const _span = Math.round((Date.now() - new Date(_df.split("..")[0]).getTime()) / 86400000);
-          const _rm = [[2,"d2"],[3,"d3"],[7,"w"],[21,"w3"],[31,"m"],[92,"m3"],[183,"m6"],
-                       [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],[2191,"y6"],[2556,"y7"],[2922,"y8"],[3287,"y9"]];
-          const _found = _rm.find(([n]) => _span <= n);
+          const _found = _DATE_SPAN_MAP.find(([n]) => _span <= n);
           _initTimeVal = _found ? _found[1] : "y9";
         }
       } else if (_tsEngine === "brave") {
@@ -10496,9 +10489,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           _initTimeVal = _brPreset[_tf];
         } else if (/^\d{4}-\d{2}-\d{2}to\d{4}-\d{2}-\d{2}$/.test(_tf)) {
           const _span = Math.round((Date.now() - new Date(_tf.split("to")[0]).getTime()) / 86400000);
-          const _rm = [[2,"d2"],[3,"d3"],[7,"w"],[21,"w3"],[31,"m"],[92,"m3"],[183,"m6"],
-                       [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],[2191,"y6"],[2556,"y7"],[2922,"y8"],[3287,"y9"]];
-          const _found = _rm.find(([n]) => _span <= n);
+          const _found = _DATE_SPAN_MAP.find(([n]) => _span <= n);
           _initTimeVal = _found ? _found[1] : "y9";
         }
       } else if (_tsEngine === "yandex") {
