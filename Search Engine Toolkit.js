@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.5.10
+// @version      2.4.5.12
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -2376,9 +2376,9 @@
 
   const ICONS = {
     plus: {
-      emoji: "⊕", size: "11px",
-      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
-      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".18"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+      emoji: "🔧", size: "14px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><g transform="rotate(-30 12 12)"><path d="M15.5 2a5.5 5.5 0 0 0-5.28 6.98L3.3 15.9a2.3 2.3 0 0 0 3.25 3.25l6.93-6.93A5.5 5.5 0 0 0 20.5 7.5a5.4 5.4 0 0 0-.32-1.84l-2.92 2.93-1.41-1.41 2.93-2.93A5.4 5.4 0 0 0 15.5 2z"/></g></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" style="display:block;pointer-events:none"><g transform="rotate(-30 12 12)"><path fill="currentColor" d="M15.5 2a5.5 5.5 0 0 0-5.28 6.98L3.3 15.9a2.3 2.3 0 0 0 3.25 3.25l6.93-6.93A5.5 5.5 0 0 0 20.5 7.5a5.4 5.4 0 0 0-.32-1.84l-2.92 2.93-1.41-1.41 2.93-2.93A5.4 5.4 0 0 0 15.5 2z"/></g></svg>`,
     },
     pin: {
       emoji: "📌", size: "16px",
@@ -5230,7 +5230,8 @@
     }
   }
 
-  function _positionExtraPanel(plusBtn) {
+  function _positionExtraPanel() {
+    const plusBtn = seBar ? seBar.querySelector(".se-plus-btn") : null;
     seExtraPanel.style.left = "-9999px";
     seExtraPanel.style.top  = "-9999px";
     requestAnimationFrame(() => {
@@ -6929,7 +6930,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     document.body.appendChild(seExtraPanel);
     shieldFromFileDrop(seExtraPanel);
     renderEngineList();
-    _positionExtraPanel(plusBtn);
+    _positionExtraPanel();
   }
 
   function _bindStylePanel(refs) {
