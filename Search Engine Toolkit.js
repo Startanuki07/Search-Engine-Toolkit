@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.5.9
+// @version      2.4.5.10
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -126,7 +126,7 @@
       siteButtonWidth: "Site Button Width",
       siteButtonWidthAuto: "Auto",
       multiSelectNone: "No sites selected!",
-      panelHelp: "📋 Site Groups Panel — Help\n\n▸ Group header buttons:\n  ✎  Rename the group\n  ➕  Add a site to the group\n  🗑️  Delete the group\n  ☑  Enter multi-select mode\n  ↗  Open selected sites (shown in multi-select mode)\n\n▸ Site buttons:\n  Left-click    — Apply site:filter to current search\n  Long-press drag — Reorder sites within the group\n  ⋯ (three dots) — Open site menu:\n      ✏️ Edit URL / note\n      🗑️ Delete site\n      🔗 Open (same tab)\n      ↗ Open (new tab)\n\n▸ Shift + Delete mode (rapid delete):\n  Hold Shift while the cursor is inside the panel.\n  All ⋯ buttons turn into ❌.\n  Click ❌ repeatedly to delete sites one by one without any confirmation.\n  Release Shift to exit this mode.\n\n▸ Multi-select mode:\n  Click sites to select / deselect (gold highlight).\n  Click ☑ again, or click ↗ Send to exit.\n\n▸ Engine bar (top icon row):\n  Click an icon to jump to that engine with the current keyword.\n  Drag ⠿ in the engine panel to reorder — top 5 show as icons.\n\n▸ Time filter (dropdown below engine bar):\n  Restricts results to a specific time range (1 hour – 9 years).\n  Select \"Unlimited\" to clear the filter.\n\n▸ Search Settings ⚙️:\n  Set exclude keywords, toggle syntax help, import/export config.\n\n▸ 📌 Button (top-right):\n  Controls whether the panel opens automatically.\n  ⛔ OFF — closed by default  ✅ ON — opens on load\n  📌 Pinned — always visible\n  Also contains: 🔒 Safe Search OFF and 🌐 Search Region toggles.",
+      panelHelp: "📋 Site Groups Panel — Help\n\n▸ Group header buttons:\n  ✎  Rename the group\n  ➕  Add a site to the group\n  🗑️  Delete the group\n  ☑  Enter multi-select mode\n  ↗  Open selected sites (shown in multi-select mode)\n\n▸ Site buttons:\n  Left-click    — Apply site:filter to current search\n  Long-press drag — Reorder sites within the group\n  ⋯ (three dots) — Open site menu:\n      ✏️ Edit URL / note\n      🗑️ Delete site\n      🔗 Open (same tab)\n      ↗ Open (new tab)\n\n▸ Shift + Delete mode (rapid delete):\n  Hold Shift while the cursor is inside the panel.\n  All ⋯ buttons turn into ❌.\n  Click ❌ repeatedly to delete sites one by one without any confirmation.\n  Release Shift to exit this mode.\n\n▸ Multi-select mode:\n  Click sites to select / deselect (gold highlight).\n  Click ☑ again, or click ↗ Send to exit.\n\n▸ Engine bar (top icon row):\n  Left-click   — Search with the current keyword on that engine.\n               No keyword → navigate to the engine homepage (same tab).\n  Middle-click — No keyword → open engine homepage in a new tab.\n  Drag ⠿ in the engine panel to reorder — top 5 show as icons.\n\n▸ Time filter (dropdown below engine bar):\n  Restricts results to a specific time range (1 hour – 9 years).\n  Select \"Unlimited\" to clear the filter.\n\n▸ Search Settings ⚙️:\n  Set exclude keywords, toggle syntax help, import/export config.\n\n▸ 📌 Button (top-right):\n  Controls whether the panel opens automatically.\n  ⛔ OFF — closed by default  ✅ ON — opens on load\n  📌 Pinned — always visible\n  Also contains: 🔒 Safe Search OFF and 🌐 Search Region toggles.",
       dpItemHint: {
         off:          "Panel stays closed by default. Click 🔍 to open manually.",
         on:           "Panel opens automatically on every page load.",
@@ -398,7 +398,7 @@
       siteButtonWidth: "站點按鈕寬度",
       siteButtonWidthAuto: "自動",
       multiSelectNone: "尚未選取任何站點！",
-      panelHelp: "📋 站台群組面板說明\n\n▸ 群組標頭按鈕：\n  ✎  重新命名群組\n  ➕  新增站台至群組\n  🗑️  刪除群組\n  ☑  進入複選模式\n  ↗  開啟已選站台（複選模式中才顯示）\n\n▸ 站台按鈕：\n  左鍵點擊      — 套用 site: 篩選搜尋\n  長按拖曳      — 在群組內重新排序\n  ⋯（三點選單）— 開啟站台選單：\n      ✏️ 編輯 URL / 備註\n      🗑️ 刪除站台\n      🔗 開啟（當前分頁）\n      ↗ 開啟（新分頁）\n\n▸ Shift + 連續刪除模式：\n  滑鼠移至面板內，按住 Shift 鍵。\n  所有 ⋯ 按鈕會變成 ❌。\n  可連續點擊 ❌ 逐一刪除站台，無需二次確認。\n  放開 Shift 鍵即可離開此模式。\n\n▸ 複選模式：\n  點擊站台按鈕可選取/取消選取（金色光暈）。\n  再次點擊 ☑，或點擊 ↗ 送出後退出。\n\n▸ 引擎列（頂部圖示列）：\n  點擊圖示，以當前關鍵字跳轉至對應引擎。\n  在引擎管理面板拖曳 ⠿ 排序，前 5 個顯示為圖示。\n\n▸ 時間篩選（引擎列下方下拉選單）：\n  將搜尋結果限定在特定時間範圍（1小時 ~ 9年）。\n  選擇「無限制」可清除篩選。\n\n▸ 搜尋設定 ⚙️：\n  設定排除關鍵字、語法參考、匯入/匯出設定。\n\n▸ 📌 按鈕（右上角）：\n  控制面板是否自動開啟。\n  ⛔ OFF — 預設關閉  ✅ ON — 頁面載入時開啟\n  📌 釘選 — 永遠顯示\n  另有：🔒 安全搜尋 OFF 與 🌐 搜尋地區開關。",
+      panelHelp: "📋 站台群組面板說明\n\n▸ 群組標頭按鈕：\n  ✎  重新命名群組\n  ➕  新增站台至群組\n  🗑️  刪除群組\n  ☑  進入複選模式\n  ↗  開啟已選站台（複選模式中才顯示）\n\n▸ 站台按鈕：\n  左鍵點擊      — 套用 site: 篩選搜尋\n  長按拖曳      — 在群組內重新排序\n  ⋯（三點選單）— 開啟站台選單：\n      ✏️ 編輯 URL / 備註\n      🗑️ 刪除站台\n      🔗 開啟（當前分頁）\n      ↗ 開啟（新分頁）\n\n▸ Shift + 連續刪除模式：\n  滑鼠移至面板內，按住 Shift 鍵。\n  所有 ⋯ 按鈕會變成 ❌。\n  可連續點擊 ❌ 逐一刪除站台，無需二次確認。\n  放開 Shift 鍵即可離開此模式。\n\n▸ 複選模式：\n  點擊站台按鈕可選取/取消選取（金色光暈）。\n  再次點擊 ☑，或點擊 ↗ 送出後退出。\n\n▸ 引擎列（頂部圖示列）：\n  左鍵點擊  — 以當前關鍵字跳轉至對應引擎。\n              無關鍵字 → 導向引擎首頁（當前分頁）。\n  中鍵點擊  — 無關鍵字 → 在新分頁開啟引擎首頁。\n  在引擎管理面板拖曳 ⠿ 排序，前 5 個顯示為圖示。\n\n▸ 時間篩選（引擎列下方下拉選單）：\n  將搜尋結果限定在特定時間範圍（1小時 ~ 9年）。\n  選擇「無限制」可清除篩選。\n\n▸ 搜尋設定 ⚙️：\n  設定排除關鍵字、語法參考、匯入/匯出設定。\n\n▸ 📌 按鈕（右上角）：\n  控制面板是否自動開啟。\n  ⛔ OFF — 預設關閉  ✅ ON — 頁面載入時開啟\n  📌 釘選 — 永遠顯示\n  另有：🔒 安全搜尋 OFF 與 🌐 搜尋地區開關。",
       dpItemHint: {
         off:          "面板預設關閉，需手動點擊 🔍 開啟。",
         on:           "每次頁面載入時自動開啟面板。",
@@ -666,7 +666,7 @@
       siteButtonWidth: "站点按钮宽度",
       siteButtonWidthAuto: "自动",
       multiSelectNone: "尚未选取任何站点！",
-      panelHelp: "📋 站点群组面板说明\n\n▸ 群组标头按钮：\n  ✎  重命名群组\n  ➕  新增站点至群组\n  🗑️  删除群组\n  ☑  进入多选模式\n  ↗  打开已选站点（多选模式中才显示）\n\n▸ 站点按钮：\n  左键点击      — 套用 site: 筛选搜索\n  长按拖曳      — 在群组内重新排序\n  ⋯（三点菜单）— 打开站点菜单：\n      ✏️ 编辑 URL / 备注\n      🗑️ 删除站点\n      🔗 打开（当前标签页）\n      ↗ 打开（新标签页）\n\n▸ Shift + 连续删除模式：\n  鼠标移至面板内，按住 Shift 键。\n  所有 ⋯ 按钮会变成 ❌。\n  可连续点击 ❌ 逐一删除站点，无需二次确认。\n  松开 Shift 键即可退出此模式。\n\n▸ 多选模式：\n  点击站点按钮可选取/取消选取（金色光晕）。\n  再次点击 ☑，或点击 ↗ 发送后退出。\n\n▸ 引擎列（顶部图标列）：\n  点击图标，以当前关键字跳转至对应引擎。\n  在引擎管理面板拖拽 ⠿ 排序，前 5 个显示为图标。\n\n▸ 时间筛选（引擎列下方下拉菜单）：\n  将搜索结果限定在特定时间范围（1小时 ~ 9年）。\n  选择「无限制」可清除筛选。\n\n▸ 搜索设置 ⚙️：\n  设置排除关键字、语法参考、导入/导出设置。\n\n▸ 📌 按钮（右上角）：\n  控制面板是否自动打开。\n  ⛔ OFF — 默认关闭  ✅ ON — 页面加载时打开\n  📌 固定 — 始终显示\n  另有：🔒 安全搜索 OFF 与 🌐 搜索地区开关。",
+      panelHelp: "📋 站点群组面板说明\n\n▸ 群组标头按钮：\n  ✎  重命名群组\n  ➕  新增站点至群组\n  🗑️  删除群组\n  ☑  进入多选模式\n  ↗  打开已选站点（多选模式中才显示）\n\n▸ 站点按钮：\n  左键点击      — 套用 site: 筛选搜索\n  长按拖曳      — 在群组内重新排序\n  ⋯（三点菜单）— 打开站点菜单：\n      ✏️ 编辑 URL / 备注\n      🗑️ 删除站点\n      🔗 打开（当前标签页）\n      ↗ 打开（新标签页）\n\n▸ Shift + 连续删除模式：\n  鼠标移至面板内，按住 Shift 键。\n  所有 ⋯ 按钮会变成 ❌。\n  可连续点击 ❌ 逐一删除站点，无需二次确认。\n  松开 Shift 键即可退出此模式。\n\n▸ 多选模式：\n  点击站点按钮可选取/取消选取（金色光晕）。\n  再次点击 ☑，或点击 ↗ 发送后退出。\n\n▸ 引擎列（顶部图标列）：\n  左键点击  — 以当前关键字跳转至对应引擎。\n              无关键字 → 导向引擎首页（当前标签页）。\n  中键点击  — 无关键字 → 在新标签页打开引擎首页。\n  在引擎管理面板拖拽 ⠿ 排序，前 5 个显示为图标。\n\n▸ 时间筛选（引擎列下方下拉菜单）：\n  将搜索结果限定在特定时间范围（1小时 ~ 9年）。\n  选择「无限制」可清除筛选。\n\n▸ 搜索设置 ⚙️：\n  设置排除关键字、语法参考、导入/导出设置。\n\n▸ 📌 按钮（右上角）：\n  控制面板是否自动打开。\n  ⛔ OFF — 默认关闭  ✅ ON — 页面加载时打开\n  📌 固定 — 始终显示\n  另有：🔒 安全搜索 OFF 与 🌐 搜索地区开关。",
       dpItemHint: {
         off:          "面板默认关闭，需手动点击 🔍 打开。",
         on:           "每次页面加载时自动打开面板。",
@@ -935,7 +935,7 @@
       siteButtonWidth: "ｻｲﾄﾎﾞﾀﾝ幅",
       siteButtonWidthAuto: "自動",
       multiSelectNone: "サイトが選択されていません！",
-      panelHelp: "📋 サイトグループパネル説明\n\n▸ グループヘッダーボタン：\n  ✎  グループ名を変更\n  ➕  グループにサイトを追加\n  🗑️  グループを削除\n  ☑  複数選択モードに入る\n  ↗  選択済みサイトを開く（複数選択モード時のみ）\n\n▸ サイトボタン：\n  左クリック        — site: フィルターを適用して検索\n  長押しドラッグ    — グループ内で並び替え\n  ⋯（三点メニュー）— サイトメニューを開く：\n      ✏️ URL / メモを編集\n      🗑️ サイトを削除\n      🔗 開く（現在のタブ）\n      ↗ 開く（新しいタブ）\n\n▸ Shift + 連続削除モード：\n  カーソルをパネル内に移動し、Shift キーを押し続ける。\n  すべての ⋯ ボタンが ❌ に変わる。\n  ❌ を連続クリックすると、確認なしでサイトを一つずつ削除できる。\n  Shift キーを放すとモードを終了。\n\n▸ 複数選択モード：\n  サイトをクリックして選択/解除（ゴールドハイライト）。\n  ☑ を再クリック、または ↗ 送信後に解除。\n\n▸ エンジン列（上部アイコン列）：\n  アイコンをクリックすると現在のキーワードで遷移。\n  エンジン管理で ⠿ ドラッグして並び替え、上位5件がアイコン表示。\n\n▸ 時間フィルター（エンジン列下のドロップダウン）：\n  検索結果を特定の期間に限定（1時間〜9年）。\n  「無制限」を選択するとフィルター解除。\n\n▸ 検索設定 ⚙️：\n  除外キーワード設定・構文リファレンス・設定インポート/エクスポート。\n\n▸ 📌 ボタン（右上）：\n  パネルの自動表示を制御します。\n  ⛔ OFF — デフォルト非表示  ✅ ON — ページ読み込み時に開く\n  📌 固定 — 常に表示\n  その他：🔒 セーフサーチ OFF・🌐 検索地域 の切り替えも含む。",
+      panelHelp: "📋 サイトグループパネル説明\n\n▸ グループヘッダーボタン：\n  ✎  グループ名を変更\n  ➕  グループにサイトを追加\n  🗑️  グループを削除\n  ☑  複数選択モードに入る\n  ↗  選択済みサイトを開く（複数選択モード時のみ）\n\n▸ サイトボタン：\n  左クリック        — site: フィルターを適用して検索\n  長押しドラッグ    — グループ内で並び替え\n  ⋯（三点メニュー）— サイトメニューを開く：\n      ✏️ URL / メモを編集\n      🗑️ サイトを削除\n      🔗 開く（現在のタブ）\n      ↗ 開く（新しいタブ）\n\n▸ Shift + 連続削除モード：\n  カーソルをパネル内に移動し、Shift キーを押し続ける。\n  すべての ⋯ ボタンが ❌ に変わる。\n  ❌ を連続クリックすると、確認なしでサイトを一つずつ削除できる。\n  Shift キーを放すとモードを終了。\n\n▸ 複数選択モード：\n  サイトをクリックして選択/解除（ゴールドハイライト）。\n  ☑ を再クリック、または ↗ 送信後に解除。\n\n▸ エンジン列（上部アイコン列）：\n  左クリック  — 現在のキーワードで対応エンジンに遷移。\n                キーワードなし → エンジンのホームページへ移動（現在タブ）。\n  中クリック  — キーワードなし → 新しいタブでホームページを開く。\n  エンジン管理で ⠿ ドラッグして並び替え、上位5件がアイコン表示。\n\n▸ 時間フィルター（エンジン列下のドロップダウン）：\n  検索結果を特定の期間に限定（1時間〜9年）。\n  「無制限」を選択するとフィルター解除。\n\n▸ 検索設定 ⚙️：\n  除外キーワード設定・構文リファレンス・設定インポート/エクスポート。\n\n▸ 📌 ボタン（右上）：\n  パネルの自動表示を制御します。\n  ⛔ OFF — デフォルト非表示  ✅ ON — ページ読み込み時に開く\n  📌 固定 — 常に表示\n  その他：🔒 セーフサーチ OFF・🌐 検索地域 の切り替えも含む。",
       dpItemHint: {
         off:          "パネルはデフォルトで非表示。🔍 をクリックして手動で開きます。",
         on:           "ページ読み込みのたびにパネルを自動表示します。",
@@ -1205,7 +1205,7 @@
       siteButtonWidth: "사이트 버튼 너비",
       siteButtonWidthAuto: "자동",
       multiSelectNone: "선택된 사이트가 없습니다！",
-      panelHelp: "📋 사이트 그룹 패널 안내\n\n▸ 그룹 헤더 버튼：\n  ✎  그룹 이름 변경\n  ➕  그룹에 사이트 추가\n  🗑️  그룹 삭제\n  ☑  다중 선택 모드 진입\n  ↗  선택한 사이트 열기（다중 선택 모드에서만 표시）\n\n▸ 사이트 버튼：\n  좌클릭          — site: 필터 적용하여 검색\n  길게 드래그      — 그룹 내 순서 변경\n  ⋯（세 점 메뉴）  — 사이트 메뉴 열기：\n      ✏️ URL / 메모 편집\n      🗑️ 사이트 삭제\n      🔗 열기（현재 탭）\n      ↗ 열기（새 탭）\n\n▸ Shift + 연속 삭제 모드：\n  커서를 패널 안으로 이동한 후 Shift 키를 누른 채로 유지.\n  모든 ⋯ 버튼이 ❌ 로 바뀜.\n  ❌ 를 연속으로 클릭하면 확인 없이 사이트를 하나씩 삭제 가능.\n  Shift 키를 놓으면 모드 종료.\n\n▸ 다중 선택 모드：\n  사이트 버튼을 클릭하여 선택/해제（금색 하이라이트）。\n  ☑ 를 다시 클릭하거나 ↗ 전송 후 모드 해제。\n\n▸ 엔진 바（상단 아이콘 열）：\n  아이콘 클릭 시 현재 키워드로 해당 엔진으로 이동。\n  엔진 관리에서 ⠿ 드래그로 순서 변경, 상위 5개가 아이콘 표시。\n\n▸ 시간 필터（엔진 바 아래 드롭다운）：\n  검색 결과를 특정 기간으로 제한（1시간 ~ 9년）。\n  「제한 없음」 선택 시 필터 해제。\n\n▸ 검색 설정 ⚙️：\n  제외 키워드 설정, 문법 참고서, 설정 가져오기/내보내기。\n\n▸ 📌 버튼（우상단）：\n  패널 자동 표시 여부를 제어합니다。\n  ⛔ OFF — 기본 닫힘  ✅ ON — 페이지 로드 시 열림\n  📌 고정 — 항상 표시\n  그 외：🔒 세이프서치 OFF・🌐 검색 지역 전환도 포함。",
+      panelHelp: "📋 사이트 그룹 패널 안내\n\n▸ 그룹 헤더 버튼：\n  ✎  그룹 이름 변경\n  ➕  그룹에 사이트 추가\n  🗑️  그룹 삭제\n  ☑  다중 선택 모드 진입\n  ↗  선택한 사이트 열기（다중 선택 모드에서만 표시）\n\n▸ 사이트 버튼：\n  좌클릭          — site: 필터 적용하여 검색\n  길게 드래그      — 그룹 내 순서 변경\n  ⋯（세 점 메뉴）  — 사이트 메뉴 열기：\n      ✏️ URL / 메모 편집\n      🗑️ 사이트 삭제\n      🔗 열기（현재 탭）\n      ↗ 열기（새 탭）\n\n▸ Shift + 연속 삭제 모드：\n  커서를 패널 안으로 이동한 후 Shift 키를 누른 채로 유지.\n  모든 ⋯ 버튼이 ❌ 로 바뀜.\n  ❌ 를 연속으로 클릭하면 확인 없이 사이트를 하나씩 삭제 가능.\n  Shift 키를 놓으면 모드 종료.\n\n▸ 다중 선택 모드：\n  사이트 버튼을 클릭하여 선택/해제（금색 하이라이트）。\n  ☑ 를 다시 클릭하거나 ↗ 전송 후 모드 해제。\n\n▸ 엔진 바（상단 아이콘 열）：\n  좌클릭    — 현재 키워드로 해당 엔진으로 이동。\n              키워드 없음 → 엔진 홈페이지로 이동（현재 탭）。\n  중클릭    — 키워드 없음 → 새 탭에서 홈페이지 열기。\n  엔진 관리에서 ⠿ 드래그로 순서 변경, 상위 5개가 아이콘 표시。\n\n▸ 시간 필터（엔진 바 아래 드롭다운）：\n  검색 결과를 특정 기간으로 제한（1시간 ~ 9년）。\n  「제한 없음」 선택 시 필터 해제。\n\n▸ 검색 설정 ⚙️：\n  제외 키워드 설정, 문법 참고서, 설정 가져오기/내보내기。\n\n▸ 📌 버튼（우상단）：\n  패널 자동 표시 여부를 제어합니다。\n  ⛔ OFF — 기본 닫힘  ✅ ON — 페이지 로드 시 열림\n  📌 고정 — 항상 표시\n  그 외：🔒 세이프서치 OFF・🌐 검색 지역 전환도 포함。",
       dpItemHint: {
         off:          "패널이 기본으로 닫혀 있습니다。🔍 를 클릭하여 수동으로 열 수 있습니다。",
         on:           "페이지를 불러올 때마다 패널이 자동으로 열립니다。",
@@ -1498,7 +1498,7 @@
     siteButtonWidth: "Site Button Width",
     siteButtonWidthAuto: "Auto",
     multiSelectNone: "No sites selected!",
-    panelHelp: "📋 Site Groups Panel — Help\n\n▸ Group header buttons:\n  ✎  Rename the group\n  ➕  Add a site to the group\n  🗑️  Delete the group\n  ☑  Enter multi-select mode\n  ↗  Open selected sites (shown in multi-select mode)\n\n▸ Site buttons:\n  Left-click    — Apply site:filter to current search\n  Long-press drag — Reorder sites within the group\n  ⋯ (three dots) — Open site menu:\n      ✏️ Edit URL / note\n      🗑️ Delete site\n      🔗 Open (same tab)\n      ↗ Open (new tab)\n\n▸ Shift + Delete mode (rapid delete):\n  Hold Shift while the cursor is inside the panel.\n  All ⋯ buttons turn into ❌.\n  Click ❌ repeatedly to delete sites one by one without any confirmation.\n  Release Shift to exit this mode.\n\n▸ Multi-select mode:\n  Click sites to select / deselect (gold highlight).\n  Click ☑ again, or click ↗ Send to exit.\n\n▸ Engine bar (top icon row):\n  Click an icon to jump to that engine with the current keyword.\n  Drag ⠿ in the engine panel to reorder — top 5 show as icons.\n\n▸ Time filter (dropdown below engine bar):\n  Restricts results to a specific time range (1 hour – 9 years).\n  Select \"Unlimited\" to clear the filter.\n\n▸ Search Settings ⚙️:\n  Set exclude keywords, toggle syntax help, import/export config.\n\n▸ 📌 Button (top-right):\n  Controls whether the panel opens automatically.\n  ⛔ OFF — closed by default  ✅ ON — opens on load\n  📌 Pinned — always visible\n  Also contains: 🔒 Safe Search OFF and 🌐 Search Region toggles.",
+    panelHelp: "📋 Site Groups Panel — Help\n\n▸ Group header buttons:\n  ✎  Rename the group\n  ➕  Add a site to the group\n  🗑️  Delete the group\n  ☑  Enter multi-select mode\n  ↗  Open selected sites (shown in multi-select mode)\n\n▸ Site buttons:\n  Left-click    — Apply site:filter to current search\n  Long-press drag — Reorder sites within the group\n  ⋯ (three dots) — Open site menu:\n      ✏️ Edit URL / note\n      🗑️ Delete site\n      🔗 Open (same tab)\n      ↗ Open (new tab)\n\n▸ Shift + Delete mode (rapid delete):\n  Hold Shift while the cursor is inside the panel.\n  All ⋯ buttons turn into ❌.\n  Click ❌ repeatedly to delete sites one by one without any confirmation.\n  Release Shift to exit this mode.\n\n▸ Multi-select mode:\n  Click sites to select / deselect (gold highlight).\n  Click ☑ again, or click ↗ Send to exit.\n\n▸ Engine bar (top icon row):\n  Left-click   — Search with the current keyword on that engine.\n               No keyword → navigate to the engine homepage (same tab).\n  Middle-click — No keyword → open engine homepage in a new tab.\n  Drag ⠿ in the engine panel to reorder — top 5 show as icons.\n\n▸ Time filter (dropdown below engine bar):\n  Restricts results to a specific time range (1 hour – 9 years).\n  Select \"Unlimited\" to clear the filter.\n\n▸ Search Settings ⚙️:\n  Set exclude keywords, toggle syntax help, import/export config.\n\n▸ 📌 Button (top-right):\n  Controls whether the panel opens automatically.\n  ⛔ OFF — closed by default  ✅ ON — opens on load\n  📌 Pinned — always visible\n  Also contains: 🔒 Safe Search OFF and 🌐 Search Region toggles.",
     multiSelectSendTitle: "Open Selected Sites",
     multiSelectSendMsg: "Open {n} site(s) in new tabs?\n\n{urls}",
     multiSelectRemember: "Remember this choice",
@@ -2032,11 +2032,22 @@
     }
   }
 
-  function se_navigate(engine) {
+  function se_navigate(engine, openMode) {
     const kw = se_extractKeyword();
     const st = t.se || {};
     if (!kw) {
-      showToast(st.noKeyword || "Cannot extract search keyword");
+      if (openMode === "same" || openMode === "new") {
+        let homeUrl;
+        try { homeUrl = new URL(engine.url).origin; }
+        catch (_) { homeUrl = engine.url; }
+        if (openMode === "new") {
+          GM_openInTab(homeUrl, false);
+        } else {
+          location.href = homeUrl;
+        }
+      } else {
+        showToast(st.noKeyword || "Cannot extract search keyword");
+      }
       return;
     }
     if (isImageSearchPage()) {
@@ -6171,7 +6182,14 @@
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         if (!se_panelPinned) closeExtraPanel(true);
-        se_navigate(engine);
+        se_navigate(engine, "same");
+      });
+      btn.addEventListener("auxclick", (e) => {
+        if (e.button !== 1) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (!se_panelPinned) closeExtraPanel(true);
+        se_navigate(engine, "new");
       });
       btn.onerror = () => {
         btn.style.visibility = "hidden";
