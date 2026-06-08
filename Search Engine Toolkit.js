@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.5.12
+// @version      2.4.6.0
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -1965,21 +1965,6 @@
   }
 
   const SE_PINNED_COUNT = 5;
-  (function migrateSeData() {
-    const oldPinned = GM_getValue("se_pinned", null);
-    const oldExtra = GM_getValue("se_extra", null);
-    if (oldPinned !== null || oldExtra !== null) {
-      const merged = [
-        ...(Array.isArray(oldPinned) ? oldPinned : []),
-        ...(Array.isArray(oldExtra) ? oldExtra : []),
-      ];
-      if (merged.length > 0 && !GM_getValue("se_engines", null)) {
-        GM_setValue("se_engines", merged);
-      }
-      GM_setValue("se_pinned", null);
-      GM_setValue("se_extra", null);
-    }
-  })();
   let se_engines = GM_getValue("se_engines", [
     { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
     { name: "Brave Search", url: "https://search.brave.com/search?q=" },
@@ -3129,7 +3114,9 @@
     const existingPanel = document.getElementById("syntax-panel");
     if (existingPanel) {
       existingPanel.remove();
+      return;
     }
+    if (isPromptActive) return;
 
     const syntaxPanel = document.createElement("div");
     syntaxPanel.id = "syntax-panel";
@@ -4400,7 +4387,13 @@
     document.body.appendChild(dlgOverlay);
     box.addEventListener("click", e => e.stopPropagation());
 
-    const closeDlg = () => { dlgOverlay.remove(); __customPromptOpen = false; isPromptActive = false; };
+    let _msEscHandler = null;
+    const closeDlg = () => {
+      if (_msEscHandler) { document.removeEventListener("keydown", _msEscHandler); _msEscHandler = null; }
+      dlgOverlay.remove();
+      __customPromptOpen = false;
+      isPromptActive = false;
+    };
 
     confirmBtn.onclick = () => {
       const mode = Object.entries(radioGroup).find(([, r]) => r.checked)?.[0] || "site_same";
@@ -4488,6 +4481,8 @@
       if (optClearChk.checked) _exitMultiSelect(blk, mBtn, sBtn);
     };
     cancelBtn.onclick = closeDlg;
+    _msEscHandler = (e) => { if (e.key === "Escape") closeDlg(); };
+    document.addEventListener("keydown", _msEscHandler);
     setTimeout(() => confirmBtn.focus(), 0);
   }
 
@@ -5424,6 +5419,14 @@
   );
   }
 
+  let dpDropdown = null;
+  function closeDpDropdown() {
+    if (dpDropdown) {
+      dpDropdown.remove();
+      dpDropdown = null;
+    }
+  }
+
   function buildHeader() {
   headerContainer = document.createElement("div");
   headerContainer.className = "panel-header-container";
@@ -5939,14 +5942,6 @@
     }
   }
   dpUpdateStyle();
-
-  let dpDropdown = null;
-  function closeDpDropdown() {
-    if (dpDropdown) {
-      dpDropdown.remove();
-      dpDropdown = null;
-    }
-  }
 
   dpBtn.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -10309,6 +10304,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               "enableSiteGlow", "enableGroupGlow",
               "searchBarBg", "searchBarBgOpacity", "searchBarFg",
               "searchBarGlowEnabled", "searchBarGlowColor", "searchBarGlowStrength",
+              "enableVignette",
+              "vignetteCornerTL", "vignetteCornerTR", "vignetteCornerBL", "vignetteCornerBR",
+              "vignetteSize", "vignetteColor", "vignetteOpacity",
             ];
             for (const k of _ssAllowedKeys) {
               if (k in config.styleSettings) styleSettings[k] = config.styleSettings[k];
@@ -10854,6 +10852,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function rebuildPanel() {
+    closeDpDropdown();
     document.removeEventListener("mousemove", _sfOnMove);
     document.removeEventListener("mouseup",   _sfOnUp);
     _sfDragging = false;
@@ -11537,6 +11536,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     function closeDialog() {
       __blacklistDialogOpen = false;
+      document.removeEventListener("keydown", escHandler);
       overlay.remove();
     }
     function safeClose() {
@@ -11964,6 +11964,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     function finish() {
       GM_setValue("onboardingDone", true);
       GM_setValue("compactHintShown", false);
+      document.removeEventListener("keydown", _obEscHandler);
       overlay.style.animation = "obFadeIn 0.2s ease reverse";
       setTimeout(() => overlay.remove(), 200);
     }
@@ -11976,6 +11977,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         finish();
       }
     });
+
+    const _obEscHandler = (e) => { if (e.key === "Escape") finish(); };
+    document.addEventListener("keydown", _obEscHandler);
 
     updateStep(0);
   }
