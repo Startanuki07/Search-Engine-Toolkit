@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.6.0
+// @version      2.4.6.2
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -168,7 +168,7 @@
       searchRegionOff: "🌐 Search Region: All — OFF",
       searchRegionWarning: "🌐 Search Region: All — How it works\n\n▸ ON  → When you navigate to a search engine, this script tries to remove or replace country/region URL parameters (e.g. gl, mkt, kl) so results are not filtered to a specific country.\n▸ OFF → The script does nothing and leaves region settings untouched.\n\n⚠️ No guarantee: engines may override this with their own detection. Baidu and Naver are not supported.\n\nThis notice only appears once.",
       styleConfig: "Style Settings 🎨",
-      hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
+      panelLayoutLabel: "Panel Layout",
       hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
       hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
       hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
@@ -440,7 +440,7 @@
       searchRegionOff: "🌐 搜尋地區：全部 — 已關閉",
       searchRegionWarning: "🌐 搜尋地區：全部 — 運作說明\n\n▸ 開啟 → 每次跳轉到搜尋引擎時，腳本會嘗試移除或置換網址中的國家/地區參數（如 gl、mkt、kl），讓搜尋結果不被限定在特定國家。\n▸ 關閉 → 腳本完全不介入，地區設定維持原狀。\n\n⚠️ 不保證有效：部分引擎可能透過瀏覽器 IP 或 Cookie 自動偵測地區。百度與 Naver 不支援此功能。\n\n此提示只出現一次。",
       styleConfig: "樣式設定 🎨",
-      hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
+      panelLayoutLabel: "面板佈局",
       hideBlacklistBtnLabel: "隱藏 🚫 黑名單按鈕",
       hideAddGroupBtnLabel: "隱藏 ➕ 新增群組按鈕",
       hideAddressToggleBtnLabel: "隱藏 🔁 顯示/隱藏網址按鈕",
@@ -708,6 +708,7 @@
       searchRegionOff: "🌐 搜索地区：全部 — 已关闭",
       searchRegionWarning: "🌐 搜索地区：全部 — 运作说明\n\n▸ 开启 → 每次跳转到搜索引擎时，脚本会尝试移除或替换网址中的国家/地区参数（如 gl、mkt、kl），让搜索结果不被限定在特定国家。\n▸ 关闭 → 脚本完全不介入，地区设置保持原状。\n\n⚠️ 不保证有效：部分引擎可能通过 IP 或 Cookie 自动检测地区。百度与 Naver 不支持此功能。\n\n此提示只出现一次。",
       styleConfig: "样式设置 🎨",
+      panelLayoutLabel: "面板布局",
       hideSyntaxBtnLabel: "隐藏 📖 语法说明按钮",
       hideBlacklistBtnLabel: "隐藏 🚫 黑名单按钮",
       hideAddGroupBtnLabel: "隐藏 ➕ 新增分组按钮",
@@ -977,6 +978,7 @@
       searchRegionOff: "🌐 検索地域：全地域 — OFF",
       searchRegionWarning: "🌐 検索地域：全地域 — 動作説明\n\n▸ ON  → 検索エンジンに移動するたびに、地域/国のURLパラメータ（gl、mkt、kl など）を削除または置換し、特定の国に限定されない結果を表示しようとします。\n▸ OFF → スクリプトは一切介入せず、地域設定をそのまま維持します。\n\n⚠️ 効果の保証なし：エンジンがIPやCookieで地域を自動検出する場合があります。BaiduおよびNaverは非対応。\n\nこの通知は一度だけ表示されます。",
       styleConfig: "スタイル設定 🎨",
+      panelLayoutLabel: "パネルレイアウト",
       hideSyntaxBtnLabel: "📖 構文ﾍﾙﾌﾟを非表示",
       hideBlacklistBtnLabel: "🚫 除外域ﾎﾞﾀﾝを非表示",
       hideAddGroupBtnLabel: "➕ ｸﾞﾙｰﾌﾟ追加ﾎﾞﾀﾝを非表示",
@@ -1247,6 +1249,7 @@
       searchRegionOff: "🌐 검색 지역: 전체 — OFF",
       searchRegionWarning: "🌐 검색 지역: 전체 — 작동 설명\n\n▸ ON  → 검색 엔진으로 이동할 때마다, 스크립트가 URL의 국가/지역 파라미터(gl, mkt, kl 등)를 제거하거나 교체하여 특정 국가로 제한되지 않은 검색 결과를 표시하려고 시도합니다.\n▸ OFF → 스크립트는 아무것도 개입하지 않으며, 지역 설정을 그대로 유지합니다.\n\n⚠️ 효과 보장 없음: 일부 엔진은 IP 또는 쿠키로 지역을 자동 감지할 수 있습니다. Baidu 및 Naver는 지원되지 않습니다.\n\n이 안내는 한 번만 표시됩니다.",
       styleConfig: "스타일 설정 🎨",
+      panelLayoutLabel: "패널 레이아웃",
       hideSyntaxBtnLabel: "📖 문법 도움말 숨기기",
       hideBlacklistBtnLabel: "🚫 차단목록 버튼 숨기기",
       hideAddGroupBtnLabel: "➕ 그룹 추가 버튼 숨기기",
@@ -1533,8 +1536,8 @@
     searchRegionOff: "🌐 Search Region: All — OFF",
     searchRegionWarning: "🌐 Search Region: All — How it works\n\n▸ ON → remove region URL parameters.\n▸ OFF → no intervention.",
     styleConfig: "Style Settings 🎨",
+    panelLayoutLabel: "Panel Layout",
     hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
-    hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
     hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
     hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
     hideExportBtnLabel: "Hide 📤 Export Button",
@@ -1546,9 +1549,9 @@
     toggleBtnIconSvgFill:   "SVG Filled",
     toggleBtnBgColorLabel:  "BG Color",
     toggleBtnBgOpacityLabel:"BG Opacity",
+    svgIconColorLabel:      "SVG Icon Color",
     style: "Style",
     borderRadius: "Border Radius",
-    contrast: "Contrast",
     opacity: "Opacity",
     fontSize: "Font Size",
     backgroundImage: "Background Image",
@@ -1922,7 +1925,12 @@
     confirmBtn.onmouseenter = () => (confirmBtn.style.opacity = ".82");
     confirmBtn.onmouseleave = () => (confirmBtn.style.opacity = "1");
 
-    const closeOverlay = () => overlay.remove();
+    const closeOverlay = () => {
+      document.removeEventListener("keydown", _escHandler);
+      overlay.remove();
+    };
+    const _escHandler = (e) => { if (e.key === "Escape") closeOverlay(); };
+    document.addEventListener("keydown", _escHandler);
     cancelBtn.onclick = closeOverlay;
     overlay.addEventListener("click", (e) => { if (e.target === overlay) closeOverlay(); });
     confirmBtn.onclick = () => {
@@ -2558,7 +2566,7 @@
     btn.addEventListener("mouseup",    btn.__upBound);
   }
 
-  const TIME_OPTIONS = t.timeOptions;
+  let TIME_OPTIONS = t.timeOptions;
 
   function getBingFilters(val) {
     if (!val) return null;
@@ -2689,13 +2697,11 @@
       d:1,  d2:2,  d3:3,
       w:7,  w3:21,
       m:31, m3:92, m6:183,
-      y:365,
+      y:365, y2:730, y3:1095, y4:1461, y5:1826,
+      y6:2191, y7:2556, y8:2922, y9:3287,
     };
     let days = DAYS_MAP[val];
-    if (!days) {
-      const _m = val.match(/^y(\d)$/);
-      days = _m ? parseInt(_m[1]) * 365 : 365;
-    }
+    if (!days) days = 365;
     const from = new Date(Date.now() - days * 86400000);
     return from.toISOString().split("T")[0];
   }
@@ -2852,6 +2858,8 @@
   let __toggleButtonObserver   = null;
   let __compactBtnObserver     = null;
   let __compactMouseupHandler  = null;
+  let __cpDragMoveHandler      = null;
+  let __cpDragUpHandler        = null;
   let _isDraggingPanel         = false;
   let _sfDragging = false, _sfOx = 0, _sfOy = 0;
 
@@ -3621,10 +3629,20 @@
       el.style.backgroundColor    = "transparent";
       el.style.backgroundImage    = `linear-gradient(rgba(0,0,0,${_ov}), rgba(0,0,0,${_ov})), url(${_safe})`;
       el.style.backgroundRepeat   = styleSettings.imageMode === "tile" ? "repeat" : "no-repeat";
-      el.style.backgroundPosition = styleSettings.imageMode === "center"
-        ? "center"
-        : `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY || 0}px`;
-      el.style.backgroundSize     = `${styleSettings.imageScale * 100}%`;
+      if (styleSettings.imageMode === "contain" || styleSettings.imageMode === "auto") {
+        el.style.backgroundPosition = "center";
+      } else if (styleSettings.imageMode === "center") {
+        el.style.backgroundPosition = "center";
+      } else {
+        el.style.backgroundPosition = `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY || 0}px`;
+      }
+      if (styleSettings.imageMode === "contain") {
+        el.style.backgroundSize = "contain";
+      } else if (styleSettings.imageMode === "auto") {
+        el.style.backgroundSize = "auto";
+      } else {
+        el.style.backgroundSize = `${styleSettings.imageScale * 100}%`;
+      }
     } else {
       if (fallbackBg !== undefined) el.style.backgroundColor = fallbackBg;
       el.style.backgroundImage    = "";
@@ -5188,6 +5206,9 @@
     updateAddressesVisibility();
 
     if (_shiftDeleteMode && _panelHovered) _applyShiftDeleteMode(true);
+
+    const _srchEl = document.getElementById("site-search-input");
+    if (_srchEl && _srchEl.value.trim()) filterSites(_srchEl.value);
   }
 
   const langWidths = {
@@ -5630,6 +5651,7 @@
         lang = code;
         GM_setValue("sitePanelLang", lang);
         t = LANGUAGES[lang] || LANGUAGES["en"];
+        TIME_OPTIONS = t.timeOptions;
         createPanel();
         showToast(t.langSwitched);
       });
@@ -5812,6 +5834,7 @@
                 lang = "custom";
                 GM_setValue("sitePanelLang", "custom");
                 t = LANGUAGES.custom;
+                TIME_OPTIONS = t.timeOptions;
                 overlay.remove();
                 createPanel();
                 showToast(cl.importSuccess + " ✅ (3/3 segments merged)");
@@ -5839,6 +5862,7 @@
             lang = "custom";
             GM_setValue("sitePanelLang", "custom");
             t = LANGUAGES.custom;
+            TIME_OPTIONS = t.timeOptions;
             overlay.remove();
             createPanel();
             showToast(cl.importSuccess);
@@ -5862,6 +5886,7 @@
         lang = "custom";
         GM_setValue("sitePanelLang", "custom");
         t = LANGUAGES.custom;
+        TIME_OPTIONS = t.timeOptions;
         overlay.remove();
         createPanel();
         showToast(LANGUAGES.custom.langSwitched || "Language switched!");
@@ -7582,6 +7607,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     toggleBtnBg: "",
     toggleBtnBgOpacity: 0,
     svgIconColor: "",
+    multiSelectColor: "#ffc400",
+    multiSelectOpacity: 0.85,
+    iconStyle: "emoji",
+    textBackgroundColor: "",
+    textBorder: false,
+    enableOverlayDarkening: false,
     enableBorderGlow: false,
     borderGlowColor: "#00bfff",
     borderGlowStrength: 12,
@@ -7660,42 +7691,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     panelLayoutContainer.style.maxWidth = "490px";
 
     const panelLayoutHeader = document.createElement("div");
-    panelLayoutHeader.textContent = "Panel Layout";
+    panelLayoutHeader.textContent = t.panelLayoutLabel || "Panel Layout";
     panelLayoutHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
     panelLayoutContainer.appendChild(panelLayoutHeader);
-
-    function makeNumRow(labelText, key, min, max, step, unit, defaultVal) {
-      const row = document.createElement("div");
-      row.style.cssText = rowCss();
-      const lbl = document.createElement("label");
-      lbl.textContent = labelText;
-      lbl.style.cssText = labelCss();
-      row.appendChild(lbl);
-      const inp = document.createElement("input");
-      inp.type = "number";
-      inp.min = min; inp.max = max; inp.step = step;
-      inp.value = styleSettings[key] ?? defaultVal;
-      inp.style.cssText = "flex:1; min-width:50px; margin:0 6px; padding:2px 4px; box-sizing:border-box;";
-      const unitSpan = document.createElement("span");
-      unitSpan.textContent = unit;
-      unitSpan.style.cssText = "width:28px; font-size:11px; flex-shrink:0; text-align:left;";
-      inp.oninput = () => {
-        const v = parseFloat(inp.value);
-        if (!isNaN(v)) {
-          styleSettings[key] = v;
-          _debouncedSave();
-        }
-      };
-      const resetBtn = makeResetBtn(defaultVal, (dv) => {
-        inp.value = dv;
-        styleSettings[key] = dv;
-        save();
-      });
-      row.appendChild(inp);
-      row.appendChild(unitSpan);
-      row.appendChild(resetBtn);
-      return row;
-    }
 
     (function() {
       const row = document.createElement("div");
@@ -10927,6 +10925,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       document.removeEventListener("mouseup", __compactMouseupHandler);
       __compactMouseupHandler = null;
     }
+    if (__cpDragMoveHandler) {
+      document.removeEventListener("mousemove", __cpDragMoveHandler);
+      __cpDragMoveHandler = null;
+    }
+    if (__cpDragUpHandler) {
+      document.removeEventListener("mouseup", __cpDragUpHandler);
+      __cpDragUpHandler = null;
+    }
     const _old = document.getElementById("set-compact-panel");
     if (_old) _old.remove();
 
@@ -11063,8 +11069,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     });
 
     const _pinned = (typeof se_engines !== "undefined" ? se_engines : [])
-      .filter(e => e.pinned !== false)
-      .slice(0, 8);
+      .slice(0, SE_PINNED_COUNT);
 
     if (_pinned.length > 0) {
       const _engEl = document.createElement("div");
@@ -11120,22 +11125,24 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       e.preventDefault();
     });
 
-    document.addEventListener("mousemove", (e) => {
+    __cpDragMoveHandler = (e) => {
       if (!_dragging) return;
       const nl = Math.max(0, Math.min(e.clientX - _dx, window.innerWidth  - _cp.offsetWidth));
       const nt = Math.max(0, Math.min(e.clientY - _dy, window.innerHeight - _cp.offsetHeight));
       _cp.style.left  = nl + "px";
       _cp.style.top   = nt + "px";
       _cp.style.right = "auto";
-    });
+    };
+    document.addEventListener("mousemove", __cpDragMoveHandler);
 
-    document.addEventListener("mouseup", () => {
+    __cpDragUpHandler = () => {
       if (!_dragging) return;
       _dragging = false;
       _handle.style.cursor = "grab";
       GM_setValue("compactPanelLeft", _cp.style.left);
       GM_setValue("compactPanelTop",  _cp.style.top);
-    });
+    };
+    document.addEventListener("mouseup", __cpDragUpHandler);
   }
 
   function _buildCompactBtn() {
@@ -12021,6 +12028,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         if (__compactMouseupHandler) {
           document.removeEventListener("mouseup", __compactMouseupHandler);
           __compactMouseupHandler = null;
+        }
+        if (__cpDragMoveHandler) {
+          document.removeEventListener("mousemove", __cpDragMoveHandler);
+          __cpDragMoveHandler = null;
+        }
+        if (__cpDragUpHandler) {
+          document.removeEventListener("mouseup", __cpDragUpHandler);
+          __cpDragUpHandler = null;
         }
       },
       { once: true },
