@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.6.2
+// @version      2.4.6.5
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -14,6 +14,7 @@
 // @match        https://search.brave.com/search*
 // @match        https://yandex.ru/search*
 // @match        https://yandex.ru/yandsearch*
+// @match        https://ya.ru/search*
 // @match        https://www.bing.com/search*
 // @match        https://duckduckgo.com/*
 // @match        https://search.yahoo.com/search*
@@ -1552,6 +1553,7 @@
     svgIconColorLabel:      "SVG Icon Color",
     style: "Style",
     borderRadius: "Border Radius",
+    contrast: "Contrast",
     opacity: "Opacity",
     fontSize: "Font Size",
     backgroundImage: "Background Image",
@@ -1801,7 +1803,7 @@
           if (params.get("adlt") !== "off") { params.set("adlt", "off"); updated = true; }
         } else if (host.includes("duckduckgo.com")) {
           if (params.get("kp") !== "-2") { params.set("kp", "-2"); updated = true; }
-        } else if (host.includes("yandex.")) {
+        } else if (host.includes("yandex.") || host === "ya.ru") {
           if (params.get("family") !== "no") { params.set("family", "no"); updated = true; }
         } else if (host.includes("search.brave.com")) {
           if (params.get("safesearch") !== "off") { params.set("safesearch", "off"); updated = true; }
@@ -1826,7 +1828,7 @@
           if (params.get("kl") !== "wt-wt") { params.set("kl", "wt-wt"); updated = true; }
           if (params.has("t"))      { params.delete("t");      updated = true; }
           if (params.has("origin")) { params.delete("origin"); updated = true; }
-        } else if (host.includes("yandex.")) {
+        } else if (host.includes("yandex.") || host === "ya.ru") {
           if (params.has("lr"))  { params.delete("lr");  updated = true; }
         } else if (host.includes("search.brave.com")) {
           if (params.has("country")) { params.delete("country"); updated = true; }
@@ -2598,7 +2600,7 @@
         host.includes("yahoo.co.jp"))       return "yahoo";
     if (host.includes("duckduckgo.com"))    return "duckduckgo";
     if (host.includes("search.brave.com"))  return "brave";
-    if (host.includes("yandex."))           return "yandex";
+    if (host.includes("yandex.") || host === "ya.ru") return "yandex";
     if (host.includes("naver.com"))         return "naver";
     return null;
   }
@@ -2612,7 +2614,7 @@
       if (host.includes("bing.com")      && path.includes("/images/"))      return true;
       if (host.includes("brave.com")     && path.startsWith("/images"))     return true;
       if (host.includes("yahoo.")        && host.startsWith("images."))     return true;
-      if (host.includes("yandex.")       && path.startsWith("/images/"))    return true;
+      if ((host.includes("yandex.") || host === "ya.ru") && path.startsWith("/images/"))    return true;
       if (host.startsWith("image.baidu"))                                    return true;
       if (host.includes("duckduckgo.com")&& params.get("ia") === "images")  return true;
       if (host.includes("ecosia.org")    && path.startsWith("/images"))     return true;
@@ -2652,7 +2654,7 @@
       if (host.includes("brave.com"))    return SE_IMAGE_URLS.brave       + kw;
       if (host.includes("yahoo.co.jp"))  return SE_IMAGE_URLS.yahoojp     + kw;
       if (host.includes("yahoo.com"))    return SE_IMAGE_URLS.yahoo       + kw;
-      if (host.includes("yandex."))      return SE_IMAGE_URLS.yandex      + kw;
+      if (host.includes("yandex.") || host === "ya.ru") return SE_IMAGE_URLS.yandex + kw;
       if (host.includes("baidu.com"))    return SE_IMAGE_URLS.baidu       + kw;
       if (host.includes("ecosia.org"))   return SE_IMAGE_URLS.ecosia      + kw;
       if (host.includes("qwant.com"))    return SE_IMAGE_URLS.qwant       + kw;
@@ -3629,13 +3631,9 @@
       el.style.backgroundColor    = "transparent";
       el.style.backgroundImage    = `linear-gradient(rgba(0,0,0,${_ov}), rgba(0,0,0,${_ov})), url(${_safe})`;
       el.style.backgroundRepeat   = styleSettings.imageMode === "tile" ? "repeat" : "no-repeat";
-      if (styleSettings.imageMode === "contain" || styleSettings.imageMode === "auto") {
-        el.style.backgroundPosition = "center";
-      } else if (styleSettings.imageMode === "center") {
-        el.style.backgroundPosition = "center";
-      } else {
-        el.style.backgroundPosition = `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY || 0}px`;
-      }
+      el.style.backgroundPosition = (styleSettings.imageMode === "tile")
+        ? `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY || 0}px`
+        : "center";
       if (styleSettings.imageMode === "contain") {
         el.style.backgroundSize = "contain";
       } else if (styleSettings.imageMode === "auto") {
@@ -7476,6 +7474,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       customTextColor: "#000000",
       customButtonBg: "#f5f5f5",
       groupBackgroundColor: "",
+      textColor:       "",
+      backgroundColor: "",
       enableOverlayDarkening: false,
       overlayStrength: 0.5,
       textBackgroundColor: "",
@@ -11080,13 +11080,27 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _img.src   = typeof se_faviconUrl === "function" ? se_faviconUrl(eng.url) : "";
         _img.alt   = eng.name || "";
         _img.title = eng.name || eng.url;
-        _img.addEventListener("click", () => {
+        _img.addEventListener("click", (e) => {
+          if (e.button !== 0) return;
           const _qEl = document.querySelector(
             "input[name='q'], input[name='query'], input[name='text'], input[name='search'], input[type='search']"
           );
-          const _q = _qEl ? encodeURIComponent(_qEl.value.trim()) : "";
+          const _q   = _qEl ? encodeURIComponent(_qEl.value.trim()) : "";
+          const _url = (eng.url || "").replace(/\{query\}|%s/, _q);
+          if (_url) window.location.href = _url;
+        });
+        _img.addEventListener("auxclick", (e) => {
+          if (e.button !== 1) return;
+          e.preventDefault();
+          const _qEl = document.querySelector(
+            "input[name='q'], input[name='query'], input[name='text'], input[name='search'], input[type='search']"
+          );
+          const _q   = _qEl ? encodeURIComponent(_qEl.value.trim()) : "";
           const _url = (eng.url || "").replace(/\{query\}|%s/, _q);
           if (_url) window.open(_url, "_blank");
+        });
+        _img.addEventListener("mousedown", (e) => {
+          if (e.button === 1) e.preventDefault();
         });
         _engEl.appendChild(_img);
       });
@@ -11164,12 +11178,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _btn.style.background = _isDark ? "rgba(60,60,80,0.92)" : "rgba(240,240,248,0.95)";
     _btn.style.color      = _isDark ? "#ccd" : "#445";
 
+    _btn.style.visibility = "hidden";
     document.body.appendChild(_btn);
 
     function _posBtn() {
       const r = _tb.getBoundingClientRect();
-      _btn.style.top  = (r.top  - 10) + "px";
-      _btn.style.left = (r.left - 10) + "px";
+      _btn.style.top        = (r.top  - 10) + "px";
+      _btn.style.left       = (r.left - 10) + "px";
+      _btn.style.visibility = "";
     }
     requestAnimationFrame(_posBtn);
 
@@ -11336,6 +11352,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const ENGINE_QUERY_PARAMS = [
     { host: "yandex.",   param: "text"  },
+    { host: "ya.ru",     param: "text"  },
     { host: "baidu.com", param: "wd"    },
     { host: "yahoo.com", param: "p"     },
     { host: "naver.com", param: "query" },
