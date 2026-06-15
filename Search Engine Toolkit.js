@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.6.5
+// @version      2.4.6.6
 // @license      MIT
 // @author       Star-tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -1798,7 +1798,6 @@
 
       if (safeSearchEnabled) {
         if (host.includes("google.")) {
-          if (params.get("safe") !== "off") { params.set("safe", "off"); updated = true; }
         } else if (host.includes("bing.com")) {
           if (params.get("adlt") !== "off") { params.set("adlt", "off"); updated = true; }
         } else if (host.includes("duckduckgo.com")) {
@@ -6036,6 +6035,7 @@
     `;
     dpDropdown.appendChild(sep);
 
+    const _isGoogleHost = window.location.hostname.includes("google.");
     const ssItem = document.createElement("div");
     ssItem.style.cssText = `
       padding:6px 10px; border-radius:5px; cursor:pointer;
@@ -6044,6 +6044,14 @@
       transition:background 0.1s;
     `;
     function _updateSsItem() {
+      if (_isGoogleHost) {
+        ssItem.textContent = "🔒 Safe Search OFF — Temporarily unavailable on Google";
+        ssItem.style.fontWeight  = "400";
+        ssItem.style.background  = "transparent";
+        ssItem.style.cursor      = "not-allowed";
+        ssItem.style.opacity     = "0.45";
+        return;
+      }
       ssItem.textContent = safeSearchEnabled
         ? (t.safeSearchOn  || "🔒 SafeSearch OFF: ON")
         : (t.safeSearchOff || "🔓 SafeSearch OFF: OFF");
@@ -6051,17 +6059,24 @@
       ssItem.style.background  = safeSearchEnabled
         ? (isDark2 ? "#2a1a1a" : "#fff0f0")
         : "transparent";
+      ssItem.style.cursor  = "pointer";
+      ssItem.style.opacity = "1";
     }
     _updateSsItem();
-    ssItem.title = (t.dpItemHint || {}).safeSearch || "Attempts to disable safe search filters via URL parameters.";
+    ssItem.title = _isGoogleHost
+      ? "Safe Search OFF is temporarily unavailable on Google due to a server-side redirect change."
+      : ((t.dpItemHint || {}).safeSearch || "Attempts to disable safe search filters via URL parameters.");
     ssItem.addEventListener("mouseenter", () => {
+      if (_isGoogleHost) return;
       if (!safeSearchEnabled) ssItem.style.background = isDark2 ? "#252535" : "#f5f5f5";
     });
     ssItem.addEventListener("mouseleave", () => {
+      if (_isGoogleHost) return;
       if (!safeSearchEnabled) ssItem.style.background = "transparent";
     });
     ssItem.addEventListener("click", (ev) => {
       ev.stopPropagation();
+      if (_isGoogleHost) return;
       if (!safeSearchEnabled) {
         closeDpDropdown();
         showSafeSearchNotice(() => {
@@ -6844,7 +6859,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     function _buildAddEngineForm() {
       const manualToggleWrap = document.createElement("div");
       manualToggleWrap.style.cssText = "margin-top:2px;";
-  
+
       const manualToggleBtn = document.createElement("button");
       manualToggleBtn.textContent = (st.addSectionLabel || "Add Engine") + " ▾";
       manualToggleBtn.style.cssText = `
@@ -6858,7 +6873,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       manualToggleBtn.addEventListener("mouseleave", () => {
         manualToggleBtn.style.color = isDark ? "#555" : "#bbb";
       });
-  
+
       let manualOpen = false;
       const addForm = document.createElement("div");
       addForm.style.cssText = `
@@ -6867,14 +6882,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         border:1px dashed ${isDark ? "#333" : "#e0e0e0"};
         background:${isDark ? "#16161e" : "#fafafa"};
       `;
-  
+
       manualToggleBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         manualOpen = !manualOpen;
         addForm.style.display = manualOpen ? "flex" : "none";
         manualToggleBtn.textContent = (st.addSectionLabel || "Add Engine") + (manualOpen ? " ▴" : " ▾");
       });
-  
+
       function mkInput(placeholder) {
         const inp = document.createElement("input");
         inp.type = "text";
@@ -6889,12 +6904,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         inp.addEventListener("blur",  () => (inp.style.borderColor = border));
         return inp;
       }
-  
+
       const nameInp = mkInput(st.namePlaceholder || "Engine name");
       const urlInp  = mkInput(st.urlPlaceholder  || "Search URL (?q=)");
       addForm.appendChild(nameInp);
       addForm.appendChild(urlInp);
-  
+
       const addBtn2 = document.createElement("button");
       addBtn2.textContent = st.addBtn || "➕ Add";
       addBtn2.style.cssText = `
@@ -6937,7 +6952,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         showToast(msg);
       });
       addForm.appendChild(addBtn2);
-  
+
       manualToggleWrap.appendChild(manualToggleBtn);
       manualToggleWrap.appendChild(addForm);
       return manualToggleWrap;
