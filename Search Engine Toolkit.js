@@ -4,11 +4,11 @@
 // @name:zh-CN   多引擎搜索工具 — 站点分组、时间筛选与搜索面板
 // @name:ja      マルチエンジン検索ツール — サイトグループ、時間フィルター、検索パネル
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
-// @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07?locale_override=1
+// @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.6.6
+// @version      2.4.6.10
 // @license      MIT
-// @author       Star-tanuki07
+// @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @include      /^https:\/\/www\.google\.[^\/]+\/search(\?|$)/
 // @match        https://search.brave.com/search*
@@ -69,6 +69,7 @@
   ];
 
   const _DATE_SPAN_MAP = [
+    [1,"d"],
     [2,"d2"],[3,"d3"],[7,"w"],[21,"w3"],[31,"m"],[92,"m3"],[183,"m6"],
     [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],
     [2191,"y6"],[2556,"y7"],[2922,"y8"],[3287,"y9"],
@@ -1782,7 +1783,8 @@
   let domainBlacklist = GM_getValue("domainBlacklist", []);
 
   function applyUrlOverrides() {
-    if (!safeSearchEnabled && !searchRegionEnabled) return;
+    const _hasBlacklist = Array.isArray(domainBlacklist) && domainBlacklist.filter(d => d.trim()).length > 0;
+    if (!safeSearchEnabled && !searchRegionEnabled && !_hasBlacklist) return;
     try {
       const url     = new URL(window.location.href);
       const params  = url.searchParams;
@@ -1840,6 +1842,28 @@
         }
         else if (host.includes("searx")) {
           if (params.has("language")) { params.delete("language"); updated = true; }
+        }
+      }
+
+      if (_hasBlacklist) {
+        const _blQParam = (() => {
+          if (host.includes("baidu.com"))                   return null;
+          if (host.includes("yahoo."))                      return "p";
+          if (host.includes("yandex.") || host === "ya.ru") return "text";
+          if (host.includes("naver.com"))                   return "query";
+          return "q";
+        })();
+        if (_blQParam) {
+          const _existQ = params.get(_blQParam) || "";
+          const _toAdd  = domainBlacklist
+            .map(d => d.trim())
+            .filter(d => d && !_existQ.includes(`-site:${d}`))
+            .map(d => `-site:${d}`)
+            .join(" ");
+          if (_toAdd) {
+            params.set(_blQParam, (_existQ + " " + _toAdd).trim());
+            updated = true;
+          }
         }
       }
 
@@ -2232,6 +2256,9 @@
   let _shiftDeleteMode  = false;
   let _panelHovered     = false;
   let _shiftDeleteNoticedOnce = GM_getValue("shiftDeleteNoticedOnce", false);
+
+  let _kwFlashLastTime  = 0;
+  const _KW_FLASH_DEBOUNCE = 2500;
 
   function _enterDelMode(delEl) {
     if (delEl.dataset.sdOrigHtml !== undefined) return;
@@ -5265,6 +5292,12 @@
         seExtraPanel.style.top  =
           Math.min(se_panelPos.top,  window.innerHeight - epH - margin) + "px";
       } else {
+        if (!plusBtn) {
+          seExtraPanel.style.left = Math.max(margin, window.innerWidth  - epW - margin) + "px";
+          seExtraPanel.style.top  = Math.max(margin, 80) + "px";
+          seExtraPanel.style.right = "auto";
+          return;
+        }
         const btnRect = plusBtn.getBoundingClientRect();
         let left = btnRect.right  - epW;
         let top  = btnRect.bottom + margin;
@@ -5277,6 +5310,281 @@
       }
       seExtraPanel.style.right = "auto";
     });
+  }
+
+  function _extractPureKw() {
+    return se_extractKeyword()
+      .replace(/\b(?:site|filetype|inurl|intitle|intext|source|before|after|cache|related):\S+/gi, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function _cleanKwHighlight() {
+    document.body.classList.remove("se-kw-flashing");
+    const spans = document.querySelectorAll(".se-kw-hl");
+    if (!spans.length) return;
+    const parents = new Set();
+    spans.forEach(span => {
+      const parent = span.parentNode;
+      if (!parent) return;
+      parent.replaceChild(document.createTextNode(span.textContent), span);
+      parents.add(parent);
+    });
+    parents.forEach(p => p.normalize());
+  }
+
+  function _injectKwHighlight(kw) {
+    if (!kw) return;
+    const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const reTest  = new RegExp(escaped, "i");
+    const reSplit = new RegExp(`(${escaped})`, "i");
+
+    const walker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode(node) {
+          const p = node.parentElement;
+          if (!p) return NodeFilter.FILTER_REJECT;
+          if (["SCRIPT","STYLE","INPUT","TEXTAREA","BUTTON","SELECT","NOSCRIPT"].includes(p.tagName))
+            return NodeFilter.FILTER_REJECT;
+          if (p.closest("#site-group-panel,#set-compact-panel,#site-toggle-simple,#se-kw-flash-css"))
+            return NodeFilter.FILTER_REJECT;
+          if (p.classList.contains("se-kw-hl"))
+            return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      }
+    );
+
+    const nodes = [];
+    let n;
+    while ((n = walker.nextNode())) {
+      if (reTest.test(n.textContent)) nodes.push(n);
+      if (nodes.length >= 500) break;
+    }
+
+    nodes.forEach(textNode => {
+      const parts = textNode.textContent.split(reSplit);
+      if (parts.length < 3) return;
+      const frag = document.createDocumentFragment();
+      parts.forEach((part, idx) => {
+        if (!part) return;
+        if (idx % 2 === 1) {
+          const s = document.createElement("span");
+          s.className = "se-kw-hl";
+          s.textContent = part;
+          frag.appendChild(s);
+        } else {
+          frag.appendChild(document.createTextNode(part));
+        }
+      });
+      if (textNode.parentNode) textNode.parentNode.replaceChild(frag, textNode);
+    });
+  }
+
+  function _flashKwSpans() {
+    document.body.classList.remove("se-kw-flashing");
+    void document.body.offsetHeight;
+    document.body.classList.add("se-kw-flashing");
+    _kwFlashLastTime = Date.now();
+    setTimeout(() => document.body.classList.remove("se-kw-flashing"), 2000);
+  }
+
+  function triggerKwFlash(opts) {
+    if (!document.getElementById("se-kw-flash-css")) {
+      const _ks = document.createElement("style");
+      _ks.id = "se-kw-flash-css";
+      _ks.textContent = [
+        ".se-kw-hl { border-radius: 2px; }",
+        "@keyframes se-kw-flash {",
+        "  0%, 40%, 60%, 100% { background: transparent; }",
+        "  20%, 80% { background: rgba(250,204,21,.55); box-shadow: 0 0 0 2px rgba(250,204,21,.2); }",
+        "}",
+        "body.se-kw-flashing .se-kw-hl { animation: se-kw-flash 2s ease-in-out; }",
+      ].join("\n");
+      (document.head || document.documentElement).appendChild(_ks);
+    }
+    if (opts && opts.hover && Date.now() - _kwFlashLastTime < _KW_FLASH_DEBOUNCE) return;
+    const kw = _extractPureKw();
+    if (!kw) return;
+    _cleanKwHighlight();
+    _injectKwHighlight(kw);
+    _flashKwSpans();
+  }
+
+  const QUICK_BLOCK_ENGINES = [
+    {
+      host: "duckduckgo.com",
+      resultSel: "article[data-testid='result'], .result--web",
+      linkSel:   "a[data-testid='result-title-a'], h2 a[href]",
+      insertSel: "[data-testid='result-url-domain'], .result__url",
+    },
+    {
+      host: "bing.com",
+      resultSel: "#b_results .b_algo",
+      linkSel:   "h2 a[href]",
+      insertSel: ".b_attribution cite, cite",
+    },
+    {
+      host: "search.brave.com",
+      resultSel: ".snippet[data-type='web'], .snippet",
+      linkSel:   ".snippet-title a[href], h3 a[href]",
+      insertSel: ".netloc, .snippet-url",
+    },
+    {
+      host: "google.",
+      resultSel: "#search .g, #rso .MjjYud > div > div",
+      linkSel:   ".yuRUbf a[href], h3 a[href]",
+      insertSel: "cite",
+    },
+    {
+      host: "startpage.com",
+      resultSel: ".result, .w-gl__result",
+      linkSel:   "a.result-title[href], a.w-gl__result-title[href]",
+      insertSel: ".result-url, .w-gl__result-url",
+    },
+    {
+      host: "search.yahoo.com",
+      resultSel: "#web .dd.algo",
+      linkSel:   "h3.title a[href], h3 a[href]",
+      insertSel: "cite, .compText",
+    },
+    {
+      host: "search.yahoo.co.jp",
+      resultSel: "#contents .sw-CardBase",
+      linkSel:   "h3 a[href]",
+      insertSel: ".sw-Card__domain, cite",
+    },
+    {
+      host: "qwant.com",
+      resultSel: "[data-testid='webResult'], .WebResult",
+      linkSel:   "a[data-testid='webResult-titleUrl'], a.WebResult-url",
+      insertSel: "[data-testid='webResult-url'], .WebResult-url",
+    },
+    {
+      host: "kagi.com",
+      resultSel: ".__sri",
+      linkSel:   ".__sri-title a[href]",
+      insertSel: ".__sri-url, .sri-url",
+    },
+    {
+      host: "www.ask.com",
+      resultSel: ".PartialSearchResults-item",
+      linkSel:   ".PartialSearchResults-item-title a[href]",
+      insertSel: ".PartialSearchResults-item-url",
+    },
+  ];
+
+  function _getQbConfig() {
+    const h = window.location.hostname;
+    return QUICK_BLOCK_ENGINES.find(c => h.includes(c.host)) || null;
+  }
+
+  function _extractDomain(resultEl, cfg) {
+    const urlEl = resultEl.querySelector(cfg.insertSel);
+    if (urlEl) {
+      const text = urlEl.textContent.trim();
+      const m = text.match(/^(?:https?:\/\/)?([^/\u203A\s]+)/);
+      if (m && m[1] && m[1].includes(".")) {
+        return m[1].replace(/^www\./, "").toLowerCase();
+      }
+    }
+    const linkEl = resultEl.querySelector(cfg.linkSel);
+    if (linkEl && linkEl.href) {
+      try {
+        const u = new URL(linkEl.href);
+        if (u.protocol.startsWith("http")) return u.hostname.replace(/^www\./, "").toLowerCase();
+      } catch (_) {}
+    }
+    return null;
+  }
+
+  function _quickAddToBlacklist(domain, resultEl) {
+    if (!Array.isArray(domainBlacklist)) domainBlacklist = [];
+    if (domainBlacklist.some(d => d.trim().toLowerCase() === domain)) {
+      showToast(`Already blocked: ${domain}`);
+      return;
+    }
+    domainBlacklist.push(domain);
+    GM_setValue("domainBlacklist", domainBlacklist);
+    save();
+
+    const cnt = domainBlacklist.filter(d => d.trim()).length;
+    const blBtn = document.getElementById("blacklist-btn");
+    if (blBtn) {
+      blBtn.textContent = `🚫 ${cnt}`;
+      blBtn.title = `Blocking ${cnt} domain(s)`;
+    }
+
+    if (resultEl) {
+      resultEl.style.opacity      = "0.3";
+      resultEl.style.transition   = "opacity 0.3s";
+      resultEl.style.pointerEvents = "none";
+    }
+
+    showToast(`🚫 ${domain} added to blacklist`);
+  }
+
+  function _injectBlockBtns() {
+    const cfg = _getQbConfig();
+    if (!cfg) return;
+
+    if (!document.getElementById("se-qb-css")) {
+      const _qs = document.createElement("style");
+      _qs.id = "se-qb-css";
+      _qs.textContent = [
+        ".se-qb-btn{display:inline-flex;align-items:center;margin-left:5px;padding:0 3px;",
+        "font-size:11px;line-height:1.6;border:1px solid transparent;border-radius:3px;",
+        "cursor:pointer;opacity:0;transition:opacity .15s,background .15s;",
+        "vertical-align:middle;user-select:none;background:transparent;",
+        "color:#c00;font-family:sans-serif;}",
+        ".se-qb-btn:hover{opacity:1!important;background:rgba(200,0,0,.1);",
+        "border-color:rgba(200,0,0,.3);}",
+        ".se-qb-result:hover .se-qb-btn{opacity:.6;}",
+      ].join("\n");
+      (document.head || document.documentElement).appendChild(_qs);
+    }
+
+    function processResult(el) {
+      if (el.dataset.seQb) return;
+      el.dataset.seQb = "1";
+      el.classList.add("se-qb-result");
+
+      const domain = _extractDomain(el, cfg);
+      if (!domain) return;
+
+      const insertEl = el.querySelector(cfg.insertSel);
+      if (!insertEl) return;
+
+      const btn = document.createElement("span");
+      btn.className   = "se-qb-btn";
+      btn.textContent = "🚫";
+      btn.title       = `Block ${domain}`;
+      btn.setAttribute("role", "button");
+      btn.setAttribute("tabindex", "0");
+      btn.addEventListener("click", e => {
+        e.preventDefault(); e.stopPropagation();
+        _quickAddToBlacklist(domain, el);
+      });
+      btn.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          _quickAddToBlacklist(domain, el);
+        }
+      });
+      insertEl.appendChild(btn);
+    }
+
+    document.querySelectorAll(cfg.resultSel).forEach(processResult);
+
+    if (!document.body._seQbObs) {
+      const obs = new MutationObserver(() => {
+        document.querySelectorAll(cfg.resultSel).forEach(processResult);
+      });
+      obs.observe(document.body, { childList: true, subtree: true });
+      document.body._seQbObs = obs;
+    }
   }
 
   function buildMainPanelShell() {
@@ -5428,13 +5736,7 @@
   panel.__clickOutsideHandler = closePanelOnClickOutside;
   document.addEventListener("click", closePanelOnClickOutside);
 
-  panel.addEventListener(
-    "remove",
-    () => {
-      document.removeEventListener("click", closePanelOnClickOutside);
-    },
-    { once: true },
-  );
+  panel.addEventListener("mouseenter", () => triggerKwFlash({ hover: true }));
   }
 
   let dpDropdown = null;
@@ -6859,7 +7161,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     function _buildAddEngineForm() {
       const manualToggleWrap = document.createElement("div");
       manualToggleWrap.style.cssText = "margin-top:2px;";
-
+  
       const manualToggleBtn = document.createElement("button");
       manualToggleBtn.textContent = (st.addSectionLabel || "Add Engine") + " ▾";
       manualToggleBtn.style.cssText = `
@@ -6873,7 +7175,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       manualToggleBtn.addEventListener("mouseleave", () => {
         manualToggleBtn.style.color = isDark ? "#555" : "#bbb";
       });
-
+  
       let manualOpen = false;
       const addForm = document.createElement("div");
       addForm.style.cssText = `
@@ -6882,14 +7184,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         border:1px dashed ${isDark ? "#333" : "#e0e0e0"};
         background:${isDark ? "#16161e" : "#fafafa"};
       `;
-
+  
       manualToggleBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         manualOpen = !manualOpen;
         addForm.style.display = manualOpen ? "flex" : "none";
         manualToggleBtn.textContent = (st.addSectionLabel || "Add Engine") + (manualOpen ? " ▴" : " ▾");
       });
-
+  
       function mkInput(placeholder) {
         const inp = document.createElement("input");
         inp.type = "text";
@@ -6904,12 +7206,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         inp.addEventListener("blur",  () => (inp.style.borderColor = border));
         return inp;
       }
-
+  
       const nameInp = mkInput(st.namePlaceholder || "Engine name");
       const urlInp  = mkInput(st.urlPlaceholder  || "Search URL (?q=)");
       addForm.appendChild(nameInp);
       addForm.appendChild(urlInp);
-
+  
       const addBtn2 = document.createElement("button");
       addBtn2.textContent = st.addBtn || "➕ Add";
       addBtn2.style.cssText = `
@@ -6952,7 +7254,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         showToast(msg);
       });
       addForm.appendChild(addBtn2);
-
+  
       manualToggleWrap.appendChild(manualToggleBtn);
       manualToggleWrap.appendChild(addForm);
       return manualToggleWrap;
@@ -11360,19 +11662,23 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       console.error("Error in applyTheme during createPanel:", e);
     }
 
+    setTimeout(triggerKwFlash, 600);
+    setTimeout(_injectBlockBtns, 700);
+
     if (GM_getValue("compactMode", false)) {
       _applyCompactMode(true);
     }
   }
 
   const ENGINE_QUERY_PARAMS = [
-    { host: "yandex.",   param: "text"  },
-    { host: "ya.ru",     param: "text"  },
-    { host: "baidu.com", param: "wd"    },
-    { host: "yahoo.com", param: "p"     },
-    { host: "naver.com", param: "query" },
-    { host: "ask.com",   param: "q"     },
-    { host: "sogou.com", param: "query" },
+    { host: "yandex.",     param: "text"  },
+    { host: "ya.ru",       param: "text"  },
+    { host: "baidu.com",   param: "wd"    },
+    { host: "yahoo.co.jp", param: "p"     },
+    { host: "yahoo.com",   param: "p"     },
+    { host: "naver.com",   param: "query" },
+    { host: "ask.com",     param: "q"     },
+    { host: "sogou.com",   param: "query" },
   ];
 
   function getEngineQueryParam() {
@@ -12271,6 +12577,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
           try {
             renderSites(panel);
+            setTimeout(triggerKwFlash, 350);
+            setTimeout(_injectBlockBtns, 400);
             if (defaultPanelOpen && !manuallyClosed && !GM_getValue("compactMode", false)) {
               showPanel(panel);
             } else if (GM_getValue("compactMode", false)) {
