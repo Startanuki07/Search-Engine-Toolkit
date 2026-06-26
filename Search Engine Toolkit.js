@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.6.11
+// @version      2.4.7.0
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -1780,11 +1780,11 @@
   let safeSearchNoticedOnce = GM_getValue("safeSearchNoticedOnce", false);
   let searchRegionEnabled     = GM_getValue("searchRegionEnabled",     false);
   let searchRegionNoticedOnce = GM_getValue("searchRegionNoticedOnce", false);
-  let domainBlacklist = GM_getValue("domainBlacklist", []);
+  let domainBlacklist     = GM_getValue("domainBlacklist",     []);
+  let blacklistWeakenMode = GM_getValue("blacklistWeakenMode", false);
 
   function applyUrlOverrides() {
-    const _hasBlacklist = Array.isArray(domainBlacklist) && domainBlacklist.filter(d => d.trim()).length > 0;
-    if (!safeSearchEnabled && !searchRegionEnabled && !_hasBlacklist) return;
+    if (!safeSearchEnabled && !searchRegionEnabled) return;
     try {
       const url     = new URL(window.location.href);
       const params  = url.searchParams;
@@ -1842,30 +1842,6 @@
         }
         else if (host.includes("searx")) {
           if (params.has("language")) { params.delete("language"); updated = true; }
-        }
-      }
-
-      if (_hasBlacklist) {
-        const _blQParam = (() => {
-          if (host.includes("baidu.com"))                   return null;
-          if (host.includes("yahoo."))                      return "p";
-          if (host.includes("yandex.") || host === "ya.ru") return "text";
-          if (host.includes("naver.com"))                   return "query";
-          return "q";
-        })();
-        if (_blQParam) {
-          const _existQ = params.get(_blQParam) || "";
-          if (_existQ.trim() !== "") {
-            const _toAdd = domainBlacklist
-              .map(d => d.trim())
-              .filter(d => d && !_existQ.includes(`-site:${d}`))
-              .map(d => `-site:${d}`)
-              .join(" ");
-            if (_toAdd) {
-              params.set(_blQParam, (_existQ + " " + _toAdd).trim());
-              updated = true;
-            }
-          }
         }
       }
 
@@ -5420,7 +5396,7 @@
       host: "duckduckgo.com",
       resultSel: "article[data-testid='result'], .result--web",
       linkSel:   "a[data-testid='result-title-a'], h2 a[href]",
-      insertSel: "[data-testid='result-url-domain'], .result__url",
+      insertSel: "[data-testid='result-extras-url-link'], [data-testid='result-url-domain'], .result__url",
     },
     {
       host: "bing.com",
@@ -5439,6 +5415,7 @@
       resultSel: "#search .g, #rso .MjjYud > div > div",
       linkSel:   ".yuRUbf a[href], h3 a[href]",
       insertSel: "cite",
+      btnInsertSel: ".yuRUbf, .B6fmyf",
     },
     {
       host: "startpage.com",
@@ -5519,13 +5496,46 @@
       blBtn.title = `Blocking ${cnt} domain(s)`;
     }
 
-    if (resultEl) {
-      resultEl.style.opacity      = "0.3";
-      resultEl.style.transition   = "opacity 0.3s";
-      resultEl.style.pointerEvents = "none";
-    }
-
+    _applyBlacklistToDOM();
     showToast(`🚫 ${domain} added to blacklist`);
+  }
+
+  function _applyBlacklistToDOM() {
+    const cfg = _getQbConfig();
+    if (!cfg) return;
+    if (!Array.isArray(domainBlacklist) || domainBlacklist.length === 0) return;
+    const blocked = new Set(domainBlacklist.map(d => d.trim().toLowerCase()).filter(Boolean));
+    if (!blocked.size) return;
+    document.querySelectorAll(cfg.resultSel).forEach(el => {
+      if (el.dataset.seBl) return;
+      const domain = _extractDomain(el, cfg);
+      if (!domain) return;
+      const isBlocked = blocked.has(domain) ||
+        [...blocked].some(b => domain.endsWith("." + b));
+      if (!isBlocked) return;
+      if (blacklistWeakenMode) {
+        el.dataset.seBl = "weaken";
+        el.classList.add("se-bl-weakened");
+      } else {
+        el.dataset.seBl     = "1";
+        el.style.transition = "opacity 0.3s";
+        el.style.opacity    = "0";
+        setTimeout(() => { el.style.display = "none"; }, 320);
+      }
+    });
+  }
+
+  function _refreshBlacklistDOM() {
+    document.querySelectorAll("[data-se-bl]").forEach(el => {
+      el.removeAttribute("data-se-bl");
+      el.style.display      = "";
+      el.style.opacity      = "";
+      el.style.transition   = "";
+      el.style.filter       = "";
+      el.style.pointerEvents = "";
+      el.classList.remove("se-bl-weakened");
+    });
+    _applyBlacklistToDOM();
   }
 
   function _injectBlockBtns() {
@@ -5544,6 +5554,8 @@
         ".se-qb-btn:hover{opacity:1!important;background:rgba(200,0,0,.1);",
         "border-color:rgba(200,0,0,.3);}",
         ".se-qb-result:hover .se-qb-btn{opacity:.6;}",
+        ".se-bl-weakened{opacity:0.15!important;filter:grayscale(0.7)!important;",
+        "pointer-events:none!important;transition:opacity 0.3s,filter 0.3s!important;}",
       ].join("\n");
       (document.head || document.documentElement).appendChild(_qs);
     }
@@ -5556,8 +5568,30 @@
       const domain = _extractDomain(el, cfg);
       if (!domain) return;
 
+      if (Array.isArray(domainBlacklist) && domainBlacklist.length > 0) {
+        const _bl = new Set(domainBlacklist.map(d => d.trim().toLowerCase()).filter(Boolean));
+        if (_bl.has(domain) || [..._bl].some(b => domain.endsWith("." + b))) {
+          if (!el.dataset.seBl) {
+            if (blacklistWeakenMode) {
+              el.dataset.seBl = "weaken";
+              el.classList.add("se-bl-weakened");
+            } else {
+              el.dataset.seBl     = "1";
+              el.style.transition = "opacity 0.3s";
+              el.style.opacity    = "0";
+              setTimeout(() => { el.style.display = "none"; }, 320);
+            }
+          }
+          return;
+        }
+      }
+
       const insertEl = el.querySelector(cfg.insertSel);
       if (!insertEl) return;
+
+      const btnInsertEl = cfg.btnInsertSel
+        ? (el.querySelector(cfg.btnInsertSel) || insertEl)
+        : insertEl;
 
       const btn = document.createElement("span");
       btn.className   = "se-qb-btn";
@@ -5575,10 +5609,12 @@
           _quickAddToBlacklist(domain, el);
         }
       });
-      insertEl.appendChild(btn);
+      btnInsertEl.insertAdjacentElement("afterend", btn);
     }
 
     document.querySelectorAll(cfg.resultSel).forEach(processResult);
+
+    _applyBlacklistToDOM();
 
     if (!document.body._seQbObs) {
       const obs = new MutationObserver(() => {
@@ -11858,6 +11894,22 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     });
     box.appendChild(countRow);
 
+    const weakenRow = document.createElement("div");
+    weakenRow.style.cssText = `display:flex; align-items:center; gap:8px;
+      padding:7px 9px; border-radius:${radius}px;
+      background:${isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.04)"};`;
+    const weakenChk = document.createElement("input");
+    weakenChk.type    = "checkbox";
+    weakenChk.id      = "bl-weaken-chk";
+    weakenChk.checked = blacklistWeakenMode;
+    weakenChk.style.cssText = "cursor:pointer; flex-shrink:0; width:14px; height:14px;";
+    const weakenLbl = document.createElement("label");
+    weakenLbl.htmlFor     = "bl-weaken-chk";
+    weakenLbl.style.cssText = `font-size:${fSize - 1}px; color:${isDark ? "#bbb" : "#555"}; cursor:pointer; line-height:1.4;`;
+    weakenLbl.textContent = "Fade blocked results instead of hiding";
+    weakenRow.appendChild(weakenChk);
+    weakenRow.appendChild(weakenLbl);
+    box.appendChild(weakenRow);
     const btnRow = document.createElement("div");
     btnRow.style.cssText = "display:flex; justify-content:flex-end; gap:8px;";
 
@@ -11938,6 +11990,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           ? (t_bl.blacklistCount ? t_bl.blacklistCount(cnt) : `Blocking ${cnt}`) + "\n" + (t_bl.blacklistTitle || "Domain Blacklist")
           : (t_bl.blacklistTitle || "Domain Blacklist");
       }
+
+      blacklistWeakenMode = weakenChk.checked;
+      GM_setValue("blacklistWeakenMode", blacklistWeakenMode);
+
+      _refreshBlacklistDOM();
 
       const msg = t_bl.blacklistSaved ? t_bl.blacklistSaved(domainBlacklist.length) : `Saved — ${domainBlacklist.length} blocked`;
       showToast(msg);
