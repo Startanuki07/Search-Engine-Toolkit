@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.6.10
+// @version      2.4.6.11
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -1855,14 +1855,16 @@
         })();
         if (_blQParam) {
           const _existQ = params.get(_blQParam) || "";
-          const _toAdd  = domainBlacklist
-            .map(d => d.trim())
-            .filter(d => d && !_existQ.includes(`-site:${d}`))
-            .map(d => `-site:${d}`)
-            .join(" ");
-          if (_toAdd) {
-            params.set(_blQParam, (_existQ + " " + _toAdd).trim());
-            updated = true;
+          if (_existQ.trim() !== "") {
+            const _toAdd = domainBlacklist
+              .map(d => d.trim())
+              .filter(d => d && !_existQ.includes(`-site:${d}`))
+              .map(d => `-site:${d}`)
+              .join(" ");
+            if (_toAdd) {
+              params.set(_blQParam, (_existQ + " " + _toAdd).trim());
+              updated = true;
+            }
           }
         }
       }
