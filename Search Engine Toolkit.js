@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.7.1
+// @version      2.4.7.2
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -5675,6 +5675,7 @@
   panel.style.maxHeight = (styleSettings.panelMaxHeight ?? 87) + "vh";
   panel.style.overflowY = "auto";
   panel.style.overflowX = "hidden";
+  panel.style.overscrollBehavior = "contain";
   panel.style.fontFamily = "sans-serif";
   panel.style.fontSize = styleSettings.fontSize + "px";
   panel.style.display = "none";
@@ -11479,6 +11480,18 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
 
     _cp.addEventListener("wheel", (e) => {
+      const _sitesScrollable = _sitesEl;
+      if (!_sitesScrollable || !_sitesScrollable.contains(e.target)) {
+        return;
+      }
+      const { scrollTop, scrollHeight, clientHeight } = _sitesScrollable;
+      const atTop    = scrollTop <= 0;
+      const atBottom = scrollTop + clientHeight >= scrollHeight - 1;
+      const goingUp  = e.deltaY < 0;
+      const goingDown = e.deltaY > 0;
+      if ((goingDown && atBottom) || (goingUp && atTop)) {
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
     }, { passive: false });
