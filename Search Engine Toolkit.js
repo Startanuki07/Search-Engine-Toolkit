@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.7.0
+// @version      2.4.7.1
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -171,6 +171,7 @@
       searchRegionWarning: "🌐 Search Region: All — How it works\n\n▸ ON  → When you navigate to a search engine, this script tries to remove or replace country/region URL parameters (e.g. gl, mkt, kl) so results are not filtered to a specific country.\n▸ OFF → The script does nothing and leaves region settings untouched.\n\n⚠️ No guarantee: engines may override this with their own detection. Baidu and Naver are not supported.\n\nThis notice only appears once.",
       styleConfig: "Style Settings 🎨",
       panelLayoutLabel: "Panel Layout",
+      hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
       hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
       hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
       hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
@@ -443,6 +444,7 @@
       searchRegionWarning: "🌐 搜尋地區：全部 — 運作說明\n\n▸ 開啟 → 每次跳轉到搜尋引擎時，腳本會嘗試移除或置換網址中的國家/地區參數（如 gl、mkt、kl），讓搜尋結果不被限定在特定國家。\n▸ 關閉 → 腳本完全不介入，地區設定維持原狀。\n\n⚠️ 不保證有效：部分引擎可能透過瀏覽器 IP 或 Cookie 自動偵測地區。百度與 Naver 不支援此功能。\n\n此提示只出現一次。",
       styleConfig: "樣式設定 🎨",
       panelLayoutLabel: "面板佈局",
+      hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
       hideBlacklistBtnLabel: "隱藏 🚫 黑名單按鈕",
       hideAddGroupBtnLabel: "隱藏 ➕ 新增群組按鈕",
       hideAddressToggleBtnLabel: "隱藏 🔁 顯示/隱藏網址按鈕",
@@ -2868,6 +2870,7 @@
   let __cpDragUpHandler        = null;
   let _isDraggingPanel         = false;
   let _sfDragging = false, _sfOx = 0, _sfOy = 0;
+  let _sfOnMove = null, _sfOnUp = null;
 
   function parseSmartDomain(raw) {
     if (!raw || typeof raw !== "string") return null;
@@ -7650,15 +7653,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     styleConfigHeaderRow.style.cursor = "grabbing";
     e.preventDefault();
   });
-  function _sfOnMove(e) {
+  _sfOnMove = function(e) {
     if (!_sfDragging) return;
     const nx = Math.max(0, Math.min(e.clientX - _sfOx, window.innerWidth  - styleConfigWrap.offsetWidth));
     const ny = Math.max(0, Math.min(e.clientY - _sfOy, window.innerHeight - styleConfigWrap.offsetHeight));
     styleConfigWrap.style.left  = nx + "px";
     styleConfigWrap.style.top   = ny + "px";
     styleConfigWrap.style.right = "auto";
-  }
-  function _sfOnUp() {
+  };
+  _sfOnUp = function() {
     if (!_sfDragging) return;
     _sfDragging = false;
     styleConfigHeaderRow.style.cursor = "grab";
@@ -7668,7 +7671,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     });
     document.removeEventListener("mousemove", _sfOnMove);
     document.removeEventListener("mouseup",   _sfOnUp);
-  }
+  };
   document.addEventListener("mousemove", _sfOnMove);
   document.addEventListener("mouseup",   _sfOnUp);
 
@@ -11272,14 +11275,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function _buildCompactPanel() {
-    if (__compactBtnObserver) {
-      __compactBtnObserver.disconnect();
-      __compactBtnObserver = null;
-    }
-    if (__compactMouseupHandler) {
-      document.removeEventListener("mouseup", __compactMouseupHandler);
-      __compactMouseupHandler = null;
-    }
     if (__cpDragMoveHandler) {
       document.removeEventListener("mousemove", __cpDragMoveHandler);
       __cpDragMoveHandler = null;
@@ -11411,6 +11406,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           }
         });
 
+        _siteBtn.addEventListener("auxclick", (e) => {
+          if (e.button !== 1) return;
+          e.preventDefault();
+          window.open(_fullUrl, "_blank");
+        });
+        _siteBtn.addEventListener("mousedown", (e) => {
+          if (e.button === 1) e.preventDefault();
+        });
+
         _sitesEl.appendChild(_siteBtn);
       });
     }
@@ -11422,6 +11426,17 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       GM_setValue("compactGroupIdx", _idx);
       _renderSites(_idx);
     });
+
+    _sel.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      if (groups.length <= 1) return;
+      const _cur  = parseInt(_sel.value, 10);
+      const _next = Math.max(0, Math.min(_cur + (e.deltaY > 0 ? 1 : -1), groups.length - 1));
+      if (_next === _cur) return;
+      _sel.value = _next;
+      GM_setValue("compactGroupIdx", _next);
+      _renderSites(_next);
+    }, { passive: false });
 
     const _pinned = (typeof se_engines !== "undefined" ? se_engines : [])
       .slice(0, SE_PINNED_COUNT);
@@ -11462,6 +11477,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
       _cp.appendChild(_engEl);
     }
+
+    _cp.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    }, { passive: false });
 
     document.body.appendChild(_cp);
 
@@ -11517,6 +11537,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   function _buildCompactBtn() {
     const _old = document.getElementById("set-compact-btn");
     if (_old) _old.remove();
+
+    if (__compactBtnObserver) {
+      __compactBtnObserver.disconnect();
+      __compactBtnObserver = null;
+    }
+    if (__compactMouseupHandler) {
+      document.removeEventListener("mouseup", __compactMouseupHandler);
+      __compactMouseupHandler = null;
+    }
 
     const _tb = document.getElementById("site-toggle-simple");
     if (!_tb) return;
