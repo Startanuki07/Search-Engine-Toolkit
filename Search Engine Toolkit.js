@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.4.7.2
+// @version      2.5.0.0
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -58,6 +58,45 @@
 
   function isValidPixelValue(value) {
     return typeof value === "string" && /^\d+(\.\d+)?px$/.test(value);
+  }
+
+  const _FADE_DURATION_MS = 180;
+  const _FADE_EASING = "ease";
+
+  function _fadeShow(el, displayValue = "block") {
+    if (!el) return;
+    el.style.display = displayValue;
+    el.style.opacity = "0";
+    if (!el.style.transition || el.style.transition.indexOf("opacity") === -1) {
+      const _existing = el.style.transition ? el.style.transition + ", " : "";
+      el.style.transition = `${_existing}opacity ${_FADE_DURATION_MS}ms ${_FADE_EASING}`;
+    }
+    requestAnimationFrame(() => {
+      el.style.opacity = "1";
+    });
+  }
+
+  function _fadeHide(el, onDone) {
+    if (!el) return;
+    if (!el.style.transition || el.style.transition.indexOf("opacity") === -1) {
+      const _existing = el.style.transition ? el.style.transition + ", " : "";
+      el.style.transition = `${_existing}opacity ${_FADE_DURATION_MS}ms ${_FADE_EASING}`;
+    }
+    el.style.opacity = "0";
+    setTimeout(() => {
+      el.style.display = "none";
+      if (typeof onDone === "function") onDone();
+    }, _FADE_DURATION_MS);
+  }
+
+  function _ensureSsePopKeyframes() {
+    if (!document.getElementById("sse-notice-style")) {
+      const styleEl = document.createElement("style");
+      styleEl.id = "sse-notice-style";
+      styleEl.textContent =
+        "@keyframes sse-pop{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}";
+      document.head.appendChild(styleEl);
+    }
   }
 
   const TIME_VALUES = [
@@ -1865,13 +1904,7 @@
     const fgColor = styleSettings.textColor || (isDark ? "#eee" : "#222");
     const fs      = styleSettings.fontSize  || 13;
 
-    if (!document.getElementById("sse-notice-style")) {
-      const styleEl = document.createElement("style");
-      styleEl.id = "sse-notice-style";
-      styleEl.textContent =
-        "@keyframes sse-pop{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}";
-      document.head.appendChild(styleEl);
-    }
+    _ensureSsePopKeyframes();
 
     const overlay = document.createElement("div");
     overlay.style.cssText = `
@@ -2360,14 +2393,13 @@
 
   function showPanel(panel) {
     if (!panel) return;
-    panel.style.display = "block";
-    panel.style.opacity = "1";
+    _fadeShow(panel, "block");
     panel.style.visibility = "visible";
   }
 
   function hidePanel(panel) {
     if (!panel) return;
-    panel.style.display = "none";
+    _fadeHide(panel);
     const dd = document.getElementById("site-history-dropdown");
     if (dd) dd.style.display = "none";
     const sf = document.getElementById("style-config-wrap");
@@ -3952,24 +3984,33 @@
     toggleBtn.onclick = () => {
       collapsed = !collapsed;
       const panel = document.getElementById("site-group-panel");
+      if (panel && (!panel.style.transition || panel.style.transition.indexOf("width") === -1)) {
+        const _existing = panel.style.transition ? panel.style.transition + ", " : "";
+        panel.style.transition = `${_existing}width ${_FADE_DURATION_MS}ms ${_FADE_EASING}, max-width ${_FADE_DURATION_MS}ms ${_FADE_EASING}`;
+      }
+      const tb = document.getElementById("toolbar-container");
       if (collapsed) {
-        const hdr = panel && panel.querySelector(".panel-header-container");
-        const naturalW = hdr ? hdr.scrollWidth + 24 : getEffectivePanelWidth();
-        if (panel) {
-          const _colW = Math.min(naturalW, getEffectivePanelWidth());
-          panel.style.width = _colW + "px";
-          panel.style.maxWidth = _colW + "px";
-        }
+        _fadeHide(wrap, () => {
+          const hdr = panel && panel.querySelector(".panel-header-container");
+          const naturalW = hdr ? hdr.scrollWidth + 24 : getEffectivePanelWidth();
+          if (panel) {
+            const _colW = Math.min(naturalW, getEffectivePanelWidth());
+            panel.style.width = _colW + "px";
+            panel.style.maxWidth = _colW + "px";
+          }
+        });
+        if (tb) _fadeHide(tb);
       } else {
         if (panel) {
           const _expW = getEffectivePanelWidth();
           panel.style.width    = _expW + "px";
           panel.style.maxWidth = _expW + "px";
         }
+        setTimeout(() => {
+          _fadeShow(wrap, "block");
+          if (tb) _fadeShow(tb, "flex");
+        }, _FADE_DURATION_MS);
       }
-      wrap.style.display = collapsed ? "none" : "block";
-      const tb = document.getElementById("toolbar-container");
-      if (tb) tb.style.display = collapsed ? "none" : "flex";
       GM_setValue("searchConfigCollapsed", collapsed);
     };
   }
@@ -4000,7 +4041,7 @@
       cursor:pointer; padding:2px 7px;
       font-size:12px; line-height:1.6;
       display:inline-flex; align-items:center; justify-content:center;
-      opacity:0.6; transition:opacity 0.15s, background 0.15s;
+      opacity:0.6; transition:opacity 0.15s, background 0.15s, color 0.15s;
     `;
     _applyGrpIcon(btn, emoji);
     btn.addEventListener("mouseenter", () => { btn.style.opacity = "1"; btn.style.background = "rgba(128,128,128,0.12)"; });
@@ -4653,6 +4694,7 @@
 
     const menu = document.createElement("div");
     menu.id = "site-popup-menu";
+    _ensureSsePopKeyframes();
     menu.style.cssText = `
       position:fixed; z-index:2147483660;
       background:${bg2}; color:${fg2};
@@ -4751,6 +4793,7 @@
     if (my + mh > window.innerHeight - 4) my = dr.top - mh - 4;
     menu.style.left = mx + "px";
     menu.style.top  = my + "px";
+    menu.style.animation = "sse-pop .16s cubic-bezier(.34,1.5,.64,1) both";
 
     const _closeMenu = (ev) => {
       if (!menu.contains(ev.target)) {
@@ -10133,6 +10176,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const historyDropdown = document.createElement("div");
   historyDropdown.id = "site-history-dropdown";
+  _ensureSsePopKeyframes();
   historyDropdown.style.cssText = `
     display: none;
     position: fixed;
@@ -10145,6 +10189,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     overflow-y: auto;
     z-index: 2147483666;
     box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    animation: sse-pop .16s cubic-bezier(.34,1.5,.64,1) both;
   `;
 
   let highlightIndex = -1;
@@ -11137,8 +11182,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       : t.expand;
     const styleFloat = document.getElementById("style-config-wrap");
     if (styleFloat) {
-      styleFloat.style.display = searchConfig.isExpanded ? "block" : "none";
-      if (searchConfig.isExpanded) _positionStyleFloat(styleFloat);
+      if (searchConfig.isExpanded) {
+        _fadeShow(styleFloat, "block");
+        _positionStyleFloat(styleFloat);
+      } else {
+        _fadeHide(styleFloat);
+      }
     }
   };
   searchConfigHeaderRow.appendChild(expandCollapseBtn);
