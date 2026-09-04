@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.5.0.0
+// @version      2.5.0.3
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -4645,8 +4645,10 @@
   favicon.style.width = "16px";
   favicon.style.height = "16px";
   favicon.style.marginRight = "4px";
-  favicon.onerror = () =>
-    (favicon.src = "https://www.google.com/favicon.ico");
+  favicon.onerror = () => {
+    favicon.onerror = null;
+    favicon.src = "https://www.google.com/favicon.ico";
+  };
 
   const label = document.createElement("span");
   label.className = "site-label";
@@ -5663,8 +5665,13 @@
     _applyBlacklistToDOM();
 
     if (!document.body._seQbObs) {
+      let _qbRAF = 0;
       const obs = new MutationObserver(() => {
-        document.querySelectorAll(cfg.resultSel).forEach(processResult);
+        if (_qbRAF) return;
+        _qbRAF = requestAnimationFrame(() => {
+          _qbRAF = 0;
+          document.querySelectorAll(cfg.resultSel).forEach(processResult);
+        });
       });
       obs.observe(document.body, { childList: true, subtree: true });
       document.body._seQbObs = obs;
@@ -5932,6 +5939,7 @@
   panelHelpTip.textContent = t.panelHelp || "";
   document.body.appendChild(panelHelpTip);
   panelHelpBtn.addEventListener("mouseenter", () => {
+    if (_isDraggingPanel || _epDrag.active) return;
     panelHelpTip.style.display = "block";
     requestAnimationFrame(() => {
       const r = panel.getBoundingClientRect();
@@ -6815,6 +6823,7 @@
     seHelpTip = helpTip;
 
     helpBtn.addEventListener("mouseenter", () => {
+      if (_isDraggingPanel || _epDrag.active) return;
       helpTip.style.display = "block";
       requestAnimationFrame(() => {
         if (!seExtraPanel) return;
