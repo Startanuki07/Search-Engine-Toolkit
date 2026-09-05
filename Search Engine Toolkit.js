@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.5.0.3
+// @version      2.5.0.8
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -59,6 +59,76 @@
   function isValidPixelValue(value) {
     return typeof value === "string" && /^\d+(\.\d+)?px$/.test(value);
   }
+
+  function _downscaleImage(dataUrl, maxDim = 1200, quality = 0.85) {
+    return new Promise((resolve) => {
+      if (!/^data:image\/jpe?g;/i.test(dataUrl)) {
+        resolve(dataUrl);
+        return;
+      }
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const { naturalWidth: w, naturalHeight: h } = img;
+          if (w <= maxDim && h <= maxDim) {
+            resolve(dataUrl);
+            return;
+          }
+          const scale = maxDim / Math.max(w, h);
+          const canvas = document.createElement("canvas");
+          canvas.width  = Math.round(w * scale);
+          canvas.height = Math.round(h * scale);
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        } catch (err) {
+          warn("[_downscaleImage] 縮放失敗，降級使用原圖:", err);
+          resolve(dataUrl);
+        }
+      };
+      img.onerror = () => {
+        warn("[_downscaleImage] 圖片載入失敗，降級使用原圖");
+        resolve(dataUrl);
+      };
+      img.src = dataUrl;
+    });
+  }
+
+  function _buildTiledImage(imgSrc, panelW, panelH, scale, offsetX, offsetY) {
+    return new Promise((resolve) => {
+      if (!panelW || !panelH) { resolve(null); return; }
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const tileW = Math.max(1, Math.round(img.naturalWidth * scale));
+          const tileH = Math.max(1, Math.round(img.naturalHeight * scale));
+          const canvas = document.createElement("canvas");
+          canvas.width = panelW;
+          canvas.height = panelH;
+          const ctx = canvas.getContext("2d");
+          const startX = ((offsetX % tileW) + tileW) % tileW - tileW;
+          const startY = ((offsetY % tileH) + tileH) % tileH - tileH;
+          for (let y = startY; y < panelH; y += tileH) {
+            for (let x = startX; x < panelW; x += tileW) {
+              ctx.drawImage(img, x, y, tileW, tileH);
+            }
+          }
+          resolve(canvas.toDataURL("image/jpeg", 0.9));
+        } catch (err) {
+          warn("[_buildTiledImage] 平舖繪製失敗，降級使用 CSS repeat:", err);
+          resolve(null);
+        }
+      };
+      img.onerror = () => {
+        warn("[_buildTiledImage] 圖片載入失敗，降級使用 CSS repeat");
+        resolve(null);
+      };
+      img.src = imgSrc;
+    });
+  }
+
+  const _tiledImageCache = new Map();
+  const _TILED_CACHE_MAX = 8;
 
   const _FADE_DURATION_MS = 180;
   const _FADE_EASING = "ease";
@@ -3680,6 +3750,35 @@
       } else {
         el.style.backgroundSize = `${styleSettings.imageScale * 100}%`;
       }
+
+      if (styleSettings.imageMode === "tile") {
+        const _panelW = el.offsetWidth, _panelH = el.offsetHeight;
+        const _scale  = styleSettings.imageScale || 1.0;
+        const _offX   = styleSettings.imageOffsetX || 0;
+        const _offY   = styleSettings.imageOffsetY || 0;
+        if (_panelW && _panelH) {
+          const _cacheKey = `${_img}|${_panelW}x${_panelH}|${_scale}|${_offX},${_offY}`;
+          const _cached = _tiledImageCache.get(_cacheKey);
+          if (_cached) {
+            el.style.backgroundImage  = `linear-gradient(rgba(0,0,0,${_ov}), rgba(0,0,0,${_ov})), url(${_cached})`;
+            el.style.backgroundRepeat = "no-repeat";
+            el.style.backgroundSize   = "100% 100%";
+          } else {
+            _buildTiledImage(_safe, _panelW, _panelH, _scale, _offX, _offY).then((tiled) => {
+              if (!tiled) return;
+              if (_tiledImageCache.size >= _TILED_CACHE_MAX) {
+                _tiledImageCache.delete(_tiledImageCache.keys().next().value);
+              }
+              _tiledImageCache.set(_cacheKey, tiled);
+              if (styleSettings.backgroundImage === _img && styleSettings.imageMode === "tile") {
+                el.style.backgroundImage  = `linear-gradient(rgba(0,0,0,${_ov}), rgba(0,0,0,${_ov})), url(${tiled})`;
+                el.style.backgroundRepeat = "no-repeat";
+                el.style.backgroundSize   = "100% 100%";
+              }
+            });
+          }
+        }
+      }
     } else {
       if (fallbackBg !== undefined) el.style.backgroundColor = fallbackBg;
       el.style.backgroundImage    = "";
@@ -5880,6 +5979,11 @@
       panel.style.top       = finalTop  + "px";
       panel.style.right     = "auto";
       panel.style.transform = "translate(0,0)";
+      if (panel.style.transition.indexOf("transform") === -1) {
+        panel.style.transition = panel.style.transition
+          ? panel.style.transition + ", transform 0.2s ease"
+          : "transform 0.2s ease";
+      }
       styleSettings.panelLeft = finalLeft;
       styleSettings.panelTop  = finalTop;
       GM_setValue("styleSettings", styleSettings);
@@ -5900,6 +6004,11 @@
       _hOx = e.clientX - rect.left;
       _hOy = e.clientY - rect.top;
       _hNextX = 0; _hNextY = 0;
+      panel.style.transition = panel.style.transition
+        .split(",")
+        .map(s => s.trim())
+        .filter(s => s && !s.startsWith("transform"))
+        .join(", ");
       panel.style.transform = "translate(0,0)";
       headerContainer.style.cursor = "grabbing";
       e.preventDefault();
@@ -9657,9 +9766,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       if (file) {
         const reader = new FileReader();
         reader.onload = (ev) => {
-          styleSettings.backgroundImage = ev.target.result;
-          save();
-          applyTheme(panelTheme);
+          showToast(t.processingImage || "🖼️ Processing image...", 800);
+          _downscaleImage(ev.target.result).then((resized) => {
+            styleSettings.backgroundImage = resized;
+            save();
+            applyTheme(panelTheme);
+          });
         };
         reader.readAsDataURL(file);
       }
