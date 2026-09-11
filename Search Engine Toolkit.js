@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.5.0.8
+// @version      2.6.0.5
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -82,12 +82,12 @@
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           resolve(canvas.toDataURL("image/jpeg", quality));
         } catch (err) {
-          warn("[_downscaleImage] 縮放失敗，降級使用原圖:", err);
+          warn("[_downscaleImage] Resize failed, falling back to original image:", err);
           resolve(dataUrl);
         }
       };
       img.onerror = () => {
-        warn("[_downscaleImage] 圖片載入失敗，降級使用原圖");
+        warn("[_downscaleImage] Image load failed, falling back to original image");
         resolve(dataUrl);
       };
       img.src = dataUrl;
@@ -115,12 +115,12 @@
           }
           resolve(canvas.toDataURL("image/jpeg", 0.9));
         } catch (err) {
-          warn("[_buildTiledImage] 平舖繪製失敗，降級使用 CSS repeat:", err);
+          warn("[_buildTiledImage] Tile draw failed, falling back to CSS repeat:", err);
           resolve(null);
         }
       };
       img.onerror = () => {
-        warn("[_buildTiledImage] 圖片載入失敗，降級使用 CSS repeat");
+        warn("[_buildTiledImage] Image load failed, falling back to CSS repeat");
         resolve(null);
       };
       img.src = imgSrc;
@@ -209,6 +209,8 @@
       collapse: "Collapse",
       toggleShow: "Show Addresses",
       toggleHide: "Hide Addresses",
+      toolbarCompactOn: "Collapse to icons only",
+      toolbarCompactOff: "Show button labels",
       addGroup: "Add Group ➕",
       editGroup: "Edit Group ✏️",
       delGroup: "Delete Group 🗑️",
@@ -474,6 +476,22 @@
       resetToDefault: "Reset to Default",
       compactOn:  "Compact Mode",
       compactOff: "Exit Compact",
+
+      modExactMatch:  "Exact match",
+      modExactMatchTip: 'Wrap your keyword in quotes: "ABCD" — forces exact wording, no synonyms',
+      modIntitle:     "Title only",
+      modIntitleTip:  "intitle:ABCD — the word must appear in the page title",
+      modInurl:       "URL only",
+      modInurlTip:    "inurl:ABCD — the word must appear in the page URL",
+      modFiletype:    "File type",
+      modFiletypeTip: "filetype:pdf — only show that file type on the site",
+      modFiletypeNone: "No filter",
+      modFiletypeCustom: "Custom…",
+      modFiletypeCustomPrompt: "Enter a file extension (e.g. pptx)",
+      modGroupHelp:
+        "🎯 Search Modifiers\n\n▸ Exact match \"…\" — wraps your keyword in quotes for an exact-wording match.\n▸ Title only (intitle:) — the word must appear in the page title.\n▸ URL only (inurl:) — the word must appear in the page URL.\n   (Title only and URL only are mutually exclusive — turning one on turns the other off.)\n▸ File type (filetype:) — restricts results to a specific file type on the site.\n\nAll modifiers apply automatically the next time you click a site button. Use the ⚙️ button to review or reset all modifiers at once.",
+      modSettingsTitle: "Search Modifiers",
+      modSettingsSaved: "Modifiers updated",
     },
     zh_TW: {
       siteTitle: "站台群組",
@@ -483,6 +501,8 @@
       collapse: "收合樣式調整介面",
       toggleShow: "顯示網址",
       toggleHide: "顯示註解",
+      toolbarCompactOn: "收合成純圖示",
+      toolbarCompactOff: "顯示按鈕文字",
       addGroup: "新增群組 ➕",
       editGroup: "編輯群組 ✏️",
       delGroup: "刪除群組 🗑️",
@@ -743,6 +763,21 @@
       resetToDefault: "重置為預設值",
       compactOn:  "精簡模式",
       compactOff: "離開精簡模式",
+      modExactMatch:  "精準比對",
+      modExactMatchTip: '將關鍵字加上引號："ABCD" —— 強制完全比對字詞，排除同義詞',
+      modIntitle:     "限定標題",
+      modIntitleTip:  "intitle:ABCD —— 該字詞必須出現在頁面標題中",
+      modInurl:       "限定網址",
+      modInurlTip:    "inurl:ABCD —— 該字詞必須出現在頁面網址中",
+      modFiletype:    "檔案類型",
+      modFiletypeTip: "filetype:pdf —— 僅顯示該站台上此檔案類型的結果",
+      modFiletypeNone: "無限定",
+      modFiletypeCustom: "自訂…",
+      modFiletypeCustomPrompt: "輸入副檔名（例如 pptx）",
+      modGroupHelp:
+        "🎯 搜尋修飾器\n\n▸ 精準比對「…」—— 將關鍵字加上引號，強制完全比對字詞。\n▸ 限定標題（intitle:）—— 該字詞必須出現在頁面標題中。\n▸ 限定網址（inurl:）—— 該字詞必須出現在頁面網址中。\n　（限定標題與限定網址互斥，開啟其中一項會自動關閉另一項。）\n▸ 檔案類型（filetype:）—— 將結果限定為該站台上的特定檔案類型。\n\n所有修飾器會在下次點擊站台按鈕時自動套用。可用 ⚙️ 按鈕檢視或一次重置全部修飾器。",
+      modSettingsTitle: "搜尋修飾器",
+      modSettingsSaved: "修飾器已更新",
     },
     zh_CN: {
       siteTitle: "站点群组",
@@ -752,6 +787,8 @@
       collapse: "收起样式调整介面",
       toggleShow: "显示网址",
       toggleHide: "显示注解",
+      toolbarCompactOn: "收起为纯图标",
+      toolbarCompactOff: "显示按钮文字",
       addGroup: "添加群组 ➕",
       editGroup: "编辑群组 ✏️",
       delGroup: "删除群组 🗑️",
@@ -1012,6 +1049,21 @@
       resetToDefault: "重置为默认值",
       compactOn:  "精简模式",
       compactOff: "退出精简模式",
+      modExactMatch:  "精准匹配",
+      modExactMatchTip: '将关键字加上引号："ABCD" —— 强制完全匹配字词，排除同义词',
+      modIntitle:     "限定标题",
+      modIntitleTip:  "intitle:ABCD —— 该字词必须出现在页面标题中",
+      modInurl:       "限定网址",
+      modInurlTip:    "inurl:ABCD —— 该字词必须出现在页面网址中",
+      modFiletype:    "文件类型",
+      modFiletypeTip: "filetype:pdf —— 仅显示该站点上此文件类型的结果",
+      modFiletypeNone: "不限定",
+      modFiletypeCustom: "自定义…",
+      modFiletypeCustomPrompt: "输入扩展名（例如 pptx）",
+      modGroupHelp:
+        "🎯 搜索修饰器\n\n▸ 精准匹配「…」—— 将关键字加上引号，强制完全匹配字词。\n▸ 限定标题（intitle:）—— 该字词必须出现在页面标题中。\n▸ 限定网址（inurl:）—— 该字词必须出现在页面网址中。\n　（限定标题与限定网址互斥，开启其中一项会自动关闭另一项。）\n▸ 文件类型（filetype:）—— 将结果限定为该站点上的特定文件类型。\n\n所有修饰器会在下次点击站点按钮时自动套用。可用 ⚙️ 按钮查看或一次重置全部修饰器。",
+      modSettingsTitle: "搜索修饰器",
+      modSettingsSaved: "修饰器已更新",
     },
     ja: {
       siteTitle: "ｻｲﾄｸﾞﾙｰﾌﾟ",
@@ -1021,6 +1073,8 @@
       collapse: "折り畳むｽﾀｲﾙ調整ｲﾝﾀｰﾌｪｰｽ",
       toggleShow: "ｱﾄﾞﾚｽを表示",
       toggleHide: "注釈を表示",
+      toolbarCompactOn: "アイコンのみに折りたたむ",
+      toolbarCompactOff: "ボタンのラベルを表示",
       addGroup: "ｸﾞﾙｰﾌﾟを追加 ➕",
       editGroup: "ｸﾞﾙｰﾌﾟを編集 ✏️",
       delGroup: "ｸﾞﾙｰﾌﾟを削除 🗑️",
@@ -1284,6 +1338,21 @@
       resetToDefault: "デフォルトにリセット",
       compactOn:  "コンパクトモード",
       compactOff: "コンパクトモード終了",
+      modExactMatch:  "完全一致",
+      modExactMatchTip: "キーワードを引用符で囲む：\"ABCD\" —— 表記を完全一致させ、類義語を除外します",
+      modIntitle:     "タイトルのみ",
+      modIntitleTip:  "intitle:ABCD —— その語がページタイトルに含まれている必要があります",
+      modInurl:       "URLのみ",
+      modInurlTip:    "inurl:ABCD —— その語がページURLに含まれている必要があります",
+      modFiletype:    "ファイル形式",
+      modFiletypeTip: "filetype:pdf —— そのサイト内の指定ファイル形式のみ表示します",
+      modFiletypeNone: "指定なし",
+      modFiletypeCustom: "カスタム…",
+      modFiletypeCustomPrompt: "拡張子を入力（例：pptx）",
+      modGroupHelp:
+        "🎯 検索修飾子\n\n▸ 完全一致「…」—— キーワードを引用符で囲み、表記を完全一致させます。\n▸ タイトルのみ（intitle:）—— その語がページタイトルに含まれている必要があります。\n▸ URLのみ（inurl:）—— その語がページURLに含まれている必要があります。\n　（タイトルのみとURLのみは排他的で、片方をONにすると他方は自動でOFFになります。）\n▸ ファイル形式（filetype:）—— そのサイト内で指定したファイル形式に結果を限定します。\n\nすべての修飾子は次回サイトボタンをクリックした際に自動的に適用されます。⚙️ ボタンで確認、または一括リセットができます。",
+      modSettingsTitle: "検索修飾子",
+      modSettingsSaved: "修飾子を更新しました",
     },
     ko: {
       siteTitle: "사이트 그룹",
@@ -1293,6 +1362,8 @@
       collapse: "스타일 조정 인터페이스 접기",
       toggleShow: "주소 표시",
       toggleHide: "메모 표시",
+      toolbarCompactOn: "아이콘만 표시",
+      toolbarCompactOff: "버튼 텍스트 표시",
       addGroup: "그룹 추가 ➕",
       editGroup: "그룹 편집 ✏️",
       delGroup: "그룹 삭제 🗑️",
@@ -1553,6 +1624,21 @@
       resetToDefault: "기본값으로 재설정",
       compactOn:  "컴팩트 모드",
       compactOff: "컴팩트 모드 종료",
+      modExactMatch:  "정확히 일치",
+      modExactMatchTip: '키워드를 인용부호로 감싸기: "ABCD" —— 표기를 정확히 일치시키고 동의어를 제외합니다',
+      modIntitle:     "제목만",
+      modIntitleTip:  "intitle:ABCD —— 해당 단어가 페이지 제목에 포함되어야 합니다",
+      modInurl:       "URL만",
+      modInurlTip:    "inurl:ABCD —— 해당 단어가 페이지 URL에 포함되어야 합니다",
+      modFiletype:    "파일 형식",
+      modFiletypeTip: "filetype:pdf —— 해당 사이트에서 지정한 파일 형식만 표시합니다",
+      modFiletypeNone: "제한 없음",
+      modFiletypeCustom: "사용자 지정…",
+      modFiletypeCustomPrompt: "확장자 입력（예: pptx）",
+      modGroupHelp:
+        "🎯 검색 수정자\n\n▸ 정확히 일치「…」—— 키워드를 인용부호로 감싸 표기를 정확히 일치시킵니다.\n▸ 제목만（intitle:）—— 해당 단어가 페이지 제목에 포함되어야 합니다.\n▸ URL만（inurl:）—— 해당 단어가 페이지 URL에 포함되어야 합니다.\n　（제목만과 URL만은 상호 배타적이며, 하나를 켜면 다른 하나는 자동으로 꺼집니다.）\n▸ 파일 형식（filetype:）—— 해당 사이트에서 지정한 파일 형식으로 결과를 제한합니다.\n\n모든 수정자는 다음에 사이트 버튼을 클릭할 때 자동으로 적용됩니다. ⚙️ 버튼으로 확인하거나 한번에 초기화할 수 있습니다.",
+      modSettingsTitle: "검색 수정자",
+      modSettingsSaved: "수정자가 업데이트되었습니다",
     },
   };
 
@@ -1882,6 +1968,26 @@
   let t = LANGUAGES[lang] || LANGUAGES["en"];
   const groups = GM_getValue("siteGroups", []);
   let showAddresses = GM_getValue("showAddresses", true);
+  let toolbarCompact = GM_getValue("toolbarCompact", false);
+
+  const NEW_FEATURE_VERSIONS = {
+    syntaxModifiers: "2.6.0.0",
+  };
+  const NEW_BADGE_SEEN_PREFIX = "newBadgeSeen_";
+  
+  function isFeatureNew(key) {
+    const introducedVer = NEW_FEATURE_VERSIONS[key];
+    if (!introducedVer) return false;
+    const seenVer = GM_getValue(NEW_BADGE_SEEN_PREFIX + key, "");
+    return seenVer !== introducedVer;
+  }
+  
+  function markFeatureSeen(key) {
+    const introducedVer = NEW_FEATURE_VERSIONS[key];
+    if (!introducedVer) return;
+    GM_setValue(NEW_BADGE_SEEN_PREFIX + key, introducedVer);
+  }
+
   let searchConfig = GM_getValue("searchConfig", {
     isExpanded: false,
     resetOnReload: true,
@@ -1893,6 +1999,11 @@
   let searchRegionNoticedOnce = GM_getValue("searchRegionNoticedOnce", false);
   let domainBlacklist     = GM_getValue("domainBlacklist",     []);
   let blacklistWeakenMode = GM_getValue("blacklistWeakenMode", false);
+
+  let exactMatchEnabled = GM_getValue("exactMatchEnabled", false);
+  let intitleEnabled    = GM_getValue("intitleEnabled",    false);
+  let inurlEnabled      = GM_getValue("inurlEnabled",      false);
+  let filetypeValue     = GM_getValue("filetypeValue",     "");
 
   function applyUrlOverrides() {
     if (!safeSearchEnabled && !searchRegionEnabled) return;
@@ -2513,6 +2624,21 @@
       line: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
       fill: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>`,
     },
+    modExact: {
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="7"/><line x1="12" y1="1" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="1" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="23" y2="12"/></svg>`,
+    },
+    modTitle: {
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><line x1="4" y1="5" x2="20" y2="5"/><line x1="12" y1="5" x2="12" y2="19"/></svg>`,
+    },
+    modUrl: {
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>`,
+    },
+    modFile: {
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+    },
+    compactToggle: {
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><polyline points="7 8 3 12 7 16"/><polyline points="17 8 21 12 17 16"/><line x1="3" y1="12" x2="21" y2="12"/></svg>`,
+    },
   };
 
   function _applyIconToBtn(btn, emoji, svgLine, svgFill, emojiSize) {
@@ -2970,6 +3096,7 @@
   let __compactMouseupHandler  = null;
   let __cpDragMoveHandler      = null;
   let __cpDragUpHandler        = null;
+  let __toolbarResizeObserver  = null;
   let _isDraggingPanel         = false;
   let _sfDragging = false, _sfOx = 0, _sfOy = 0;
   let _sfOnMove = null, _sfOnUp = null;
@@ -10628,20 +10755,103 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     border:1px solid ${panelTheme === "dark" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.08)"};
   `;
 
-  const _tlbBg  = panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5";
-  const _tlbFg  = panelTheme === "dark" ? "#ffffff" : "#000000";
-  const _tlbBd  = panelTheme === "dark" ? "#666"    : "#ccc";
+  const _tlbBg  = `var(--set-btn-bg, ${panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5"})`;
+  const _tlbFg  = `var(--set-text, ${panelTheme === "dark" ? "#ffffff" : "#000000"})`;
+  const _tlbBd  = `var(--set-border, ${panelTheme === "dark" ? "#666"    : "#ccc"})`;
   const _tlbRad = Math.max(styleSettings.borderRadius, 6) + "px";
+
+  function _attachHoverTooltip(el, textOrGetter, opts) {
+    const _margin = 8;
+    let tip = null;
+    function _getText() {
+      return typeof textOrGetter === "function" ? textOrGetter() : textOrGetter;
+    }
+    function _show() {
+      if (_isDraggingPanel || _epDrag.active) return;
+      const text = _getText();
+      if (!text) return;
+      if (!tip) {
+        tip = document.createElement("div");
+        tip.style.cssText = `
+          position:fixed; z-index:2147483660; display:none;
+          background:${panelTheme === "dark" ? "#2a2a4a" : "#f8f8ff"};
+          border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+          border-radius:8px; padding:6px 9px; font-size:11px; line-height:1.5;
+          white-space:pre-wrap;
+          color:${styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000")};
+          box-shadow:0 4px 16px rgba(0,0,0,0.25); max-width:260px; pointer-events:none;
+        `;
+        document.body.appendChild(tip);
+      }
+      tip.textContent = text;
+      tip.style.visibility = "hidden";
+      tip.style.display = "block";
+      requestAnimationFrame(() => {
+        if (!tip) return;
+        const r = el.getBoundingClientRect();
+        const tw = tip.offsetWidth || 200;
+        const th = tip.offsetHeight || 60;
+        let left = (opts && opts.center) ? r.left - tw / 2 : r.left;
+        if (left + tw > window.innerWidth - _margin) left = window.innerWidth - tw - _margin;
+        if (left < _margin) left = _margin;
+        let top = r.bottom + 6;
+        if (top + th > window.innerHeight - _margin) top = r.top - th - 6;
+        if (top < _margin) top = _margin;
+        tip.style.left = left + "px";
+        tip.style.top  = top + "px";
+        tip.style.visibility = "visible";
+      });
+    }
+    function _hide() { if (tip) tip.style.display = "none"; }
+    el.addEventListener("mouseenter", _show);
+    el.addEventListener("mouseleave", _hide);
+    return { hide: _hide, el: () => tip };
+  }
+
+  const compactToggleBtn = document.createElement("button");
+  compactToggleBtn.id = "toolbar-compact-toggle-btn";
+  compactToggleBtn.innerHTML = ICONS.compactToggle.line;
+  compactToggleBtn.style.cssText = `
+    padding:3px 6px; border-radius:${_tlbRad};
+    cursor:pointer; white-space:nowrap; font-size:13px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:${toolbarCompact ? (panelTheme === "dark" ? "rgba(90,150,255,0.35)" : "rgba(60,120,255,0.15)") : _tlbBg};
+    color:${_tlbFg}; border:1px solid ${_tlbBd};
+  `;
+  _attachHoverTooltip(compactToggleBtn, () =>
+    toolbarCompact
+      ? (t.toolbarCompactOff || "Show button labels")
+      : (t.toolbarCompactOn  || "Collapse to icons only")
+  );
+  compactToggleBtn.onclick = () => {
+    toolbarCompact = !toolbarCompact;
+    GM_setValue("toolbarCompact", toolbarCompact);
+    compactToggleBtn.style.background = toolbarCompact
+      ? (panelTheme === "dark" ? "rgba(90,150,255,0.35)" : "rgba(60,120,255,0.15)")
+      : _tlbBg;
+    _updateAddGroupBtn();
+    _updateExportBtn();
+    _updateImportBtn();
+    _updateBlacklistBtn();
+  };
 
   const addGroupBtn = document.createElement("button");
   addGroupBtn.id = "toolbar-add-group-btn";
-  addGroupBtn.textContent = t.addGroup || "Add Group ➕";
+  function _updateAddGroupBtn() {
+    if (toolbarCompact) {
+      addGroupBtn.textContent = "➕";
+    } else {
+      addGroupBtn.textContent = t.addGroup || "Add Group ➕";
+    }
+  }
+  _updateAddGroupBtn();
   addGroupBtn.style.cssText = `
     padding:3px 8px; border-radius:${_tlbRad};
-    cursor:pointer; white-space:nowrap; font-size:11px;
+    cursor:pointer; white-space:nowrap; font-size:11px; flex-shrink:1;
     background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
   `;
   addGroupBtn.style.display = styleSettings.hideAddGroupBtn ? "none" : "";
+  _attachHoverTooltip(addGroupBtn, () => toolbarCompact ? (t.addGroup || "Add Group ➕") : "");
   addGroupBtn.onclick = () => {
     if (isPromptActive) {
       warn("[Prompt] Another prompt is active, ignoring add-group request");
@@ -10659,34 +10869,31 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       showToast(`${t.addGroup || "Group added"} ✅`);
     });
   };
-  buttonContainer.appendChild(addGroupBtn);
 
   const toggleAddressBtn = document.createElement("button");
   toggleAddressBtn.id = "se-toggle-address-btn";
   toggleAddressBtn.style.cssText = `
-    padding:3px 8px; border-radius:${_tlbRad};
-    cursor:pointer; white-space:nowrap; font-size:11px;
+    padding:3px 6px; border-radius:${_tlbRad};
+    cursor:pointer; white-space:nowrap; font-size:13px;
     background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
-    display:${styleSettings.hideAddressToggleBtn ? "none" : "inline-flex"}; align-items:center; gap:4px;
+    display:${styleSettings.hideAddressToggleBtn ? "none" : "inline-flex"}; align-items:center; justify-content:center;
   `;
 
   function _updateAddrBtn() {
     const _ic = styleSettings.iconStyle || "emoji";
-    const _lbl = showAddresses ? (t.toggleHide || "Hide Addresses") : (t.toggleShow || "Show Addresses");
     if (_ic === "emoji") {
-      toggleAddressBtn.textContent = ICONS.toggleAddress.emoji + "\u202F" + _lbl;
-      toggleAddressBtn.style.fontSize = "11px";
+      toggleAddressBtn.textContent = ICONS.toggleAddress.emoji;
+      toggleAddressBtn.style.color = "";
     } else {
       const svgSrc = _ic === "svg-line" ? ICONS.toggleAddress.line : ICONS.toggleAddress.fill;
       toggleAddressBtn.innerHTML = svgSrc;
-      const lblSpan = document.createElement("span");
-      lblSpan.style.cssText = "font-size:11px;line-height:1";
-      lblSpan.textContent = _lbl;
-      toggleAddressBtn.appendChild(lblSpan);
       toggleAddressBtn.style.color = styleSettings.svgIconColor || "";
     }
   }
   _updateAddrBtn();
+  _attachHoverTooltip(toggleAddressBtn, () =>
+    showAddresses ? (t.toggleHide || "Hide Addresses") : (t.toggleShow || "Show Addresses")
+  );
 
   toggleAddressBtn.onclick = () => {
     showAddresses = !showAddresses;
@@ -10696,9 +10903,345 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   };
   buttonContainer.appendChild(toggleAddressBtn);
 
+  const modGroup = document.createElement("div");
+  modGroup.id = "syntax-mod-group";
+  modGroup.style.cssText =
+    "display:flex; align-items:center; gap:3px; flex-shrink:0; position:relative;";
+
+  let _modNewBadgeEl = null;
+  if (isFeatureNew("syntaxModifiers")) {
+    _modNewBadgeEl = document.createElement("span");
+    _modNewBadgeEl.textContent = "NEW";
+    _modNewBadgeEl.style.cssText = `
+      position:absolute; top:-7px; left:-4px; z-index:1;
+      background:#ff4d4f; color:#fff; font-size:8px; font-weight:700;
+      padding:1px 4px; border-radius:6px; line-height:1.3;
+      pointer-events:none; letter-spacing:0.02em;
+      animation:setModNewPulse 1.6s ease-in-out infinite;
+    `;
+    if (!document.getElementById("set-mod-new-badge-style")) {
+      const pulseStyle = document.createElement("style");
+      pulseStyle.id = "set-mod-new-badge-style";
+      pulseStyle.textContent = `
+        @keyframes setModNewPulse {
+          0%, 100% { opacity:1; transform:scale(1); }
+          50%      { opacity:0.7; transform:scale(1.08); }
+        }
+      `;
+      document.head.appendChild(pulseStyle);
+    }
+    modGroup.appendChild(_modNewBadgeEl);
+  }
+  
+  function _dismissModNewBadge() {
+    if (!_modNewBadgeEl) return;
+    markFeatureSeen("syntaxModifiers");
+    _modNewBadgeEl.remove();
+    _modNewBadgeEl = null;
+  }
+
+  const _modBtnBaseStyle = (active) => `
+    background:${active
+      ? (panelTheme === "dark" ? "rgba(90,150,255,0.35)" : "rgba(60,120,255,0.15)")
+      : "transparent"};
+    border:1px solid ${active
+      ? (panelTheme === "dark" ? "#5a96ff" : "#3c78ff")
+      : `var(--set-border, ${panelTheme === "dark" ? "#555" : "#ccc"})`};
+    color:${active
+      ? (panelTheme === "dark" ? "#bcd7ff" : "#1a54d6")
+      : (styleSettings.textColor || (panelTheme === "dark" ? "#ddd" : "#333"))};
+    border-radius:${styleSettings.borderRadius}px;
+    font-size:12px; padding:3px 6px; cursor:pointer; line-height:1;
+    display:inline-flex; align-items:center; justify-content:center;
+    transition:background 0.15s, border-color 0.15s;
+  `;
+
+  function _buildModToggleBtn(svgSrc, tipKey, stateGetter, stateSetter, onToggleExtra) {
+    const btn = document.createElement("button");
+    btn.innerHTML = svgSrc;
+    btn.style.cssText = _modBtnBaseStyle(stateGetter());
+    _attachHoverTooltip(btn, () => t[tipKey] || "");
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      stateSetter(!stateGetter());
+      if (onToggleExtra) onToggleExtra();
+      btn.style.cssText = _modBtnBaseStyle(stateGetter());
+      showToast(t.modSettingsSaved || "Modifiers updated");
+    });
+    return btn;
+  }
+
+  const exactMatchBtn = _buildModToggleBtn(
+    ICONS.modExact.line, "modExactMatchTip",
+    () => exactMatchEnabled,
+    (v) => { exactMatchEnabled = v; GM_setValue("exactMatchEnabled", v); },
+  );
+  modGroup.appendChild(exactMatchBtn);
+
+  const intitleBtn = _buildModToggleBtn(
+    ICONS.modTitle.line, "modIntitleTip",
+    () => intitleEnabled,
+    (v) => { intitleEnabled = v; GM_setValue("intitleEnabled", v); },
+    () => {
+      if (intitleEnabled && inurlEnabled) {
+        inurlEnabled = false;
+        GM_setValue("inurlEnabled", false);
+        inurlBtn.style.cssText = _modBtnBaseStyle(false);
+      }
+    },
+  );
+  modGroup.appendChild(intitleBtn);
+
+  const inurlBtn = _buildModToggleBtn(
+    ICONS.modUrl.line, "modInurlTip",
+    () => inurlEnabled,
+    (v) => { inurlEnabled = v; GM_setValue("inurlEnabled", v); },
+    () => {
+      if (inurlEnabled && intitleEnabled) {
+        intitleEnabled = false;
+        GM_setValue("intitleEnabled", false);
+        intitleBtn.style.cssText = _modBtnBaseStyle(false);
+      }
+    },
+  );
+  modGroup.appendChild(inurlBtn);
+
+  const FILETYPE_PRESETS = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"];
+  const filetypeBtn = document.createElement("button");
+  filetypeBtn.style.cssText = _modBtnBaseStyle(!!filetypeValue) + "position:relative;";
+  filetypeBtn.innerHTML = ICONS.modFile.line;
+  const filetypeDot = document.createElement("span");
+  filetypeDot.style.cssText = `
+    position:absolute; top:1px; right:1px; width:6px; height:6px; border-radius:50%;
+    background:${panelTheme === "dark" ? "#5a96ff" : "#3c78ff"};
+    display:${filetypeValue ? "block" : "none"}; pointer-events:none;
+  `;
+  filetypeBtn.appendChild(filetypeDot);
+  _attachHoverTooltip(filetypeBtn, () =>
+    filetypeValue
+      ? `${t.modFiletype || "File type"}: ${filetypeValue}`
+      : (t.modFiletypeTip || "")
+  );
+  modGroup.appendChild(filetypeBtn);
+
+  function _closeFiletypeMenu() {
+    const m = document.getElementById("filetype-mod-menu");
+    if (m) m.remove();
+    document.removeEventListener("mousedown", _ftMenuOutsideClick, true);
+  }
+  function _ftMenuOutsideClick(e) {
+    const m = document.getElementById("filetype-mod-menu");
+    if (m && !m.contains(e.target) && e.target !== filetypeBtn) _closeFiletypeMenu();
+  }
+  filetypeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    _closeFiletypeMenu();
+    const menu = document.createElement("div");
+    menu.id = "filetype-mod-menu";
+    menu.style.cssText = `
+      position:fixed; z-index:2147483660;
+      background:${panelTheme === "dark" ? "#2a2a2a" : "#fff"};
+      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+      border-radius:${styleSettings.borderRadius}px; padding:4px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.25); min-width:110px;
+      display:flex; flex-direction:column; gap:1px;
+    `;
+    const _mkItem = (label, onClick, isActive) => {
+      const it = document.createElement("div");
+      it.textContent = label;
+      const _baseBg = isActive
+        ? (panelTheme === "dark" ? "rgba(90,150,255,0.25)" : "rgba(60,120,255,0.12)")
+        : "";
+      it.style.cssText = `
+        padding:5px 8px; font-size:12px; cursor:pointer; border-radius:4px;
+        color:${styleSettings.textColor || (panelTheme === "dark" ? "#eee" : "#222")};
+        background:${_baseBg}; font-weight:${isActive ? "600" : "400"};
+      `;
+      it.addEventListener("mouseenter", () => {
+        it.style.background = panelTheme === "dark" ? "#3a3a3a" : "#f0f4ff";
+      });
+      it.addEventListener("mouseleave", () => { it.style.background = _baseBg; });
+      it.addEventListener("mousedown", (ev) => {
+        ev.stopPropagation(); ev.preventDefault();
+        onClick();
+        _closeFiletypeMenu();
+      });
+      return it;
+    };
+    const noneItem = _mkItem(`∅ ${t.modFiletypeNone || "No filter"}`, () => {
+      filetypeValue = "";
+      GM_setValue("filetypeValue", "");
+      filetypeBtn.style.cssText = _modBtnBaseStyle(false) + "position:relative;";
+      filetypeDot.style.display = "none";
+      showToast(t.modSettingsSaved || "Modifiers updated");
+    }, !filetypeValue);
+    menu.appendChild(noneItem);
+    FILETYPE_PRESETS.forEach((ext) => {
+      menu.appendChild(_mkItem(ext, () => {
+        filetypeValue = ext;
+        GM_setValue("filetypeValue", ext);
+        filetypeBtn.style.cssText = _modBtnBaseStyle(true) + "position:relative;";
+        filetypeDot.style.display = "block";
+        showToast(t.modSettingsSaved || "Modifiers updated");
+      }, filetypeValue === ext));
+    });
+    menu.appendChild(_mkItem(t.modFiletypeCustom || "Custom…", () => {
+      showCustomPrompt(
+        t.modFiletypeCustomPrompt || "Enter a file extension (e.g. pptx)",
+        "", (val) => {
+          const clean = (val || "").trim().replace(/^\./, "").toLowerCase();
+          if (!clean) return;
+          filetypeValue = clean;
+          GM_setValue("filetypeValue", clean);
+          filetypeBtn.style.cssText = _modBtnBaseStyle(true) + "position:relative;";
+          filetypeDot.style.display = "block";
+          showToast(t.modSettingsSaved || "Modifiers updated");
+        }, null, false,
+      );
+    }));
+    document.body.appendChild(menu);
+    const r = filetypeBtn.getBoundingClientRect();
+    const mw = menu.offsetWidth || 110, mh = menu.offsetHeight || 100;
+    let left = r.left;
+    if (left + mw > window.innerWidth - 8) left = window.innerWidth - mw - 8;
+    let top = r.bottom + 4;
+    if (top + mh > window.innerHeight - 8) top = r.top - mh - 4;
+    menu.style.left = Math.max(8, left) + "px";
+    menu.style.top  = Math.max(8, top)  + "px";
+    document.addEventListener("mousedown", _ftMenuOutsideClick, true);
+  });
+
+  function _closeModSettingsMenu() {
+    const m = document.getElementById("mod-settings-menu");
+    if (m) m.remove();
+    document.removeEventListener("mousedown", _msMenuOutsideClick, true);
+  }
+  function _msMenuOutsideClick(e) {
+    const m = document.getElementById("mod-settings-menu");
+    if (m && !m.contains(e.target) && e.target !== modSettingsBtn) _closeModSettingsMenu();
+  }
+  const _MOD_SETTINGS_BTN_W = "20px";
+  const modSettingsBtn = document.createElement("button");
+  modSettingsBtn.textContent = "⚙️";
+  modSettingsBtn.style.cssText = `
+    background:none; border:1px solid transparent; border-radius:${styleSettings.borderRadius}px;
+    cursor:pointer; font-size:12px; padding:2px 0; opacity:0; pointer-events:none; flex-shrink:0;
+    width:0; overflow:hidden; white-space:nowrap;
+    transition:opacity 0.15s, width 0.15s, padding 0.15s;
+  `;
+  _attachHoverTooltip(modSettingsBtn, () => t.modSettingsTitle || "Search Modifiers");
+  modSettingsBtn.addEventListener("mouseenter", () => { modSettingsBtn.style.opacity = "1"; });
+  modSettingsBtn.addEventListener("mouseleave", () => { modSettingsBtn.style.opacity = "0.6"; });
+  modSettingsBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    _closeModSettingsMenu();
+    const menu = document.createElement("div");
+    menu.id = "mod-settings-menu";
+    menu.style.cssText = `
+      position:fixed; z-index:2147483660;
+      background:${panelTheme === "dark" ? "#2a2a2a" : "#fff"};
+      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+      border-radius:${styleSettings.borderRadius}px; padding:8px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.25); min-width:180px;
+      font-size:12px; color:${styleSettings.textColor || (panelTheme === "dark" ? "#eee" : "#222")};
+    `;
+    const _mkCheckRow = (label, checked, onChange) => {
+      const row = document.createElement("label");
+      row.style.cssText = "display:flex; align-items:center; gap:6px; padding:4px 2px; cursor:pointer;";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = checked;
+      cb.addEventListener("change", () => onChange(cb.checked));
+      const span = document.createElement("span");
+      span.textContent = label;
+      row.appendChild(cb);
+      row.appendChild(span);
+      return { row, checkbox: cb };
+    };
+    const exactMatchRow = _mkCheckRow(t.modExactMatch || "Exact match", exactMatchEnabled, (v) => {
+      exactMatchEnabled = v; GM_setValue("exactMatchEnabled", v);
+      exactMatchBtn.style.cssText = _modBtnBaseStyle(v);
+      showToast(t.modSettingsSaved || "Modifiers updated");
+    });
+    const intitleRow = _mkCheckRow(t.modIntitle || "Title only", intitleEnabled, (v) => {
+      intitleEnabled = v; GM_setValue("intitleEnabled", v);
+      if (v && inurlEnabled) {
+        inurlEnabled = false; GM_setValue("inurlEnabled", false);
+        inurlBtn.style.cssText = _modBtnBaseStyle(false);
+        inurlRow.checkbox.checked = false;
+      }
+      intitleBtn.style.cssText = _modBtnBaseStyle(v);
+      showToast(t.modSettingsSaved || "Modifiers updated");
+    });
+    const inurlRow = _mkCheckRow(t.modInurl || "URL only", inurlEnabled, (v) => {
+      inurlEnabled = v; GM_setValue("inurlEnabled", v);
+      if (v && intitleEnabled) {
+        intitleEnabled = false; GM_setValue("intitleEnabled", false);
+        intitleBtn.style.cssText = _modBtnBaseStyle(false);
+        intitleRow.checkbox.checked = false;
+      }
+      inurlBtn.style.cssText = _modBtnBaseStyle(v);
+      showToast(t.modSettingsSaved || "Modifiers updated");
+    });
+    menu.appendChild(exactMatchRow.row);
+    menu.appendChild(intitleRow.row);
+    menu.appendChild(inurlRow.row);
+    document.body.appendChild(menu);
+    const r = modSettingsBtn.getBoundingClientRect();
+    const mw = menu.offsetWidth || 180, mh = menu.offsetHeight || 100;
+    let left = r.right - mw;
+    if (left < 8) left = 8;
+    let top = r.bottom + 4;
+    if (top + mh > window.innerHeight - 8) top = r.top - mh - 4;
+    menu.style.left = left + "px";
+    menu.style.top  = Math.max(8, top) + "px";
+    document.addEventListener("mousedown", _msMenuOutsideClick, true);
+  });
+  modGroup.appendChild(modSettingsBtn);
+
+  const _MOD_HELP_BADGE_W = "13px";
+  const modHelpBadge = document.createElement("span");
+  modHelpBadge.textContent = "❓";
+  modHelpBadge.style.cssText =
+    "cursor:help; font-size:11px; opacity:0; pointer-events:none; display:inline-block; " +
+    "flex-shrink:0; transition:opacity 0.15s, width 0.15s, margin-left 0.15s; " +
+    "width:0; margin-left:0; overflow:hidden; white-space:nowrap;";
+  modGroup.appendChild(modHelpBadge);
+
+  _attachHoverTooltip(modHelpBadge, () => t.modGroupHelp || "");
+
+  modGroup.addEventListener("mouseenter", () => {
+    if (_isDraggingPanel) return;
+    modHelpBadge.style.opacity = "0.55";
+    modHelpBadge.style.pointerEvents = "auto";
+    modHelpBadge.style.width = _MOD_HELP_BADGE_W;
+    modHelpBadge.style.marginLeft = "1px";
+    modSettingsBtn.style.opacity = "0.6";
+    modSettingsBtn.style.pointerEvents = "auto";
+    modSettingsBtn.style.width = _MOD_SETTINGS_BTN_W;
+    modSettingsBtn.style.padding = "2px 4px";
+    _dismissModNewBadge();
+  });
+  modGroup.addEventListener("mouseleave", () => {
+    modHelpBadge.style.opacity = "0";
+    modHelpBadge.style.pointerEvents = "none";
+    modHelpBadge.style.width = "0";
+    modHelpBadge.style.marginLeft = "0";
+    modSettingsBtn.style.opacity = "0";
+    modSettingsBtn.style.pointerEvents = "none";
+    modSettingsBtn.style.width = "0";
+    modSettingsBtn.style.padding = "2px 0";
+  });
+
+  buttonContainer.appendChild(modGroup);
+  buttonContainer.appendChild(addGroupBtn);
+
   const exportBtn = document.createElement("button");
   exportBtn.id = "toolbar-export-btn";
-  exportBtn.textContent = t.exportConfig || "Export Config 📤";
+  function _updateExportBtn() {
+    exportBtn.textContent = toolbarCompact ? "📤" : (t.exportConfig || "Export Config 📤");
+  }
+  _updateExportBtn();
   exportBtn.style.padding = "4px 8px";
   exportBtn.style.borderRadius = _tlbRad;
   exportBtn.style.cursor = "pointer";
@@ -10708,6 +11251,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   exportBtn.style.color = _tlbFg;
   exportBtn.style.border = `1px solid ${_tlbBd}`;
   exportBtn.style.display = styleSettings.hideExportBtn ? "none" : "";
+  _attachHoverTooltip(exportBtn, () => toolbarCompact ? (t.exportConfig || "Export Config 📤") : "");
   exportBtn.onclick = () => {
     const config = {
       siteGroups: groups,
@@ -10724,6 +11268,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       se_panelPinned: se_panelPinned,
       se_panelPos: se_panelPos,
       showAddresses: showAddresses,
+      toolbarCompact: toolbarCompact,
       searchConfigCollapsed: GM_getValue("searchConfigCollapsed", false),
       toggleButtonTop: GM_getValue("toggleButtonTop", null),
       toggleButtonLeft: GM_getValue("toggleButtonLeft", null),
@@ -10754,7 +11299,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const importBtn = document.createElement("button");
   importBtn.id = "toolbar-import-btn";
-  importBtn.textContent = t.importConfig || "Import Config 📥";
+  function _updateImportBtn() {
+    importBtn.textContent = toolbarCompact ? "📥" : (t.importConfig || "Import Config 📥");
+  }
+  _updateImportBtn();
   importBtn.style.padding = "4px 8px";
   importBtn.style.borderRadius = _tlbRad;
   importBtn.style.cursor = "pointer";
@@ -10764,6 +11312,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   importBtn.style.color = _tlbFg;
   importBtn.style.border = `1px solid ${_tlbBd}`;
   importBtn.style.display = styleSettings.hideImportBtn ? "none" : "";
+  _attachHoverTooltip(importBtn, () => toolbarCompact ? (t.importConfig || "Import Config 📥") : "");
   importBtn.onclick = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -10870,6 +11419,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
             showAddresses = config.showAddresses;
             GM_setValue("showAddresses", showAddresses);
           }
+          if (config.toolbarCompact !== undefined) {
+            toolbarCompact = config.toolbarCompact;
+            GM_setValue("toolbarCompact", toolbarCompact);
+          }
           if (config.searchConfigCollapsed !== undefined)
             GM_setValue("searchConfigCollapsed", config.searchConfigCollapsed);
           if (config.toggleButtonTop != null)
@@ -10925,25 +11478,88 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const blacklistBtnEl = document.createElement("button");
   blacklistBtnEl.id = "blacklist-btn";
-  blacklistBtnEl.textContent = t.blacklistBtn || "🚫 Blacklist";
-  blacklistBtnEl.title = t.blacklistTitle || "Domain Blacklist";
   blacklistBtnEl.style.padding = "4px 8px";
   blacklistBtnEl.style.borderRadius = _tlbRad;
   blacklistBtnEl.style.cursor = "pointer";
   blacklistBtnEl.style.whiteSpace = "nowrap";
-  blacklistBtnEl.style.flexShrink = "0";
+  blacklistBtnEl.style.flexShrink = "1";
   blacklistBtnEl.style.background = _tlbBg;
   blacklistBtnEl.style.color = _tlbFg;
   blacklistBtnEl.style.border = `1px solid ${_tlbBd}`;
   const _blCount = Array.isArray(domainBlacklist) ? domainBlacklist.filter(d => d.trim()).length : 0;
-  if (_blCount > 0) {
-    blacklistBtnEl.textContent = `🚫 ${_blCount}`;
-    blacklistBtnEl.title = (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist");
+  function _updateBlacklistBtn() {
+    if (toolbarCompact) {
+      blacklistBtnEl.textContent = _blCount > 0 ? `🚫${_blCount}` : "🚫";
+      blacklistBtnEl.title = "";
+    } else {
+      blacklistBtnEl.textContent = _blCount > 0 ? `🚫 ${_blCount}` : (t.blacklistBtn || "🚫 Blacklist");
+      blacklistBtnEl.title = _blCount > 0
+        ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
+        : (t.blacklistTitle || "Domain Blacklist");
+    }
   }
+  _updateBlacklistBtn();
+  _attachHoverTooltip(blacklistBtnEl, () =>
+    toolbarCompact
+      ? (_blCount > 0
+          ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
+          : (t.blacklistTitle || "Domain Blacklist"))
+      : ""
+  );
   blacklistBtnEl.onclick = () => showBlacklistDialog();
   blacklistBtnEl.style.display = styleSettings.hideBlacklistBtn ? "none" : "";
   buttonContainer.appendChild(blacklistBtnEl);
   buttonContainer.appendChild(syntaxHelpBtn);
+
+  const _TOOLBAR_EXPAND_MARGIN_PX = 8;
+  let _toolbarAutoCompactRaf = null;
+  function _measureToolbarNaturalWidth() {
+    const prevWrap = buttonContainer.style.flexWrap;
+    buttonContainer.style.flexWrap = "nowrap";
+    const naturalW = buttonContainer.scrollWidth;
+    buttonContainer.style.flexWrap = prevWrap || "wrap";
+    return naturalW;
+  }
+  function _applyToolbarAutoCompact() {
+    if (!buttonContainer.isConnected) return;
+    if (__toolbarResizeObserver) __toolbarResizeObserver.disconnect();
+    try {
+      const clientW = buttonContainer.clientWidth;
+      if (!toolbarCompact) {
+        if (_measureToolbarNaturalWidth() > clientW) {
+          toolbarCompact = true;
+          GM_setValue("toolbarCompact", toolbarCompact);
+          _updateAddGroupBtn(); _updateExportBtn(); _updateImportBtn(); _updateBlacklistBtn();
+        }
+      } else {
+        toolbarCompact = false;
+        _updateAddGroupBtn(); _updateExportBtn(); _updateImportBtn(); _updateBlacklistBtn();
+        const textW = _measureToolbarNaturalWidth();
+        if (textW > clientW - _TOOLBAR_EXPAND_MARGIN_PX) {
+          toolbarCompact = true;
+          _updateAddGroupBtn(); _updateExportBtn(); _updateImportBtn(); _updateBlacklistBtn();
+        } else {
+          GM_setValue("toolbarCompact", toolbarCompact);
+        }
+      }
+    } finally {
+      if (__toolbarResizeObserver) __toolbarResizeObserver.observe(buttonContainer);
+    }
+  }
+  if (__toolbarResizeObserver) {
+    __toolbarResizeObserver.disconnect();
+    __toolbarResizeObserver = null;
+  }
+  __toolbarResizeObserver = new ResizeObserver(() => {
+    if (_toolbarAutoCompactRaf) cancelAnimationFrame(_toolbarAutoCompactRaf);
+    _toolbarAutoCompactRaf = requestAnimationFrame(() => {
+      _toolbarAutoCompactRaf = null;
+      _applyToolbarAutoCompact();
+    });
+  });
+  __toolbarResizeObserver.observe(buttonContainer);
+  requestAnimationFrame(_applyToolbarAutoCompact);
+
     return { searchContainer, buttonContainer, searchInput };
   }
 
@@ -11939,6 +12555,28 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     return "q";
   }
 
+  function _buildModifiedKeyword(keyword) {
+    if (!keyword || !keyword.trim()) {
+      return { text: keyword || "", filetype: filetypeValue || "" };
+    }
+    let text = keyword;
+    if (intitleEnabled) {
+      text = `intitle:${text}`;
+    } else if (inurlEnabled) {
+      text = `inurl:${text}`;
+    }
+    if (exactMatchEnabled) {
+      if (intitleEnabled) {
+        text = `intitle:"${keyword}"`;
+      } else if (inurlEnabled) {
+        text = `inurl:"${keyword}"`;
+      } else {
+        text = `"${keyword}"`;
+      }
+    }
+    return { text, filetype: filetypeValue || "" };
+  }
+
   function applySiteFilter(keyword) {
     const selectors = [
       'input[name="text"]',
@@ -12009,7 +12647,23 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       let newQuery = rawQuery
         .replace(/(?:^|\s)-?site:[^\s]+/gi, "")
         .trim();
-      newQuery = `${newQuery} site:${keyword}`.trim();
+
+      if (filetypeValue) {
+        newQuery = newQuery.replace(/(?:^|\s)filetype:[^\s]+/gi, "").trim();
+      }
+      if (intitleEnabled) {
+        newQuery = newQuery.replace(/(?:^|\s)intitle:/gi, " ").trim();
+      }
+      if (inurlEnabled) {
+        newQuery = newQuery.replace(/(?:^|\s)inurl:/gi, " ").trim();
+      }
+      if (exactMatchEnabled && newQuery.startsWith('"') && newQuery.endsWith('"')) {
+        newQuery = newQuery.slice(1, -1).trim();
+      }
+
+      const { text: modifiedQuery, filetype } = _buildModifiedKeyword(newQuery);
+      newQuery = `${modifiedQuery} site:${keyword}`.trim();
+      if (filetype) newQuery = `${newQuery} filetype:${filetype}`.trim();
 
       const isBaidu = window.location.hostname.includes("baidu.com");
       if (!isBaidu && Array.isArray(domainBlacklist) && domainBlacklist.length > 0) {
@@ -12403,9 +13057,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           removeUndoMessage(undoMsg);
         }, 2000);
         log("Site restored:", {
-          群組: targetGroup.name,
-          站點: deletedSite.url,
-          位置: siteIndex,
+          group: targetGroup.name,
+          site: deletedSite.url,
+          index: siteIndex,
         });
       }
     };
