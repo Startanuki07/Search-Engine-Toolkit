@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.6.0.5
+// @version      2.6.0.13
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -288,6 +288,7 @@
       hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
       hideExportBtnLabel: "Hide 📤 Export Button",
       hideImportBtnLabel: "Hide 📥 Import Button",
+      hideModGroupLabel: "Hide Modifier Button Group (◇T🔗📄)",
       toggleBtnStyleLabel:    "Toggle Button Style",
       toggleBtnIconLabel:     "Icon",
       toggleBtnIconEmoji:     "🔍 Emoji",
@@ -579,6 +580,7 @@
       hideAddressToggleBtnLabel: "隱藏 🔁 顯示/隱藏網址按鈕",
       hideExportBtnLabel: "隱藏 📤 匯出按鈕",
       hideImportBtnLabel: "隱藏 📥 匯入按鈕",
+      hideModGroupLabel: "隱藏修飾器按鈕群（◇T🔗📄）",
       toggleBtnStyleLabel:    "開關按鈕樣式",
       toggleBtnIconLabel:     "圖示",
       toggleBtnIconEmoji:     "🔍 Emoji",
@@ -865,6 +867,7 @@
       hideAddressToggleBtnLabel: "隐藏 🔁 显示/隐藏网址按钮",
       hideExportBtnLabel: "隐藏 📤 导出按钮",
       hideImportBtnLabel: "隐藏 📥 导入按钮",
+      hideModGroupLabel: "隐藏修饰器按钮组（◇T🔗📄）",
       toggleBtnStyleLabel:    "开关按钮样式",
       toggleBtnIconLabel:     "图标",
       toggleBtnIconEmoji:     "🔍 Emoji",
@@ -1152,6 +1155,7 @@
       hideAddressToggleBtnLabel: "🔁 ｱﾄﾞﾚｽ切替ﾎﾞﾀﾝを非表示",
       hideExportBtnLabel: "📤 ｴｸｽﾎﾟｰﾄﾎﾞﾀﾝを非表示",
       hideImportBtnLabel: "📥 ｲﾝﾎﾟｰﾄﾎﾞﾀﾝを非表示",
+      hideModGroupLabel: "修飾子ﾎﾞﾀﾝｸﾞﾙｰﾌﾟを非表示（◇T🔗📄）",
       toggleBtnStyleLabel:    "ﾄｸﾞﾙﾎﾞﾀﾝｽﾀｲﾙ",
       toggleBtnIconLabel:     "ｱｲｺﾝ",
       toggleBtnIconEmoji:     "🔍 Emoji",
@@ -1440,6 +1444,7 @@
       hideAddressToggleBtnLabel: "🔁 주소 토글 버튼 숨기기",
       hideExportBtnLabel: "📤 내보내기 버튼 숨기기",
       hideImportBtnLabel: "📥 가져오기 버튼 숨기기",
+      hideModGroupLabel: "수정자 버튼 그룹 숨기기（◇T🔗📄）",
       toggleBtnStyleLabel:    "토글 버튼 스타일",
       toggleBtnIconLabel:     "아이콘",
       toggleBtnIconEmoji:     "🔍 Emoji",
@@ -1741,6 +1746,7 @@
     hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
     hideExportBtnLabel: "Hide 📤 Export Button",
     hideImportBtnLabel: "Hide 📥 Import Button",
+    hideModGroupLabel: "Hide Modifier Button Group (◇T🔗📄)",
     toggleBtnStyleLabel:    "Toggle Button Style",
     toggleBtnIconLabel:     "Icon",
     toggleBtnIconEmoji:     "🔍 Emoji",
@@ -2372,6 +2378,7 @@
       hideAddressToggleBtn: false,
       hideExportBtn: false,
       hideImportBtn: false,
+      hideModGroup: false,
       iconStyle: "emoji",
       toggleBtnBg: "",
       toggleBtnBgOpacity: 0,
@@ -2625,19 +2632,54 @@
       fill: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>`,
     },
     modExact: {
+      emoji: "🎯", size: "13px",
       line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="7"/><line x1="12" y1="1" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="1" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="23" y2="12"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="7" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2"/><line x1="12" y1="1" x2="12" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="19" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
     },
     modTitle: {
+      emoji: "🔤", size: "13px",
       line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><line x1="4" y1="5" x2="20" y2="5"/><line x1="12" y1="5" x2="12" y2="19"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><rect x="2" y="2" width="20" height="20" rx="4" fill="currentColor" fill-opacity=".15"/><line x1="4" y1="5" x2="20" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
     },
     modUrl: {
+      emoji: "🔗", size: "13px",
       line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.5 1.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.5-1.5" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     },
     modFile: {
+      emoji: "📁", size: "13px",
       line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
     },
     compactToggle: {
+      emoji: "↔️", size: "13px",
       line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><polyline points="7 8 3 12 7 16"/><polyline points="17 8 21 12 17 16"/><line x1="3" y1="12" x2="21" y2="12"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><polyline points="7 8 3 12 7 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17 8 21 12 17 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+    },
+    addGroup: {
+      emoji: "➕", size: "13px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+    },
+    exportConfig: {
+      emoji: "📤", size: "13px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17 8 12 3 7 8" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
+    },
+    importConfig: {
+      emoji: "📥", size: "13px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="7 10 12 15 17 10" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
+    },
+    blacklist: {
+      emoji: "🚫", size: "13px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10"/><line x1="5.5" y1="5.5" x2="18.5" y2="18.5"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2"/><line x1="5.5" y1="5.5" x2="18.5" y2="18.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+    },
+    syntaxHelp: {
+      emoji: "📖", size: "13px",
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M2 5.5A2.5 2.5 0 0 1 4.5 3H11v18H4.5A2.5 2.5 0 0 1 2 18.5z"/><path d="M22 5.5A2.5 2.5 0 0 0 19.5 3H13v18h6.5a2.5 2.5 0 0 0 2.5-2.5z"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="display:block;pointer-events:none"><path d="M2 5.5A2.5 2.5 0 0 1 4.5 3H11v18H4.5A2.5 2.5 0 0 1 2 18.5z" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M22 5.5A2.5 2.5 0 0 0 19.5 3H13v18h6.5a2.5 2.5 0 0 0 2.5-2.5z" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
     },
   };
 
@@ -2658,6 +2700,19 @@
       btn.style.fontSize = emojiSize || "14px";
       btn.style.color    = "";
     }
+  }
+
+  function _applyModBtnIcon(btn, iconDef, active, preserveChild) {
+    if (!btn) return;
+    const style = styleSettings.iconStyle || "emoji";
+    if (style === "emoji") {
+      btn.textContent = iconDef.emoji;
+      btn.style.fontSize = iconDef.size || "13px";
+    } else {
+      btn.innerHTML = style === "svg-line" ? iconDef.line : iconDef.fill;
+      btn.style.fontSize = "0";
+    }
+    if (preserveChild) btn.appendChild(preserveChild);
   }
 
   const GRP_SVG_MAP = {
@@ -2703,6 +2758,45 @@
         el.style.color = "";
       }
     });
+
+    if (typeof _applyModBtnIcon === "function") {
+      const _modExactEl = document.querySelector('[data-mod-icon-key="modExact"]');
+      if (_modExactEl) _applyModBtnIcon(_modExactEl, ICONS.modExact, exactMatchEnabled);
+      const _modTitleEl = document.querySelector('[data-mod-icon-key="modTitle"]');
+      if (_modTitleEl) _applyModBtnIcon(_modTitleEl, ICONS.modTitle, intitleEnabled);
+      const _modUrlEl = document.querySelector('[data-mod-icon-key="modUrl"]');
+      if (_modUrlEl) _applyModBtnIcon(_modUrlEl, ICONS.modUrl, inurlEnabled);
+      const _modFileEl = document.querySelector('[data-mod-icon-key="modFile"]');
+      if (_modFileEl) {
+        const _dot = _modFileEl.querySelector("span");
+        _applyModBtnIcon(_modFileEl, ICONS.modFile, !!filetypeValue, _dot);
+      }
+    }
+
+    const _addGroupIcon = document.getElementById("toolbar-add-group-btn")?.firstElementChild;
+    if (_addGroupIcon) _applyIconToBtn(_addGroupIcon, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
+    const _exportIcon = document.getElementById("toolbar-export-btn")?.firstElementChild;
+    if (_exportIcon) _applyIconToBtn(_exportIcon, ICONS.exportConfig.emoji, ICONS.exportConfig.line, ICONS.exportConfig.fill, ICONS.exportConfig.size);
+    const _importIcon = document.getElementById("toolbar-import-btn")?.firstElementChild;
+    if (_importIcon) _applyIconToBtn(_importIcon, ICONS.importConfig.emoji, ICONS.importConfig.line, ICONS.importConfig.fill, ICONS.importConfig.size);
+    const _blacklistIcon = document.getElementById("blacklist-btn")?.firstElementChild;
+    if (_blacklistIcon) _applyIconToBtn(_blacklistIcon, ICONS.blacklist.emoji, ICONS.blacklist.line, ICONS.blacklist.fill, ICONS.blacklist.size);
+    const _syntaxHelpBtn = document.getElementById("syntax-help-btn");
+    if (_syntaxHelpBtn) _applyIconToBtn(_syntaxHelpBtn, ICONS.syntaxHelp.emoji, ICONS.syntaxHelp.line, ICONS.syntaxHelp.fill, ICONS.syntaxHelp.size);
+  }
+
+  function _syncToolbarContainerVisibility() {
+    const container = document.getElementById("toolbar-container");
+    if (!container) return;
+    const _others = Array.from(container.children).filter(
+      (el) => el.id !== "toolbar-compact-toggle-btn"
+    );
+    const allHidden = _others.length > 0 && _others.every(
+      (el) => el.style.display === "none"
+    );
+    const _toggleBtn = document.getElementById("toolbar-compact-toggle-btn");
+    if (_toggleBtn) _toggleBtn.style.display = allHidden ? "none" : "inline-flex";
+    container.style.display = allHidden ? "none" : "flex";
   }
 
   function applyToggleBtnStyle(btn) {
@@ -3096,7 +3190,6 @@
   let __compactMouseupHandler  = null;
   let __cpDragMoveHandler      = null;
   let __cpDragUpHandler        = null;
-  let __toolbarResizeObserver  = null;
   let _isDraggingPanel         = false;
   let _sfDragging = false, _sfOx = 0, _sfOy = 0;
   let _sfOnMove = null, _sfOnUp = null;
@@ -8140,6 +8233,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       hideBlacklistBtn: false,
       hideAddGroupBtn: false, hideAddressToggleBtn: false,
       hideExportBtn: false,   hideImportBtn: false,
+      hideModGroup: false,
       isExpanded:       false,
       iconStyle:          "emoji",
       toggleBtnBg:        "",
@@ -8251,6 +8345,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     hideBlacklistBtn: false,
     hideAddGroupBtn: false, hideAddressToggleBtn: false,
     hideExportBtn: false,   hideImportBtn: false,
+    hideModGroup: false,
     toggleBtnBg: "",
     toggleBtnBgOpacity: 0,
     svgIconColor: "",
@@ -8359,6 +8454,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         save();
         const btn = document.getElementById("syntax-help-btn");
         if (btn) btn.style.display = chk.checked ? "none" : "";
+        if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
       };
       const _openSyntax = document.createElement("button");
       _openSyntax.textContent = "📖";
@@ -8402,6 +8498,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         save();
         const btn = document.getElementById("blacklist-btn");
         if (btn) btn.style.display = chk.checked ? "none" : "";
+        if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
       };
       const _openBl = document.createElement("button");
       _openBl.textContent = "🚫";
@@ -8444,33 +8541,38 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         styleSettings[key] = chk.checked;
         save();
         const _idMap = {
-          hideAddGroupBtn:      "toolbar-add-group-btn",
-          hideAddressToggleBtn: "se-toggle-address-btn",
-          hideExportBtn:        "toolbar-export-btn",
-          hideImportBtn:        "toolbar-import-btn",
+          hideAddGroupBtn:      { id: "toolbar-add-group-btn", show: "inline-flex" },
+          hideAddressToggleBtn: { id: "se-toggle-address-btn",  show: "inline-flex"  },
+          hideExportBtn:        { id: "toolbar-export-btn",     show: "inline-flex" },
+          hideImportBtn:        { id: "toolbar-import-btn",     show: "inline-flex" },
+          hideModGroup:         { id: "syntax-mod-group",       show: "flex"         },
         };
-        const el = document.getElementById(_idMap[key]);
-        if (el) el.style.display = chk.checked ? "none" : "";
+        const _map = _idMap[key];
+        const el = _map && document.getElementById(_map.id);
+        if (el) el.style.display = chk.checked ? "none" : _map.show;
+        if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
       };
-      const _openBtn = document.createElement("button");
-      _openBtn.textContent = icon;
-      _openBtn.title = title;
-      _openBtn.style.cssText = `
-        padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
-        border:1px solid ${_isDk ? "#555" : "#ccc"};
-        background:transparent; font-size:12px; line-height:1.6;
-        transition:background .15s;
-      `;
-      _openBtn.addEventListener("mouseenter", () => {
-        _openBtn.style.background = _isDk ? "#333" : "#f0f0f0";
-      });
-      _openBtn.addEventListener("mouseleave", () => {
-        _openBtn.style.background = "transparent";
-      });
-      _openBtn.addEventListener("click", (e) => { e.stopPropagation(); onOpen(); });
       row.appendChild(chk);
       row.appendChild(lbl);
-      row.appendChild(_openBtn);
+      if (onOpen) {
+        const _openBtn = document.createElement("button");
+        _openBtn.textContent = icon;
+        _openBtn.title = title;
+        _openBtn.style.cssText = `
+          padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
+          border:1px solid ${_isDk ? "#555" : "#ccc"};
+          background:transparent; font-size:12px; line-height:1.6;
+          transition:background .15s;
+        `;
+        _openBtn.addEventListener("mouseenter", () => {
+          _openBtn.style.background = _isDk ? "#333" : "#f0f0f0";
+        });
+        _openBtn.addEventListener("mouseleave", () => {
+          _openBtn.style.background = "transparent";
+        });
+        _openBtn.addEventListener("click", (e) => { e.stopPropagation(); onOpen(); });
+        row.appendChild(_openBtn);
+      }
       panelLayoutContainer.appendChild(row);
     }
 
@@ -8517,6 +8619,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const btn = document.getElementById("toolbar-import-btn");
         if (btn) btn.click(); else importBtn.onclick?.();
       }
+    );
+
+    _makeHideRow(
+      "hideModGroup",
+      t.hideModGroupLabel || "Hide Modifier Button Group (◇T🔗📄)",
+      "◇", ""
     );
 
     return { panelLayoutContainer, panelLayoutHeader };
@@ -10747,12 +10855,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const buttonContainer = document.createElement("div");
   buttonContainer.id = "toolbar-container";
   buttonContainer.style.cssText = `
-    display:flex; flex-wrap:wrap; gap:4px; row-gap:3px;
-    margin-bottom:8px; position:relative; z-index:0;
+    display:flex; flex-wrap:nowrap; gap:4px;
+    margin-top:8px; margin-bottom:8px; position:relative; z-index:0;
     padding:6px 8px;
     background:${panelTheme === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)"};
     border-radius:${Math.max(styleSettings.borderRadius, 8)}px;
     border:1px solid ${panelTheme === "dark" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.08)"};
+    overflow-x:auto; overflow-y:hidden; scrollbar-width:thin;
   `;
 
   const _tlbBg  = `var(--set-btn-bg, ${panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5"})`;
@@ -10810,7 +10919,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const compactToggleBtn = document.createElement("button");
   compactToggleBtn.id = "toolbar-compact-toggle-btn";
-  compactToggleBtn.innerHTML = ICONS.compactToggle.line;
   compactToggleBtn.style.cssText = `
     padding:3px 6px; border-radius:${_tlbRad};
     cursor:pointer; white-space:nowrap; font-size:13px;
@@ -10818,6 +10926,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     background:${toolbarCompact ? (panelTheme === "dark" ? "rgba(90,150,255,0.35)" : "rgba(60,120,255,0.15)") : _tlbBg};
     color:${_tlbFg}; border:1px solid ${_tlbBd};
   `;
+  _applyIconToBtn(compactToggleBtn, ICONS.compactToggle.emoji, ICONS.compactToggle.line, ICONS.compactToggle.fill, ICONS.compactToggle.size);
   _attachHoverTooltip(compactToggleBtn, () =>
     toolbarCompact
       ? (t.toolbarCompactOff || "Show button labels")
@@ -10837,20 +10946,22 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const addGroupBtn = document.createElement("button");
   addGroupBtn.id = "toolbar-add-group-btn";
-  function _updateAddGroupBtn() {
-    if (toolbarCompact) {
-      addGroupBtn.textContent = "➕";
-    } else {
-      addGroupBtn.textContent = t.addGroup || "Add Group ➕";
-    }
-  }
-  _updateAddGroupBtn();
   addGroupBtn.style.cssText = `
     padding:3px 8px; border-radius:${_tlbRad};
     cursor:pointer; white-space:nowrap; font-size:11px; flex-shrink:1;
     background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
+    display:inline-flex; align-items:center; justify-content:center; gap:4px;
   `;
-  addGroupBtn.style.display = styleSettings.hideAddGroupBtn ? "none" : "";
+  const addGroupIconEl  = document.createElement("span");
+  const addGroupLabelEl = document.createElement("span");
+  addGroupBtn.appendChild(addGroupIconEl);
+  addGroupBtn.appendChild(addGroupLabelEl);
+  function _updateAddGroupBtn() {
+    _applyIconToBtn(addGroupIconEl, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
+    addGroupLabelEl.textContent = toolbarCompact ? "" : (t.addGroup || "Add Group ➕").replace(/\s*➕\s*$/, "");
+  }
+  _updateAddGroupBtn();
+  addGroupBtn.style.display = styleSettings.hideAddGroupBtn ? "none" : "inline-flex";
   _attachHoverTooltip(addGroupBtn, () => toolbarCompact ? (t.addGroup || "Add Group ➕") : "");
   addGroupBtn.onclick = () => {
     if (isPromptActive) {
@@ -10901,12 +11012,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _updateAddrBtn();
     renderSites(panel);
   };
+  buttonContainer.appendChild(compactToggleBtn);
   buttonContainer.appendChild(toggleAddressBtn);
 
   const modGroup = document.createElement("div");
   modGroup.id = "syntax-mod-group";
   modGroup.style.cssText =
     "display:flex; align-items:center; gap:3px; flex-shrink:0; position:relative;";
+  modGroup.style.display = styleSettings.hideModGroup ? "none" : "flex";
 
   let _modNewBadgeEl = null;
   if (isFeatureNew("syntaxModifiers")) {
@@ -10956,30 +11069,32 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     transition:background 0.15s, border-color 0.15s;
   `;
 
-  function _buildModToggleBtn(svgSrc, tipKey, stateGetter, stateSetter, onToggleExtra) {
+  function _buildModToggleBtn(iconDef, tipKey, stateGetter, stateSetter, onToggleExtra) {
     const btn = document.createElement("button");
-    btn.innerHTML = svgSrc;
     btn.style.cssText = _modBtnBaseStyle(stateGetter());
+    _applyModBtnIcon(btn, iconDef, stateGetter());
     _attachHoverTooltip(btn, () => t[tipKey] || "");
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
       stateSetter(!stateGetter());
       if (onToggleExtra) onToggleExtra();
       btn.style.cssText = _modBtnBaseStyle(stateGetter());
+      _applyModBtnIcon(btn, iconDef, stateGetter());
       showToast(t.modSettingsSaved || "Modifiers updated");
     });
+    btn.dataset.modIconKey = iconDef.__key;
     return btn;
   }
 
   const exactMatchBtn = _buildModToggleBtn(
-    ICONS.modExact.line, "modExactMatchTip",
+    { ...ICONS.modExact, __key: "modExact" }, "modExactMatchTip",
     () => exactMatchEnabled,
     (v) => { exactMatchEnabled = v; GM_setValue("exactMatchEnabled", v); },
   );
   modGroup.appendChild(exactMatchBtn);
 
   const intitleBtn = _buildModToggleBtn(
-    ICONS.modTitle.line, "modIntitleTip",
+    { ...ICONS.modTitle, __key: "modTitle" }, "modIntitleTip",
     () => intitleEnabled,
     (v) => { intitleEnabled = v; GM_setValue("intitleEnabled", v); },
     () => {
@@ -10987,13 +11102,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         inurlEnabled = false;
         GM_setValue("inurlEnabled", false);
         inurlBtn.style.cssText = _modBtnBaseStyle(false);
+        _applyModBtnIcon(inurlBtn, ICONS.modUrl, false);
       }
     },
   );
   modGroup.appendChild(intitleBtn);
 
   const inurlBtn = _buildModToggleBtn(
-    ICONS.modUrl.line, "modInurlTip",
+    { ...ICONS.modUrl, __key: "modUrl" }, "modInurlTip",
     () => inurlEnabled,
     (v) => { inurlEnabled = v; GM_setValue("inurlEnabled", v); },
     () => {
@@ -11001,6 +11117,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         intitleEnabled = false;
         GM_setValue("intitleEnabled", false);
         intitleBtn.style.cssText = _modBtnBaseStyle(false);
+        _applyModBtnIcon(intitleBtn, ICONS.modTitle, false);
       }
     },
   );
@@ -11008,8 +11125,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const FILETYPE_PRESETS = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"];
   const filetypeBtn = document.createElement("button");
+  filetypeBtn.dataset.modIconKey = "modFile";
   filetypeBtn.style.cssText = _modBtnBaseStyle(!!filetypeValue) + "position:relative;";
-  filetypeBtn.innerHTML = ICONS.modFile.line;
+  _applyModBtnIcon(filetypeBtn, ICONS.modFile, !!filetypeValue);
   const filetypeDot = document.createElement("span");
   filetypeDot.style.cssText = `
     position:absolute; top:1px; right:1px; width:6px; height:6px; border-radius:50%;
@@ -11111,94 +11229,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     document.addEventListener("mousedown", _ftMenuOutsideClick, true);
   });
 
-  function _closeModSettingsMenu() {
-    const m = document.getElementById("mod-settings-menu");
-    if (m) m.remove();
-    document.removeEventListener("mousedown", _msMenuOutsideClick, true);
-  }
-  function _msMenuOutsideClick(e) {
-    const m = document.getElementById("mod-settings-menu");
-    if (m && !m.contains(e.target) && e.target !== modSettingsBtn) _closeModSettingsMenu();
-  }
-  const _MOD_SETTINGS_BTN_W = "20px";
-  const modSettingsBtn = document.createElement("button");
-  modSettingsBtn.textContent = "⚙️";
-  modSettingsBtn.style.cssText = `
-    background:none; border:1px solid transparent; border-radius:${styleSettings.borderRadius}px;
-    cursor:pointer; font-size:12px; padding:2px 0; opacity:0; pointer-events:none; flex-shrink:0;
-    width:0; overflow:hidden; white-space:nowrap;
-    transition:opacity 0.15s, width 0.15s, padding 0.15s;
-  `;
-  _attachHoverTooltip(modSettingsBtn, () => t.modSettingsTitle || "Search Modifiers");
-  modSettingsBtn.addEventListener("mouseenter", () => { modSettingsBtn.style.opacity = "1"; });
-  modSettingsBtn.addEventListener("mouseleave", () => { modSettingsBtn.style.opacity = "0.6"; });
-  modSettingsBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    _closeModSettingsMenu();
-    const menu = document.createElement("div");
-    menu.id = "mod-settings-menu";
-    menu.style.cssText = `
-      position:fixed; z-index:2147483660;
-      background:${panelTheme === "dark" ? "#2a2a2a" : "#fff"};
-      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
-      border-radius:${styleSettings.borderRadius}px; padding:8px;
-      box-shadow:0 6px 20px rgba(0,0,0,0.25); min-width:180px;
-      font-size:12px; color:${styleSettings.textColor || (panelTheme === "dark" ? "#eee" : "#222")};
-    `;
-    const _mkCheckRow = (label, checked, onChange) => {
-      const row = document.createElement("label");
-      row.style.cssText = "display:flex; align-items:center; gap:6px; padding:4px 2px; cursor:pointer;";
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.checked = checked;
-      cb.addEventListener("change", () => onChange(cb.checked));
-      const span = document.createElement("span");
-      span.textContent = label;
-      row.appendChild(cb);
-      row.appendChild(span);
-      return { row, checkbox: cb };
-    };
-    const exactMatchRow = _mkCheckRow(t.modExactMatch || "Exact match", exactMatchEnabled, (v) => {
-      exactMatchEnabled = v; GM_setValue("exactMatchEnabled", v);
-      exactMatchBtn.style.cssText = _modBtnBaseStyle(v);
-      showToast(t.modSettingsSaved || "Modifiers updated");
-    });
-    const intitleRow = _mkCheckRow(t.modIntitle || "Title only", intitleEnabled, (v) => {
-      intitleEnabled = v; GM_setValue("intitleEnabled", v);
-      if (v && inurlEnabled) {
-        inurlEnabled = false; GM_setValue("inurlEnabled", false);
-        inurlBtn.style.cssText = _modBtnBaseStyle(false);
-        inurlRow.checkbox.checked = false;
-      }
-      intitleBtn.style.cssText = _modBtnBaseStyle(v);
-      showToast(t.modSettingsSaved || "Modifiers updated");
-    });
-    const inurlRow = _mkCheckRow(t.modInurl || "URL only", inurlEnabled, (v) => {
-      inurlEnabled = v; GM_setValue("inurlEnabled", v);
-      if (v && intitleEnabled) {
-        intitleEnabled = false; GM_setValue("intitleEnabled", false);
-        intitleBtn.style.cssText = _modBtnBaseStyle(false);
-        intitleRow.checkbox.checked = false;
-      }
-      inurlBtn.style.cssText = _modBtnBaseStyle(v);
-      showToast(t.modSettingsSaved || "Modifiers updated");
-    });
-    menu.appendChild(exactMatchRow.row);
-    menu.appendChild(intitleRow.row);
-    menu.appendChild(inurlRow.row);
-    document.body.appendChild(menu);
-    const r = modSettingsBtn.getBoundingClientRect();
-    const mw = menu.offsetWidth || 180, mh = menu.offsetHeight || 100;
-    let left = r.right - mw;
-    if (left < 8) left = 8;
-    let top = r.bottom + 4;
-    if (top + mh > window.innerHeight - 8) top = r.top - mh - 4;
-    menu.style.left = left + "px";
-    menu.style.top  = Math.max(8, top) + "px";
-    document.addEventListener("mousedown", _msMenuOutsideClick, true);
-  });
-  modGroup.appendChild(modSettingsBtn);
-
   const _MOD_HELP_BADGE_W = "13px";
   const modHelpBadge = document.createElement("span");
   modHelpBadge.textContent = "❓";
@@ -11216,10 +11246,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     modHelpBadge.style.pointerEvents = "auto";
     modHelpBadge.style.width = _MOD_HELP_BADGE_W;
     modHelpBadge.style.marginLeft = "1px";
-    modSettingsBtn.style.opacity = "0.6";
-    modSettingsBtn.style.pointerEvents = "auto";
-    modSettingsBtn.style.width = _MOD_SETTINGS_BTN_W;
-    modSettingsBtn.style.padding = "2px 4px";
     _dismissModNewBadge();
   });
   modGroup.addEventListener("mouseleave", () => {
@@ -11227,10 +11253,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     modHelpBadge.style.pointerEvents = "none";
     modHelpBadge.style.width = "0";
     modHelpBadge.style.marginLeft = "0";
-    modSettingsBtn.style.opacity = "0";
-    modSettingsBtn.style.pointerEvents = "none";
-    modSettingsBtn.style.width = "0";
-    modSettingsBtn.style.padding = "2px 0";
   });
 
   buttonContainer.appendChild(modGroup);
@@ -11238,8 +11260,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const exportBtn = document.createElement("button");
   exportBtn.id = "toolbar-export-btn";
+  exportBtn.style.alignItems = "center";
+  exportBtn.style.justifyContent = "center";
+  exportBtn.style.gap = "4px";
+  const exportIconEl  = document.createElement("span");
+  const exportLabelEl = document.createElement("span");
+  exportBtn.appendChild(exportIconEl);
+  exportBtn.appendChild(exportLabelEl);
   function _updateExportBtn() {
-    exportBtn.textContent = toolbarCompact ? "📤" : (t.exportConfig || "Export Config 📤");
+    _applyIconToBtn(exportIconEl, ICONS.exportConfig.emoji, ICONS.exportConfig.line, ICONS.exportConfig.fill, ICONS.exportConfig.size);
+    exportLabelEl.textContent = toolbarCompact ? "" : (t.exportConfig || "Export Config 📤").replace(/\s*📤\s*$/, "");
   }
   _updateExportBtn();
   exportBtn.style.padding = "4px 8px";
@@ -11250,7 +11280,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   exportBtn.style.background = _tlbBg;
   exportBtn.style.color = _tlbFg;
   exportBtn.style.border = `1px solid ${_tlbBd}`;
-  exportBtn.style.display = styleSettings.hideExportBtn ? "none" : "";
+  exportBtn.style.display = styleSettings.hideExportBtn ? "none" : "inline-flex";
   _attachHoverTooltip(exportBtn, () => toolbarCompact ? (t.exportConfig || "Export Config 📤") : "");
   exportBtn.onclick = () => {
     const config = {
@@ -11299,8 +11329,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const importBtn = document.createElement("button");
   importBtn.id = "toolbar-import-btn";
+  importBtn.style.alignItems = "center";
+  importBtn.style.justifyContent = "center";
+  importBtn.style.gap = "4px";
+  const importIconEl  = document.createElement("span");
+  const importLabelEl = document.createElement("span");
+  importBtn.appendChild(importIconEl);
+  importBtn.appendChild(importLabelEl);
   function _updateImportBtn() {
-    importBtn.textContent = toolbarCompact ? "📥" : (t.importConfig || "Import Config 📥");
+    _applyIconToBtn(importIconEl, ICONS.importConfig.emoji, ICONS.importConfig.line, ICONS.importConfig.fill, ICONS.importConfig.size);
+    importLabelEl.textContent = toolbarCompact ? "" : (t.importConfig || "Import Config 📥").replace(/\s*📥\s*$/, "");
   }
   _updateImportBtn();
   importBtn.style.padding = "4px 8px";
@@ -11311,7 +11349,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   importBtn.style.background = _tlbBg;
   importBtn.style.color = _tlbFg;
   importBtn.style.border = `1px solid ${_tlbBd}`;
-  importBtn.style.display = styleSettings.hideImportBtn ? "none" : "";
+  importBtn.style.display = styleSettings.hideImportBtn ? "none" : "inline-flex";
   _attachHoverTooltip(importBtn, () => toolbarCompact ? (t.importConfig || "Import Config 📥") : "");
   importBtn.onclick = () => {
     const fileInput = document.createElement("input");
@@ -11369,7 +11407,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               "groupBackgroundColor", "enableOverlayDarkening", "textBackgroundColor",
               "textBorder", "overlayStrength", "multiSelectColor", "multiSelectOpacity",
               "siteButtonWidth", "hideSyntaxBtn", "hideBlacklistBtn", "hideAddGroupBtn",
-              "hideAddressToggleBtn", "hideExportBtn", "hideImportBtn",
+              "hideAddressToggleBtn", "hideExportBtn", "hideImportBtn", "hideModGroup",
               "iconStyle", "toggleBtnBg", "toggleBtnBgOpacity", "svgIconColor",
               "enableBorderGlow", "borderGlowColor", "borderGlowStrength", "borderGlowInset",
               "enableSheen", "sheenAngle", "sheenOpacity",
@@ -11463,18 +11501,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const syntaxHelpBtn = document.createElement("button");
   syntaxHelpBtn.id = "syntax-help-btn";
-  syntaxHelpBtn.textContent = "📖";
   syntaxHelpBtn.title = t.syntaxHelp || "Search Syntax Reference";
   syntaxHelpBtn.style.cssText = `
     padding:3px 6px;
     border-radius:${_tlbRad};
     cursor:pointer; white-space:nowrap;
-    font-size:${styleSettings.fontSize}px; line-height:1.4;
+    line-height:1.4;
     flex-shrink:0;
+    display:inline-flex; align-items:center; justify-content:center;
     background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
   `;
+  _applyIconToBtn(syntaxHelpBtn, ICONS.syntaxHelp.emoji, ICONS.syntaxHelp.line, ICONS.syntaxHelp.fill, ICONS.syntaxHelp.size || `${styleSettings.fontSize}px`);
   syntaxHelpBtn.onclick = () => showSyntaxPanel();
-  syntaxHelpBtn.style.display = styleSettings.hideSyntaxBtn ? "none" : "";
+  syntaxHelpBtn.style.display = styleSettings.hideSyntaxBtn ? "none" : "inline-flex";
 
   const blacklistBtnEl = document.createElement("button");
   blacklistBtnEl.id = "blacklist-btn";
@@ -11486,13 +11525,25 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   blacklistBtnEl.style.background = _tlbBg;
   blacklistBtnEl.style.color = _tlbFg;
   blacklistBtnEl.style.border = `1px solid ${_tlbBd}`;
+  blacklistBtnEl.style.display = "inline-flex";
+  blacklistBtnEl.style.alignItems = "center";
+  blacklistBtnEl.style.justifyContent = "center";
+  blacklistBtnEl.style.gap = "3px";
+  const blacklistIconEl  = document.createElement("span");
+  const blacklistCountEl = document.createElement("span");
+  const blacklistLabelEl = document.createElement("span");
+  blacklistBtnEl.appendChild(blacklistIconEl);
+  blacklistBtnEl.appendChild(blacklistCountEl);
+  blacklistBtnEl.appendChild(blacklistLabelEl);
   const _blCount = Array.isArray(domainBlacklist) ? domainBlacklist.filter(d => d.trim()).length : 0;
   function _updateBlacklistBtn() {
+    _applyIconToBtn(blacklistIconEl, ICONS.blacklist.emoji, ICONS.blacklist.line, ICONS.blacklist.fill, ICONS.blacklist.size);
+    blacklistCountEl.textContent = _blCount > 0 ? String(_blCount) : "";
     if (toolbarCompact) {
-      blacklistBtnEl.textContent = _blCount > 0 ? `🚫${_blCount}` : "🚫";
+      blacklistLabelEl.textContent = "";
       blacklistBtnEl.title = "";
     } else {
-      blacklistBtnEl.textContent = _blCount > 0 ? `🚫 ${_blCount}` : (t.blacklistBtn || "🚫 Blacklist");
+      blacklistLabelEl.textContent = (t.blacklistBtn || "🚫 Blacklist").replace(/^\s*🚫\s*/, "");
       blacklistBtnEl.title = _blCount > 0
         ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
         : (t.blacklistTitle || "Domain Blacklist");
@@ -11507,58 +11558,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       : ""
   );
   blacklistBtnEl.onclick = () => showBlacklistDialog();
-  blacklistBtnEl.style.display = styleSettings.hideBlacklistBtn ? "none" : "";
+  blacklistBtnEl.style.display = styleSettings.hideBlacklistBtn ? "none" : "inline-flex";
   buttonContainer.appendChild(blacklistBtnEl);
   buttonContainer.appendChild(syntaxHelpBtn);
-
-  const _TOOLBAR_EXPAND_MARGIN_PX = 8;
-  let _toolbarAutoCompactRaf = null;
-  function _measureToolbarNaturalWidth() {
-    const prevWrap = buttonContainer.style.flexWrap;
-    buttonContainer.style.flexWrap = "nowrap";
-    const naturalW = buttonContainer.scrollWidth;
-    buttonContainer.style.flexWrap = prevWrap || "wrap";
-    return naturalW;
-  }
-  function _applyToolbarAutoCompact() {
-    if (!buttonContainer.isConnected) return;
-    if (__toolbarResizeObserver) __toolbarResizeObserver.disconnect();
-    try {
-      const clientW = buttonContainer.clientWidth;
-      if (!toolbarCompact) {
-        if (_measureToolbarNaturalWidth() > clientW) {
-          toolbarCompact = true;
-          GM_setValue("toolbarCompact", toolbarCompact);
-          _updateAddGroupBtn(); _updateExportBtn(); _updateImportBtn(); _updateBlacklistBtn();
-        }
-      } else {
-        toolbarCompact = false;
-        _updateAddGroupBtn(); _updateExportBtn(); _updateImportBtn(); _updateBlacklistBtn();
-        const textW = _measureToolbarNaturalWidth();
-        if (textW > clientW - _TOOLBAR_EXPAND_MARGIN_PX) {
-          toolbarCompact = true;
-          _updateAddGroupBtn(); _updateExportBtn(); _updateImportBtn(); _updateBlacklistBtn();
-        } else {
-          GM_setValue("toolbarCompact", toolbarCompact);
-        }
-      }
-    } finally {
-      if (__toolbarResizeObserver) __toolbarResizeObserver.observe(buttonContainer);
-    }
-  }
-  if (__toolbarResizeObserver) {
-    __toolbarResizeObserver.disconnect();
-    __toolbarResizeObserver = null;
-  }
-  __toolbarResizeObserver = new ResizeObserver(() => {
-    if (_toolbarAutoCompactRaf) cancelAnimationFrame(_toolbarAutoCompactRaf);
-    _toolbarAutoCompactRaf = requestAnimationFrame(() => {
-      _toolbarAutoCompactRaf = null;
-      _applyToolbarAutoCompact();
-    });
-  });
-  __toolbarResizeObserver.observe(buttonContainer);
-  requestAnimationFrame(_applyToolbarAutoCompact);
 
     return { searchContainer, buttonContainer, searchInput };
   }
@@ -12521,6 +12523,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     document.body.appendChild(panel);
     initSearchConfigCollapse();
     renderSites(panel);
+    if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
 
     try {
       applyTheme(panelTheme);
