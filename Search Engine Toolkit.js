@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.6.0.24
+// @version      2.6.0.27
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -299,9 +299,7 @@
       toggleBtnBgOpacityLabel:"BG Opacity",
       toggleBtnShapeLabel:        "Shape",
       toggleBtnShapeCircle:       "● Circle",
-      toggleBtnShapePill:         "⬭ Pill",
       toggleBtnShapeRoundedSquare:"▢ Rounded",
-      toggleBtnShapeStar:         "★ Star",
       enableToggleBtnGlow:        "Glow",
       toggleBtnGlowColor:         "Glow Color",
       toggleBtnGlowStrength:      "Glow Strength",
@@ -364,10 +362,6 @@
       searchBarGlowColor:     "Glow Color",
       searchBarGlowStrength:  "Glow Strength",
       customThemeLabel:       "Custom Theme",
-      quickSchemeLabel:       "🎨 Quick Scheme",
-      quickSchemeLight:       "☀️ Light",
-      quickSchemeDark:        "🌑 Dark",
-      quickSchemeReset:       "↺ Reset",
       panelBgColor:           "Panel BG Color",
       vignetteLabel:      "Vignette",
       vignetteCorners:    "Corners",
@@ -600,9 +594,7 @@
       toggleBtnBgOpacityLabel:"背景透明度",
       toggleBtnShapeLabel:        "形狀",
       toggleBtnShapeCircle:       "● 圓形",
-      toggleBtnShapePill:         "⬭ 藥丸",
       toggleBtnShapeRoundedSquare:"▢ 方形圓角",
-      toggleBtnShapeStar:         "★ 星型",
       enableToggleBtnGlow:        "發光",
       toggleBtnGlowColor:         "發光顏色",
       toggleBtnGlowStrength:      "發光強度",
@@ -665,10 +657,6 @@
       searchBarGlowColor:     "光暈顏色",
       searchBarGlowStrength:  "光暈強度",
       customThemeLabel:       "自訂主題",
-      quickSchemeLabel:       "🎨 快速方案",
-      quickSchemeLight:       "☀️ 亮色",
-      quickSchemeDark:        "🌑 深色",
-      quickSchemeReset:       "↺ 重置",
       panelBgColor:     "面板背景顏色",
       vignetteLabel:    "暗角效果",
       vignetteCorners:  "啟用角落",
@@ -896,9 +884,7 @@
       toggleBtnBgOpacityLabel:"背景透明度",
       toggleBtnShapeLabel:        "形状",
       toggleBtnShapeCircle:       "● 圆形",
-      toggleBtnShapePill:         "⬭ 药丸",
       toggleBtnShapeRoundedSquare:"▢ 方形圆角",
-      toggleBtnShapeStar:         "★ 星型",
       enableToggleBtnGlow:        "发光",
       toggleBtnGlowColor:         "发光颜色",
       toggleBtnGlowStrength:      "发光强度",
@@ -961,10 +947,6 @@
       searchBarGlowColor:     "光晕颜色",
       searchBarGlowStrength:  "光晕强度",
       customThemeLabel:       "自定义主题",
-      quickSchemeLabel:       "🎨 快速方案",
-      quickSchemeLight:       "☀️ 亮色",
-      quickSchemeDark:        "🌑 深色",
-      quickSchemeReset:       "↺ 重置",
       panelBgColor:     "面板背景颜色",
       vignetteLabel:    "暗角效果",
       vignetteCorners:  "启用角落",
@@ -1193,9 +1175,7 @@
       toggleBtnBgOpacityLabel:"背景透明度",
       toggleBtnShapeLabel:        "形状",
       toggleBtnShapeCircle:       "● 円形",
-      toggleBtnShapePill:         "⬭ ﾋﾟﾙ型",
       toggleBtnShapeRoundedSquare:"▢ 角丸四角",
-      toggleBtnShapeStar:         "★ 星型",
       enableToggleBtnGlow:        "ｸﾞﾛｳ",
       toggleBtnGlowColor:         "ｸﾞﾛｳ色",
       toggleBtnGlowStrength:      "ｸﾞﾛｳ強度",
@@ -1258,10 +1238,6 @@
       searchBarGlowColor:     "ｸﾞﾛｳ色",
       searchBarGlowStrength:  "ｸﾞﾛｳ強度",
       customThemeLabel:       "ｶｽﾀﾑﾃｰﾏ",
-      quickSchemeLabel:       "🎨 ｸｲｯｸ方案",
-      quickSchemeLight:       "☀️ ﾗｲﾄ",
-      quickSchemeDark:        "🌑 ﾀﾞｰｸ",
-      quickSchemeReset:       "↺ ﾘｾｯﾄ",
       panelBgColor:   "ﾊﾟﾈﾙ背景色",
       vignetteLabel:    "暗角効果",
       vignetteCorners:  "有効角",
@@ -1491,9 +1467,7 @@
       toggleBtnBgOpacityLabel:"배경 투명도",
       toggleBtnShapeLabel:        "모양",
       toggleBtnShapeCircle:       "● 원형",
-      toggleBtnShapePill:         "⬭ 필 형",
       toggleBtnShapeRoundedSquare:"▢ 둥근 사각형",
-      toggleBtnShapeStar:         "★ 별 모양",
       enableToggleBtnGlow:        "글로우",
       toggleBtnGlowColor:         "글로우 색",
       toggleBtnGlowStrength:      "글로우 강도",
@@ -1556,10 +1530,6 @@
       searchBarGlowColor:     "글로우 색",
       searchBarGlowStrength:  "글로우 강도",
       customThemeLabel:       "커스텀 테마",
-      quickSchemeLabel:       "🎨 빠른 방안",
-      quickSchemeLight:       "☀️ 라이트",
-      quickSchemeDark:        "🌑 다크",
-      quickSchemeReset:       "↺ 초기화",
       panelBgColor:   "패널 배경색",
       vignetteLabel:    "어두운 모서리",
       vignetteCorners:  "활성 모서리",
@@ -1802,9 +1772,7 @@
     toggleBtnBgOpacityLabel:"BG Opacity",
     toggleBtnShapeLabel:        "Shape",
     toggleBtnShapeCircle:       "● Circle",
-    toggleBtnShapePill:         "⬭ Pill",
     toggleBtnShapeRoundedSquare:"▢ Rounded",
-    toggleBtnShapeStar:         "★ Star",
     enableToggleBtnGlow:        "Glow",
     toggleBtnGlowColor:         "Glow Color",
     toggleBtnGlowStrength:      "Glow Strength",
@@ -1867,10 +1835,6 @@
     searchBarGlowColor:     "Glow Color",
     searchBarGlowStrength:  "Glow Strength",
     customThemeLabel:       "Custom Theme",
-    quickSchemeLabel:       "🎨 Quick Scheme",
-    quickSchemeLight:       "☀️ Light",
-    quickSchemeDark:        "🌑 Dark",
-    quickSchemeReset:       "↺ Reset",
     panelBgColor:   "Panel BG Color",
     vignetteLabel:    "Vignette",
     vignetteCorners:  "Corners",
@@ -2883,7 +2847,7 @@
     const _radius   = (styleSettings.borderRadius ?? 10) + "px";
     const _color    = styleSettings.textColor || (_isDark ? "#e8e8f0" : "#3a3a4a");
 
-    const _shape = styleSettings.toggleBtnShape || "circle";
+    const _shape = styleSettings.toggleBtnShape === "star" ? "circle" : (styleSettings.toggleBtnShape || "circle");
     let _shapeRadius = "50%";
     let _clipPath = "none";
     let _showBorder = true;
@@ -2891,10 +2855,6 @@
       _shapeRadius = "50%";
     } else if (_shape === "rounded-square") {
       _shapeRadius = _radius;
-    } else if (_shape === "star") {
-      _shapeRadius = "0";
-      _showBorder = false;
-      _clipPath = "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
     }
 
     let _glowShadow = "";
@@ -7772,7 +7732,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       panelLayoutHeader,
       generalStyleContainer,
       generalStyleHeader,
-      _qsHeader,
       borderRadiusLabel,
       contrastLabel,
       opacityLabel,
@@ -7871,11 +7830,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   _bind(generalStyleHeader,
     () => _hlSet([".group-block", "button:not(.icon-btn)"], true),
     () => _hlSet([".group-block", "button:not(.icon-btn)"], false)
-  );
-
-  _bind(_qsHeader,
-    () => { _hlPanel(true); _hlSearchBar(true); },
-    () => { _hlPanel(false); _hlSearchBar(false); }
   );
 
   _bind(glowHeader,
@@ -8251,7 +8205,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const styleConfigHeader = document.createElement("div");
   styleConfigHeader.textContent = t.styleConfig || "Style Settings 🎨";
-  styleConfigHeader.style.cssText = "font-weight:bold; flex:1;";
+  styleConfigHeader.style.cssText = `font-weight:bold; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
   styleConfigHeaderRow.appendChild(sfDragHandle);
   styleConfigHeaderRow.appendChild(styleConfigHeader);
 
@@ -8417,7 +8371,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     searchConfig.isExpanded = false;
     save();
     styleConfigWrap.style.display = "none";
-    expandCollapseBtn.textContent = t.expand;
+    const _expandBtn = document.getElementById("search-expand-collapse-btn");
+    if (_expandBtn) _expandBtn.textContent = t.expand;
   };
   styleConfigHeaderRow.appendChild(sfCloseBtn);
 
@@ -8497,7 +8452,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function labelCss() {
-    return "flex-shrink: 0; font-size: 12px; margin-right: 6px;";
+    return `flex-shrink: 0; font-size: 12px; margin-right: 6px; color: ${panelTheme === "dark" ? "#eee" : "#111"};`;
   }
 
   function sliderCss() {
@@ -8550,7 +8505,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const panelLayoutHeader = document.createElement("div");
     panelLayoutHeader.textContent = t.panelLayoutLabel || "Panel Layout";
-    panelLayoutHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
+    panelLayoutHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
     panelLayoutContainer.appendChild(panelLayoutHeader);
 
     (function() {
@@ -8564,7 +8519,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const lbl = document.createElement("label");
       lbl.htmlFor = "hide-syntax-btn-chk";
       lbl.textContent = t.hideSyntaxBtnLabel || "Hide 📖 Syntax Help Button";
-      lbl.style.cssText = "cursor:pointer; font-size:12px; user-select:none; flex:1;";
+      lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
       chk.onchange = () => {
         styleSettings.hideSyntaxBtn = chk.checked;
         save();
@@ -8608,7 +8563,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const lbl = document.createElement("label");
       lbl.htmlFor = "hide-blacklist-btn-chk";
       lbl.textContent = t.hideBlacklistBtnLabel || "Hide 🚫 Blacklist Button";
-      lbl.style.cssText = "cursor:pointer; font-size:12px; user-select:none; flex:1;";
+      lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
       chk.onchange = () => {
         styleSettings.hideBlacklistBtn = chk.checked;
         save();
@@ -8651,7 +8606,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       chk.style.cssText = "cursor:pointer; flex-shrink:0;";
       const lbl = document.createElement("label");
       lbl.textContent = labelText;
-      lbl.style.cssText = "cursor:pointer; font-size:12px; user-select:none; flex:1;";
+      lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
       lbl.addEventListener("click", () => { chk.checked = !chk.checked; chk.dispatchEvent(new Event("change")); });
       chk.onchange = () => {
         styleSettings[key] = chk.checked;
@@ -8723,7 +8678,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       "📤", t.exportConfig || "Export Config",
       () => {
         const btn = document.getElementById("toolbar-export-btn");
-        if (btn) btn.click(); else exportBtn.onclick?.();
+        if (btn) btn.click();
       }
     );
 
@@ -8733,7 +8688,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       "📥", t.importConfig || "Import Config",
       () => {
         const btn = document.getElementById("toolbar-import-btn");
-        if (btn) btn.click(); else importBtn.onclick?.();
+        if (btn) btn.click();
       }
     );
 
@@ -8744,87 +8699,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     );
 
     return { panelLayoutContainer, panelLayoutHeader };
-    }
-
-    function _buildGsQuickSchemeSection(parent) {
-      const _qsDark = panelTheme === "dark";
-      const qsContainer = document.createElement("div");
-      qsContainer.style.cssText = `
-        border:1px solid ${_qsDark ? "#555" : "#ccc"};
-        border-radius:${styleSettings.borderRadius}px;
-        padding:6px 8px; display:flex; flex-direction:column; gap:4px; margin-top:0;
-      `;
-      const qsHeader = document.createElement("div");
-      qsHeader.textContent = t.quickSchemeLabel || "🎨 Quick Scheme";
-      qsHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
-      qsContainer.appendChild(qsHeader);
-
-      const _qsRow = document.createElement("div");
-      _qsRow.style.cssText = "display:flex; gap:5px; flex-wrap:wrap;";
-
-      const _SCHEMES = {
-        light: {
-          panelTheme:            "light",
-          searchBarBg:           "#ffffff",
-          searchBarBgOpacity:    0.85,
-          searchBarFg:           "#111111",
-          customBackgroundColor: "#ffffff",
-          customTextColor:       "#111111",
-          customButtonBg:        "#f0f0f0",
-        },
-        dark: {
-          panelTheme:            "dark",
-          searchBarBg:           "#1a1a1a",
-          searchBarBgOpacity:    0.75,
-          searchBarFg:           "#eeeeee",
-          customBackgroundColor: "#1e1e1e",
-          customTextColor:       "#eeeeee",
-          customButtonBg:        "#3c3c3c",
-        },
-        reset: null,
-      };
-
-      const _qsDefs = [
-        { key: "reset", label: t.quickSchemeReset || "↺ Reset" },
-        { key: "light", label: t.quickSchemeLight  || "☀️ Light" },
-        { key: "dark",  label: t.quickSchemeDark   || "🌑 Dark" },
-      ];
-
-      _qsDefs.forEach(def => {
-        const pb = document.createElement("button");
-        pb.textContent = def.label;
-        pb.title = def.label;
-        pb.className = "icon-btn";
-        pb.style.cssText = `flex:1; padding:3px 6px; border-radius:5px; font-size:11px;
-          cursor:pointer; white-space:nowrap;
-          background:${_qsDark ? "#4a4a4a" : "#eee"};
-          border:1px solid ${_qsDark ? "#666" : "#ccc"}; color:inherit;`;
-        pb.onclick = () => {
-          if (def.key === "reset") {
-            styleSettings.searchBarBg           = "";
-            styleSettings.searchBarBgOpacity    = 0;
-            styleSettings.searchBarFg           = "";
-            styleSettings.searchBarGlowEnabled  = false;
-          } else {
-            const s = _SCHEMES[def.key];
-            styleSettings.searchBarBg        = s.searchBarBg;
-            styleSettings.searchBarBgOpacity = s.searchBarBgOpacity;
-            styleSettings.searchBarFg        = s.searchBarFg;
-            if (panelTheme === "custom") {
-              styleSettings.customBackgroundColor = s.customBackgroundColor;
-              styleSettings.customTextColor       = s.customTextColor;
-              styleSettings.customButtonBg        = s.customButtonBg;
-            }
-          }
-          save();
-          applyTheme(panelTheme);
-        };
-        _qsRow.appendChild(pb);
-      });
-
-      qsContainer.appendChild(_qsRow);
-      parent.appendChild(qsContainer);
-      return { qsContainer, qsHeader };
     }
 
     function _buildGsGlowSheenSection(parent) {
@@ -8838,7 +8712,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       `;
       const glowHeader = document.createElement("div");
       glowHeader.textContent = "✨ " + (t.glowLabel || "Border Glow / Sheen");
-      glowHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
+      glowHeader.style.cssText = `font-weight:bold; font-size:11px; margin-bottom:2px; color:${_isDark ? "#eee" : "#111"};`;
       glowSection.appendChild(glowHeader);
 
       const glowToggleRow = document.createElement("div");
@@ -9041,7 +8915,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       vigHeaderRow.style.cssText = checkboxRowCss() + "margin-bottom:0;";
       const vignetteHeader = document.createElement("div");
       vignetteHeader.textContent = "🌑 " + (t.vignetteLabel || "Vignette");
-      vignetteHeader.style.cssText = "font-weight:bold; font-size:11px; margin-right:6px;";
+      vignetteHeader.style.cssText = `font-weight:bold; font-size:11px; margin-right:6px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
       const vigToggle = document.createElement("input");
       vigToggle.type = "checkbox";
       vigToggle.checked = !!styleSettings.enableVignette;
@@ -9190,7 +9064,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       `;
       const _sbsHeader = document.createElement("div");
       _sbsHeader.textContent = "🔍 " + (t.searchBarStyleLabel || "Search Bar Style");
-      _sbsHeader.style.cssText = "font-weight:bold; font-size:11px; margin-bottom:2px;";
+      _sbsHeader.style.cssText = `font-weight:bold; font-size:11px; margin-bottom:2px; color:${_isDark ? "#eee" : "#111"};`;
       searchBarSection.appendChild(_sbsHeader);
 
       const _sbsPresetRow = document.createElement("div");
@@ -9393,7 +9267,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const generalStyleHeader = document.createElement("div");
     generalStyleHeader.textContent = t.style || "Style";
-    generalStyleHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
+    generalStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
     generalStyleContainer.appendChild(generalStyleHeader);
 
     const styleRow = document.createElement("div");
@@ -9501,8 +9375,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       generalStyleContainer.appendChild(row);
     })();
 
-    const { qsHeader: _qsHeader } =
-      _buildGsQuickSchemeSection(generalStyleContainer);
+    const _toggleBtnStyleAnchor = document.createElement("div");
+    generalStyleContainer.appendChild(_toggleBtnStyleAnchor);
 
     const borderRadiusRow = document.createElement("div");
     borderRadiusRow.style.cssText = rowCss();
@@ -9764,7 +9638,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl,
     } = _buildGsSearchBarSection(generalStyleContainer);
 
-    return { generalStyleContainer, generalStyleHeader, _qsHeader, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl };
+    return { generalStyleContainer, generalStyleHeader, _toggleBtnStyleAnchor, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl };
     }
 
     function _buildToggleBtnStyleSection() {
@@ -9775,7 +9649,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     `;
     const _tbsHeader = document.createElement("div");
     _tbsHeader.textContent = t.toggleBtnStyleLabel || "Toggle Button Style";
-    _tbsHeader.style.cssText = "font-weight:bold; margin-bottom:6px; font-size:11px;";
+    _tbsHeader.style.cssText = `font-weight:bold; margin-bottom:6px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
     toggleBtnStyleContainer.appendChild(_tbsHeader);
 
     (function() {
@@ -9790,7 +9664,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const _opts = [
         { v: "circle",         lb: t.toggleBtnShapeCircle        || "● Circle" },
         { v: "rounded-square", lb: t.toggleBtnShapeRoundedSquare || "▢ Rounded" },
-        { v: "star",           lb: t.toggleBtnShapeStar          || "★ Star" },
       ];
       _opts.forEach(({ v, lb }) => {
         const b = document.createElement("button");
@@ -10062,7 +9935,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const textStyleHeader = document.createElement("div");
     textStyleHeader.textContent = t.fontSize || "Text Settings";
-    textStyleHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
+    textStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
     textStyleContainer.appendChild(textStyleHeader);
 
     const fontSizeRow = document.createElement("div");
@@ -10195,7 +10068,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const backgroundOverlayHeader = document.createElement("div");
     backgroundOverlayHeader.textContent = t.backgroundImage || "Background & Overlay";
-    backgroundOverlayHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
+    backgroundOverlayHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
     backgroundOverlayContainer.appendChild(backgroundOverlayHeader);
 
     const overlayDarkeningRow = document.createElement("div");
@@ -10499,7 +10372,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const multiSelectHeader = document.createElement("div");
     multiSelectHeader.textContent = t.multiSelectMode || "Multi-select Mode";
-    multiSelectHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
+    multiSelectHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
     multiSelectContainer.appendChild(multiSelectHeader);
 
     const msColorRow = document.createElement("div");
@@ -10564,7 +10437,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const customThemeHeader = document.createElement("div");
     customThemeHeader.textContent = t.customThemeLabel || "Custom Theme";
-    customThemeHeader.style.cssText = "font-weight:bold; margin-bottom:4px; font-size:11px;";
+    customThemeHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
     customThemeContainer.appendChild(customThemeHeader);
 
     const backgroundColorRow = document.createElement("div");
@@ -10629,7 +10502,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
 
     const { panelLayoutContainer, panelLayoutHeader } = _buildPanelLayoutSection();
-    const { generalStyleContainer, generalStyleHeader, _qsHeader, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl } = _buildGeneralStyleSection();
+    const { generalStyleContainer, generalStyleHeader, _toggleBtnStyleAnchor, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl } = _buildGeneralStyleSection();
     const { toggleBtnStyleContainer, _tbsHeader } = _buildToggleBtnStyleSection();
     const { textStyleContainer, textStyleHeader, fontSizeLabel, textBackgroundColorLabel, textBorderLabel, textOpacityCompensationLabel } = _buildTextStyleSection();
     const { backgroundOverlayContainer, backgroundOverlayHeader, overlayDarkeningLabel, overlayStrengthLabel, imageLabel, imageModeLabel, imageOffsetXLabel, imageOffsetYLabel, imageScaleLabel, imageOpacityLabel } = _buildBgOverlaySection();
@@ -10637,13 +10510,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const { customThemeContainer, customThemeHeader, backgroundColorLabel, textColorLabel, buttonBgLabel } = _buildCustomThemeSection();
 
     styleConfigContent.appendChild(panelLayoutContainer);
-    const _tbsDivider = document.createElement("div");
-    _tbsDivider.style.cssText = `
-      border-top:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
-      margin:8px 0 6px;
-    `;
-    generalStyleContainer.appendChild(_tbsDivider);
-    generalStyleContainer.appendChild(toggleBtnStyleContainer);
+    generalStyleContainer.insertBefore(toggleBtnStyleContainer, _toggleBtnStyleAnchor);
+    _toggleBtnStyleAnchor.remove();
     styleConfigContent.appendChild(generalStyleContainer);
     styleConfigContent.appendChild(textStyleContainer);
     styleConfigContent.appendChild(backgroundOverlayContainer);
@@ -10655,7 +10523,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       panelLayoutHeader,
       generalStyleContainer,
       generalStyleHeader,
-      _qsHeader,
       borderRadiusLabel,
       contrastLabel,
       opacityLabel,
@@ -12195,6 +12062,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   buildResizeGrip();
 
   const expandCollapseBtn = document.createElement("button");
+  expandCollapseBtn.id = "search-expand-collapse-btn";
   expandCollapseBtn.textContent = t.expand;
   expandCollapseBtn.style.cssText = `
     padding:3px 8px; border-radius:${Math.max(styleSettings.borderRadius, 6)}px;
