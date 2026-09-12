@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.6.0.13
+// @version      2.6.0.24
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -220,7 +220,7 @@
       enterGroupName: "Enter group name",
       enterSite:
         "Enter site URL (e.g., example.com)\n\nRight-click ⚙️ to delete the domain",
-      confirmDel: (name) => `Confirm to delete group "${name}"?（Confirm）`,
+      confirmDel: (name) => `Confirm to delete group "${name}"?`,
       exportConfig: "Export Config 📤",
       importConfig: "Import Config 📥",
       searchConfig: "⚙️ Search Settings",
@@ -290,12 +290,21 @@
       hideImportBtnLabel: "Hide 📥 Import Button",
       hideModGroupLabel: "Hide Modifier Button Group (◇T🔗📄)",
       toggleBtnStyleLabel:    "Toggle Button Style",
+      iconStyleLabel:         "Icon Style",
       toggleBtnIconLabel:     "Icon",
       toggleBtnIconEmoji:     "🔍 Emoji",
       toggleBtnIconSvgLine:   "SVG Outline",
       toggleBtnIconSvgFill:   "SVG Filled",
       toggleBtnBgColorLabel:  "BG Color",
       toggleBtnBgOpacityLabel:"BG Opacity",
+      toggleBtnShapeLabel:        "Shape",
+      toggleBtnShapeCircle:       "● Circle",
+      toggleBtnShapePill:         "⬭ Pill",
+      toggleBtnShapeRoundedSquare:"▢ Rounded",
+      toggleBtnShapeStar:         "★ Star",
+      enableToggleBtnGlow:        "Glow",
+      toggleBtnGlowColor:         "Glow Color",
+      toggleBtnGlowStrength:      "Glow Strength",
       svgIconColorLabel:      "SVG Icon Color",
       style: "Style",
       borderRadius: "Border Radius",
@@ -512,7 +521,7 @@
       notFound: "未找到搜尋輸入框！",
       enterGroupName: "輸入群組名稱",
       enterSite: "輸入站台網址（例如：example.com）\n\n若對⚙️按右鍵可刪除網域",
-      confirmDel: (name) => `確認刪除群組 "${name}"？（直接確認）`,
+      confirmDel: (name) => `確認刪除群組 "${name}"？`,
       exportConfig: "匯出設定 📤",
       importConfig: "匯入設定 📥",
       searchConfig: "⚙️ 搜尋設定",
@@ -582,12 +591,21 @@
       hideImportBtnLabel: "隱藏 📥 匯入按鈕",
       hideModGroupLabel: "隱藏修飾器按鈕群（◇T🔗📄）",
       toggleBtnStyleLabel:    "開關按鈕樣式",
+      iconStyleLabel:         "圖示樣式",
       toggleBtnIconLabel:     "圖示",
       toggleBtnIconEmoji:     "🔍 Emoji",
       toggleBtnIconSvgLine:   "SVG 線框",
       toggleBtnIconSvgFill:   "SVG 填色",
       toggleBtnBgColorLabel:  "背景顏色",
       toggleBtnBgOpacityLabel:"背景透明度",
+      toggleBtnShapeLabel:        "形狀",
+      toggleBtnShapeCircle:       "● 圓形",
+      toggleBtnShapePill:         "⬭ 藥丸",
+      toggleBtnShapeRoundedSquare:"▢ 方形圓角",
+      toggleBtnShapeStar:         "★ 星型",
+      enableToggleBtnGlow:        "發光",
+      toggleBtnGlowColor:         "發光顏色",
+      toggleBtnGlowStrength:      "發光強度",
       svgIconColorLabel:      "SVG 圖示顏色",
       style: "風格",
       borderRadius: "圓角",
@@ -799,7 +817,7 @@
       notFound: "未找到搜索输入框！",
       enterGroupName: "输入群组名称",
       enterSite: "输入站点网址（例如：example.com）\n\n若对⚙️按右键可删除域名",
-      confirmDel: (name) => `确认删除群组 "${name}"？（直接确认）`,
+      confirmDel: (name) => `确认删除群组 "${name}"？`,
       exportConfig: "导出设置 📤",
       importConfig: "导入设置 📥",
       searchConfig: "⚙️ 搜索设置",
@@ -869,12 +887,21 @@
       hideImportBtnLabel: "隐藏 📥 导入按钮",
       hideModGroupLabel: "隐藏修饰器按钮组（◇T🔗📄）",
       toggleBtnStyleLabel:    "开关按钮样式",
+      iconStyleLabel:         "图标样式",
       toggleBtnIconLabel:     "图标",
       toggleBtnIconEmoji:     "🔍 Emoji",
       toggleBtnIconSvgLine:   "SVG 线框",
       toggleBtnIconSvgFill:   "SVG 填色",
       toggleBtnBgColorLabel:  "背景颜色",
       toggleBtnBgOpacityLabel:"背景透明度",
+      toggleBtnShapeLabel:        "形状",
+      toggleBtnShapeCircle:       "● 圆形",
+      toggleBtnShapePill:         "⬭ 药丸",
+      toggleBtnShapeRoundedSquare:"▢ 方形圆角",
+      toggleBtnShapeStar:         "★ 星型",
+      enableToggleBtnGlow:        "发光",
+      toggleBtnGlowColor:         "发光颜色",
+      toggleBtnGlowStrength:      "发光强度",
       svgIconColorLabel:      "SVG 图标颜色",
       style: "风格",
       borderRadius: "圆角",
@@ -1087,7 +1114,7 @@
       enterGroupName: "ｸﾞﾙｰﾌﾟ名を入力",
       enterSite:
         "ｻｲﾄのURLを入力（例：example.com）\n\n⚙️ を右クリックするとドメインを削除できます",
-      confirmDel: (name) => `ｸﾞﾙｰﾌﾟ "${name}" を削除しますか？（入力無し）`,
+      confirmDel: (name) => `ｸﾞﾙｰﾌﾟ "${name}" を削除しますか？`,
       exportConfig: "設定をｴｸｽﾎﾟｰﾄ 📤",
       importConfig: "設定をｲﾝﾎﾟｰﾄ 📥",
       searchConfig: "⚙️ 検索設定",
@@ -1157,12 +1184,21 @@
       hideImportBtnLabel: "📥 ｲﾝﾎﾟｰﾄﾎﾞﾀﾝを非表示",
       hideModGroupLabel: "修飾子ﾎﾞﾀﾝｸﾞﾙｰﾌﾟを非表示（◇T🔗📄）",
       toggleBtnStyleLabel:    "ﾄｸﾞﾙﾎﾞﾀﾝｽﾀｲﾙ",
+      iconStyleLabel:         "ｱｲｺﾝｽﾀｲﾙ",
       toggleBtnIconLabel:     "ｱｲｺﾝ",
       toggleBtnIconEmoji:     "🔍 Emoji",
       toggleBtnIconSvgLine:   "SVG ｱｳﾄﾗｲﾝ",
       toggleBtnIconSvgFill:   "SVG ﾌｨﾙ",
       toggleBtnBgColorLabel:  "背景色",
       toggleBtnBgOpacityLabel:"背景透明度",
+      toggleBtnShapeLabel:        "形状",
+      toggleBtnShapeCircle:       "● 円形",
+      toggleBtnShapePill:         "⬭ ﾋﾟﾙ型",
+      toggleBtnShapeRoundedSquare:"▢ 角丸四角",
+      toggleBtnShapeStar:         "★ 星型",
+      enableToggleBtnGlow:        "ｸﾞﾛｳ",
+      toggleBtnGlowColor:         "ｸﾞﾛｳ色",
+      toggleBtnGlowStrength:      "ｸﾞﾛｳ強度",
       svgIconColorLabel:      "SVGｱｲｺﾝ色",
       style: "スタイル",
       borderRadius: "角の丸み",
@@ -1446,12 +1482,21 @@
       hideImportBtnLabel: "📥 가져오기 버튼 숨기기",
       hideModGroupLabel: "수정자 버튼 그룹 숨기기（◇T🔗📄）",
       toggleBtnStyleLabel:    "토글 버튼 스타일",
+      iconStyleLabel:         "아이콘 스타일",
       toggleBtnIconLabel:     "아이콘",
       toggleBtnIconEmoji:     "🔍 Emoji",
       toggleBtnIconSvgLine:   "SVG 아웃라인",
       toggleBtnIconSvgFill:   "SVG 채우기",
       toggleBtnBgColorLabel:  "배경 색상",
       toggleBtnBgOpacityLabel:"배경 투명도",
+      toggleBtnShapeLabel:        "모양",
+      toggleBtnShapeCircle:       "● 원형",
+      toggleBtnShapePill:         "⬭ 필 형",
+      toggleBtnShapeRoundedSquare:"▢ 둥근 사각형",
+      toggleBtnShapeStar:         "★ 별 모양",
+      enableToggleBtnGlow:        "글로우",
+      toggleBtnGlowColor:         "글로우 색",
+      toggleBtnGlowStrength:      "글로우 강도",
       svgIconColorLabel:      "SVG 아이콘 색상",
       style: "스타일",
       borderRadius: "모서리 둥글기",
@@ -1686,7 +1731,7 @@
     notFound: "Search input not found!",
     enterGroupName: "Enter group name",
     enterSite: "Enter site URL (e.g., example.com)\n\nRight-click ⚙️ to delete the domain",
-    confirmDel: "Confirm to delete group \"{name}\"?（Confirm）",
+    confirmDel: "Confirm to delete group \"{name}\"?",
     exportConfig: "Export Config 📤",
     importConfig: "Import Config 📥",
     searchConfig: "⚙️ Search Settings",
@@ -1748,12 +1793,21 @@
     hideImportBtnLabel: "Hide 📥 Import Button",
     hideModGroupLabel: "Hide Modifier Button Group (◇T🔗📄)",
     toggleBtnStyleLabel:    "Toggle Button Style",
+    iconStyleLabel:         "Icon Style",
     toggleBtnIconLabel:     "Icon",
     toggleBtnIconEmoji:     "🔍 Emoji",
     toggleBtnIconSvgLine:   "SVG Outline",
     toggleBtnIconSvgFill:   "SVG Filled",
     toggleBtnBgColorLabel:  "BG Color",
     toggleBtnBgOpacityLabel:"BG Opacity",
+    toggleBtnShapeLabel:        "Shape",
+    toggleBtnShapeCircle:       "● Circle",
+    toggleBtnShapePill:         "⬭ Pill",
+    toggleBtnShapeRoundedSquare:"▢ Rounded",
+    toggleBtnShapeStar:         "★ Star",
+    enableToggleBtnGlow:        "Glow",
+    toggleBtnGlowColor:         "Glow Color",
+    toggleBtnGlowStrength:      "Glow Strength",
     svgIconColorLabel:      "SVG Icon Color",
     style: "Style",
     borderRadius: "Border Radius",
@@ -2328,29 +2382,23 @@
 
   const STYLE_PRESETS = {
     default: {
-      buttonBgOffset: 0,
-      borderContrast: 0.2,
-      borderRadius: "6px",
+      borderRadius: 6,
       opacity: 1.0,
       fontSize: 13,
       groupOpacity: 1.0,
       buttonOpacity: 1.0,
     },
     soft: {
-      buttonBgOffset: 0,
-      borderContrast: 0.1,
-      borderRadius: "8px",
-      opacity: 0.9,
+      borderRadius: 14,
+      opacity: 0.85,
       fontSize: 13,
-      groupOpacity: 0.9,
-      buttonOpacity: 0.9,
+      groupOpacity: 0.85,
+      buttonOpacity: 0.85,
     },
     bold: {
-      buttonBgOffset: 10,
-      borderContrast: 0.3,
-      borderRadius: "4px",
+      borderRadius: 2,
       opacity: 1.0,
-      fontSize: 14,
+      fontSize: 15,
       groupOpacity: 1.0,
       buttonOpacity: 1.0,
     },
@@ -2382,6 +2430,11 @@
       iconStyle: "emoji",
       toggleBtnBg: "",
       toggleBtnBgOpacity: 0,
+      toggleBtnIconStyle: "svg-line",
+      toggleBtnShape: "circle",
+      enableToggleBtnGlow:  false,
+      toggleBtnGlowColor:   "#00bfff",
+      toggleBtnGlowStrength: 12,
       svgIconColor: "",
       enableBorderGlow: false,
       borderGlowColor: "#00bfff",
@@ -2683,9 +2736,9 @@
     },
   };
 
-  function _applyIconToBtn(btn, emoji, svgLine, svgFill, emojiSize) {
+  function _applyIconToBtn(btn, emoji, svgLine, svgFill, emojiSize, styleOverride) {
     if (!btn) return;
-    const style = styleSettings.iconStyle || "emoji";
+    const style = styleOverride || styleSettings.iconStyle || "emoji";
     const color = styleSettings.svgIconColor || "";
     if (style === "svg-line") {
       btn.innerHTML      = svgLine;
@@ -2824,11 +2877,33 @@
     const _bdColor  = styleSettings.customButtonBg
       ? adjustColor(styleSettings.customButtonBg, styleSettings.contrast ?? 0)
       : _isDark ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.13)";
-    const _shadow   = _isDark
+    const _shadowBase = _isDark
       ? "0 4px 16px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.35)"
       : "0 4px 16px rgba(0,0,0,0.14), 0 1px 3px rgba(0,0,0,0.09)";
     const _radius   = (styleSettings.borderRadius ?? 10) + "px";
     const _color    = styleSettings.textColor || (_isDark ? "#e8e8f0" : "#3a3a4a");
+
+    const _shape = styleSettings.toggleBtnShape || "circle";
+    let _shapeRadius = "50%";
+    let _clipPath = "none";
+    let _showBorder = true;
+    if (_shape === "circle") {
+      _shapeRadius = "50%";
+    } else if (_shape === "rounded-square") {
+      _shapeRadius = _radius;
+    } else if (_shape === "star") {
+      _shapeRadius = "0";
+      _showBorder = false;
+      _clipPath = "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
+    }
+
+    let _glowShadow = "";
+    if (styleSettings.enableToggleBtnGlow) {
+      const _gc = styleSettings.toggleBtnGlowColor || "#00bfff";
+      const _gs = Math.max(4, Math.min(32, styleSettings.toggleBtnGlowStrength || 12));
+      _glowShadow = `, 0 0 ${_gs}px ${_gc}, 0 0 ${_gs * 2}px ${_gc}44`;
+    }
+    const _shadow = _shadowBase + _glowShadow;
 
     btn.style.cssText = `
       position: fixed;
@@ -2843,8 +2918,9 @@
       justify-content: center;
       appearance: none;
       -webkit-appearance: none;
-      border: 1px solid ${_bdColor};
-      border-radius: ${_radius};
+      border: ${_showBorder ? `1px solid ${_bdColor}` : "none"};
+      border-radius: ${_shapeRadius};
+      clip-path: ${_clipPath};
       background: ${_tbBg};
       color: ${_color};
       box-shadow: ${_shadow};
@@ -2860,19 +2936,19 @@
       outline: none;
     `;
 
-    _applyIconToBtn(btn, ICONS.search.emoji, ICONS.search.line, ICONS.search.fill, ICONS.search.size);
+    _applyIconToBtn(btn, ICONS.search.emoji, ICONS.search.line, ICONS.search.fill, ICONS.search.size, styleSettings.toggleBtnIconStyle || "svg-line");
 
     btn.__hoverBound && btn.removeEventListener("mouseenter", btn.__hoverBound);
     btn.__leaveBound && btn.removeEventListener("mouseleave", btn.__leaveBound);
     btn.__downBound  && btn.removeEventListener("mousedown",  btn.__downBound);
     btn.__upBound    && btn.removeEventListener("mouseup",    btn.__upBound);
 
-    const _shadowHover  = _isDark
+    const _shadowHover  = (_isDark
       ? "0 6px 22px rgba(0,0,0,0.65), 0 2px 6px rgba(0,0,0,0.4)"
-      : "0 6px 22px rgba(0,0,0,0.20), 0 2px 6px rgba(0,0,0,0.12)";
-    const _shadowActive = _isDark
+      : "0 6px 22px rgba(0,0,0,0.20), 0 2px 6px rgba(0,0,0,0.12)") + _glowShadow;
+    const _shadowActive = (_isDark
       ? "0 2px 6px rgba(0,0,0,0.45)"
-      : "0 2px 6px rgba(0,0,0,0.10)";
+      : "0 2px 6px rgba(0,0,0,0.10)") + _glowShadow;
 
     btn.__hoverBound = () => {
       btn.style.boxShadow = _shadowHover;
@@ -5408,12 +5484,12 @@
         return function () {
           const currentGroup = groups[currentIndex];
           if (!currentGroup) return;
-          showCustomPrompt(t.confirmDel(currentGroup.name), "", () => {
+          showCustomPrompt(t.confirmDel(currentGroup.name), null, () => {
             groups.splice(currentIndex, 1);
             save();
             renderSites(panel);
             showToast(t.groupDeleted(currentGroup.name));
-          });
+          }, null, true, true);
         };
       })(groupIndex);
 
@@ -7994,6 +8070,31 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const _scSelBg = panelTheme === "dark" ? "#3a3a3a" : "#ffffff";
     const _scSelFg = panelTheme === "dark" ? "#e8e8e8" : "#111111";
     const _scSelScheme = panelTheme === "dark" ? "dark" : "light";
+    const _scCtrlCss = panelTheme === "dark" ? `
+      #style-config-wrap input[type="checkbox"] {
+        accent-color: #4d9fff;
+        background: #3a3a3a;
+        border: 1px solid #666;
+        color-scheme: dark;
+      }
+      #style-config-wrap input[type="range"] {
+        accent-color: #4d9fff;
+        color-scheme: dark;
+      }
+      #style-config-wrap input[type="range"]::-webkit-slider-runnable-track {
+        background: #555;
+      }
+      #style-config-wrap input[type="range"]::-moz-range-track {
+        background: #555;
+      }
+      #style-config-wrap input[type="range"]::-webkit-slider-thumb {
+        background: #4d9fff;
+      }
+      #style-config-wrap input[type="range"]::-moz-range-thumb {
+        background: #4d9fff;
+        border: none;
+      }
+    ` : "";
     _scSelStyle.textContent = `
       #style-config-wrap select {
         background: ${_scSelBg};
@@ -8003,6 +8104,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         border-radius: 4px;
         padding: 2px 4px;
       }
+      ${_scCtrlCss}
     `;
     document.head.appendChild(_scSelStyle);
   }
@@ -8063,9 +8165,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   if (!GM_getValue("hideLockHintBanner", false)) {
     const lockHintBanner = document.createElement("div");
     lockHintBanner.style.cssText = `
-      background: ${panelTheme === "dark" ? "#332b00" : "#fff8d6"};
-      color: ${panelTheme === "dark" ? "#ffda33" : "#997300"};
-      border: 1px dashed ${panelTheme === "dark" ? "#806600" : "#ffe066"};
+      background: ${panelTheme === "dark" ? "#3a3320" : "#fff8d6"};
+      color: ${panelTheme === "dark" ? "#e0b84d" : "#997300"};
+      border: 1px dashed ${panelTheme === "dark" ? "#6b5d33" : "#ffe066"};
       border-radius: ${styleSettings.borderRadius}px;
       padding: 6px 8px;
       margin-bottom: 8px;
@@ -8238,6 +8340,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       iconStyle:          "emoji",
       toggleBtnBg:        "",
       toggleBtnBgOpacity: 0,
+      toggleBtnIconStyle:    "svg-line",
+      toggleBtnShape:        "circle",
+      enableToggleBtnGlow:   false,
+      toggleBtnGlowColor:    "#00bfff",
+      toggleBtnGlowStrength: 12,
       svgIconColor:       "",
       enableBorderGlow:    false,
       borderGlowColor:    "#00bfff",
@@ -8348,6 +8455,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     hideModGroup: false,
     toggleBtnBg: "",
     toggleBtnBgOpacity: 0,
+    toggleBtnIconStyle: "svg-line",
+    toggleBtnShape: "circle",
+    enableToggleBtnGlow: false,
+    toggleBtnGlowColor: "#00bfff",
+    toggleBtnGlowStrength: 12,
     svgIconColor: "",
     multiSelectColor: "#ffc400",
     multiSelectOpacity: 0.85,
@@ -8385,11 +8497,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function labelCss() {
-    return "width: 85px; flex-shrink: 0; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;";
+    return "flex-shrink: 0; font-size: 12px; margin-right: 6px;";
   }
 
   function sliderCss() {
     return "flex: 1; min-width: 60px; margin: 0 6px;";
+  }
+
+  function checkboxRowCss() {
+    return "display: flex; align-items: center; margin-bottom: 6px; width: 100%; justify-content: flex-start;";
   }
 
   function makeValueSpan(val) {
@@ -8726,7 +8842,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       glowSection.appendChild(glowHeader);
 
       const glowToggleRow = document.createElement("div");
-      glowToggleRow.style.cssText = rowCss();
+      glowToggleRow.style.cssText = checkboxRowCss();
       const glowToggleLbl = document.createElement("label");
       glowToggleLbl.textContent = t.enableBorderGlow || "Border Glow";
       glowToggleLbl.style.cssText = labelCss();
@@ -8785,7 +8901,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       glowSection.appendChild(glowStrRow);
 
       const glowInsetRow = document.createElement("div");
-      glowInsetRow.style.cssText = rowCss();
+      glowInsetRow.style.cssText = checkboxRowCss();
       const glowInsetLbl = document.createElement("label");
       glowInsetLbl.textContent = t.borderGlowInset || "Inset Glow";
       glowInsetLbl.style.cssText = labelCss();
@@ -8801,7 +8917,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       glowSection.appendChild(glowInsetRow);
 
       const sheenToggleRow = document.createElement("div");
-      sheenToggleRow.style.cssText = rowCss() + "margin-top:4px;border-top:1px solid " +
+      sheenToggleRow.style.cssText = checkboxRowCss() + "margin-top:4px;border-top:1px solid " +
         (_isDark ? "#444" : "#eee") + ";padding-top:5px;";
       const sheenToggleLbl = document.createElement("label");
       sheenToggleLbl.textContent = t.enableSheen || "Sheen Effect";
@@ -8859,7 +8975,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       glowSection.appendChild(sheenOpRow);
 
       const siteGlowRow = document.createElement("div");
-      siteGlowRow.style.cssText = rowCss();
+      siteGlowRow.style.cssText = checkboxRowCss();
       const siteGlowLbl = document.createElement("label");
       siteGlowLbl.textContent = t.enableSiteGlow || "Site Button Glow";
       siteGlowLbl.style.cssText = labelCss();
@@ -8881,7 +8997,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       glowSection.appendChild(siteGlowRow);
 
       const groupGlowRow = document.createElement("div");
-      groupGlowRow.style.cssText = rowCss();
+      groupGlowRow.style.cssText = checkboxRowCss();
       const groupGlowLbl = document.createElement("label");
       groupGlowLbl.textContent = t.enableGroupGlow || "Group Block Glow";
       groupGlowLbl.style.cssText = labelCss();
@@ -8922,10 +9038,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       `;
 
       const vigHeaderRow = document.createElement("div");
-      vigHeaderRow.style.cssText = rowCss() + "margin-bottom:0;";
+      vigHeaderRow.style.cssText = checkboxRowCss() + "margin-bottom:0;";
       const vignetteHeader = document.createElement("div");
       vignetteHeader.textContent = "🌑 " + (t.vignetteLabel || "Vignette");
-      vignetteHeader.style.cssText = "font-weight:bold; font-size:11px; flex:1;";
+      vignetteHeader.style.cssText = "font-weight:bold; font-size:11px; margin-right:6px;";
       const vigToggle = document.createElement("input");
       vigToggle.type = "checkbox";
       vigToggle.checked = !!styleSettings.enableVignette;
@@ -9190,7 +9306,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       searchBarSection.appendChild(_sbsFgRow);
 
       const _sbsGlowToggleRow = document.createElement("div");
-      _sbsGlowToggleRow.style.cssText = rowCss() + "margin-top:4px;border-top:1px solid " +
+      _sbsGlowToggleRow.style.cssText = checkboxRowCss() + "margin-top:4px;border-top:1px solid " +
         (_isDark ? "#444" : "#eee") + ";padding-top:5px;";
       const _sbsGlowToggleLbl = document.createElement("label");
       _sbsGlowToggleLbl.textContent = t.searchBarGlowEnabled || "Bar Glow";
@@ -9288,24 +9404,102 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     styleLabel.style.cssText = labelCss();
     styleRow.appendChild(styleLabel);
 
-    const styleSelect = document.createElement("select");
-    styleSelect.style.width = "100px";
-    Object.entries(t.styleOptions || {}).forEach(([key, value]) => {
-      const option = document.createElement("option");
-      option.value = key;
-      option.textContent = value;
-      if (styleSettings.style === key) option.selected = true;
-      styleSelect.appendChild(option);
-    });
-    styleSelect.onchange = () => {
-      styleSettings.style = styleSelect.value;
-      Object.assign(styleSettings, STYLE_PRESETS[styleSettings.style] || {});
-      save();
-      applyTheme(panelTheme);
-      rebuildPanel();
+    const _styleWrap = document.createElement("div");
+    _styleWrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
+    const _styleOptEntries = Object.entries(t.styleOptions || {});
+    const _refreshStyleBtnActive = () => {
+      _styleWrap.querySelectorAll("button").forEach(btn2 => {
+        const now = btn2.dataset.styleVal === styleSettings.style;
+        const _isDark = panelTheme === "dark";
+        btn2.style.background = now
+          ? (_isDark ? "#334466" : "#ddeeff")
+          : "transparent";
+        btn2.style.color = now
+          ? (_isDark ? "#88aaff" : "#0055cc")
+          : "inherit";
+      });
     };
-    styleRow.appendChild(styleSelect);
+    _styleOptEntries.forEach(([key, label]) => {
+      const b = document.createElement("button");
+      b.textContent = label;
+      b.dataset.styleVal = key;
+      const _isDark = panelTheme === "dark";
+      const _active = styleSettings.style === key;
+      b.style.cssText = `
+        padding:2px 8px; border-radius:4px; cursor:pointer;
+        font-size:${styleSettings.fontSize - 1}px; white-space:nowrap;
+        border:1px solid ${_isDark ? "#555" : "#ccc"};
+        background:${_active ? (_isDark ? "#334466" : "#ddeeff") : "transparent"};
+        color:${_active ? (_isDark ? "#88aaff" : "#0055cc") : "inherit"};
+        transition: background .15s, color .15s;
+      `;
+      b.addEventListener("click", () => {
+        styleSettings.style = key;
+        Object.assign(styleSettings, STYLE_PRESETS[key] || {});
+        save();
+        applyTheme(panelTheme);
+        borderRadiusInput.value = styleSettings.borderRadius;
+        _vs_borderRadiusInput.textContent = styleSettings.borderRadius + "px";
+        opacityInput.value = styleSettings.opacity;
+        _vs_opacityInput.textContent = parseFloat(styleSettings.opacity).toFixed(1);
+        groupOpacityInput.value = styleSettings.groupOpacity;
+        _vs_groupOpacityInput.textContent = parseFloat(styleSettings.groupOpacity).toFixed(1);
+        buttonOpacityInput.value = styleSettings.buttonOpacity;
+        _vs_buttonOpacityInput.textContent = parseFloat(styleSettings.buttonOpacity).toFixed(1);
+        _refreshStyleBtnActive();
+      });
+      _styleWrap.appendChild(b);
+    });
+    styleRow.appendChild(_styleWrap);
     generalStyleContainer.appendChild(styleRow);
+
+    (function() {
+      const row = document.createElement("div");
+      row.style.cssText = rowCss() + "flex-wrap:wrap; gap:4px;";
+      const lbl = document.createElement("label");
+      lbl.textContent = t.iconStyleLabel || "Icon Style";
+      lbl.style.cssText = labelCss();
+      row.appendChild(lbl);
+      const _wrap = document.createElement("div");
+      _wrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
+      const _opts = [
+        { v: "emoji",    lb: t.toggleBtnIconEmoji   || "🔍 Emoji" },
+        { v: "svg-line", lb: t.toggleBtnIconSvgLine || "SVG Outline" },
+        { v: "svg-fill", lb: t.toggleBtnIconSvgFill || "SVG Filled" },
+      ];
+      _opts.forEach(({ v, lb }) => {
+        const b = document.createElement("button");
+        b.textContent = lb;
+        b.dataset.iconVal = v;
+        const _isDark = panelTheme === "dark";
+        const _active = (styleSettings.iconStyle || "emoji") === v;
+        b.style.cssText = `
+          padding:2px 8px; border-radius:4px; cursor:pointer;
+          font-size:${styleSettings.fontSize - 1}px; white-space:nowrap;
+          border:1px solid ${_isDark ? "#555" : "#ccc"};
+          background:${_active ? (_isDark ? "#334466" : "#ddeeff") : "transparent"};
+          color:${_active ? (_isDark ? "#88aaff" : "#0055cc") : "inherit"};
+          transition: background .15s, color .15s;
+        `;
+        b.addEventListener("click", () => {
+          styleSettings.iconStyle = v;
+          save();
+          applyAllBtnIcons();
+          _wrap.querySelectorAll("button").forEach(btn2 => {
+            const now = btn2.dataset.iconVal === v;
+            btn2.style.background = now
+              ? (panelTheme === "dark" ? "#334466" : "#ddeeff")
+              : "transparent";
+            btn2.style.color = now
+              ? (panelTheme === "dark" ? "#88aaff" : "#0055cc")
+              : "inherit";
+          });
+        });
+        _wrap.appendChild(b);
+      });
+      row.appendChild(_wrap);
+      generalStyleContainer.appendChild(row);
+    })();
 
     const { qsHeader: _qsHeader } =
       _buildGsQuickSchemeSection(generalStyleContainer);
@@ -9576,9 +9770,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     function _buildToggleBtnStyleSection() {
     const toggleBtnStyleContainer = document.createElement("div");
     toggleBtnStyleContainer.style.cssText = `
-      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
-      border-radius:${styleSettings.borderRadius}px;
-      padding:6px; display:flex; flex-direction:column;
+      display:flex; flex-direction:column;
       gap:0; max-width:490px; margin-top:0;
     `;
     const _tbsHeader = document.createElement("div");
@@ -9590,22 +9782,22 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const row = document.createElement("div");
       row.style.cssText = rowCss() + "flex-wrap:wrap; gap:4px;";
       const lbl = document.createElement("label");
-      lbl.textContent = t.toggleBtnIconLabel || "Icon";
+      lbl.textContent = t.toggleBtnShapeLabel || "Shape";
       lbl.style.cssText = labelCss();
       row.appendChild(lbl);
       const _wrap = document.createElement("div");
       _wrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
       const _opts = [
-        { v: "emoji",    lb: t.toggleBtnIconEmoji   || "🔍 Emoji" },
-        { v: "svg-line", lb: t.toggleBtnIconSvgLine || "SVG Outline" },
-        { v: "svg-fill", lb: t.toggleBtnIconSvgFill || "SVG Filled" },
+        { v: "circle",         lb: t.toggleBtnShapeCircle        || "● Circle" },
+        { v: "rounded-square", lb: t.toggleBtnShapeRoundedSquare || "▢ Rounded" },
+        { v: "star",           lb: t.toggleBtnShapeStar          || "★ Star" },
       ];
       _opts.forEach(({ v, lb }) => {
         const b = document.createElement("button");
         b.textContent = lb;
-        b.dataset.iconVal = v;
+        b.dataset.shapeVal = v;
         const _isDark = panelTheme === "dark";
-        const _active = (styleSettings.iconStyle || "emoji") === v;
+        const _active = (styleSettings.toggleBtnShape || "circle") === v;
         b.style.cssText = `
           padding:2px 8px; border-radius:4px; cursor:pointer;
           font-size:${styleSettings.fontSize - 1}px; white-space:nowrap;
@@ -9615,13 +9807,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           transition: background .15s, color .15s;
         `;
         b.addEventListener("click", () => {
-          styleSettings.iconStyle = v;
+          styleSettings.toggleBtnShape = v;
           save();
           const tb = document.getElementById("site-toggle-simple");
           if (tb) applyToggleBtnStyle(tb);
-          applyAllBtnIcons();
           _wrap.querySelectorAll("button").forEach(btn2 => {
-            const now = btn2.dataset.iconVal === v;
+            const now = btn2.dataset.shapeVal === v;
             btn2.style.background = now
               ? (panelTheme === "dark" ? "#334466" : "#ddeeff")
               : "transparent";
@@ -9773,6 +9964,89 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       toggleBtnStyleContainer.appendChild(row);
     })();
 
+    const _tbGlowColorRow = document.createElement("div");
+    const _tbGlowStrRow   = document.createElement("div");
+    (function() {
+      const row = document.createElement("div");
+      row.style.cssText = checkboxRowCss();
+      const lbl = document.createElement("label");
+      lbl.textContent = t.enableToggleBtnGlow || "Glow";
+      lbl.style.cssText = labelCss();
+      row.appendChild(lbl);
+      const _tg = document.createElement("input");
+      _tg.type = "checkbox";
+      _tg.checked = !!styleSettings.enableToggleBtnGlow;
+      _tg.onchange = () => {
+        styleSettings.enableToggleBtnGlow = _tg.checked;
+        _setGroupEnabled(_tg.checked, _tbGlowColorRow, _tbGlowStrRow);
+        save();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+      };
+      row.appendChild(_tg);
+      toggleBtnStyleContainer.appendChild(row);
+    })();
+
+    (function() {
+      _tbGlowColorRow.style.cssText = rowCss();
+      const lbl = document.createElement("label");
+      lbl.textContent = t.toggleBtnGlowColor || "Glow Color";
+      lbl.style.cssText = labelCss();
+      _tbGlowColorRow.appendChild(lbl);
+      const _ci = document.createElement("input");
+      _ci.type = "color";
+      _ci.value = styleSettings.toggleBtnGlowColor || "#00bfff";
+      _ci.oninput = () => {
+        styleSettings.toggleBtnGlowColor = _ci.value;
+        _debouncedSave();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+      };
+      const _rb = makeResetBtn("#00bfff", (dv) => {
+        _ci.value = dv;
+        styleSettings.toggleBtnGlowColor = dv;
+        save();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+      });
+      _tbGlowColorRow.appendChild(_ci);
+      _tbGlowColorRow.appendChild(_rb);
+      toggleBtnStyleContainer.appendChild(_tbGlowColorRow);
+    })();
+
+    (function() {
+      _tbGlowStrRow.style.cssText = rowCss();
+      const lbl = document.createElement("label");
+      lbl.textContent = t.toggleBtnGlowStrength || "Glow Strength";
+      lbl.style.cssText = labelCss();
+      _tbGlowStrRow.appendChild(lbl);
+      const _si = document.createElement("input");
+      _si.type = "range"; _si.min = "4"; _si.max = "32"; _si.step = "1";
+      _si.value = styleSettings.toggleBtnGlowStrength || 12;
+      _si.style.cssText = sliderCss();
+      const _vs = makeValueSpan(_si.value + "px");
+      _si.oninput = () => {
+        styleSettings.toggleBtnGlowStrength = parseInt(_si.value);
+        _vs.textContent = _si.value + "px";
+        _debouncedSave();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+      };
+      const _rb = makeResetBtn(12, (dv) => {
+        _si.value = dv;
+        styleSettings.toggleBtnGlowStrength = dv;
+        _vs.textContent = dv + "px";
+        save();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+      });
+      _tbGlowStrRow.appendChild(_si);
+      _tbGlowStrRow.appendChild(_vs);
+      _tbGlowStrRow.appendChild(_rb);
+      toggleBtnStyleContainer.appendChild(_tbGlowStrRow);
+    })();
+    _setGroupEnabled(!!styleSettings.enableToggleBtnGlow, _tbGlowColorRow, _tbGlowStrRow);
+
     return { toggleBtnStyleContainer, _tbsHeader };
     }
 
@@ -9845,7 +10119,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     textStyleContainer.appendChild(textBackgroundColorRow);
 
     const textBorderRow = document.createElement("div");
-    textBorderRow.style.cssText = rowCss();
+    textBorderRow.style.cssText = checkboxRowCss();
 
     const textBorderLabel = document.createElement("label");
     textBorderLabel.textContent = t.textBorder || "Enable Text Border";
@@ -9925,7 +10199,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     backgroundOverlayContainer.appendChild(backgroundOverlayHeader);
 
     const overlayDarkeningRow = document.createElement("div");
-    overlayDarkeningRow.style.cssText = rowCss();
+    overlayDarkeningRow.style.cssText = checkboxRowCss();
 
     const overlayDarkeningLabel = document.createElement("label");
     overlayDarkeningLabel.textContent = t.enableOverlayDarkening || "Overlay Darkening";
@@ -10363,8 +10637,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const { customThemeContainer, customThemeHeader, backgroundColorLabel, textColorLabel, buttonBgLabel } = _buildCustomThemeSection();
 
     styleConfigContent.appendChild(panelLayoutContainer);
+    const _tbsDivider = document.createElement("div");
+    _tbsDivider.style.cssText = `
+      border-top:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+      margin:8px 0 6px;
+    `;
+    generalStyleContainer.appendChild(_tbsDivider);
+    generalStyleContainer.appendChild(toggleBtnStyleContainer);
     styleConfigContent.appendChild(generalStyleContainer);
-    styleConfigContent.appendChild(toggleBtnStyleContainer);
     styleConfigContent.appendChild(textStyleContainer);
     styleConfigContent.appendChild(backgroundOverlayContainer);
     styleConfigContent.appendChild(multiSelectContainer);
@@ -10864,10 +11144,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     overflow-x:auto; overflow-y:hidden; scrollbar-width:thin;
   `;
 
-  const _tlbBg  = `var(--set-btn-bg, ${panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5"})`;
+  const _tlbBg  = panelTheme === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
   const _tlbFg  = `var(--set-text, ${panelTheme === "dark" ? "#ffffff" : "#000000"})`;
-  const _tlbBd  = `var(--set-border, ${panelTheme === "dark" ? "#666"    : "#ccc"})`;
+  const _tlbBd  = panelTheme === "dark" ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)";
   const _tlbRad = Math.max(styleSettings.borderRadius, 6) + "px";
+  const _tlbOpacity   = `var(--set-btn-opacity, 1)`;
+  const _tlbFontSize  = `var(--set-font-size, ${styleSettings.fontSize}px)`;
 
   function _attachHoverTooltip(el, textOrGetter, opts) {
     const _margin = 8;
@@ -10924,7 +11206,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     cursor:pointer; white-space:nowrap; font-size:13px;
     display:inline-flex; align-items:center; justify-content:center;
     background:${toolbarCompact ? (panelTheme === "dark" ? "rgba(90,150,255,0.35)" : "rgba(60,120,255,0.15)") : _tlbBg};
-    color:${_tlbFg}; border:1px solid ${_tlbBd};
+    color:${_tlbFg}; border:1px solid ${_tlbBd}; opacity:${_tlbOpacity};
   `;
   _applyIconToBtn(compactToggleBtn, ICONS.compactToggle.emoji, ICONS.compactToggle.line, ICONS.compactToggle.fill, ICONS.compactToggle.size);
   _attachHoverTooltip(compactToggleBtn, () =>
@@ -10949,16 +11231,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   addGroupBtn.style.cssText = `
     padding:3px 8px; border-radius:${_tlbRad};
     cursor:pointer; white-space:nowrap; font-size:11px; flex-shrink:1;
-    background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
+    background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd}; opacity:${_tlbOpacity};
     display:inline-flex; align-items:center; justify-content:center; gap:4px;
   `;
   const addGroupIconEl  = document.createElement("span");
   const addGroupLabelEl = document.createElement("span");
+  addGroupLabelEl.style.fontSize = _tlbFontSize;
   addGroupBtn.appendChild(addGroupIconEl);
   addGroupBtn.appendChild(addGroupLabelEl);
   function _updateAddGroupBtn() {
     _applyIconToBtn(addGroupIconEl, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
     addGroupLabelEl.textContent = toolbarCompact ? "" : (t.addGroup || "Add Group ➕").replace(/\s*➕\s*$/, "");
+    addGroupBtn.style.gap = toolbarCompact ? "0" : "4px";
+    addGroupBtn.style.padding = toolbarCompact ? "3px 6px" : "3px 8px";
   }
   _updateAddGroupBtn();
   addGroupBtn.style.display = styleSettings.hideAddGroupBtn ? "none" : "inline-flex";
@@ -10986,7 +11271,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   toggleAddressBtn.style.cssText = `
     padding:3px 6px; border-radius:${_tlbRad};
     cursor:pointer; white-space:nowrap; font-size:13px;
-    background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
+    background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd}; opacity:${_tlbOpacity};
     display:${styleSettings.hideAddressToggleBtn ? "none" : "inline-flex"}; align-items:center; justify-content:center;
   `;
 
@@ -11059,11 +11344,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       : "transparent"};
     border:1px solid ${active
       ? (panelTheme === "dark" ? "#5a96ff" : "#3c78ff")
-      : `var(--set-border, ${panelTheme === "dark" ? "#555" : "#ccc"})`};
+      : _tlbBd};
     color:${active
       ? (panelTheme === "dark" ? "#bcd7ff" : "#1a54d6")
       : (styleSettings.textColor || (panelTheme === "dark" ? "#ddd" : "#333"))};
-    border-radius:${styleSettings.borderRadius}px;
+    border-radius:${_tlbRad}; opacity:${_tlbOpacity};
     font-size:12px; padding:3px 6px; cursor:pointer; line-height:1;
     display:inline-flex; align-items:center; justify-content:center;
     transition:background 0.15s, border-color 0.15s;
@@ -11265,14 +11550,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   exportBtn.style.gap = "4px";
   const exportIconEl  = document.createElement("span");
   const exportLabelEl = document.createElement("span");
+  exportLabelEl.style.fontSize = _tlbFontSize;
   exportBtn.appendChild(exportIconEl);
   exportBtn.appendChild(exportLabelEl);
   function _updateExportBtn() {
     _applyIconToBtn(exportIconEl, ICONS.exportConfig.emoji, ICONS.exportConfig.line, ICONS.exportConfig.fill, ICONS.exportConfig.size);
     exportLabelEl.textContent = toolbarCompact ? "" : (t.exportConfig || "Export Config 📤").replace(/\s*📤\s*$/, "");
+    exportBtn.style.gap = toolbarCompact ? "0" : "4px";
+    exportBtn.style.padding = toolbarCompact ? "3px 6px" : "4px 8px";
   }
   _updateExportBtn();
-  exportBtn.style.padding = "4px 8px";
   exportBtn.style.borderRadius = _tlbRad;
   exportBtn.style.cursor = "pointer";
   exportBtn.style.whiteSpace = "nowrap";
@@ -11280,6 +11567,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   exportBtn.style.background = _tlbBg;
   exportBtn.style.color = _tlbFg;
   exportBtn.style.border = `1px solid ${_tlbBd}`;
+  exportBtn.style.opacity = _tlbOpacity;
   exportBtn.style.display = styleSettings.hideExportBtn ? "none" : "inline-flex";
   _attachHoverTooltip(exportBtn, () => toolbarCompact ? (t.exportConfig || "Export Config 📤") : "");
   exportBtn.onclick = () => {
@@ -11334,14 +11622,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   importBtn.style.gap = "4px";
   const importIconEl  = document.createElement("span");
   const importLabelEl = document.createElement("span");
+  importLabelEl.style.fontSize = _tlbFontSize;
   importBtn.appendChild(importIconEl);
   importBtn.appendChild(importLabelEl);
   function _updateImportBtn() {
     _applyIconToBtn(importIconEl, ICONS.importConfig.emoji, ICONS.importConfig.line, ICONS.importConfig.fill, ICONS.importConfig.size);
     importLabelEl.textContent = toolbarCompact ? "" : (t.importConfig || "Import Config 📥").replace(/\s*📥\s*$/, "");
+    importBtn.style.gap = toolbarCompact ? "0" : "4px";
+    importBtn.style.padding = toolbarCompact ? "3px 6px" : "4px 8px";
   }
   _updateImportBtn();
-  importBtn.style.padding = "4px 8px";
   importBtn.style.borderRadius = _tlbRad;
   importBtn.style.cursor = "pointer";
   importBtn.style.whiteSpace = "nowrap";
@@ -11349,6 +11639,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   importBtn.style.background = _tlbBg;
   importBtn.style.color = _tlbFg;
   importBtn.style.border = `1px solid ${_tlbBd}`;
+  importBtn.style.opacity = _tlbOpacity;
   importBtn.style.display = styleSettings.hideImportBtn ? "none" : "inline-flex";
   _attachHoverTooltip(importBtn, () => toolbarCompact ? (t.importConfig || "Import Config 📥") : "");
   importBtn.onclick = () => {
@@ -11409,6 +11700,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               "siteButtonWidth", "hideSyntaxBtn", "hideBlacklistBtn", "hideAddGroupBtn",
               "hideAddressToggleBtn", "hideExportBtn", "hideImportBtn", "hideModGroup",
               "iconStyle", "toggleBtnBg", "toggleBtnBgOpacity", "svgIconColor",
+              "toggleBtnIconStyle", "toggleBtnShape",
+              "enableToggleBtnGlow", "toggleBtnGlowColor", "toggleBtnGlowStrength",
               "enableBorderGlow", "borderGlowColor", "borderGlowStrength", "borderGlowInset",
               "enableSheen", "sheenAngle", "sheenOpacity",
               "enableSiteGlow", "enableGroupGlow",
@@ -11509,7 +11802,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     line-height:1.4;
     flex-shrink:0;
     display:inline-flex; align-items:center; justify-content:center;
-    background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
+    background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd}; opacity:${_tlbOpacity};
   `;
   _applyIconToBtn(syntaxHelpBtn, ICONS.syntaxHelp.emoji, ICONS.syntaxHelp.line, ICONS.syntaxHelp.fill, ICONS.syntaxHelp.size || `${styleSettings.fontSize}px`);
   syntaxHelpBtn.onclick = () => showSyntaxPanel();
@@ -11525,6 +11818,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   blacklistBtnEl.style.background = _tlbBg;
   blacklistBtnEl.style.color = _tlbFg;
   blacklistBtnEl.style.border = `1px solid ${_tlbBd}`;
+  blacklistBtnEl.style.opacity = _tlbOpacity;
   blacklistBtnEl.style.display = "inline-flex";
   blacklistBtnEl.style.alignItems = "center";
   blacklistBtnEl.style.justifyContent = "center";
@@ -11532,6 +11826,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const blacklistIconEl  = document.createElement("span");
   const blacklistCountEl = document.createElement("span");
   const blacklistLabelEl = document.createElement("span");
+  blacklistCountEl.style.fontSize = _tlbFontSize;
+  blacklistLabelEl.style.fontSize = _tlbFontSize;
   blacklistBtnEl.appendChild(blacklistIconEl);
   blacklistBtnEl.appendChild(blacklistCountEl);
   blacklistBtnEl.appendChild(blacklistLabelEl);
@@ -11548,6 +11844,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
         : (t.blacklistTitle || "Domain Blacklist");
     }
+    const _isIconOnly = toolbarCompact && _blCount === 0;
+    blacklistBtnEl.style.gap = _isIconOnly ? "0" : "3px";
+    blacklistBtnEl.style.padding = _isIconOnly ? "3px 6px" : "4px 8px";
   }
   _updateBlacklistBtn();
   _attachHoverTooltip(blacklistBtnEl, () =>
