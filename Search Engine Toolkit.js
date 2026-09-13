@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.6.0.27
+// @version      2.6.0.34
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -55,6 +55,114 @@
   const DEBUG = false;
   const log = (...args) => DEBUG && console.log(...args);
   const warn = (...args) => DEBUG && console.warn(...args);
+
+  const STORAGE_KEYS = {
+    PANEL_THEME:            "panelTheme",
+    STYLE_SETTINGS:         "styleSettings",
+    STYLE_FLOAT_POS:        "styleFloatPos",
+    SEARCH_CONFIG:          "searchConfig",
+    SEARCH_CONFIG_COLLAPSED:"searchConfigCollapsed",
+    DEFAULT_PANEL_OPEN:     "defaultPanelOpen",
+    MANUALLY_CLOSED:        "manuallyClosed",
+    TOGGLE_BUTTON_TOP:      "toggleButtonTop",
+    TOGGLE_BUTTON_LEFT:     "toggleButtonLeft",
+    SITE_PANEL_LANG:        "sitePanelLang",
+    CUSTOM_LANG_DATA:       "customLangData",
+    CUSTOM_LANG_DRAFT:      "customLangDraft",
+    SITE_GROUPS:            "siteGroups",
+    SHOW_ADDRESSES:         "showAddresses",
+    TOOLBAR_COMPACT:        "toolbarCompact",
+    SHIFT_DELETE_NOTICED_ONCE: "shiftDeleteNoticedOnce",
+    DOMAIN_BLACKLIST:       "domainBlacklist",
+    BLACKLIST_WEAKEN_MODE:  "blacklistWeakenMode",
+    EXACT_MATCH_ENABLED:    "exactMatchEnabled",
+    INTITLE_ENABLED:        "intitleEnabled",
+    INURL_ENABLED:          "inurlEnabled",
+    FILETYPE_VALUE:         "filetypeValue",
+    SAFE_SEARCH_ENABLED:        "safeSearchEnabled",
+    SAFE_SEARCH_NOTICED_ONCE:   "safeSearchNoticedOnce",
+    SEARCH_REGION_ENABLED:      "searchRegionEnabled",
+    SEARCH_REGION_NOTICED_ONCE: "searchRegionNoticedOnce",
+    SE_ENGINES:             "se_engines",
+    SE_PANEL_PINNED:        "se_panelPinned",
+    SE_PANEL_POS:           "se_panelPos",
+    SE_DETECT_FIRST_SEEN:   "seDetectFirstSeen",
+    HIDE_SE_ADVICE_BANNER:  "hideSeAdviceBanner",
+    MS_SEND_MODE:           "ms_sendMode",
+    MS_CLEAR_AFTER_SEND:    "ms_clearAfterSend",
+    COMPACT_MODE:           "compactMode",
+    COMPACT_THEME:          "compactTheme",
+    COMPACT_GROUP_IDX:      "compactGroupIdx",
+    COMPACT_PANEL_LEFT:     "compactPanelLeft",
+    COMPACT_PANEL_TOP:      "compactPanelTop",
+    COMPACT_HINT_SHOWN:     "compactHintShown",
+    HIDE_LOCK_HINT_BANNER:  "hideLockHintBanner",
+    ONBOARDING_DONE:        "onboardingDone",
+  };
+
+  const TOOLBAR_BTN_IDS = {
+    hideAddGroupBtn:      { id: "toolbar-add-group-btn", show: "inline-flex" },
+    hideAddressToggleBtn: { id: "se-toggle-address-btn", show: "inline-flex" },
+    hideExportBtn:        { id: "toolbar-export-btn",    show: "inline-flex" },
+    hideImportBtn:        { id: "toolbar-import-btn",    show: "inline-flex" },
+    hideModGroup:         { id: "syntax-mod-group",      show: "flex"        },
+    hideBlacklistBtn:     { id: "blacklist-btn",          show: "inline-flex" },
+  };
+
+  const STYLE_DEFAULTS = {
+      style: "default", borderRadius: 6, contrast: 0, opacity: 0.9,
+      fontSize: 12, isExpanded: false,
+      panelTop: 80, panelRight: 20, panelLeft: -1, panelWidth: 0, panelMaxHeight: 87,
+      panelUserSized: false,
+      backgroundImage: "", imageMode: "center", textColor: "", backgroundColor: "",
+      imageOffsetX: 0, imageOffsetY: 0, groupOpacity: 1.0,
+      textOpacityCompensation: 1.0, buttonOpacity: 1.0,
+      imageScale: 1.0, imageOpacity: 1.0, theme: "light",
+      customBackgroundColor: "#ffffff", customTextColor: "#000000",
+      customButtonBg: "#f5f5f5", groupBackgroundColor: "",
+      enableOverlayDarkening: false, textBackgroundColor: "", textBorder: false,
+      overlayStrength: 0.5, multiSelectColor: "#ffc400", multiSelectOpacity: 0.85,
+      siteButtonWidth: 0,
+      hideSyntaxBtn: false,
+      hideBlacklistBtn: false,
+      hideAddGroupBtn: false,
+      hideAddressToggleBtn: false,
+      hideExportBtn: false,
+      hideImportBtn: false,
+      hideModGroup: false,
+      iconStyle: "emoji",
+      toggleBtnBg: "",
+      toggleBtnBgOpacity: 0,
+      toggleBtnIconStyle: "svg-line",
+      toggleBtnShape: "circle",
+      enableToggleBtnGlow:  false,
+      toggleBtnGlowColor:   "#00bfff",
+      toggleBtnGlowStrength: 12,
+      svgIconColor: "",
+      enableBorderGlow: false,
+      borderGlowColor: "#00bfff",
+      borderGlowStrength: 12,
+      borderGlowInset: true,
+      enableSheen: false,
+      sheenAngle: 135,
+      sheenOpacity: 0.08,
+      enableSiteGlow: false,
+      enableGroupGlow: false,
+      searchBarBg: "",
+      searchBarBgOpacity: 0,
+      searchBarFg: "",
+      searchBarGlowEnabled: false,
+      searchBarGlowColor: "#5599ff",
+      searchBarGlowStrength: 6,
+      enableVignette: false,
+      vignetteCornerTL: true,
+      vignetteCornerTR: true,
+      vignetteCornerBL: true,
+      vignetteCornerBR: true,
+      vignetteSize: 120,
+      vignetteColor: "#000000",
+      vignetteOpacity: 0.45,
+  };
 
   function isValidPixelValue(value) {
     return typeof value === "string" && /^\d+(\.\d+)?px$/.test(value);
@@ -1945,7 +2053,7 @@
       exportBtn: "📤 Export Template",
       importBtn: "📥 Import Translation",
       exportHint: "1. Click 「📤 Export」 to download the JSON template.\n2. Open the file and translate only the VALUES (not the keys).\n3. Set the \"name\" field to your language name.\n4. Click 「📥 Import」 to apply.\n\nEnglish: Export → translate the values → Import\nDeutsch: Exportieren → Werte übersetzen → Importieren\nFrançais : Exporter → traduire les valeurs → Importer\nEspañol: Exportar → traducir los valores → Importar\nItaliano: Esporta → traduci i valori → Importa\nPortuguês: Exportar → traduzir os valores → Importar\nРусский: Экспорт → перевести значения → Импорт\nУкраїнська: Експорт → перекласти значення → Імпорт\nภาษาไทย: ส่งออก → แปลค่า → นำเข้า\nTürkçe: Dışa aktar → değerleri çevir → İçe aktar\nPolski: Eksportuj → przetłumacz wartości → Importuj\nČeština: Exportovat → přeložit hodnoty → Importovat\nRomână: Exportați → traduceți valorile → Importați\nMagyar: Exportálás → értékek fordítása → Importálás\nΕλληνικά: Εξαγωγή → μετάφραση τιμών → Εισαγωγή\nالعربية: تصدير ← ترجمة القيم ← استيراد\nעברית: ייצוא ← תרגום הערכים ← ייבוא\nفارسی: صادر کردن ← ترجمه مقادیر ← وارد کردن\nहिन्दी: निर्यात → मान अनुवाद करें → आयात\nবাংলা: রপ্তানি → মান অনুবাদ করুন → আমদানি\nIndonesia: Ekspor → terjemahkan nilai → Impor\nBahasa Melayu: Eksport → terjemah nilai → Import\nFilipino: I-export → isalin ang mga halaga → I-import\nTiếng Việt: Xuất → dịch các giá trị → Nhập\nNederlands: Exporteren → waarden vertalen → Importeren\nSvenska: Exportera → översätt värdena → Importera\nKiswahili: Hamisha → tafsiri maadili → Ingiza\n(...)",
-      exportSuccess: "📦 Exported: lang-full-template.json",
+      exportSuccess: "📦 Exported: uiLang-full-template.json",
       importSuccess: "Custom language applied! ✅",
       importFailed: "Import failed: invalid or missing 'name' field.",
       noCustomLang: "No custom language loaded yet.",
@@ -1980,7 +2088,7 @@
   }
 
   (function () {
-    const saved = GM_getValue("customLangData", null);
+    const saved = GM_getValue(STORAGE_KEYS.CUSTOM_LANG_DATA, null);
     if (saved) {
       try {
         LANGUAGES.custom = hydrateCustomLang(JSON.parse(saved));
@@ -1988,11 +2096,11 @@
     }
   })();
 
-  let lang = GM_getValue("sitePanelLang", "zh_TW");
-  let t = LANGUAGES[lang] || LANGUAGES["en"];
-  const groups = GM_getValue("siteGroups", []);
-  let showAddresses = GM_getValue("showAddresses", true);
-  let toolbarCompact = GM_getValue("toolbarCompact", false);
+  let uiLang = GM_getValue(STORAGE_KEYS.SITE_PANEL_LANG, "zh_TW");
+  let t = LANGUAGES[uiLang] || LANGUAGES["en"];
+  const groups = GM_getValue(STORAGE_KEYS.SITE_GROUPS, []);
+  let showSiteAddresses = GM_getValue(STORAGE_KEYS.SHOW_ADDRESSES, true);
+  let toolbarCompactMode = GM_getValue(STORAGE_KEYS.TOOLBAR_COMPACT, false);
 
   const NEW_FEATURE_VERSIONS = {
     syntaxModifiers: "2.6.0.0",
@@ -2012,25 +2120,25 @@
     GM_setValue(NEW_BADGE_SEEN_PREFIX + key, introducedVer);
   }
 
-  let searchConfig = GM_getValue("searchConfig", {
+  let syntaxConfig = GM_getValue(STORAGE_KEYS.SEARCH_CONFIG, {
     isExpanded: false,
     resetOnReload: true,
   });
-  let defaultPanelOpen = GM_getValue("defaultPanelOpen", false);
-  let safeSearchEnabled     = GM_getValue("safeSearchEnabled",     false);
-  let safeSearchNoticedOnce = GM_getValue("safeSearchNoticedOnce", false);
-  let searchRegionEnabled     = GM_getValue("searchRegionEnabled",     false);
-  let searchRegionNoticedOnce = GM_getValue("searchRegionNoticedOnce", false);
-  let domainBlacklist     = GM_getValue("domainBlacklist",     []);
-  let blacklistWeakenMode = GM_getValue("blacklistWeakenMode", false);
+  let panelDefaultOpen = GM_getValue(STORAGE_KEYS.DEFAULT_PANEL_OPEN, false);
+  let syntaxSafeSearchOn     = GM_getValue(STORAGE_KEYS.SAFE_SEARCH_ENABLED,     false);
+  let _syntaxSafeSearchNoticed = GM_getValue(STORAGE_KEYS.SAFE_SEARCH_NOTICED_ONCE, false);
+  let syntaxRegionOn     = GM_getValue(STORAGE_KEYS.SEARCH_REGION_ENABLED,     false);
+  let _syntaxRegionNoticed = GM_getValue(STORAGE_KEYS.SEARCH_REGION_NOTICED_ONCE, false);
+  let blacklistDomains     = GM_getValue(STORAGE_KEYS.DOMAIN_BLACKLIST,     []);
+  let blacklistWeakenOn = GM_getValue(STORAGE_KEYS.BLACKLIST_WEAKEN_MODE, false);
 
-  let exactMatchEnabled = GM_getValue("exactMatchEnabled", false);
-  let intitleEnabled    = GM_getValue("intitleEnabled",    false);
-  let inurlEnabled      = GM_getValue("inurlEnabled",      false);
-  let filetypeValue     = GM_getValue("filetypeValue",     "");
+  let syntaxExactMatchOn = GM_getValue(STORAGE_KEYS.EXACT_MATCH_ENABLED, false);
+  let syntaxIntitleOn    = GM_getValue(STORAGE_KEYS.INTITLE_ENABLED,    false);
+  let syntaxInurlOn      = GM_getValue(STORAGE_KEYS.INURL_ENABLED,      false);
+  let syntaxFiletypeVal     = GM_getValue(STORAGE_KEYS.FILETYPE_VALUE,     "");
 
   function applyUrlOverrides() {
-    if (!safeSearchEnabled && !searchRegionEnabled) return;
+    if (!syntaxSafeSearchOn && !syntaxRegionOn) return;
     try {
       const url     = new URL(window.location.href);
       const params  = url.searchParams;
@@ -2044,7 +2152,7 @@
       }
       let updated = false;
 
-      if (safeSearchEnabled) {
+      if (syntaxSafeSearchOn) {
         if (host.includes("google.")) {
         } else if (host.includes("bing.com")) {
           if (params.get("adlt") !== "off") { params.set("adlt", "off"); updated = true; }
@@ -2065,7 +2173,7 @@
         }
       }
 
-      if (searchRegionEnabled) {
+      if (syntaxRegionOn) {
         if (host.includes("google.")) {
           if (params.has("gl"))  { params.delete("gl");  updated = true; }
           if (params.has("cr"))  { params.delete("cr");  updated = true; }
@@ -2191,8 +2299,8 @@
 
   function showSafeSearchNotice(onConfirm) {
     showNoticeDialog({
-      noticedFlag:   safeSearchNoticedOnce,
-      setNoticed:    () => { safeSearchNoticedOnce = true; GM_setValue("safeSearchNoticedOnce", true); },
+      noticedFlag:   _syntaxSafeSearchNoticed,
+      setNoticed:    () => { _syntaxSafeSearchNoticed = true; GM_setValue(STORAGE_KEYS.SAFE_SEARCH_NOTICED_ONCE, true); },
       title:         t.safeSearchLabel   || "🔒 Safe Search OFF",
       body:          t.safeSearchWarning ||
         "⚠️ ON: injects URL params to disable safe search.\nOFF: script does nothing.\nNo guarantee. Baidu unsupported.\n\nThis notice only appears once.",
@@ -2204,8 +2312,8 @@
 
   function showSearchRegionNotice(onConfirm) {
     showNoticeDialog({
-      noticedFlag:   searchRegionNoticedOnce,
-      setNoticed:    () => { searchRegionNoticedOnce = true; GM_setValue("searchRegionNoticedOnce", true); },
+      noticedFlag:   _syntaxRegionNoticed,
+      setNoticed:    () => { _syntaxRegionNoticed = true; GM_setValue(STORAGE_KEYS.SEARCH_REGION_NOTICED_ONCE, true); },
       title:         t.searchRegionLabel   || "🌐 Search Region: All",
       body:          t.searchRegionWarning ||
         "⚠️ ON: removes/replaces region URL params to avoid country-limited results.\nOFF: script does nothing.\nNo guarantee. Baidu & Naver unsupported.\n\nThis notice only appears once.",
@@ -2216,7 +2324,7 @@
   }
 
   const SE_PINNED_COUNT = 5;
-  let se_engines = GM_getValue("se_engines", [
+  let engineList = GM_getValue(STORAGE_KEYS.SE_ENGINES, [
     { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
     { name: "Brave Search", url: "https://search.brave.com/search?q=" },
     { name: "Bing", url: "https://www.bing.com/search?q=" },
@@ -2224,13 +2332,13 @@
     { name: "Yandex", url: "https://yandex.ru/yandsearch?text=" },
     { name: "Google", url: "https://www.google.com/search?q=" },
   ]);
-  let se_panelPinned = GM_getValue("se_panelPinned", false);
-  let se_panelPos = GM_getValue("se_panelPos", null);
+  let enginePanelPinned = GM_getValue(STORAGE_KEYS.SE_PANEL_PINNED, false);
+  let enginePanelPos = GM_getValue(STORAGE_KEYS.SE_PANEL_POS, null);
 
   function se_save() {
-    GM_setValue("se_engines", se_engines);
-    GM_setValue("se_panelPinned", se_panelPinned);
-    GM_setValue("se_panelPos", se_panelPos);
+    GM_setValue(STORAGE_KEYS.SE_ENGINES, engineList);
+    GM_setValue(STORAGE_KEYS.SE_PANEL_PINNED, enginePanelPinned);
+    GM_setValue(STORAGE_KEYS.SE_PANEL_POS, enginePanelPos);
   }
 
   function se_extractKeyword() {
@@ -2293,22 +2401,22 @@
     window.open(engine.url + encodeURIComponent(kw), "_blank");
   }
 
-  log("Initial defaultPanelOpen:", defaultPanelOpen);
-  let panelTheme = GM_getValue("panelTheme", "light");
+  log("Initial panelDefaultOpen:", panelDefaultOpen);
+  let panelTheme = GM_getValue(STORAGE_KEYS.PANEL_THEME, "light");
   let panel      = null;
-  let panelBody       = null;
-  let headerContainer = null;
-  let dpBtn           = null;
-  let seBar           = null;
-  let seExtraPanel   = null;
-  let seHelpTip      = null;
-  let _epDrag        = { active: false, x: 0, y: 0 };
-  let _epTitleBarRef = null;
-  let manuallyClosed = false;
-  if (window.performance && !searchConfig.resetOnReload) {
+  let panelBodyEl       = null;
+  let panelHeaderEl = null;
+  let pinDropdownBtn           = null;
+  let enginePanelBar           = null;
+  let enginePanelFloat   = null;
+  let enginePanelHelpTip      = null;
+  let _dragEnginePanel        = { active: false, x: 0, y: 0 };
+  let _engineDragTitleBarRef = null;
+  let _panelManuallyClosed = false;
+  if (window.performance && !syntaxConfig.resetOnReload) {
     const navigationType = performance.getEntriesByType("navigation")[0]?.type;
     if (navigationType !== "reload" && navigationType !== "navigate") {
-      manuallyClosed = GM_getValue("manuallyClosed", false);
+      _panelManuallyClosed = GM_getValue(STORAGE_KEYS.MANUALLY_CLOSED, false);
     }
   }
 
@@ -2368,114 +2476,60 @@
     },
   };
 
-  let styleSettings = GM_getValue("styleSettings", {});
+  let styleSettings = GM_getValue(STORAGE_KEYS.STYLE_SETTINGS, {});
   {
-    const _ssDefaults = {
-      style: "default", borderRadius: 6, contrast: 0, opacity: 0.9,
-      fontSize: 12, isExpanded: false,
-      panelTop: 80, panelRight: 20, panelLeft: -1, panelWidth: 0, panelMaxHeight: 87,
-      panelUserSized: false,
-      backgroundImage: "", imageMode: "center", textColor: "", backgroundColor: "",
-      imageOffsetX: 0, imageOffsetY: 0, groupOpacity: 1.0,
-      textOpacityCompensation: 1.0, buttonOpacity: 1.0,
-      imageScale: 1.0, imageOpacity: 1.0, theme: "light",
-      customBackgroundColor: "#ffffff", customTextColor: "#000000",
-      customButtonBg: "#f5f5f5", groupBackgroundColor: "",
-      enableOverlayDarkening: false, textBackgroundColor: "", textBorder: false,
-      overlayStrength: 0.5, multiSelectColor: "#ffc400", multiSelectOpacity: 0.85,
-      siteButtonWidth: 0,
-      hideSyntaxBtn: false,
-      hideBlacklistBtn: false,
-      hideAddGroupBtn: false,
-      hideAddressToggleBtn: false,
-      hideExportBtn: false,
-      hideImportBtn: false,
-      hideModGroup: false,
-      iconStyle: "emoji",
-      toggleBtnBg: "",
-      toggleBtnBgOpacity: 0,
-      toggleBtnIconStyle: "svg-line",
-      toggleBtnShape: "circle",
-      enableToggleBtnGlow:  false,
-      toggleBtnGlowColor:   "#00bfff",
-      toggleBtnGlowStrength: 12,
-      svgIconColor: "",
-      enableBorderGlow: false,
-      borderGlowColor: "#00bfff",
-      borderGlowStrength: 12,
-      borderGlowInset: true,
-      enableSheen: false,
-      sheenAngle: 135,
-      sheenOpacity: 0.08,
-      enableSiteGlow: false,
-      enableGroupGlow: false,
-      searchBarBg: "",
-      searchBarBgOpacity: 0,
-      searchBarFg: "",
-      searchBarGlowEnabled: false,
-      searchBarGlowColor: "#5599ff",
-      searchBarGlowStrength: 6,
-      enableVignette: false,
-      vignetteCornerTL: true,
-      vignetteCornerTR: true,
-      vignetteCornerBL: true,
-      vignetteCornerBR: true,
-      vignetteSize: 120,
-      vignetteColor: "#000000",
-      vignetteOpacity: 0.45,
-    };
-    for (const k of Object.keys(_ssDefaults)) {
-      if (styleSettings[k] === undefined) styleSettings[k] = _ssDefaults[k];
+    for (const k of Object.keys(STYLE_DEFAULTS)) {
+      if (styleSettings[k] === undefined) styleSettings[k] = STYLE_DEFAULTS[k];
     }
 
   }
 
   function save() {
-    GM_setValue("siteGroups", groups);
-    GM_setValue("searchConfig", searchConfig);
-    GM_setValue("domainBlacklist", domainBlacklist);
-    GM_setValue("safeSearchEnabled",  safeSearchEnabled);
-    GM_setValue("searchRegionEnabled", searchRegionEnabled);
-    GM_setValue("defaultPanelOpen", defaultPanelOpen);
-    GM_setValue("panelTheme", panelTheme);
-    GM_setValue("styleSettings", styleSettings);
-    GM_setValue("sitePanelLang", lang);
-    GM_setValue("manuallyClosed", manuallyClosed);
+    GM_setValue(STORAGE_KEYS.SITE_GROUPS, groups);
+    GM_setValue(STORAGE_KEYS.SEARCH_CONFIG, syntaxConfig);
+    GM_setValue(STORAGE_KEYS.DOMAIN_BLACKLIST, blacklistDomains);
+    GM_setValue(STORAGE_KEYS.SAFE_SEARCH_ENABLED,  syntaxSafeSearchOn);
+    GM_setValue(STORAGE_KEYS.SEARCH_REGION_ENABLED, syntaxRegionOn);
+    GM_setValue(STORAGE_KEYS.DEFAULT_PANEL_OPEN, panelDefaultOpen);
+    GM_setValue(STORAGE_KEYS.PANEL_THEME, panelTheme);
+    GM_setValue(STORAGE_KEYS.STYLE_SETTINGS, styleSettings);
+    GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, uiLang);
+    GM_setValue(STORAGE_KEYS.MANUALLY_CLOSED, _panelManuallyClosed);
     const toggleBtn = document.getElementById("site-toggle-simple");
     if (toggleBtn) {
       const top = toggleBtn.style.top || "60px";
       const left = toggleBtn.style.left || "20px";
       if (isValidPixelValue(top) && isValidPixelValue(left)) {
-        GM_setValue("toggleButtonTop", top);
-        GM_setValue("toggleButtonLeft", left);
+        GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_TOP, top);
+        GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_LEFT, left);
         log("Saved button position:", { top, left });
       } else {
         warn("Invalid button position, not saved:", { top, left });
       }
     }
-    log("Saved defaultPanelOpen:", defaultPanelOpen);
-    log("Saved manuallyClosed:", manuallyClosed);
-    log("Saved resetOnReload:", searchConfig.resetOnReload);
+    log("Saved panelDefaultOpen:", panelDefaultOpen);
+    log("Saved _panelManuallyClosed:", _panelManuallyClosed);
+    log("Saved resetOnReload:", syntaxConfig.resetOnReload);
 
   }
 
-  let _applyTimer = null;
+  let _styleApplyTimer = null;
   function _debouncedApply() {
-    clearTimeout(_applyTimer);
-    _applyTimer = setTimeout(() => applyTheme(panelTheme), 16);
+    clearTimeout(_styleApplyTimer);
+    _styleApplyTimer = setTimeout(() => applyTheme(panelTheme), 16);
   }
 
-  let _saveTimer = null;
+  let _saveDebounceTimer = null;
   function _debouncedSave() {
-    clearTimeout(_saveTimer);
-    _saveTimer = setTimeout(() => save(), 300);
+    clearTimeout(_saveDebounceTimer);
+    _saveDebounceTimer = setTimeout(() => save(), 300);
   }
 
-  let _shiftDeleteMode  = false;
-  let _panelHovered     = false;
-  let _shiftDeleteNoticedOnce = GM_getValue("shiftDeleteNoticedOnce", false);
+  let _shiftDeleteActive  = false;
+  let _panelIsHovered     = false;
+  let _shiftDeleteNoticed = GM_getValue(STORAGE_KEYS.SHIFT_DELETE_NOTICED_ONCE, false);
 
-  let _kwFlashLastTime  = 0;
+  let _kwFlashLastTs  = 0;
   const _KW_FLASH_DEBOUNCE = 2500;
 
   function _enterDelMode(delEl) {
@@ -2509,7 +2563,7 @@
   }
 
   function _showShiftDeleteNotice(onConfirm) {
-    if (_shiftDeleteNoticedOnce) { onConfirm(); return; }
+    if (_shiftDeleteNoticed) { onConfirm(); return; }
     const isDark   = panelTheme === "dark";
     const bg       = styleSettings.customBackgroundColor || (isDark ? "#2a2a2a" : "#fff");
     const fg       = styleSettings.textColor             || (isDark ? "#eee"    : "#222");
@@ -2565,8 +2619,8 @@
     });
     okBtn.addEventListener("click", () => {
       if (chk.checked) {
-        _shiftDeleteNoticedOnce = true;
-        GM_setValue("shiftDeleteNoticedOnce", true);
+        _shiftDeleteNoticed = true;
+        GM_setValue(STORAGE_KEYS.SHIFT_DELETE_NOTICED_ONCE, true);
       }
       overlay.remove();
       onConfirm();
@@ -2583,16 +2637,16 @@
   }
 
   document.addEventListener("keydown", (e) => {
-    if (e.key !== "Shift" || _shiftDeleteMode) return;
-    if (!_panelHovered) return;
-    if (isPromptActive) return;
-    _shiftDeleteMode = true;
+    if (e.key !== "Shift" || _shiftDeleteActive) return;
+    if (!_panelIsHovered) return;
+    if (_dlgPromptActive) return;
+    _shiftDeleteActive = true;
     _applyShiftDeleteMode(true);
   });
 
   document.addEventListener("keyup", (e) => {
-    if (e.key !== "Shift" || !_shiftDeleteMode) return;
-    _shiftDeleteMode = false;
+    if (e.key !== "Shift" || !_shiftDeleteActive) return;
+    _shiftDeleteActive = false;
     _applyShiftDeleteMode(false);
   });
 
@@ -2609,7 +2663,7 @@
     if (dd) dd.style.display = "none";
     const sf = document.getElementById("style-config-wrap");
     if (sf) sf.style.display = "none";
-    searchConfig.isExpanded = false;
+    syntaxConfig.isExpanded = false;
   }
 
   const ICONS = {
@@ -2753,7 +2807,7 @@
     document.querySelectorAll(".se-help-btn").forEach(_h => {
       _applyIconToBtn(_h, ICONS.help.emoji, ICONS.help.line, ICONS.help.fill, ICONS.help.size);
     });
-    const _tAddr = document.getElementById("se-toggle-address-btn");
+    const _tAddr = document.getElementById(TOOLBAR_BTN_IDS.hideAddressToggleBtn.id);
     if (_tAddr) {
       const _addrStyle = styleSettings.iconStyle || "emoji";
       if (_addrStyle !== "emoji") {
@@ -2778,25 +2832,25 @@
 
     if (typeof _applyModBtnIcon === "function") {
       const _modExactEl = document.querySelector('[data-mod-icon-key="modExact"]');
-      if (_modExactEl) _applyModBtnIcon(_modExactEl, ICONS.modExact, exactMatchEnabled);
+      if (_modExactEl) _applyModBtnIcon(_modExactEl, ICONS.modExact, syntaxExactMatchOn);
       const _modTitleEl = document.querySelector('[data-mod-icon-key="modTitle"]');
-      if (_modTitleEl) _applyModBtnIcon(_modTitleEl, ICONS.modTitle, intitleEnabled);
+      if (_modTitleEl) _applyModBtnIcon(_modTitleEl, ICONS.modTitle, syntaxIntitleOn);
       const _modUrlEl = document.querySelector('[data-mod-icon-key="modUrl"]');
-      if (_modUrlEl) _applyModBtnIcon(_modUrlEl, ICONS.modUrl, inurlEnabled);
+      if (_modUrlEl) _applyModBtnIcon(_modUrlEl, ICONS.modUrl, syntaxInurlOn);
       const _modFileEl = document.querySelector('[data-mod-icon-key="modFile"]');
       if (_modFileEl) {
         const _dot = _modFileEl.querySelector("span");
-        _applyModBtnIcon(_modFileEl, ICONS.modFile, !!filetypeValue, _dot);
+        _applyModBtnIcon(_modFileEl, ICONS.modFile, !!syntaxFiletypeVal, _dot);
       }
     }
 
-    const _addGroupIcon = document.getElementById("toolbar-add-group-btn")?.firstElementChild;
+    const _addGroupIcon = document.getElementById(TOOLBAR_BTN_IDS.hideAddGroupBtn.id)?.firstElementChild;
     if (_addGroupIcon) _applyIconToBtn(_addGroupIcon, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
-    const _exportIcon = document.getElementById("toolbar-export-btn")?.firstElementChild;
+    const _exportIcon = document.getElementById(TOOLBAR_BTN_IDS.hideExportBtn.id)?.firstElementChild;
     if (_exportIcon) _applyIconToBtn(_exportIcon, ICONS.exportConfig.emoji, ICONS.exportConfig.line, ICONS.exportConfig.fill, ICONS.exportConfig.size);
-    const _importIcon = document.getElementById("toolbar-import-btn")?.firstElementChild;
+    const _importIcon = document.getElementById(TOOLBAR_BTN_IDS.hideImportBtn.id)?.firstElementChild;
     if (_importIcon) _applyIconToBtn(_importIcon, ICONS.importConfig.emoji, ICONS.importConfig.line, ICONS.importConfig.fill, ICONS.importConfig.size);
-    const _blacklistIcon = document.getElementById("blacklist-btn")?.firstElementChild;
+    const _blacklistIcon = document.getElementById(TOOLBAR_BTN_IDS.hideBlacklistBtn.id)?.firstElementChild;
     if (_blacklistIcon) _applyIconToBtn(_blacklistIcon, ICONS.blacklist.emoji, ICONS.blacklist.line, ICONS.blacklist.fill, ICONS.blacklist.size);
     const _syntaxHelpBtn = document.getElementById("syntax-help-btn");
     if (_syntaxHelpBtn) _applyIconToBtn(_syntaxHelpBtn, ICONS.syntaxHelp.emoji, ICONS.syntaxHelp.line, ICONS.syntaxHelp.fill, ICONS.syntaxHelp.size);
@@ -2932,7 +2986,7 @@
     btn.addEventListener("mouseup",    btn.__upBound);
   }
 
-  let TIME_OPTIONS = t.timeOptions;
+  let timeFilterOptions = t.timeOptions;
 
   function getBingFilters(val) {
     if (!val) return null;
@@ -3204,7 +3258,7 @@
           `.group-block[data-group-index="${groupIndex}"] .site-container .draggable-site[data-site-index="${siteIndex}"] .site-label`,
         );
         if (label) {
-          const displayText = showAddresses
+          const displayText = showSiteAddresses
             ? site.url.length > 10
               ? site.url.slice(0, 10) + "..."
               : site.url
@@ -3217,18 +3271,18 @@
     });
   }
 
-  let isPromptActive = false;
-  let __customPromptOpen       = false;
-  let __blacklistDialogOpen    = false;
-  let __styleFloatResizeHandler = null;
-  let __toggleButtonObserver   = null;
-  let __compactBtnObserver     = null;
-  let __compactMouseupHandler  = null;
-  let __cpDragMoveHandler      = null;
-  let __cpDragUpHandler        = null;
-  let _isDraggingPanel         = false;
-  let _sfDragging = false, _sfOx = 0, _sfOy = 0;
-  let _sfOnMove = null, _sfOnUp = null;
+  let _dlgPromptActive = false;
+  let _dlgCustomPromptOpen       = false;
+  let _dlgBlacklistOpen    = false;
+  let _hdlStyleFloatResize = null;
+  let _obsToggleButton   = null;
+  let _obsCompactBtn     = null;
+  let _hdlCompactMouseup  = null;
+  let _hdlCompactDragMove      = null;
+  let _hdlCompactDragUp        = null;
+  let _dragPanelActive         = false;
+  let _dragStyleFloatActive = false, _dragStyleFloatOx = 0, _dragStyleFloatOy = 0;
+  let _dragStyleFloatOnMove = null, _dragStyleFloatOnUp = null;
 
   function parseSmartDomain(raw) {
     if (!raw || typeof raw !== "string") return null;
@@ -3259,13 +3313,13 @@
     allowEmpty = true,
     hideInput = false,
   ) {
-    if (__customPromptOpen) {
+    if (_dlgCustomPromptOpen) {
       log("[Prompt] Another prompt is already active, ignoring new request");
       return;
     }
 
-    __customPromptOpen = true;
-    isPromptActive     = true;
+    _dlgCustomPromptOpen = true;
+    _dlgPromptActive     = true;
 
     const theme =
       typeof panelTheme !== "undefined" && panelTheme ? panelTheme : "light";
@@ -3379,8 +3433,8 @@
 
       if (overlay && overlay.parentNode) overlay.remove();
       document.removeEventListener("keydown", onKeydown);
-      __customPromptOpen = false;
-      isPromptActive     = false;
+      _dlgCustomPromptOpen = false;
+      _dlgPromptActive     = false;
       restoreScroll();
     }
 
@@ -3491,7 +3545,7 @@
       existingPanel.remove();
       return;
     }
-    if (isPromptActive) return;
+    if (_dlgPromptActive) return;
 
     const syntaxPanel = document.createElement("div");
     syntaxPanel.id = "syntax-panel";
@@ -4321,7 +4375,7 @@
 
     }
 
-    let collapsed = GM_getValue("searchConfigCollapsed", false);
+    let collapsed = GM_getValue(STORAGE_KEYS.SEARCH_CONFIG_COLLAPSED, false);
     wrap.style.display = collapsed ? "none" : "block";
     const toolbar = document.getElementById("toolbar-container");
     if (toolbar) toolbar.style.display = collapsed ? "none" : "flex";
@@ -4366,7 +4420,7 @@
           if (tb) _fadeShow(tb, "flex");
         }, _FADE_DURATION_MS);
       }
-      GM_setValue("searchConfigCollapsed", collapsed);
+      GM_setValue(STORAGE_KEYS.SEARCH_CONFIG_COLLAPSED, collapsed);
     };
   }
 
@@ -4511,7 +4565,7 @@
       };
 
       blk._msEscHandler = (ev) => {
-        if (ev.key === "Escape" && blk.dataset.multiSelectActive === "true" && !__customPromptOpen) {
+        if (ev.key === "Escape" && blk.dataset.multiSelectActive === "true" && !_dlgCustomPromptOpen) {
           ev.stopPropagation();
           blk._msExit();
         }
@@ -4584,9 +4638,9 @@
       showToast(t.multiSelectNone || "No sites selected!");
       return;
     }
-    if (__customPromptOpen) return;
-    __customPromptOpen = true;
-    isPromptActive     = true;
+    if (_dlgCustomPromptOpen) return;
+    _dlgCustomPromptOpen = true;
+    _dlgPromptActive     = true;
 
     const keyword = (() => {
       const sels = [
@@ -4645,7 +4699,7 @@
     modeLabel.style.cssText = "font-size:11px; font-weight:bold; margin-bottom:5px; opacity:0.75;";
     box.appendChild(modeLabel);
 
-    const _savedMode = GM_getValue("ms_sendMode", "site_same");
+    const _savedMode = GM_getValue(STORAGE_KEYS.MS_SEND_MODE, "site_same");
     const modes = [
       { id:"site_same", label: t.modeSiteSearch || "site:A OR site:B search (same tab)" },
       { id:"site_new",  label: t.modeSiteSearchNew || "site:A OR site:B search (new tab)" },
@@ -4764,7 +4818,7 @@
     optClearRow.style.cssText = "display:flex; align-items:center; gap:6px; margin-bottom:6px; cursor:pointer; font-size:11px;";
     const optClearChk = document.createElement("input");
     optClearChk.type = "checkbox";
-    optClearChk.checked = GM_getValue("ms_clearAfterSend", true);
+    optClearChk.checked = GM_getValue(STORAGE_KEYS.MS_CLEAR_AFTER_SEND, true);
     optClearRow.appendChild(optClearChk);
     optClearRow.appendChild(Object.assign(document.createElement("span"), {
       textContent: t.multiSelectClearAfter || "Exit multi-select after sending"
@@ -4810,16 +4864,16 @@
     const closeDlg = () => {
       if (_msEscHandler) { document.removeEventListener("keydown", _msEscHandler); _msEscHandler = null; }
       dlgOverlay.remove();
-      __customPromptOpen = false;
-      isPromptActive = false;
+      _dlgCustomPromptOpen = false;
+      _dlgPromptActive = false;
     };
 
     confirmBtn.onclick = () => {
       const mode = Object.entries(radioGroup).find(([, r]) => r.checked)?.[0] || "site_same";
       const finalKeyword = kwInput.value.trim();
       const finalTime   = msTimeSelect.value;
-      GM_setValue("ms_sendMode", mode);
-      GM_setValue("ms_clearAfterSend", optClearChk.checked);
+      GM_setValue(STORAGE_KEYS.MS_SEND_MODE, mode);
+      GM_setValue(STORAGE_KEYS.MS_CLEAR_AFTER_SEND, optClearChk.checked);
       if (optRemSelChk.checked) {
         GM_setValue(_grpSelKey, JSON.stringify(selected));
       } else {
@@ -4866,8 +4920,8 @@
       } else {
         const siteStr = selected.map(u => `site:${u}`).join(" OR ");
         const _isBaidu = window.location.hostname.includes("baidu.com");
-        const _blStr = (!_isBaidu && Array.isArray(domainBlacklist) && domainBlacklist.length > 0)
-          ? domainBlacklist.map(d => d.trim()).filter(d => d).map(d => `-site:${d}`).join(" ")
+        const _blStr = (!_isBaidu && Array.isArray(blacklistDomains) && blacklistDomains.length > 0)
+          ? blacklistDomains.map(d => d.trim()).filter(d => d).map(d => `-site:${d}`).join(" ")
           : "";
         const finalQuery = [
           finalKeyword ? `${siteStr} ${finalKeyword}` : siteStr,
@@ -4937,12 +4991,12 @@
     userSelect: "none",
   });
 
-  let pressStartTime = 0;
+  let _dragPressStartTime = 0;
 
-  btn.addEventListener("mousedown", () => { pressStartTime = Date.now(); });
+  btn.addEventListener("mousedown", () => { _dragPressStartTime = Date.now(); });
 
   btn.onclick = (e) => {
-    const pressDuration = Date.now() - pressStartTime;
+    const pressDuration = Date.now() - _dragPressStartTime;
     if (pressDuration > 200) {
       e.stopPropagation();
       return;
@@ -5007,7 +5061,7 @@
 
   const label = document.createElement("span");
   label.className = "site-label";
-  label.textContent = showAddresses
+  label.textContent = showSiteAddresses
     ? site.url.length > 10
       ? site.url.slice(0, 10) + "..."
       : site.url
@@ -5038,7 +5092,7 @@
 
     const _blk = btn.closest(".group-block");
     if (_blk && _blk.dataset.multiSelectActive === "true") return;
-    if (isPromptActive) return;
+    if (_dlgPromptActive) return;
 
     const old = document.getElementById("site-popup-menu");
     if (old) old.remove();
@@ -5162,7 +5216,7 @@
   };
 
   del.addEventListener("click", (e) => {
-    if (_shiftDeleteMode) {
+    if (_shiftDeleteActive) {
       e.stopPropagation();
       e.preventDefault();
       const _blk2 = btn.closest(".group-block");
@@ -5363,7 +5417,7 @@
           pointer-events:none;
         `;
         header.addEventListener("mouseenter", () => {
-          if (_isDraggingPanel) return;
+          if (_dragPanelActive) return;
           rightContainer.style.opacity = "1";
           rightContainer.style.pointerEvents = "auto";
         });
@@ -5409,7 +5463,7 @@
       }
 
       addSiteBtnInline.onclick = () => {
-        if (isPromptActive) return;
+        if (_dlgPromptActive) return;
         showCustomPrompt(t.enterSite, "", (siteInput) => {
           const parsed = parseSmartDomain(siteInput);
           if (parsed) {
@@ -5610,7 +5664,7 @@
 
     updateAddressesVisibility();
 
-    if (_shiftDeleteMode && _panelHovered) _applyShiftDeleteMode(true);
+    if (_shiftDeleteActive && _panelIsHovered) _applyShiftDeleteMode(true);
 
     const _srchEl = document.getElementById("site-search-input");
     if (_srchEl && _srchEl.value.trim()) filterSites(_srchEl.value);
@@ -5628,7 +5682,7 @@
   function getEffectivePanelWidth() {
     return (styleSettings.panelWidth > 0)
       ? styleSettings.panelWidth
-      : (langWidths[lang] || 410);
+      : (langWidths[uiLang] || 410);
   }
 
   function _positionStyleFloat(el) {
@@ -5652,31 +5706,31 @@
   }
 
   function _positionExtraPanel() {
-    const plusBtn = seBar ? seBar.querySelector(".se-plus-btn") : null;
-    seExtraPanel.style.left = "-9999px";
-    seExtraPanel.style.top  = "-9999px";
+    const plusBtn = enginePanelBar ? enginePanelBar.querySelector(".se-plus-btn") : null;
+    enginePanelFloat.style.left = "-9999px";
+    enginePanelFloat.style.top  = "-9999px";
     requestAnimationFrame(() => {
-      if (!seExtraPanel) return;
-      const epW    = seExtraPanel.offsetWidth  || 280;
-      const epH    = seExtraPanel.offsetHeight || 320;
+      if (!enginePanelFloat) return;
+      const epW    = enginePanelFloat.offsetWidth  || 280;
+      const epH    = enginePanelFloat.offsetHeight || 320;
       const margin = 6;
 
       if (
-        se_panelPos &&
-        se_panelPos.left >= 0 &&
-        se_panelPos.top  >= 0 &&
-        se_panelPos.left + epW <= window.innerWidth  + margin &&
-        se_panelPos.top  + epH <= window.innerHeight + margin
+        enginePanelPos &&
+        enginePanelPos.left >= 0 &&
+        enginePanelPos.top  >= 0 &&
+        enginePanelPos.left + epW <= window.innerWidth  + margin &&
+        enginePanelPos.top  + epH <= window.innerHeight + margin
       ) {
-        seExtraPanel.style.left =
-          Math.min(se_panelPos.left, window.innerWidth  - epW - margin) + "px";
-        seExtraPanel.style.top  =
-          Math.min(se_panelPos.top,  window.innerHeight - epH - margin) + "px";
+        enginePanelFloat.style.left =
+          Math.min(enginePanelPos.left, window.innerWidth  - epW - margin) + "px";
+        enginePanelFloat.style.top  =
+          Math.min(enginePanelPos.top,  window.innerHeight - epH - margin) + "px";
       } else {
         if (!plusBtn) {
-          seExtraPanel.style.left = Math.max(margin, window.innerWidth  - epW - margin) + "px";
-          seExtraPanel.style.top  = Math.max(margin, 80) + "px";
-          seExtraPanel.style.right = "auto";
+          enginePanelFloat.style.left = Math.max(margin, window.innerWidth  - epW - margin) + "px";
+          enginePanelFloat.style.top  = Math.max(margin, 80) + "px";
+          enginePanelFloat.style.right = "auto";
           return;
         }
         const btnRect = plusBtn.getBoundingClientRect();
@@ -5686,10 +5740,10 @@
         if (top + epH > window.innerHeight - margin)
           top = btnRect.top - epH - margin;
         if (top < margin) top = margin;
-        seExtraPanel.style.left = left + "px";
-        seExtraPanel.style.top  = top  + "px";
+        enginePanelFloat.style.left = left + "px";
+        enginePanelFloat.style.top  = top  + "px";
       }
-      seExtraPanel.style.right = "auto";
+      enginePanelFloat.style.right = "auto";
     });
   }
 
@@ -5768,7 +5822,7 @@
     document.body.classList.remove("se-kw-flashing");
     void document.body.offsetHeight;
     document.body.classList.add("se-kw-flashing");
-    _kwFlashLastTime = Date.now();
+    _kwFlashLastTs = Date.now();
     setTimeout(() => document.body.classList.remove("se-kw-flashing"), 2000);
   }
 
@@ -5786,7 +5840,7 @@
       ].join("\n");
       (document.head || document.documentElement).appendChild(_ks);
     }
-    if (opts && opts.hover && Date.now() - _kwFlashLastTime < _KW_FLASH_DEBOUNCE) return;
+    if (opts && opts.hover && Date.now() - _kwFlashLastTs < _KW_FLASH_DEBOUNCE) return;
     const kw = _extractPureKw();
     if (!kw) return;
     _cleanKwHighlight();
@@ -5883,20 +5937,20 @@
   }
 
   function _quickAddToBlacklist(domain, resultEl) {
-    if (!Array.isArray(domainBlacklist)) domainBlacklist = [];
-    if (domainBlacklist.some(d => d.trim().toLowerCase() === domain)) {
+    if (!Array.isArray(blacklistDomains)) blacklistDomains = [];
+    if (blacklistDomains.some(d => d.trim().toLowerCase() === domain)) {
       showToast(`Already blocked: ${domain}`);
       return;
     }
-    domainBlacklist.push(domain);
-    GM_setValue("domainBlacklist", domainBlacklist);
+    blacklistDomains.push(domain);
+    GM_setValue(STORAGE_KEYS.DOMAIN_BLACKLIST, blacklistDomains);
     save();
 
-    const cnt = domainBlacklist.filter(d => d.trim()).length;
-    const blBtn = document.getElementById("blacklist-btn");
-    if (blBtn) {
-      blBtn.textContent = `🚫 ${cnt}`;
-      blBtn.title = `Blocking ${cnt} domain(s)`;
+    const cnt = blacklistDomains.filter(d => d.trim()).length;
+    const blBtn = document.getElementById(TOOLBAR_BTN_IDS.hideBlacklistBtn.id);
+    if (blBtn && blBtn.children[1]) {
+      blBtn.children[1].textContent = cnt > 0 ? String(cnt) : "";
+      blBtn.title = toolbarCompactMode ? "" : `Blocking ${cnt} domain(s)`;
     }
 
     _applyBlacklistToDOM();
@@ -5906,8 +5960,8 @@
   function _applyBlacklistToDOM() {
     const cfg = _getQbConfig();
     if (!cfg) return;
-    if (!Array.isArray(domainBlacklist) || domainBlacklist.length === 0) return;
-    const blocked = new Set(domainBlacklist.map(d => d.trim().toLowerCase()).filter(Boolean));
+    if (!Array.isArray(blacklistDomains) || blacklistDomains.length === 0) return;
+    const blocked = new Set(blacklistDomains.map(d => d.trim().toLowerCase()).filter(Boolean));
     if (!blocked.size) return;
     document.querySelectorAll(cfg.resultSel).forEach(el => {
       if (el.dataset.seBl) return;
@@ -5916,7 +5970,7 @@
       const isBlocked = blocked.has(domain) ||
         [...blocked].some(b => domain.endsWith("." + b));
       if (!isBlocked) return;
-      if (blacklistWeakenMode) {
+      if (blacklistWeakenOn) {
         el.dataset.seBl = "weaken";
         el.classList.add("se-bl-weakened");
       } else {
@@ -5971,11 +6025,11 @@
       const domain = _extractDomain(el, cfg);
       if (!domain) return;
 
-      if (Array.isArray(domainBlacklist) && domainBlacklist.length > 0) {
-        const _bl = new Set(domainBlacklist.map(d => d.trim().toLowerCase()).filter(Boolean));
+      if (Array.isArray(blacklistDomains) && blacklistDomains.length > 0) {
+        const _bl = new Set(blacklistDomains.map(d => d.trim().toLowerCase()).filter(Boolean));
         if (_bl.has(domain) || [..._bl].some(b => domain.endsWith("." + b))) {
           if (!el.dataset.seBl) {
-            if (blacklistWeakenMode) {
+            if (blacklistWeakenOn) {
               el.dataset.seBl = "weaken";
               el.classList.add("se-bl-weakened");
             } else {
@@ -6034,8 +6088,8 @@
   }
 
   function buildMainPanelShell() {
-  log("Creating panel with defaultPanelOpen:", defaultPanelOpen);
-  searchConfig.isExpanded = false;
+  log("Creating panel with panelDefaultOpen:", panelDefaultOpen);
+  syntaxConfig.isExpanded = false;
 
   const existingPanel = document.getElementById("site-group-panel");
   if (existingPanel) {
@@ -6101,20 +6155,20 @@
     }
   });
 
-  panel.addEventListener("mouseenter", () => { _panelHovered = true;  });
+  panel.addEventListener("mouseenter", () => { _panelIsHovered = true;  });
   panel.addEventListener("mouseleave", () => {
-    _panelHovered = false;
-    if (_shiftDeleteMode) {
-      _shiftDeleteMode = false;
+    _panelIsHovered = false;
+    if (_shiftDeleteActive) {
+      _shiftDeleteActive = false;
       _applyShiftDeleteMode(false);
     }
   });
 
   const closePanelOnClickOutside = (event) => {
-    if (!panel || isPromptActive) return;
-    if (_isDraggingPanel) return;
+    if (!panel || _dlgPromptActive) return;
+    if (_dragPanelActive) return;
     if (event.target && !event.target.isConnected) return;
-    if (searchConfig.isExpanded) {
+    if (syntaxConfig.isExpanded) {
       const _sfWrap = document.getElementById("style-config-wrap");
       const _sfBtn  = document.getElementById("sf-close-btn");
       if (_sfWrap && _sfWrap.contains(event.target)) return;
@@ -6145,7 +6199,7 @@
     if (window._historyItemClicked) return;
 
     if (panel.dataset.multiSelectLock === "true") {
-      if (__customPromptOpen) return;
+      if (_dlgCustomPromptOpen) return;
       const clickedInPanel = panel.contains(event.target);
       const clickedInOverlay = !!event.target.closest("[id^='ms-overlay-']");
       if (!clickedInPanel && !clickedInOverlay) {
@@ -6166,16 +6220,16 @@
       event.target.closest(
         "#site-toggle-simple, #syntax-panel, #style-config-wrap, #site-history-dropdown, input, select, .prompt, #dp-dropdown",
       ) ||
-      defaultPanelOpen === "pinned"
+      panelDefaultOpen === "pinned"
     ) {
       return;
     }
 
     panel.style.display = "none";
-    manuallyClosed = true;
-    GM_setValue("manuallyClosed", manuallyClosed);
-    panel.dataset.manuallyClosed = "true";
-    setTimeout(() => { delete panel.dataset.manuallyClosed; }, 1000);
+    _panelManuallyClosed = true;
+    GM_setValue(STORAGE_KEYS.MANUALLY_CLOSED, _panelManuallyClosed);
+    panel.dataset._panelManuallyClosed = "true";
+    setTimeout(() => { delete panel.dataset._panelManuallyClosed; }, 1000);
     const dd = document.getElementById("site-history-dropdown");
     if (dd) dd.style.display = "none";
   };
@@ -6186,18 +6240,18 @@
   panel.addEventListener("mouseenter", () => triggerKwFlash({ hover: true }));
   }
 
-  let dpDropdown = null;
+  let pinDropdownMenu = null;
   function closeDpDropdown() {
-    if (dpDropdown) {
-      dpDropdown.remove();
-      dpDropdown = null;
+    if (pinDropdownMenu) {
+      pinDropdownMenu.remove();
+      pinDropdownMenu = null;
     }
   }
 
   function buildHeader() {
-  headerContainer = document.createElement("div");
-  headerContainer.className = "panel-header-container";
-  headerContainer.style.cssText = `
+  panelHeaderEl = document.createElement("div");
+  panelHeaderEl.className = "panel-header-container";
+  panelHeaderEl.style.cssText = `
     display:flex; align-items:center; gap:4px; flex-wrap:nowrap; box-sizing:border-box;
     padding:8px 10px 8px 12px;
     border-bottom:1px solid ${panelTheme === "dark" ? "rgba(255,255,255,0.18)" : "rgba(0,0,0,0.1)"};
@@ -6228,7 +6282,7 @@
       if (!_hDragging) return;
       _hDragging = false;
       if (_hRAF) { cancelAnimationFrame(_hRAF); _hRAF = 0; }
-      headerContainer.style.cursor = "grab";
+      panelHeaderEl.style.cursor = "grab";
       const finalLeft = Math.max(0, Math.min(_hBaseLeft + _hNextX, window.innerWidth  - _hPW));
       const finalTop  = Math.max(0, Math.min(_hBaseTop  + _hNextY, window.innerHeight - _hPH));
       panel.style.left      = finalLeft + "px";
@@ -6242,16 +6296,16 @@
       }
       styleSettings.panelLeft = finalLeft;
       styleSettings.panelTop  = finalTop;
-      GM_setValue("styleSettings", styleSettings);
+      GM_setValue(STORAGE_KEYS.STYLE_SETTINGS, styleSettings);
       window.removeEventListener("mousemove", _hOnMove, true);
       window.removeEventListener("mouseup",   _hOnUp,   true);
-      setTimeout(() => { _isDraggingPanel = false; }, 50);
+      setTimeout(() => { _dragPanelActive = false; }, 50);
     }
 
-    headerContainer.addEventListener("mousedown", (e) => {
+    panelHeaderEl.addEventListener("mousedown", (e) => {
       if (e.target.closest("button,input,select,a,[role=button]")) return;
       _hDragging = true;
-      _isDraggingPanel = true;
+      _dragPanelActive = true;
       const rect = panel.getBoundingClientRect();
       _hBaseLeft = rect.left;
       _hBaseTop  = rect.top;
@@ -6266,7 +6320,7 @@
         .filter(s => s && !s.startsWith("transform"))
         .join(", ");
       panel.style.transform = "translate(0,0)";
-      headerContainer.style.cursor = "grabbing";
+      panelHeaderEl.style.cursor = "grabbing";
       e.preventDefault();
       window.addEventListener("mousemove", _hOnMove, true);
       window.addEventListener("mouseup",   _hOnUp,   true);
@@ -6304,7 +6358,7 @@
   panelHelpTip.textContent = t.panelHelp || "";
   document.body.appendChild(panelHelpTip);
   panelHelpBtn.addEventListener("mouseenter", () => {
-    if (_isDraggingPanel || _epDrag.active) return;
+    if (_dragPanelActive || _dragEnginePanel.active) return;
     panelHelpTip.style.display = "block";
     requestAnimationFrame(() => {
       const r = panel.getBoundingClientRect();
@@ -6325,7 +6379,7 @@
   headerLeft.appendChild(panelHelpBtn);
 
   const langBtn = document.createElement("button");
-  langBtn.id = "lang-btn";
+  langBtn.id = "uiLang-btn";
   langBtn.title = "Language / 語言";
   langBtn.textContent = "🌍";
   langBtn.style.cssText = `
@@ -6358,11 +6412,11 @@
   ];
 
   function _buildLangMenu() {
-    const existing = document.getElementById("lang-float-menu");
+    const existing = document.getElementById("uiLang-float-menu");
     if (existing) { existing.remove(); return; }
 
     const menu = document.createElement("div");
-    menu.id = "lang-float-menu";
+    menu.id = "uiLang-float-menu";
     const bg = panelTheme === "dark" ? "#2d2d2d" : "#fff";
     const fg = panelTheme === "dark" ? "#eee"    : "#222";
     const bd = panelTheme === "dark" ? "#555"    : "#ddd";
@@ -6386,29 +6440,29 @@
 
     LANG_LIST.forEach(({ code, label }) => {
       const item = document.createElement("div");
-      item.textContent = (lang === code ? "✓ " : "   ") + label;
+      item.textContent = (uiLang === code ? "✓ " : "   ") + label;
       item.style.cssText = `
         padding: 7px 14px;
         cursor: pointer;
         color: ${fg};
-        background: ${lang === code ? hv : "transparent"};
+        background: ${uiLang === code ? hv : "transparent"};
         transition: background 0.1s;
         white-space: nowrap;
       `;
       item.addEventListener("mouseenter", () => { item.style.background = hv; });
-      item.addEventListener("mouseleave", () => { item.style.background = lang === code ? hv : "transparent"; });
+      item.addEventListener("mouseleave", () => { item.style.background = uiLang === code ? hv : "transparent"; });
       item.addEventListener("mousedown", (e) => {
         e.preventDefault();
         e.stopPropagation();
         menu.remove();
-        if (code === lang) return;
+        if (code === uiLang) return;
         const sf = document.getElementById("style-config-wrap");
         if (sf) sf.style.display = "none";
-        searchConfig.isExpanded = false;
-        lang = code;
-        GM_setValue("sitePanelLang", lang);
-        t = LANGUAGES[lang] || LANGUAGES["en"];
-        TIME_OPTIONS = t.timeOptions;
+        syntaxConfig.isExpanded = false;
+        uiLang = code;
+        GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, uiLang);
+        t = LANGUAGES[uiLang] || LANGUAGES["en"];
+        timeFilterOptions = t.timeOptions;
         createPanel();
         showToast(t.langSwitched);
       });
@@ -6420,7 +6474,7 @@
       ? "✏️ " + (LANGUAGES.custom.name || "Custom")
       : "✏️ " + CUSTOM_LANG_TEMPLATE.customLang.menuLabel;
     const customItemText = document.createElement("span");
-    customItemText.textContent = (lang === "custom" ? "✓ " : "   ") + customLabel;
+    customItemText.textContent = (uiLang === "custom" ? "✓ " : "   ") + customLabel;
     const customItemArrow = document.createElement("span");
     customItemArrow.textContent = " ›";
     customItemArrow.style.cssText = `
@@ -6435,7 +6489,7 @@
       padding: 7px 14px;
       cursor: pointer;
       color: ${fg};
-      background: ${lang === "custom" ? hv : "transparent"};
+      background: ${uiLang === "custom" ? hv : "transparent"};
       transition: background 0.1s;
       white-space: nowrap;
       display: flex;
@@ -6445,7 +6499,7 @@
       margin-top: 2px;
     `;
     customItem.addEventListener("mouseenter", () => { customItem.style.background = hv; });
-    customItem.addEventListener("mouseleave", () => { customItem.style.background = lang === "custom" ? hv : "transparent"; });
+    customItem.addEventListener("mouseleave", () => { customItem.style.background = uiLang === "custom" ? hv : "transparent"; });
     customItem.addEventListener("mousedown", (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -6472,15 +6526,15 @@
   });
 
   headerLeft.appendChild(langBtn);
-  headerContainer.appendChild(headerLeft);
+  panelHeaderEl.appendChild(headerLeft);
 
   function _showCustomLangPanel() {
     const cl = CUSTOM_LANG_TEMPLATE.customLang;
-    const existing = document.getElementById("custom-lang-panel");
+    const existing = document.getElementById("custom-uiLang-panel");
     if (existing) { existing.remove(); return; }
 
     const overlay = document.createElement("div");
-    overlay.id = "custom-lang-panel";
+    overlay.id = "custom-uiLang-panel";
     overlay.style.cssText = `
       position:fixed; inset:0; background:rgba(0,0,0,0.5);
       z-index:2147483667; display:flex; align-items:center; justify-content:center;
@@ -6546,12 +6600,12 @@
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement("a");
       a.href     = url;
-      a.download = "lang-full-template.json";
+      a.download = "uiLang-full-template.json";
       document.body.appendChild(a);
       a.click();
       setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
 
-      showToast(cl.exportSuccess || "📦 Exported: lang-full-template.json");
+      showToast(cl.exportSuccess || "📦 Exported: uiLang-full-template.json");
     };
     btnRow.appendChild(exportBtn);
 
@@ -6573,25 +6627,25 @@
             const isChunk = typeof raw._chunkInfo === "string";
             if (isChunk) {
               let draft = {};
-              try { draft = JSON.parse(GM_getValue("customLangDraft", "{}")); } catch(_) {}
+              try { draft = JSON.parse(GM_getValue(STORAGE_KEYS.CUSTOM_LANG_DRAFT, "{}")); } catch(_) {}
               const { _chunkInfo, _chunkEnd, _completionCheck: cc, ...payload } = raw;
               Object.assign(draft, payload);
               if (cc) draft._completionCheck = cc;
-              GM_setValue("customLangDraft", JSON.stringify(draft));
+              GM_setValue(STORAGE_KEYS.CUSTOM_LANG_DRAFT, JSON.stringify(draft));
               const hasCore  = typeof draft.siteTitle === "string";
               const hasSe    = typeof draft.se === "object";
               const hasArray = Array.isArray(draft.timeOptions) && draft.timeOptions.length === 22;
               const isComplete = hasCore && hasSe && hasArray && draft._completionCheck === "COMPLETE";
               if (isComplete) {
                 if (!draft.name || typeof draft.name !== "string") throw new Error("missing name");
-                GM_setValue("customLangDraft", null);
+                GM_setValue(STORAGE_KEYS.CUSTOM_LANG_DRAFT, null);
                 const hydrated = hydrateCustomLang(draft);
                 LANGUAGES.custom = hydrated;
-                GM_setValue("customLangData", JSON.stringify(draft));
-                lang = "custom";
-                GM_setValue("sitePanelLang", "custom");
+                GM_setValue(STORAGE_KEYS.CUSTOM_LANG_DATA, JSON.stringify(draft));
+                uiLang = "custom";
+                GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, "custom");
                 t = LANGUAGES.custom;
-                TIME_OPTIONS = t.timeOptions;
+                timeFilterOptions = t.timeOptions;
                 overlay.remove();
                 createPanel();
                 showToast(cl.importSuccess + " ✅ (3/3 segments merged)");
@@ -6615,11 +6669,11 @@
 
             const hydrated = hydrateCustomLang(raw);
             LANGUAGES.custom = hydrated;
-            GM_setValue("customLangData", JSON.stringify(raw));
-            lang = "custom";
-            GM_setValue("sitePanelLang", "custom");
+            GM_setValue(STORAGE_KEYS.CUSTOM_LANG_DATA, JSON.stringify(raw));
+            uiLang = "custom";
+            GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, "custom");
             t = LANGUAGES.custom;
-            TIME_OPTIONS = t.timeOptions;
+            timeFilterOptions = t.timeOptions;
             overlay.remove();
             createPanel();
             showToast(cl.importSuccess);
@@ -6640,10 +6694,10 @@
       switchBtn.textContent = "✅ " + (LANGUAGES.custom.customLang?.menuLabel || "Use Custom");
       switchBtn.style.cssText = btnStyle("#e08a00");
       switchBtn.onclick = () => {
-        lang = "custom";
-        GM_setValue("sitePanelLang", "custom");
+        uiLang = "custom";
+        GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, "custom");
         t = LANGUAGES.custom;
-        TIME_OPTIONS = t.timeOptions;
+        timeFilterOptions = t.timeOptions;
         overlay.remove();
         createPanel();
         showToast(LANGUAGES.custom.langSwitched || "Language switched!");
@@ -6668,12 +6722,12 @@
   seBarWrap.style.cssText =
     "flex:1; display:flex; justify-content:center; align-items:center; min-width:0;";
 
-  seBar = document.createElement("div");
-  seBar.style.cssText =
+  enginePanelBar = document.createElement("div");
+  enginePanelBar.style.cssText =
     "display:flex; align-items:center; gap:3px; flex-shrink:0;";
 
-  seExtraPanel = null;
-  seHelpTip    = null;
+  enginePanelFloat = null;
+  enginePanelHelpTip    = null;
 
   const plusBtn = document.createElement("button");
   plusBtn.className = "se-plus-btn";
@@ -6686,13 +6740,13 @@
     align-items:center; justify-content:center; flex-shrink:0;
     transition:border-color .15s, background .15s;
   `;
-  seBar.appendChild(plusBtn);
-  seBarWrap.appendChild(seBar);
-  headerContainer.appendChild(seBarWrap);
+  enginePanelBar.appendChild(plusBtn);
+  seBarWrap.appendChild(enginePanelBar);
+  panelHeaderEl.appendChild(seBarWrap);
 
-  dpBtn = document.createElement("button");
-  dpBtn.id = "se-dp-btn";
-  dpBtn.style.cssText = `
+  pinDropdownBtn = document.createElement("button");
+  pinDropdownBtn.id = "se-dp-btn";
+  pinDropdownBtn.style.cssText = `
     background:none; border:1px solid transparent; border-radius:5px;
     cursor:pointer; font-size:16px; line-height:1; padding:3px 4px;
     flex-shrink:0; transition:opacity 0.2s, border-color 0.2s, filter 0.2s;
@@ -6703,39 +6757,39 @@
   function dpUpdateStyle() {
     const dpT      = (t.se || {}).dpTitle || {};
     const _dpEmoji = (styleSettings.iconStyle || "emoji") === "emoji";
-    if (defaultPanelOpen === "pinned") {
-      if (_dpEmoji) dpBtn.textContent = "📌";
-      dpBtn.title = dpT.pinned || "Panel always visible (Pinned)\nClick to change";
-      dpBtn.style.opacity = "1";
-      dpBtn.style.filter = "none";
-      dpBtn.style.borderColor = "#f80";
-    } else if (defaultPanelOpen === true) {
-      if (_dpEmoji) dpBtn.textContent = "📌";
-      dpBtn.title = dpT.on || "Panel opens by default (ON)\nClick to change";
-      dpBtn.style.opacity = "1";
-      dpBtn.style.filter = "none";
-      dpBtn.style.borderColor = "#4a9";
+    if (panelDefaultOpen === "pinned") {
+      if (_dpEmoji) pinDropdownBtn.textContent = "📌";
+      pinDropdownBtn.title = dpT.pinned || "Panel always visible (Pinned)\nClick to change";
+      pinDropdownBtn.style.opacity = "1";
+      pinDropdownBtn.style.filter = "none";
+      pinDropdownBtn.style.borderColor = "#f80";
+    } else if (panelDefaultOpen === true) {
+      if (_dpEmoji) pinDropdownBtn.textContent = "📌";
+      pinDropdownBtn.title = dpT.on || "Panel opens by default (ON)\nClick to change";
+      pinDropdownBtn.style.opacity = "1";
+      pinDropdownBtn.style.filter = "none";
+      pinDropdownBtn.style.borderColor = "#4a9";
     } else {
-      if (_dpEmoji) dpBtn.textContent = "📌";
-      dpBtn.title = dpT.off || "Panel closed by default (OFF)\nClick to change";
-      dpBtn.style.opacity = "0.3";
-      dpBtn.style.filter = "grayscale(1)";
-      dpBtn.style.borderColor = "transparent";
+      if (_dpEmoji) pinDropdownBtn.textContent = "📌";
+      pinDropdownBtn.title = dpT.off || "Panel closed by default (OFF)\nClick to change";
+      pinDropdownBtn.style.opacity = "0.3";
+      pinDropdownBtn.style.filter = "grayscale(1)";
+      pinDropdownBtn.style.borderColor = "transparent";
     }
   }
   dpUpdateStyle();
 
-  dpBtn.addEventListener("click", (e) => {
+  pinDropdownBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (dpDropdown) {
+    if (pinDropdownMenu) {
       closeDpDropdown();
       return;
     }
 
     const isDark2 = panelTheme === "dark";
-    dpDropdown = document.createElement("div");
-    dpDropdown.id = "dp-dropdown";
-    dpDropdown.style.cssText = `
+    pinDropdownMenu = document.createElement("div");
+    pinDropdownMenu.id = "dp-dropdown";
+    pinDropdownMenu.style.cssText = `
       position:fixed; z-index:2147483660;
       background:${isDark2 ? "#1e1e2e" : "#fff"};
       border:1px solid ${isDark2 ? "#3a3a5c" : "#ccc"};
@@ -6744,9 +6798,9 @@
       font-size:${styleSettings.fontSize}px;
       color:${styleSettings.textColor || (isDark2 ? "#eee" : "#111")};
     `;
-    const btnRect = dpBtn.getBoundingClientRect();
-    dpDropdown.style.top = btnRect.bottom + 4 + "px";
-    dpDropdown.style.right = window.innerWidth - btnRect.right + "px";
+    const btnRect = pinDropdownBtn.getBoundingClientRect();
+    pinDropdownMenu.style.top = btnRect.bottom + 4 + "px";
+    pinDropdownMenu.style.right = window.innerWidth - btnRect.right + "px";
 
     [
       { value: false,    label: "⛔ OFF",   hintKey: "off"    },
@@ -6757,7 +6811,7 @@
       item.textContent = label;
       const hint = (t.dpItemHint || {})[hintKey] || "";
       if (hint) item.title = hint;
-      const isActive = defaultPanelOpen === value;
+      const isActive = panelDefaultOpen === value;
       item.style.cssText = `
         padding:6px 10px; border-radius:5px; cursor:pointer;
         background:${isActive ? (isDark2 ? "#2a2a4a" : "#f0f0ff") : "transparent"};
@@ -6773,8 +6827,8 @@
       });
       item.addEventListener("click", (ev) => {
         ev.stopPropagation();
-        defaultPanelOpen = value;
-        GM_setValue("defaultPanelOpen", defaultPanelOpen);
+        panelDefaultOpen = value;
+        GM_setValue(STORAGE_KEYS.DEFAULT_PANEL_OPEN, panelDefaultOpen);
         const p = document.getElementById("site-group-panel");
         if (value === "pinned" && p) p.style.display = "block";
         dpUpdateStyle();
@@ -6786,21 +6840,21 @@
           showToast(label);
         }
       });
-      dpDropdown.appendChild(item);
+      pinDropdownMenu.appendChild(item);
     });
 
     const sep = document.createElement("div");
     sep.style.cssText = `
       margin:4px 6px; border-top:1px solid ${isDark2 ? "#3a3a5c" : "#e0e0e0"};
     `;
-    dpDropdown.appendChild(sep);
+    pinDropdownMenu.appendChild(sep);
 
     const _isGoogleHost = window.location.hostname.includes("google.");
     const ssItem = document.createElement("div");
     ssItem.style.cssText = `
       padding:6px 10px; border-radius:5px; cursor:pointer;
-      font-weight:${safeSearchEnabled ? "600" : "400"};
-      background:${safeSearchEnabled ? (isDark2 ? "#2a1a1a" : "#fff0f0") : "transparent"};
+      font-weight:${syntaxSafeSearchOn ? "600" : "400"};
+      background:${syntaxSafeSearchOn ? (isDark2 ? "#2a1a1a" : "#fff0f0") : "transparent"};
       transition:background 0.1s;
     `;
     function _updateSsItem() {
@@ -6812,11 +6866,11 @@
         ssItem.style.opacity     = "0.45";
         return;
       }
-      ssItem.textContent = safeSearchEnabled
+      ssItem.textContent = syntaxSafeSearchOn
         ? (t.safeSearchOn  || "🔒 SafeSearch OFF: ON")
         : (t.safeSearchOff || "🔓 SafeSearch OFF: OFF");
-      ssItem.style.fontWeight = safeSearchEnabled ? "600" : "400";
-      ssItem.style.background  = safeSearchEnabled
+      ssItem.style.fontWeight = syntaxSafeSearchOn ? "600" : "400";
+      ssItem.style.background  = syntaxSafeSearchOn
         ? (isDark2 ? "#2a1a1a" : "#fff0f0")
         : "transparent";
       ssItem.style.cursor  = "pointer";
@@ -6828,85 +6882,85 @@
       : ((t.dpItemHint || {}).safeSearch || "Attempts to disable safe search filters via URL parameters.");
     ssItem.addEventListener("mouseenter", () => {
       if (_isGoogleHost) return;
-      if (!safeSearchEnabled) ssItem.style.background = isDark2 ? "#252535" : "#f5f5f5";
+      if (!syntaxSafeSearchOn) ssItem.style.background = isDark2 ? "#252535" : "#f5f5f5";
     });
     ssItem.addEventListener("mouseleave", () => {
       if (_isGoogleHost) return;
-      if (!safeSearchEnabled) ssItem.style.background = "transparent";
+      if (!syntaxSafeSearchOn) ssItem.style.background = "transparent";
     });
     ssItem.addEventListener("click", (ev) => {
       ev.stopPropagation();
       if (_isGoogleHost) return;
-      if (!safeSearchEnabled) {
+      if (!syntaxSafeSearchOn) {
         closeDpDropdown();
         showSafeSearchNotice(() => {
-          safeSearchEnabled = true;
-          GM_setValue("safeSearchEnabled", safeSearchEnabled);
+          syntaxSafeSearchOn = true;
+          GM_setValue(STORAGE_KEYS.SAFE_SEARCH_ENABLED, syntaxSafeSearchOn);
           showToast(t.safeSearchOn || "🔒 SafeSearch OFF: ON", 2000);
           applyUrlOverrides();
         });
         return;
       }
-      safeSearchEnabled = false;
-      GM_setValue("safeSearchEnabled", safeSearchEnabled);
+      syntaxSafeSearchOn = false;
+      GM_setValue(STORAGE_KEYS.SAFE_SEARCH_ENABLED, syntaxSafeSearchOn);
       _updateSsItem();
       showToast(t.safeSearchOff || "🔓 SafeSearch OFF: OFF", 2000);
       closeDpDropdown();
     });
-    dpDropdown.appendChild(ssItem);
+    pinDropdownMenu.appendChild(ssItem);
 
     const srItem = document.createElement("div");
     srItem.style.cssText = `
       padding:6px 10px; border-radius:5px; cursor:pointer;
-      font-weight:${searchRegionEnabled ? "600" : "400"};
-      background:${searchRegionEnabled ? (isDark2 ? "#0d2137" : "#e8f4fd") : "transparent"};
+      font-weight:${syntaxRegionOn ? "600" : "400"};
+      background:${syntaxRegionOn ? (isDark2 ? "#0d2137" : "#e8f4fd") : "transparent"};
       transition:background 0.1s;
     `;
     function _updateSrItem() {
-      srItem.textContent = searchRegionEnabled
+      srItem.textContent = syntaxRegionOn
         ? (t.searchRegionOn  || "🌐 Search Region: All — ON")
         : (t.searchRegionOff || "🌐 Search Region: All — OFF");
-      srItem.style.fontWeight = searchRegionEnabled ? "600" : "400";
-      srItem.style.background = searchRegionEnabled
+      srItem.style.fontWeight = syntaxRegionOn ? "600" : "400";
+      srItem.style.background = syntaxRegionOn
         ? (isDark2 ? "#0d2137" : "#e8f4fd")
         : "transparent";
     }
     _updateSrItem();
     srItem.title = (t.dpItemHint || {}).searchRegion || "Attempts to remove region/country URL parameters for global results.";
     srItem.addEventListener("mouseenter", () => {
-      if (!searchRegionEnabled) srItem.style.background = isDark2 ? "#252535" : "#f5f5f5";
+      if (!syntaxRegionOn) srItem.style.background = isDark2 ? "#252535" : "#f5f5f5";
     });
     srItem.addEventListener("mouseleave", () => {
-      if (!searchRegionEnabled) srItem.style.background = "transparent";
+      if (!syntaxRegionOn) srItem.style.background = "transparent";
     });
     srItem.addEventListener("click", (ev) => {
       ev.stopPropagation();
-      if (!searchRegionEnabled) {
+      if (!syntaxRegionOn) {
         closeDpDropdown();
         showSearchRegionNotice(() => {
-          searchRegionEnabled = true;
-          GM_setValue("searchRegionEnabled", searchRegionEnabled);
+          syntaxRegionOn = true;
+          GM_setValue(STORAGE_KEYS.SEARCH_REGION_ENABLED, syntaxRegionOn);
           showToast(t.searchRegionOn || "🌐 Search Region: All — ON", 2000);
           applyUrlOverrides();
         });
         return;
       }
-      searchRegionEnabled = false;
-      GM_setValue("searchRegionEnabled", searchRegionEnabled);
+      syntaxRegionOn = false;
+      GM_setValue(STORAGE_KEYS.SEARCH_REGION_ENABLED, syntaxRegionOn);
       _updateSrItem();
       showToast(t.searchRegionOff || "🌐 Search Region: All — OFF", 2000);
       closeDpDropdown();
     });
-    dpDropdown.appendChild(srItem);
+    pinDropdownMenu.appendChild(srItem);
 
-    document.body.appendChild(dpDropdown);
+    document.body.appendChild(pinDropdownMenu);
     setTimeout(() => {
       function onOut(ev) {
-        if (!dpDropdown) {
+        if (!pinDropdownMenu) {
           document.removeEventListener("click", onOut);
           return;
         }
-        if (!dpDropdown.contains(ev.target) && ev.target !== dpBtn) {
+        if (!pinDropdownMenu.contains(ev.target) && ev.target !== pinDropdownBtn) {
           closeDpDropdown();
           document.removeEventListener("click", onOut);
         }
@@ -6914,7 +6968,7 @@
       document.addEventListener("click", onOut);
     }, 0);
   });
-  headerContainer.appendChild(dpBtn);
+  panelHeaderEl.appendChild(pinDropdownBtn);
 
   plusBtn.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -6923,37 +6977,37 @@
 
   renderPinnedEngines();
 
-  if (se_panelPinned) {
+  if (enginePanelPinned) {
     setTimeout(() => {
       buildExtraPanel();
     }, 300);
   }
 
-  panel.appendChild(headerContainer);
+  panel.appendChild(panelHeaderEl);
 
-    return headerContainer;
+    return panelHeaderEl;
   }
 
   function closeExtraPanel(force) {
-    if (seExtraPanel) {
-      if (se_panelPinned && !force) return;
+    if (enginePanelFloat) {
+      if (enginePanelPinned && !force) return;
       document.removeEventListener("mousemove", _epOnMove);
       document.removeEventListener("mouseup",   _epOnUp);
-      _epDrag.active = false;
-      _epTitleBarRef = null;
-      seExtraPanel.remove();
-      seExtraPanel = null;
+      _dragEnginePanel.active = false;
+      _engineDragTitleBarRef = null;
+      enginePanelFloat.remove();
+      enginePanelFloat = null;
     }
-    if (seHelpTip) {
-      seHelpTip.remove();
-      seHelpTip = null;
+    if (enginePanelHelpTip) {
+      enginePanelHelpTip.remove();
+      enginePanelHelpTip = null;
     }
   }
 
   function renderPinnedEngines() {
-    seBar.querySelectorAll(".se-icon-pinned").forEach((el) => el.remove());
-    const plusBtnEl = seBar.querySelector(".se-plus-btn");
-    se_engines.slice(0, SE_PINNED_COUNT).forEach((engine) => {
+    enginePanelBar.querySelectorAll(".se-icon-pinned").forEach((el) => el.remove());
+    const plusBtnEl = enginePanelBar.querySelector(".se-plus-btn");
+    engineList.slice(0, SE_PINNED_COUNT).forEach((engine) => {
       const wrap = document.createElement("span");
       wrap.className = "se-icon-pinned";
       wrap.style.cssText = "display:inline-flex; align-items:center;";
@@ -6975,21 +7029,21 @@
       );
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
-        if (!se_panelPinned) closeExtraPanel(true);
+        if (!enginePanelPinned) closeExtraPanel(true);
         se_navigate(engine, "same");
       });
       btn.addEventListener("auxclick", (e) => {
         if (e.button !== 1) return;
         e.preventDefault();
         e.stopPropagation();
-        if (!se_panelPinned) closeExtraPanel(true);
+        if (!enginePanelPinned) closeExtraPanel(true);
         se_navigate(engine, "new");
       });
       btn.onerror = () => {
         btn.style.visibility = "hidden";
       };
       wrap.appendChild(btn);
-      seBar.insertBefore(wrap, plusBtnEl || null);
+      enginePanelBar.insertBefore(wrap, plusBtnEl || null);
     });
   }
 
@@ -7036,13 +7090,13 @@
       detectedName,
       (finalName) => {
         if (!finalName || !finalName.trim()) return;
-        if (se_engines.some(eng => eng.url === detectedUrl)) {
+        if (engineList.some(eng => eng.url === detectedUrl)) {
           showToast("⚠️ " + detectedUrl + " already exists.");
           return;
         }
-        se_engines.push({ name: finalName.trim(), url: detectedUrl });
+        engineList.push({ name: finalName.trim(), url: detectedUrl });
         se_save();
-        seExtraPanel?.__renderEngineList?.();
+        enginePanelFloat?.__renderEngineList?.();
         renderPinnedEngines();
         const msg = typeof st.detectSuccess === "function"
           ? st.detectSuccess(finalName.trim())
@@ -7055,27 +7109,27 @@
   }
 
   function _epOnMove(e) {
-    if (!_epDrag.active || !seExtraPanel) return;
+    if (!_dragEnginePanel.active || !enginePanelFloat) return;
     const nx = Math.max(
       0,
-      Math.min(e.clientX - _epDrag.x, window.innerWidth  - seExtraPanel.offsetWidth),
+      Math.min(e.clientX - _dragEnginePanel.x, window.innerWidth  - enginePanelFloat.offsetWidth),
     );
     const ny = Math.max(
       0,
-      Math.min(e.clientY - _epDrag.y, window.innerHeight - seExtraPanel.offsetHeight),
+      Math.min(e.clientY - _dragEnginePanel.y, window.innerHeight - enginePanelFloat.offsetHeight),
     );
-    seExtraPanel.style.left  = nx + "px";
-    seExtraPanel.style.top   = ny + "px";
-    seExtraPanel.style.right = "auto";
+    enginePanelFloat.style.left  = nx + "px";
+    enginePanelFloat.style.top   = ny + "px";
+    enginePanelFloat.style.right = "auto";
   }
   function _epOnUp() {
-    if (!_epDrag.active) return;
-    _epDrag.active = false;
-    if (_epTitleBarRef) _epTitleBarRef.style.cursor = "grab";
-    if (seExtraPanel) {
-      se_panelPos = {
-        left: parseInt(seExtraPanel.style.left),
-        top:  parseInt(seExtraPanel.style.top),
+    if (!_dragEnginePanel.active) return;
+    _dragEnginePanel.active = false;
+    if (_engineDragTitleBarRef) _engineDragTitleBarRef.style.cursor = "grab";
+    if (enginePanelFloat) {
+      enginePanelPos = {
+        left: parseInt(enginePanelFloat.style.left),
+        top:  parseInt(enginePanelFloat.style.top),
       };
       se_save();
     }
@@ -7084,7 +7138,7 @@
   }
 
   function _buildEpUsageBanner(isDark, st) {
-    if (GM_getValue("hideSeAdviceBanner", false)) return null;
+    if (GM_getValue(STORAGE_KEYS.HIDE_SE_ADVICE_BANNER, false)) return null;
     const adviceBanner = document.createElement("div");
     adviceBanner.style.cssText = `
       background:${isDark ? "#1a2a1a" : "#f0fff4"};
@@ -7109,7 +7163,7 @@
     adviceClose.addEventListener("mouseleave", () => { adviceClose.style.opacity = "0.55"; });
     adviceClose.addEventListener("click", (e) => {
       e.stopPropagation();
-      GM_setValue("hideSeAdviceBanner", true);
+      GM_setValue(STORAGE_KEYS.HIDE_SE_ADVICE_BANNER, true);
       adviceBanner.remove();
     });
     adviceBanner.appendChild(adviceText);
@@ -7118,7 +7172,7 @@
   }
 
   function buildExtraPanel() {
-    if (seExtraPanel) {
+    if (enginePanelFloat) {
       closeExtraPanel(true);
       return;
     }
@@ -7130,9 +7184,9 @@
     const border = isDark ? "#3a3a5c" : "#d0d0d0";
     const accent = isDark ? "#7c6af7" : "#4f46e5";
 
-    seExtraPanel = document.createElement("div");
-    seExtraPanel.id = "se-extra-float-panel";
-    seExtraPanel.style.cssText = `
+    enginePanelFloat = document.createElement("div");
+    enginePanelFloat.id = "se-extra-float-panel";
+    enginePanelFloat.style.cssText = `
       position:fixed; background:${bg}; border:1px solid ${border};
       border-radius:12px; padding:0; z-index:2147483651;
       box-shadow:0 8px 32px rgba(0,0,0,${isDark ? "0.55" : "0.18"}),
@@ -7185,14 +7239,14 @@
     `;
     helpTip.textContent = st.helpTooltip || "";
     document.body.appendChild(helpTip);
-    seHelpTip = helpTip;
+    enginePanelHelpTip = helpTip;
 
     helpBtn.addEventListener("mouseenter", () => {
-      if (_isDraggingPanel || _epDrag.active) return;
+      if (_dragPanelActive || _dragEnginePanel.active) return;
       helpTip.style.display = "block";
       requestAnimationFrame(() => {
-        if (!seExtraPanel) return;
-        const panelRect = seExtraPanel.getBoundingClientRect();
+        if (!enginePanelFloat) return;
+        const panelRect = enginePanelFloat.getBoundingClientRect();
         const tipW = helpTip.offsetWidth || 260;
         const tipH = helpTip.offsetHeight || 140;
         const margin = 8;
@@ -7238,7 +7292,7 @@
     function epUpdatePin() {
       epPinBtn.textContent = "📌";
 
-      epPinBtn.title = se_panelPinned
+      epPinBtn.title = enginePanelPinned
         ? `EN │ Pinned (click to unpin)
 TW │ 已釘選（點擊取消）
 CN │ 已固定（点击取消）
@@ -7250,17 +7304,17 @@ CN │ 固定面板（跳转后不消失）
 JP │ パネルをピン留め（移動後も消えない）
 KR │ 패널 고정 (won't disappear after navigation)`;
 
-      epPinBtn.style.opacity = se_panelPinned ? "1" : "0.3";
-      epPinBtn.style.filter = se_panelPinned ? "none" : "grayscale(1)";
-      epPinBtn.style.borderColor = se_panelPinned ? "#f80" : "transparent";
+      epPinBtn.style.opacity = enginePanelPinned ? "1" : "0.3";
+      epPinBtn.style.filter = enginePanelPinned ? "none" : "grayscale(1)";
+      epPinBtn.style.borderColor = enginePanelPinned ? "#f80" : "transparent";
     }
     epUpdatePin();
     epPinBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      se_panelPinned = !se_panelPinned;
+      enginePanelPinned = !enginePanelPinned;
       se_save();
       epUpdatePin();
-      showToast(se_panelPinned ? t.panelPinned : t.panelUnpinned);
+      showToast(enginePanelPinned ? t.panelPinned : t.panelUnpinned);
     });
     epTitleRight.appendChild(epPinBtn);
 
@@ -7287,16 +7341,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     epTitleRight.appendChild(epCloseBtn);
 
     epTitleBar.appendChild(epTitleRight);
-    seExtraPanel.appendChild(epTitleBar);
+    enginePanelFloat.appendChild(epTitleBar);
 
-    _epTitleBarRef = epTitleBar;
-    _epDrag.active = false;
+    _engineDragTitleBarRef = epTitleBar;
+    _dragEnginePanel.active = false;
     epTitleBar.addEventListener("mousedown", (e) => {
       if (e.target === epCloseBtn || e.target === helpBtn) return;
-      const rect = seExtraPanel.getBoundingClientRect();
-      _epDrag.active = true;
-      _epDrag.x = e.clientX - rect.left;
-      _epDrag.y = e.clientY - rect.top;
+      const rect = enginePanelFloat.getBoundingClientRect();
+      _dragEnginePanel.active = true;
+      _dragEnginePanel.x = e.clientX - rect.left;
+      _dragEnginePanel.y = e.clientY - rect.top;
       epTitleBar.style.cursor = "grabbing";
       e.preventDefault();
     });
@@ -7306,7 +7360,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const epBody = document.createElement("div");
     epBody.style.cssText =
       "padding:10px 12px; display:flex; flex-direction:column; gap:8px; max-height:70vh; overflow-y:auto;";
-    seExtraPanel.appendChild(epBody);
+    enginePanelFloat.appendChild(epBody);
 
     function mkDivider(label) {
       const d = document.createElement("div");
@@ -7335,7 +7389,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     function renderEngineList() {
       epList.innerHTML = "";
 
-      if (se_engines.length === 0) {
+      if (engineList.length === 0) {
         const empty = document.createElement("div");
         empty.textContent = st.emptyList || "(No engines yet — add one below)";
         empty.style.cssText = `color:${isDark ? "#555" : "#ccc"};font-size:${styleSettings.fontSize - 1}px;padding:4px 0;`;
@@ -7482,7 +7536,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         );
         delBtn.addEventListener("click", (e) => {
           e.stopPropagation();
-          se_engines.splice(idx, 1);
+          engineList.splice(idx, 1);
           se_save();
           renderEngineList();
           renderPinnedEngines();
@@ -7523,8 +7577,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           const fromIdx = parseInt(e.dataTransfer.getData("se-idx"));
           const toIdx = idx;
           if (fromIdx === toIdx) return;
-          const moved = se_engines.splice(fromIdx, 1)[0];
-          se_engines.splice(toIdx, 0, moved);
+          const moved = engineList.splice(fromIdx, 1)[0];
+          engineList.splice(toIdx, 0, moved);
           se_save();
           renderEngineList();
           renderPinnedEngines();
@@ -7533,10 +7587,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         return row;
       }
 
-      se_engines.forEach((engine, idx) => { epList.appendChild(_buildEngineRow(engine, idx)); });
+      engineList.forEach((engine, idx) => { epList.appendChild(_buildEngineRow(engine, idx)); });
     }
 
-    seExtraPanel.__renderEngineList = renderEngineList;
+    enginePanelFloat.__renderEngineList = renderEngineList;
 
     const _adviceBanner = _buildEpUsageBanner(isDark, st);
     if (_adviceBanner) epBody.appendChild(_adviceBanner);
@@ -7564,7 +7618,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     detectBtn.addEventListener("click", (e) => {
       e.stopPropagation();
 
-      if (!GM_getValue("seDetectFirstSeen", false)) {
+      if (!GM_getValue(STORAGE_KEYS.SE_DETECT_FIRST_SEEN, false)) {
         const tipOverlay = document.createElement("div");
         tipOverlay.style.cssText = `
           position:fixed; top:0; left:0; right:0; bottom:0;
@@ -7598,7 +7652,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         `;
         tipOkBtn.addEventListener("click", (ev) => {
           ev.stopPropagation();
-          GM_setValue("seDetectFirstSeen", true);
+          GM_setValue(STORAGE_KEYS.SE_DETECT_FIRST_SEEN, true);
           tipOverlay.remove();
           _seRunDetect(st);
         });
@@ -7702,7 +7756,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           showToast(st.urlInvalid || "URL must start with http!");
           return;
         }
-        se_engines.push({ name, url });
+        engineList.push({ name, url });
         se_save();
         nameInp.value = "";
         urlInp.value  = "";
@@ -7721,8 +7775,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     epBody.appendChild(_buildAddEngineForm());
 
-    document.body.appendChild(seExtraPanel);
-    shieldFromFileDrop(seExtraPanel);
+    document.body.appendChild(enginePanelFloat);
+    shieldFromFileDrop(enginePanelFloat);
     renderEngineList();
     _positionExtraPanel();
   }
@@ -7996,7 +8050,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     : panelTheme === "dark" ? "#2a2a2a" : "#fff";
   const _scFg = styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000");
   styleConfigWrap.style.cssText = `
-    display: ${searchConfig.isExpanded ? "block" : "none"};
+    display: ${syntaxConfig.isExpanded ? "block" : "none"};
     position: fixed;
     top: -9999px;
     left: -9999px;
@@ -8085,38 +8139,38 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   styleConfigHeaderRow.addEventListener("mousedown", (e) => {
     if (e.target.tagName === "BUTTON" || e.target.tagName === "SELECT") return;
-    _sfDragging = true;
-    _sfOx = e.clientX - styleConfigWrap.getBoundingClientRect().left;
-    _sfOy = e.clientY - styleConfigWrap.getBoundingClientRect().top;
+    _dragStyleFloatActive = true;
+    _dragStyleFloatOx = e.clientX - styleConfigWrap.getBoundingClientRect().left;
+    _dragStyleFloatOy = e.clientY - styleConfigWrap.getBoundingClientRect().top;
     styleConfigHeaderRow.style.cursor = "grabbing";
     e.preventDefault();
   });
-  _sfOnMove = function(e) {
-    if (!_sfDragging) return;
-    const nx = Math.max(0, Math.min(e.clientX - _sfOx, window.innerWidth  - styleConfigWrap.offsetWidth));
-    const ny = Math.max(0, Math.min(e.clientY - _sfOy, window.innerHeight - styleConfigWrap.offsetHeight));
+  _dragStyleFloatOnMove = function(e) {
+    if (!_dragStyleFloatActive) return;
+    const nx = Math.max(0, Math.min(e.clientX - _dragStyleFloatOx, window.innerWidth  - styleConfigWrap.offsetWidth));
+    const ny = Math.max(0, Math.min(e.clientY - _dragStyleFloatOy, window.innerHeight - styleConfigWrap.offsetHeight));
     styleConfigWrap.style.left  = nx + "px";
     styleConfigWrap.style.top   = ny + "px";
     styleConfigWrap.style.right = "auto";
   };
-  _sfOnUp = function() {
-    if (!_sfDragging) return;
-    _sfDragging = false;
+  _dragStyleFloatOnUp = function() {
+    if (!_dragStyleFloatActive) return;
+    _dragStyleFloatActive = false;
     styleConfigHeaderRow.style.cursor = "grab";
-    GM_setValue("styleFloatPos", {
+    GM_setValue(STORAGE_KEYS.STYLE_FLOAT_POS, {
       top:  styleConfigWrap.style.top,
       left: styleConfigWrap.style.left,
     });
-    document.removeEventListener("mousemove", _sfOnMove);
-    document.removeEventListener("mouseup",   _sfOnUp);
+    document.removeEventListener("mousemove", _dragStyleFloatOnMove);
+    document.removeEventListener("mouseup",   _dragStyleFloatOnUp);
   };
-  document.addEventListener("mousemove", _sfOnMove);
-  document.addEventListener("mouseup",   _sfOnUp);
+  document.addEventListener("mousemove", _dragStyleFloatOnMove);
+  document.addEventListener("mouseup",   _dragStyleFloatOnUp);
 
   const styleFloatBody = document.createElement("div");
   styleFloatBody.style.padding = "6px";
 
-  if (!GM_getValue("hideLockHintBanner", false)) {
+  if (!GM_getValue(STORAGE_KEYS.HIDE_LOCK_HINT_BANNER, false)) {
     const lockHintBanner = document.createElement("div");
     lockHintBanner.style.cssText = `
       background: ${panelTheme === "dark" ? "#3a3320" : "#fff8d6"};
@@ -8145,7 +8199,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       ja:    { bold: "編集モード：",   rest: "プレビュー用に固定中。閉じることで通常操作に戻ります。" },
       ko:    { bold: "편집 모드：",    rest: "미리보기를 위해 고정됨. 정상 작동으로 돌아가려면 닫아주세요." },
     };
-    const _hint = lockHints[lang] || lockHints["zh_TW"];
+    const _hint = lockHints[uiLang] || lockHints["zh_TW"];
     const _boldEl = document.createElement("b");
     _boldEl.textContent = _hint.bold;
     textSpan.appendChild(_boldEl);
@@ -8170,7 +8224,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     closeBannerBtn.onmouseout = () => closeBannerBtn.style.opacity = "0.5";
     closeBannerBtn.onclick = () => {
       lockHintBanner.remove();
-      GM_setValue("hideLockHintBanner", true);
+      GM_setValue(STORAGE_KEYS.HIDE_LOCK_HINT_BANNER, true);
     };
 
     lockHintBanner.appendChild(iconSpan);
@@ -8251,78 +8305,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   function _doResetStyles() {
     const currentBackgroundImage = styleSettings.backgroundImage;
     styleSettings = {
-      theme: "light",
-      style: "default",
-      borderRadius: 6,
-      contrast: 0,
-      opacity: 0.9,
-      groupOpacity: 1.0,
-      textOpacityCompensation: 1.0,
-      buttonOpacity: 1.0,
-      fontSize: 12,
+      ...STYLE_DEFAULTS,
       backgroundImage: currentBackgroundImage,
-      imageMode: "center",
-      imageOffsetX: 0,
-      imageOffsetY: 0,
-      imageScale: 1.0,
-      imageOpacity: 1.0,
-      customBackgroundColor: "#ffffff",
-      customTextColor: "#000000",
-      customButtonBg: "#f5f5f5",
-      groupBackgroundColor: "",
-      textColor:       "",
-      backgroundColor: "",
-      enableOverlayDarkening: false,
-      overlayStrength: 0.5,
-      textBackgroundColor: "",
-      textBorder: false,
-      panelTop:       80,
-      panelRight:     20,
-      panelLeft:      -1,
-      panelWidth:     0,
-      panelMaxHeight: 87,
-      panelUserSized: false,
-      multiSelectColor:   "#ffc400",
-      multiSelectOpacity: 0.85,
-      siteButtonWidth: 0,
-      hideSyntaxBtn:    false,
-      hideBlacklistBtn: false,
-      hideAddGroupBtn: false, hideAddressToggleBtn: false,
-      hideExportBtn: false,   hideImportBtn: false,
-      hideModGroup: false,
-      isExpanded:       false,
-      iconStyle:          "emoji",
-      toggleBtnBg:        "",
-      toggleBtnBgOpacity: 0,
-      toggleBtnIconStyle:    "svg-line",
-      toggleBtnShape:        "circle",
-      enableToggleBtnGlow:   false,
-      toggleBtnGlowColor:    "#00bfff",
-      toggleBtnGlowStrength: 12,
-      svgIconColor:       "",
-      enableBorderGlow:    false,
-      borderGlowColor:    "#00bfff",
-      borderGlowStrength:  12,
-      borderGlowInset:     true,
-      enableSheen:         false,
-      sheenAngle:          135,
-      sheenOpacity:        0.08,
-      enableSiteGlow:      false,
-      enableGroupGlow:     false,
-      searchBarBg:             "",
-      searchBarBgOpacity:      0,
-      searchBarFg:             "",
-      searchBarGlowEnabled:    false,
-      searchBarGlowColor:      "#5599ff",
-      searchBarGlowStrength:   6,
-      enableVignette:      false,
-      vignetteCornerTL:    true,
-      vignetteCornerTR:    true,
-      vignetteCornerBL:    true,
-      vignetteCornerBR:    true,
-      vignetteSize:        120,
-      vignetteColor:       "#000000",
-      vignetteOpacity:     0.45,
     };
     save();
     applyTheme(panelTheme);
@@ -8368,7 +8352,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     sfCloseBtn.style.borderColor = panelTheme === "dark" ? "#802b2b" : "#ffb3b3";
   };
   sfCloseBtn.onclick = () => {
-    searchConfig.isExpanded = false;
+    syntaxConfig.isExpanded = false;
     save();
     styleConfigWrap.style.display = "none";
     const _expandBtn = document.getElementById("search-expand-collapse-btn");
@@ -8384,68 +8368,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   styleConfigContent.style.flexDirection = "column";
   styleConfigContent.style.gap = "6px";
   styleFloatBody.appendChild(styleConfigContent);
-
-  const STYLE_DEFAULTS = {
-    borderRadius: 6,
-    contrast: 0,
-    opacity: 0.9,
-    groupOpacity: 1.0,
-    buttonOpacity: 1.0,
-    textOpacityCompensation: 1.0,
-    fontSize: 12,
-    imageOffsetX: 0,
-    imageOffsetY: 0,
-    imageScale: 1.0,
-    imageOpacity: 1.0,
-    overlayStrength: 0.5,
-    panelTop: 80,
-    panelRight: 20,
-    panelWidth: 0,
-    panelMaxHeight: 87,
-    siteButtonWidth: 0,
-    hideSyntaxBtn: false,
-    hideBlacklistBtn: false,
-    hideAddGroupBtn: false, hideAddressToggleBtn: false,
-    hideExportBtn: false,   hideImportBtn: false,
-    hideModGroup: false,
-    toggleBtnBg: "",
-    toggleBtnBgOpacity: 0,
-    toggleBtnIconStyle: "svg-line",
-    toggleBtnShape: "circle",
-    enableToggleBtnGlow: false,
-    toggleBtnGlowColor: "#00bfff",
-    toggleBtnGlowStrength: 12,
-    svgIconColor: "",
-    multiSelectColor: "#ffc400",
-    multiSelectOpacity: 0.85,
-    iconStyle: "emoji",
-    textBackgroundColor: "",
-    textBorder: false,
-    enableOverlayDarkening: false,
-    enableBorderGlow: false,
-    borderGlowColor: "#00bfff",
-    borderGlowStrength: 12,
-    borderGlowInset: true,
-    enableSheen: false,
-    sheenAngle: 135,
-    sheenOpacity: 0.08,
-    enableSiteGlow: false,
-    enableGroupGlow: false,
-    searchBarBg: "",
-    searchBarBgOpacity: 0,
-    searchBarFg: "",
-    searchBarGlowEnabled: false,
-    searchBarGlowColor: "#5599ff",
-    searchBarGlowStrength: 6,
-    enableVignette: false,
-    vignetteCornerTL: true,
-    vignetteCornerTR: true,
-    vignetteCornerBL: true,
-    vignetteCornerBR: true,
-    vignetteSize: 120,
-    vignetteColor: "#000000",
-    vignetteOpacity: 0.45,
-  };
 
   function rowCss() {
     return "display: flex; align-items: center; margin-bottom: 6px; width: 100%; justify-content: space-between;";
@@ -8468,6 +8390,51 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     span.textContent = val;
     span.style.cssText = "width: 40px; text-align: right; font-size: 11px; flex-shrink: 0;";
     return span;
+  }
+
+  function _buildButtonGroup(labelText, options, datasetKey, getCurrentVal, onSelect) {
+    const row = document.createElement("div");
+    row.style.cssText = rowCss() + "flex-wrap:wrap; gap:4px;";
+    const lbl = document.createElement("label");
+    lbl.textContent = labelText;
+    lbl.style.cssText = labelCss();
+    row.appendChild(lbl);
+    const wrap = document.createElement("div");
+    wrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
+
+    const refreshActive = () => {
+      const current = getCurrentVal();
+      wrap.querySelectorAll("button").forEach(btn2 => {
+        const now = btn2.dataset[datasetKey] === current;
+        const isDark = panelTheme === "dark";
+        btn2.style.background = now ? (isDark ? "#334466" : "#ddeeff") : "transparent";
+        btn2.style.color = now ? (isDark ? "#88aaff" : "#0055cc") : "inherit";
+      });
+    };
+
+    options.forEach(({ v, lb }) => {
+      const b = document.createElement("button");
+      b.textContent = lb;
+      b.dataset[datasetKey] = v;
+      const isDark = panelTheme === "dark";
+      const active = getCurrentVal() === v;
+      b.style.cssText = `
+        padding:2px 8px; border-radius:4px; cursor:pointer;
+        font-size:${styleSettings.fontSize - 1}px; white-space:nowrap;
+        border:1px solid ${isDark ? "#555" : "#ccc"};
+        background:${active ? (isDark ? "#334466" : "#ddeeff") : "transparent"};
+        color:${active ? (isDark ? "#88aaff" : "#0055cc") : "inherit"};
+        transition: background .15s, color .15s;
+      `;
+      b.addEventListener("click", () => {
+        onSelect(v);
+        refreshActive();
+      });
+      wrap.appendChild(b);
+    });
+
+    row.appendChild(wrap);
+    return { row, refreshActive };
   }
 
   function makeResetBtn(defaultVal, callback) {
@@ -8567,8 +8534,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       chk.onchange = () => {
         styleSettings.hideBlacklistBtn = chk.checked;
         save();
-        const btn = document.getElementById("blacklist-btn");
-        if (btn) btn.style.display = chk.checked ? "none" : "";
+        const btn = document.getElementById(TOOLBAR_BTN_IDS.hideBlacklistBtn.id);
+        if (btn) btn.style.display = chk.checked ? "none" : TOOLBAR_BTN_IDS.hideBlacklistBtn.show;
         if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
       };
       const _openBl = document.createElement("button");
@@ -8611,14 +8578,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       chk.onchange = () => {
         styleSettings[key] = chk.checked;
         save();
-        const _idMap = {
-          hideAddGroupBtn:      { id: "toolbar-add-group-btn", show: "inline-flex" },
-          hideAddressToggleBtn: { id: "se-toggle-address-btn",  show: "inline-flex"  },
-          hideExportBtn:        { id: "toolbar-export-btn",     show: "inline-flex" },
-          hideImportBtn:        { id: "toolbar-import-btn",     show: "inline-flex" },
-          hideModGroup:         { id: "syntax-mod-group",       show: "flex"         },
-        };
-        const _map = _idMap[key];
+        const _map = TOOLBAR_BTN_IDS[key];
         const el = _map && document.getElementById(_map.id);
         if (el) el.style.display = chk.checked ? "none" : _map.show;
         if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
@@ -8652,7 +8612,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       t.hideAddGroupBtnLabel || "Hide ➕ Add Group Button",
       "➕", t.addGroup || "Add Group",
       () => {
-        if (isPromptActive) return;
+        if (_dlgPromptActive) return;
         showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
           if (!name || !name.trim()) { showToast(t.emptyGroupName || "Group name cannot be empty!"); return; }
           groups.push({ name: name.trim(), sites: [] });
@@ -8667,7 +8627,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       t.hideAddressToggleBtnLabel || "Hide 🔁 Address Toggle Button",
       "🔁", t.toggleShow || "Show Addresses",
       () => {
-        const btn = document.getElementById("se-toggle-address-btn");
+        const btn = document.getElementById(TOOLBAR_BTN_IDS.hideAddressToggleBtn.id);
         if (btn) btn.click();
       }
     );
@@ -8677,7 +8637,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       t.hideExportBtnLabel || "Hide 📤 Export Button",
       "📤", t.exportConfig || "Export Config",
       () => {
-        const btn = document.getElementById("toolbar-export-btn");
+        const btn = document.getElementById(TOOLBAR_BTN_IDS.hideExportBtn.id);
         if (btn) btn.click();
       }
     );
@@ -8687,7 +8647,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       t.hideImportBtnLabel || "Hide 📥 Import Button",
       "📥", t.importConfig || "Import Config",
       () => {
-        const btn = document.getElementById("toolbar-import-btn");
+        const btn = document.getElementById(TOOLBAR_BTN_IDS.hideImportBtn.id);
         if (btn) btn.click();
       }
     );
@@ -8745,7 +8705,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         styleSettings.borderGlowColor = glowColorInput.value;
         _debouncedSave();
       };
-      const glowColorReset = makeResetBtn("#00bfff", (dv) => {
+      const glowColorReset = makeResetBtn(STYLE_DEFAULTS.borderGlowColor, (dv) => {
         glowColorInput.value = dv;
         styleSettings.borderGlowColor = dv;
         save(); applyTheme(panelTheme);
@@ -8861,7 +8821,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         styleSettings.enableSiteGlow = siteGlowToggle.checked;
         save(); applyTheme(panelTheme);
       };
-      const _rb_siteGlow = makeResetBtn(false, (dv) => {
+      const _rb_siteGlow = makeResetBtn(STYLE_DEFAULTS.enableSiteGlow, (dv) => {
         siteGlowToggle.checked = dv;
         styleSettings.enableSiteGlow = dv;
         save(); applyTheme(panelTheme);
@@ -8883,7 +8843,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         styleSettings.enableGroupGlow = groupGlowToggle.checked;
         save(); applyTheme(panelTheme);
       };
-      const _rb_groupGlow = makeResetBtn(false, (dv) => {
+      const _rb_groupGlow = makeResetBtn(STYLE_DEFAULTS.enableGroupGlow, (dv) => {
         groupGlowToggle.checked = dv;
         styleSettings.enableGroupGlow = dv;
         save(); applyTheme(panelTheme);
@@ -8979,7 +8939,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _debouncedSave();
         applyTheme(panelTheme);
       };
-      const _rb_size = makeResetBtn(120, (dv) => {
+      const _rb_size = makeResetBtn(STYLE_DEFAULTS.vignetteSize, (dv) => {
         sizeInput.value = dv;
         _vs_size.textContent = dv + "px";
         styleSettings.vignetteSize = dv;
@@ -9004,7 +8964,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _debouncedSave();
         applyTheme(panelTheme);
       };
-      const _rb_color = makeResetBtn("#000000", (dv) => {
+      const _rb_color = makeResetBtn(STYLE_DEFAULTS.vignetteColor, (dv) => {
         colorInput.value = dv;
         styleSettings.vignetteColor = dv;
         save(); applyTheme(panelTheme);
@@ -9030,7 +8990,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _debouncedSave();
         applyTheme(panelTheme);
       };
-      const _rb_op = makeResetBtn(0.45, (dv) => {
+      const _rb_op = makeResetBtn(STYLE_DEFAULTS.vignetteOpacity, (dv) => {
         opInput.value = dv;
         _vs_op.textContent = parseFloat(dv).toFixed(2);
         styleSettings.vignetteOpacity = dv;
@@ -9118,7 +9078,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _debouncedSave();
       };
       _sbsBgInputRef = sbsBgInput;
-      const _rb_sbsBg = makeResetBtn("", (dv) => {
+      const _rb_sbsBg = makeResetBtn(STYLE_DEFAULTS.searchBarBg, (dv) => {
         sbsBgInput.value = dv || "#333333";
         styleSettings.searchBarBg = dv;
         save(); applyTheme(panelTheme);
@@ -9145,7 +9105,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       };
       _sbsBgOpInputRef = sbsBgOpInput;
       _sbsBgOpSpanRef  = sbsBgOpSpan;
-      const _rb_sbsBgOp = makeResetBtn(0, (dv) => {
+      const _rb_sbsBgOp = makeResetBtn(STYLE_DEFAULTS.searchBarBgOpacity, (dv) => {
         sbsBgOpInput.value = dv;
         sbsBgOpSpan.textContent = parseFloat(dv).toFixed(2);
         styleSettings.searchBarBgOpacity = dv;
@@ -9170,7 +9130,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _debouncedSave();
       };
       _sbsFgInputRef = sbsFgInput;
-      const _rb_sbsFg = makeResetBtn("", (dv) => {
+      const _rb_sbsFg = makeResetBtn(STYLE_DEFAULTS.searchBarFg, (dv) => {
         sbsFgInput.value = dv || "#eeeeee";
         styleSettings.searchBarFg = dv;
         save(); applyTheme(panelTheme);
@@ -9210,7 +9170,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         styleSettings.searchBarGlowColor = _sbsGlowColorInput.value;
         _debouncedSave();
       };
-      const _rb_sbsGlowColor = makeResetBtn("#5599ff", (dv) => {
+      const _rb_sbsGlowColor = makeResetBtn(STYLE_DEFAULTS.searchBarGlowColor, (dv) => {
         _sbsGlowColorInput.value = dv;
         styleSettings.searchBarGlowColor = dv;
         save(); applyTheme(panelTheme);
@@ -9235,7 +9195,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _vs_sbsGlowStr.textContent = _sbsGlowStrInput.value + "px";
         _debouncedSave();
       };
-      const _rb_sbsGlowStr = makeResetBtn(6, (dv) => {
+      const _rb_sbsGlowStr = makeResetBtn(STYLE_DEFAULTS.searchBarGlowStrength, (dv) => {
         _sbsGlowStrInput.value = dv;
         _vs_sbsGlowStr.textContent = dv + "px";
         styleSettings.searchBarGlowStrength = dv;
@@ -9270,44 +9230,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     generalStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
     generalStyleContainer.appendChild(generalStyleHeader);
 
-    const styleRow = document.createElement("div");
-    styleRow.style.cssText = rowCss();
-
-    const styleLabel = document.createElement("label");
-    styleLabel.textContent = t.style || "Style";
-    styleLabel.style.cssText = labelCss();
-    styleRow.appendChild(styleLabel);
-
-    const _styleWrap = document.createElement("div");
-    _styleWrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
     const _styleOptEntries = Object.entries(t.styleOptions || {});
-    const _refreshStyleBtnActive = () => {
-      _styleWrap.querySelectorAll("button").forEach(btn2 => {
-        const now = btn2.dataset.styleVal === styleSettings.style;
-        const _isDark = panelTheme === "dark";
-        btn2.style.background = now
-          ? (_isDark ? "#334466" : "#ddeeff")
-          : "transparent";
-        btn2.style.color = now
-          ? (_isDark ? "#88aaff" : "#0055cc")
-          : "inherit";
-      });
-    };
-    _styleOptEntries.forEach(([key, label]) => {
-      const b = document.createElement("button");
-      b.textContent = label;
-      b.dataset.styleVal = key;
-      const _isDark = panelTheme === "dark";
-      const _active = styleSettings.style === key;
-      b.style.cssText = `
-        padding:2px 8px; border-radius:4px; cursor:pointer;
-        font-size:${styleSettings.fontSize - 1}px; white-space:nowrap;
-        border:1px solid ${_isDark ? "#555" : "#ccc"};
-        background:${_active ? (_isDark ? "#334466" : "#ddeeff") : "transparent"};
-        color:${_active ? (_isDark ? "#88aaff" : "#0055cc") : "inherit"};
-        transition: background .15s, color .15s;
-      `;
-      b.addEventListener("click", () => {
+    const { row: styleGroupRow } = _buildButtonGroup(
+      t.style || "Style",
+      _styleOptEntries.map(([key, label]) => ({ v: key, lb: label })),
+      "styleVal",
+      () => styleSettings.style,
+      (key) => {
         styleSettings.style = key;
         Object.assign(styleSettings, STYLE_PRESETS[key] || {});
         save();
@@ -9320,58 +9249,26 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _vs_groupOpacityInput.textContent = parseFloat(styleSettings.groupOpacity).toFixed(1);
         buttonOpacityInput.value = styleSettings.buttonOpacity;
         _vs_buttonOpacityInput.textContent = parseFloat(styleSettings.buttonOpacity).toFixed(1);
-        _refreshStyleBtnActive();
-      });
-      _styleWrap.appendChild(b);
-    });
-    styleRow.appendChild(_styleWrap);
-    generalStyleContainer.appendChild(styleRow);
+      }
+    );
+    generalStyleContainer.appendChild(styleGroupRow);
 
     (function() {
-      const row = document.createElement("div");
-      row.style.cssText = rowCss() + "flex-wrap:wrap; gap:4px;";
-      const lbl = document.createElement("label");
-      lbl.textContent = t.iconStyleLabel || "Icon Style";
-      lbl.style.cssText = labelCss();
-      row.appendChild(lbl);
-      const _wrap = document.createElement("div");
-      _wrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
-      const _opts = [
-        { v: "emoji",    lb: t.toggleBtnIconEmoji   || "🔍 Emoji" },
-        { v: "svg-line", lb: t.toggleBtnIconSvgLine || "SVG Outline" },
-        { v: "svg-fill", lb: t.toggleBtnIconSvgFill || "SVG Filled" },
-      ];
-      _opts.forEach(({ v, lb }) => {
-        const b = document.createElement("button");
-        b.textContent = lb;
-        b.dataset.iconVal = v;
-        const _isDark = panelTheme === "dark";
-        const _active = (styleSettings.iconStyle || "emoji") === v;
-        b.style.cssText = `
-          padding:2px 8px; border-radius:4px; cursor:pointer;
-          font-size:${styleSettings.fontSize - 1}px; white-space:nowrap;
-          border:1px solid ${_isDark ? "#555" : "#ccc"};
-          background:${_active ? (_isDark ? "#334466" : "#ddeeff") : "transparent"};
-          color:${_active ? (_isDark ? "#88aaff" : "#0055cc") : "inherit"};
-          transition: background .15s, color .15s;
-        `;
-        b.addEventListener("click", () => {
+      const { row } = _buildButtonGroup(
+        t.iconStyleLabel || "Icon Style",
+        [
+          { v: "emoji",    lb: t.toggleBtnIconEmoji   || "🔍 Emoji" },
+          { v: "svg-line", lb: t.toggleBtnIconSvgLine || "SVG Outline" },
+          { v: "svg-fill", lb: t.toggleBtnIconSvgFill || "SVG Filled" },
+        ],
+        "iconVal",
+        () => styleSettings.iconStyle || "emoji",
+        (v) => {
           styleSettings.iconStyle = v;
           save();
           applyAllBtnIcons();
-          _wrap.querySelectorAll("button").forEach(btn2 => {
-            const now = btn2.dataset.iconVal === v;
-            btn2.style.background = now
-              ? (panelTheme === "dark" ? "#334466" : "#ddeeff")
-              : "transparent";
-            btn2.style.color = now
-              ? (panelTheme === "dark" ? "#88aaff" : "#0055cc")
-              : "inherit";
-          });
-        });
-        _wrap.appendChild(b);
-      });
-      row.appendChild(_wrap);
+        }
+      );
       generalStyleContainer.appendChild(row);
     })();
 
@@ -9580,7 +9477,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         }
       });
     };
-    const _rb_siteButtonWidth = makeResetBtn(0, (dv) => {
+    const _rb_siteButtonWidth = makeResetBtn(STYLE_DEFAULTS.siteButtonWidth, (dv) => {
       siteButtonWidthInput.value = dv;
       styleSettings.siteButtonWidth = dv;
       _vs_siteButtonWidth.textContent = t.siteButtonWidthAuto || "Auto";
@@ -9653,50 +9550,21 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     toggleBtnStyleContainer.appendChild(_tbsHeader);
 
     (function() {
-      const row = document.createElement("div");
-      row.style.cssText = rowCss() + "flex-wrap:wrap; gap:4px;";
-      const lbl = document.createElement("label");
-      lbl.textContent = t.toggleBtnShapeLabel || "Shape";
-      lbl.style.cssText = labelCss();
-      row.appendChild(lbl);
-      const _wrap = document.createElement("div");
-      _wrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
-      const _opts = [
-        { v: "circle",         lb: t.toggleBtnShapeCircle        || "● Circle" },
-        { v: "rounded-square", lb: t.toggleBtnShapeRoundedSquare || "▢ Rounded" },
-      ];
-      _opts.forEach(({ v, lb }) => {
-        const b = document.createElement("button");
-        b.textContent = lb;
-        b.dataset.shapeVal = v;
-        const _isDark = panelTheme === "dark";
-        const _active = (styleSettings.toggleBtnShape || "circle") === v;
-        b.style.cssText = `
-          padding:2px 8px; border-radius:4px; cursor:pointer;
-          font-size:${styleSettings.fontSize - 1}px; white-space:nowrap;
-          border:1px solid ${_isDark ? "#555" : "#ccc"};
-          background:${_active ? (_isDark ? "#334466" : "#ddeeff") : "transparent"};
-          color:${_active ? (_isDark ? "#88aaff" : "#0055cc") : "inherit"};
-          transition: background .15s, color .15s;
-        `;
-        b.addEventListener("click", () => {
+      const { row } = _buildButtonGroup(
+        t.toggleBtnShapeLabel || "Shape",
+        [
+          { v: "circle",         lb: t.toggleBtnShapeCircle        || "● Circle" },
+          { v: "rounded-square", lb: t.toggleBtnShapeRoundedSquare || "▢ Rounded" },
+        ],
+        "shapeVal",
+        () => styleSettings.toggleBtnShape || "circle",
+        (v) => {
           styleSettings.toggleBtnShape = v;
           save();
           const tb = document.getElementById("site-toggle-simple");
           if (tb) applyToggleBtnStyle(tb);
-          _wrap.querySelectorAll("button").forEach(btn2 => {
-            const now = btn2.dataset.shapeVal === v;
-            btn2.style.background = now
-              ? (panelTheme === "dark" ? "#334466" : "#ddeeff")
-              : "transparent";
-            btn2.style.color = now
-              ? (panelTheme === "dark" ? "#88aaff" : "#0055cc")
-              : "inherit";
-          });
-        });
-        _wrap.appendChild(b);
-      });
-      row.appendChild(_wrap);
+        }
+      );
       toggleBtnStyleContainer.appendChild(row);
     })();
 
@@ -9788,7 +9656,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
       };
-      const _cbReset = makeResetBtn("", (dv) => {
+      const _cbReset = makeResetBtn(STYLE_DEFAULTS.toggleBtnBg, (dv) => {
         styleSettings.toggleBtnBg = dv;
         _ci.value = "#ffffff";
         save();
@@ -9823,7 +9691,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
       };
-      const _rb = makeResetBtn(0, (dv) => {
+      const _rb = makeResetBtn(STYLE_DEFAULTS.toggleBtnBgOpacity, (dv) => {
         _si.value = dv;
         styleSettings.toggleBtnBgOpacity = dv;
         _vs.textContent = "0.00";
@@ -9875,7 +9743,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
       };
-      const _rb = makeResetBtn("#00bfff", (dv) => {
+      const _rb = makeResetBtn(STYLE_DEFAULTS.toggleBtnGlowColor, (dv) => {
         _ci.value = dv;
         styleSettings.toggleBtnGlowColor = dv;
         save();
@@ -9905,7 +9773,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
       };
-      const _rb = makeResetBtn(12, (dv) => {
+      const _rb = makeResetBtn(STYLE_DEFAULTS.toggleBtnGlowStrength, (dv) => {
         _si.value = dv;
         styleSettings.toggleBtnGlowStrength = dv;
         _vs.textContent = dv + "px";
@@ -10007,7 +9875,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       save();
       applyTheme(panelTheme);
     };
-    const _rb_textBorderInput = makeResetBtn(false, (dv) => {
+    const _rb_textBorderInput = makeResetBtn(STYLE_DEFAULTS.textBorder, (dv) => {
       textBorderInput.checked = dv;
       styleSettings.textBorder = dv;
       save(); applyTheme(panelTheme);
@@ -10088,7 +9956,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       save();
       applyTheme(panelTheme);
     };
-    const _rb_overlayDarkeningInput = makeResetBtn(false, (dv) => {
+    const _rb_overlayDarkeningInput = makeResetBtn(STYLE_DEFAULTS.enableOverlayDarkening, (dv) => {
       overlayDarkeningInput.checked = dv;
       styleSettings.enableOverlayDarkening = dv;
       _setGroupEnabled(dv, overlayStrengthRow);
@@ -10410,7 +10278,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _debouncedSave();
     };
     const _vs_msOpacity = makeValueSpan(parseFloat(msOpacityInput.value).toFixed(2));
-    const _rb_msOpacity = makeResetBtn(0.85, (dv) => {
+    const _rb_msOpacity = makeResetBtn(STYLE_DEFAULTS.multiSelectOpacity, (dv) => {
       msOpacityInput.value = dv;
       styleSettings.multiSelectOpacity = dv;
       _vs_msOpacity.textContent = String(dv);
@@ -10582,15 +10450,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
   document.body.appendChild(styleConfigWrap);
   shieldFromFileDrop(styleConfigWrap);
-  if (searchConfig.isExpanded) {
+  if (syntaxConfig.isExpanded) {
     requestAnimationFrame(() => _positionStyleFloat(styleConfigWrap));
   }
   }
 
   function buildSearchSection() {
-  panelBody = document.createElement("div");
-  panelBody.id = "panel-body";
-  panelBody.style.cssText = "padding:10px; box-sizing:border-box;";
+  panelBodyEl = document.createElement("div");
+  panelBodyEl.id = "panel-body";
+  panelBodyEl.style.cssText = "padding:10px; box-sizing:border-box;";
   const searchContainer = document.createElement("div");
   searchContainer.id = "site-search-container";
   searchContainer.style.cssText = `
@@ -10695,11 +10563,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     animation: sse-pop .16s cubic-bezier(.34,1.5,.64,1) both;
   `;
 
-  let highlightIndex = -1;
+  let _historyHighlightIdx = -1;
 
   function renderHistoryDropdown(keyword) {
     historyDropdown.innerHTML = "";
-    highlightIndex = -1;
+    _historyHighlightIdx = -1;
     const history = SearchHistoryManager.getHistory();
 
     const header = document.createElement("div");
@@ -10848,7 +10716,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         ? (panelTheme === "dark" ? "#4a4a4a" : "#e8f0fe")
         : "transparent";
     });
-    highlightIndex = idx;
+    _historyHighlightIdx = idx;
   }
 
   function filterSites(keyword) {
@@ -10919,15 +10787,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   panel.__reposDD = _reposDD;
 
   const _debouncedFilterSites = debounce(filterSites, 200);
-  let _historyDebounceTimer = null;
+  let _historyInputDebounceTimer = null;
   searchInput.addEventListener("input", (e) => {
     const kw = e.target.value;
     clearInputBtn.style.display = kw ? "" : "none";
     _debouncedFilterSites(kw);
 
-    clearTimeout(_historyDebounceTimer);
+    clearTimeout(_historyInputDebounceTimer);
     if (kw.trim()) {
-      _historyDebounceTimer = setTimeout(() => {
+      _historyInputDebounceTimer = setTimeout(() => {
         SearchHistoryManager.addToHistory(kw.trim());
       }, 800);
     }
@@ -10956,17 +10824,17 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         positionDropdown();
         historyDropdown.style.display = "block";
       }
-      setHighlight(Math.min(highlightIndex + 1, items.length - 1));
+      setHighlight(Math.min(_historyHighlightIdx + 1, items.length - 1));
       return;
     }
     if (e.key === "ArrowUp") {
       e.preventDefault();
-      setHighlight(Math.max(highlightIndex - 1, 0));
+      setHighlight(Math.max(_historyHighlightIdx - 1, 0));
       return;
     }
     if (e.key === "Enter") {
-      if (isOpen && highlightIndex >= 0 && items[highlightIndex]) {
-        const kw = items[highlightIndex].querySelector("span")?.textContent || "";
+      if (isOpen && _historyHighlightIdx >= 0 && items[_historyHighlightIdx]) {
+        const kw = items[_historyHighlightIdx].querySelector("span")?.textContent || "";
         searchInput.value = kw;
         clearInputBtn.style.display = kw ? "" : "none";
         filterSites(kw);
@@ -10997,7 +10865,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   searchContainer.appendChild(searchRow);
   document.body.appendChild(historyDropdown);
   shieldFromFileDrop(historyDropdown);
-  headerContainer.insertBefore(searchContainer, dpBtn);
+  panelHeaderEl.insertBefore(searchContainer, pinDropdownBtn);
 
   const buttonContainer = document.createElement("div");
   buttonContainer.id = "toolbar-container";
@@ -11025,7 +10893,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       return typeof textOrGetter === "function" ? textOrGetter() : textOrGetter;
     }
     function _show() {
-      if (_isDraggingPanel || _epDrag.active) return;
+      if (_dragPanelActive || _dragEnginePanel.active) return;
       const text = _getText();
       if (!text) return;
       if (!tip) {
@@ -11072,19 +10940,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     padding:3px 6px; border-radius:${_tlbRad};
     cursor:pointer; white-space:nowrap; font-size:13px;
     display:inline-flex; align-items:center; justify-content:center;
-    background:${toolbarCompact ? (panelTheme === "dark" ? "rgba(90,150,255,0.35)" : "rgba(60,120,255,0.15)") : _tlbBg};
+    background:${toolbarCompactMode ? (panelTheme === "dark" ? "rgba(90,150,255,0.35)" : "rgba(60,120,255,0.15)") : _tlbBg};
     color:${_tlbFg}; border:1px solid ${_tlbBd}; opacity:${_tlbOpacity};
   `;
   _applyIconToBtn(compactToggleBtn, ICONS.compactToggle.emoji, ICONS.compactToggle.line, ICONS.compactToggle.fill, ICONS.compactToggle.size);
   _attachHoverTooltip(compactToggleBtn, () =>
-    toolbarCompact
+    toolbarCompactMode
       ? (t.toolbarCompactOff || "Show button labels")
       : (t.toolbarCompactOn  || "Collapse to icons only")
   );
   compactToggleBtn.onclick = () => {
-    toolbarCompact = !toolbarCompact;
-    GM_setValue("toolbarCompact", toolbarCompact);
-    compactToggleBtn.style.background = toolbarCompact
+    toolbarCompactMode = !toolbarCompactMode;
+    GM_setValue(STORAGE_KEYS.TOOLBAR_COMPACT, toolbarCompactMode);
+    compactToggleBtn.style.background = toolbarCompactMode
       ? (panelTheme === "dark" ? "rgba(90,150,255,0.35)" : "rgba(60,120,255,0.15)")
       : _tlbBg;
     _updateAddGroupBtn();
@@ -11093,48 +10961,86 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _updateBlacklistBtn();
   };
 
-  const addGroupBtn = document.createElement("button");
-  addGroupBtn.id = "toolbar-add-group-btn";
-  addGroupBtn.style.cssText = `
-    padding:3px 8px; border-radius:${_tlbRad};
-    cursor:pointer; white-space:nowrap; font-size:11px; flex-shrink:1;
-    background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd}; opacity:${_tlbOpacity};
-    display:inline-flex; align-items:center; justify-content:center; gap:4px;
-  `;
-  const addGroupIconEl  = document.createElement("span");
-  const addGroupLabelEl = document.createElement("span");
-  addGroupLabelEl.style.fontSize = _tlbFontSize;
-  addGroupBtn.appendChild(addGroupIconEl);
-  addGroupBtn.appendChild(addGroupLabelEl);
-  function _updateAddGroupBtn() {
-    _applyIconToBtn(addGroupIconEl, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
-    addGroupLabelEl.textContent = toolbarCompact ? "" : (t.addGroup || "Add Group ➕").replace(/\s*➕\s*$/, "");
-    addGroupBtn.style.gap = toolbarCompact ? "0" : "4px";
-    addGroupBtn.style.padding = toolbarCompact ? "3px 6px" : "3px 8px";
-  }
-  _updateAddGroupBtn();
-  addGroupBtn.style.display = styleSettings.hideAddGroupBtn ? "none" : "inline-flex";
-  _attachHoverTooltip(addGroupBtn, () => toolbarCompact ? (t.addGroup || "Add Group ➕") : "");
-  addGroupBtn.onclick = () => {
-    if (isPromptActive) {
-      warn("[Prompt] Another prompt is active, ignoring add-group request");
-      return;
+  function _buildToolbarActionBtn(opts) {
+    const {
+      id,
+      hasCount = false,
+      nonCompactPadding = "4px 8px",
+      compactGap = "4px",
+      isIconOnly = () => toolbarCompactMode,
+      applyIcon,
+      getLabelText,
+      getCountText,
+      getTooltip,
+      onClick,
+    } = opts;
+
+    const btn = document.createElement("button");
+    if (id) btn.id = id;
+    btn.style.cssText = `
+      padding:${nonCompactPadding}; border-radius:${_tlbRad};
+      cursor:pointer; white-space:nowrap; font-size:11px; flex-shrink:1;
+      background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd}; opacity:${_tlbOpacity};
+      display:inline-flex; align-items:center; justify-content:center; gap:${compactGap};
+    `;
+    const iconEl  = document.createElement("span");
+    const labelEl = document.createElement("span");
+    labelEl.style.fontSize = _tlbFontSize;
+    btn.appendChild(iconEl);
+    let countEl = null;
+    if (hasCount) {
+      countEl = document.createElement("span");
+      countEl.style.fontSize = _tlbFontSize;
+      btn.appendChild(countEl);
     }
-    showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
-      if (!name || !name.trim()) {
-        showToast(t.emptyGroupName || "Group name cannot be empty!");
+    btn.appendChild(labelEl);
+
+    function update() {
+      applyIcon(iconEl);
+      if (countEl) countEl.textContent = getCountText();
+      labelEl.textContent = toolbarCompactMode ? "" : getLabelText();
+      const _iconOnly = isIconOnly();
+      btn.style.gap = _iconOnly ? "0" : compactGap;
+      btn.style.padding = _iconOnly ? "3px 6px" : nonCompactPadding;
+      if (opts.afterUpdate) opts.afterUpdate(btn);
+    }
+    update();
+    _attachHoverTooltip(btn, getTooltip);
+    if (onClick) btn.addEventListener("click", onClick);
+
+    return { btn, iconEl, labelEl, countEl, update };
+  }
+
+  const _addGroupParts = _buildToolbarActionBtn({
+    id: TOOLBAR_BTN_IDS.hideAddGroupBtn.id,
+    nonCompactPadding: "3px 8px",
+    applyIcon: (el) => _applyIconToBtn(el, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size),
+    getLabelText: () => (t.addGroup || "Add Group ➕").replace(/\s*➕\s*$/, ""),
+    getTooltip: () => toolbarCompactMode ? (t.addGroup || "Add Group ➕") : "",
+    onClick: () => {
+      if (_dlgPromptActive) {
+        warn("[Prompt] Another prompt is active, ignoring add-group request");
         return;
       }
-      groups.push({ name: name.trim(), sites: [] });
-      save();
-      renderSites(panel);
-      panel.style.display = "block";
-      showToast(`${t.addGroup || "Group added"} ✅`);
-    });
-  };
+      showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
+        if (!name || !name.trim()) {
+          showToast(t.emptyGroupName || "Group name cannot be empty!");
+          return;
+        }
+        groups.push({ name: name.trim(), sites: [] });
+        save();
+        renderSites(panel);
+        panel.style.display = "block";
+        showToast(`${t.addGroup || "Group added"} ✅`);
+      });
+    },
+  });
+  const addGroupBtn = _addGroupParts.btn;
+  const _updateAddGroupBtn = _addGroupParts.update;
+  addGroupBtn.style.display = styleSettings.hideAddGroupBtn ? "none" : "inline-flex";
 
   const toggleAddressBtn = document.createElement("button");
-  toggleAddressBtn.id = "se-toggle-address-btn";
+  toggleAddressBtn.id = TOOLBAR_BTN_IDS.hideAddressToggleBtn.id;
   toggleAddressBtn.style.cssText = `
     padding:3px 6px; border-radius:${_tlbRad};
     cursor:pointer; white-space:nowrap; font-size:13px;
@@ -11155,12 +11061,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
   _updateAddrBtn();
   _attachHoverTooltip(toggleAddressBtn, () =>
-    showAddresses ? (t.toggleHide || "Hide Addresses") : (t.toggleShow || "Show Addresses")
+    showSiteAddresses ? (t.toggleHide || "Hide Addresses") : (t.toggleShow || "Show Addresses")
   );
 
   toggleAddressBtn.onclick = () => {
-    showAddresses = !showAddresses;
-    GM_setValue("showAddresses", showAddresses);
+    showSiteAddresses = !showSiteAddresses;
+    GM_setValue(STORAGE_KEYS.SHOW_ADDRESSES, showSiteAddresses);
     _updateAddrBtn();
     renderSites(panel);
   };
@@ -11168,16 +11074,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   buttonContainer.appendChild(toggleAddressBtn);
 
   const modGroup = document.createElement("div");
-  modGroup.id = "syntax-mod-group";
+  modGroup.id = TOOLBAR_BTN_IDS.hideModGroup.id;
   modGroup.style.cssText =
     "display:flex; align-items:center; gap:3px; flex-shrink:0; position:relative;";
   modGroup.style.display = styleSettings.hideModGroup ? "none" : "flex";
 
-  let _modNewBadgeEl = null;
+  let _syntaxModNewBadgeEl = null;
   if (isFeatureNew("syntaxModifiers")) {
-    _modNewBadgeEl = document.createElement("span");
-    _modNewBadgeEl.textContent = "NEW";
-    _modNewBadgeEl.style.cssText = `
+    _syntaxModNewBadgeEl = document.createElement("span");
+    _syntaxModNewBadgeEl.textContent = "NEW";
+    _syntaxModNewBadgeEl.style.cssText = `
       position:absolute; top:-7px; left:-4px; z-index:1;
       background:#ff4d4f; color:#fff; font-size:8px; font-weight:700;
       padding:1px 4px; border-radius:6px; line-height:1.3;
@@ -11195,14 +11101,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       `;
       document.head.appendChild(pulseStyle);
     }
-    modGroup.appendChild(_modNewBadgeEl);
+    modGroup.appendChild(_syntaxModNewBadgeEl);
   }
   
   function _dismissModNewBadge() {
-    if (!_modNewBadgeEl) return;
+    if (!_syntaxModNewBadgeEl) return;
     markFeatureSeen("syntaxModifiers");
-    _modNewBadgeEl.remove();
-    _modNewBadgeEl = null;
+    _syntaxModNewBadgeEl.remove();
+    _syntaxModNewBadgeEl = null;
   }
 
   const _modBtnBaseStyle = (active) => `
@@ -11240,19 +11146,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const exactMatchBtn = _buildModToggleBtn(
     { ...ICONS.modExact, __key: "modExact" }, "modExactMatchTip",
-    () => exactMatchEnabled,
-    (v) => { exactMatchEnabled = v; GM_setValue("exactMatchEnabled", v); },
+    () => syntaxExactMatchOn,
+    (v) => { syntaxExactMatchOn = v; GM_setValue(STORAGE_KEYS.EXACT_MATCH_ENABLED, v); },
   );
   modGroup.appendChild(exactMatchBtn);
 
   const intitleBtn = _buildModToggleBtn(
     { ...ICONS.modTitle, __key: "modTitle" }, "modIntitleTip",
-    () => intitleEnabled,
-    (v) => { intitleEnabled = v; GM_setValue("intitleEnabled", v); },
+    () => syntaxIntitleOn,
+    (v) => { syntaxIntitleOn = v; GM_setValue(STORAGE_KEYS.INTITLE_ENABLED, v); },
     () => {
-      if (intitleEnabled && inurlEnabled) {
-        inurlEnabled = false;
-        GM_setValue("inurlEnabled", false);
+      if (syntaxIntitleOn && syntaxInurlOn) {
+        syntaxInurlOn = false;
+        GM_setValue(STORAGE_KEYS.INURL_ENABLED, false);
         inurlBtn.style.cssText = _modBtnBaseStyle(false);
         _applyModBtnIcon(inurlBtn, ICONS.modUrl, false);
       }
@@ -11262,12 +11168,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const inurlBtn = _buildModToggleBtn(
     { ...ICONS.modUrl, __key: "modUrl" }, "modInurlTip",
-    () => inurlEnabled,
-    (v) => { inurlEnabled = v; GM_setValue("inurlEnabled", v); },
+    () => syntaxInurlOn,
+    (v) => { syntaxInurlOn = v; GM_setValue(STORAGE_KEYS.INURL_ENABLED, v); },
     () => {
-      if (inurlEnabled && intitleEnabled) {
-        intitleEnabled = false;
-        GM_setValue("intitleEnabled", false);
+      if (syntaxInurlOn && syntaxIntitleOn) {
+        syntaxIntitleOn = false;
+        GM_setValue(STORAGE_KEYS.INTITLE_ENABLED, false);
         intitleBtn.style.cssText = _modBtnBaseStyle(false);
         _applyModBtnIcon(intitleBtn, ICONS.modTitle, false);
       }
@@ -11278,18 +11184,18 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const FILETYPE_PRESETS = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"];
   const filetypeBtn = document.createElement("button");
   filetypeBtn.dataset.modIconKey = "modFile";
-  filetypeBtn.style.cssText = _modBtnBaseStyle(!!filetypeValue) + "position:relative;";
-  _applyModBtnIcon(filetypeBtn, ICONS.modFile, !!filetypeValue);
+  filetypeBtn.style.cssText = _modBtnBaseStyle(!!syntaxFiletypeVal) + "position:relative;";
+  _applyModBtnIcon(filetypeBtn, ICONS.modFile, !!syntaxFiletypeVal);
   const filetypeDot = document.createElement("span");
   filetypeDot.style.cssText = `
     position:absolute; top:1px; right:1px; width:6px; height:6px; border-radius:50%;
     background:${panelTheme === "dark" ? "#5a96ff" : "#3c78ff"};
-    display:${filetypeValue ? "block" : "none"}; pointer-events:none;
+    display:${syntaxFiletypeVal ? "block" : "none"}; pointer-events:none;
   `;
   filetypeBtn.appendChild(filetypeDot);
   _attachHoverTooltip(filetypeBtn, () =>
-    filetypeValue
-      ? `${t.modFiletype || "File type"}: ${filetypeValue}`
+    syntaxFiletypeVal
+      ? `${t.modFiletype || "File type"}: ${syntaxFiletypeVal}`
       : (t.modFiletypeTip || "")
   );
   modGroup.appendChild(filetypeBtn);
@@ -11339,21 +11245,21 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       return it;
     };
     const noneItem = _mkItem(`∅ ${t.modFiletypeNone || "No filter"}`, () => {
-      filetypeValue = "";
-      GM_setValue("filetypeValue", "");
+      syntaxFiletypeVal = "";
+      GM_setValue(STORAGE_KEYS.FILETYPE_VALUE, "");
       filetypeBtn.style.cssText = _modBtnBaseStyle(false) + "position:relative;";
       filetypeDot.style.display = "none";
       showToast(t.modSettingsSaved || "Modifiers updated");
-    }, !filetypeValue);
+    }, !syntaxFiletypeVal);
     menu.appendChild(noneItem);
     FILETYPE_PRESETS.forEach((ext) => {
       menu.appendChild(_mkItem(ext, () => {
-        filetypeValue = ext;
-        GM_setValue("filetypeValue", ext);
+        syntaxFiletypeVal = ext;
+        GM_setValue(STORAGE_KEYS.FILETYPE_VALUE, ext);
         filetypeBtn.style.cssText = _modBtnBaseStyle(true) + "position:relative;";
         filetypeDot.style.display = "block";
         showToast(t.modSettingsSaved || "Modifiers updated");
-      }, filetypeValue === ext));
+      }, syntaxFiletypeVal === ext));
     });
     menu.appendChild(_mkItem(t.modFiletypeCustom || "Custom…", () => {
       showCustomPrompt(
@@ -11361,8 +11267,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         "", (val) => {
           const clean = (val || "").trim().replace(/^\./, "").toLowerCase();
           if (!clean) return;
-          filetypeValue = clean;
-          GM_setValue("filetypeValue", clean);
+          syntaxFiletypeVal = clean;
+          GM_setValue(STORAGE_KEYS.FILETYPE_VALUE, clean);
           filetypeBtn.style.cssText = _modBtnBaseStyle(true) + "position:relative;";
           filetypeDot.style.display = "block";
           showToast(t.modSettingsSaved || "Modifiers updated");
@@ -11393,7 +11299,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   _attachHoverTooltip(modHelpBadge, () => t.modGroupHelp || "");
 
   modGroup.addEventListener("mouseenter", () => {
-    if (_isDraggingPanel) return;
+    if (_dragPanelActive) return;
     modHelpBadge.style.opacity = "0.55";
     modHelpBadge.style.pointerEvents = "auto";
     modHelpBadge.style.width = _MOD_HELP_BADGE_W;
@@ -11410,56 +11316,34 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   buttonContainer.appendChild(modGroup);
   buttonContainer.appendChild(addGroupBtn);
 
-  const exportBtn = document.createElement("button");
-  exportBtn.id = "toolbar-export-btn";
-  exportBtn.style.alignItems = "center";
-  exportBtn.style.justifyContent = "center";
-  exportBtn.style.gap = "4px";
-  const exportIconEl  = document.createElement("span");
-  const exportLabelEl = document.createElement("span");
-  exportLabelEl.style.fontSize = _tlbFontSize;
-  exportBtn.appendChild(exportIconEl);
-  exportBtn.appendChild(exportLabelEl);
-  function _updateExportBtn() {
-    _applyIconToBtn(exportIconEl, ICONS.exportConfig.emoji, ICONS.exportConfig.line, ICONS.exportConfig.fill, ICONS.exportConfig.size);
-    exportLabelEl.textContent = toolbarCompact ? "" : (t.exportConfig || "Export Config 📤").replace(/\s*📤\s*$/, "");
-    exportBtn.style.gap = toolbarCompact ? "0" : "4px";
-    exportBtn.style.padding = toolbarCompact ? "3px 6px" : "4px 8px";
-  }
-  _updateExportBtn();
-  exportBtn.style.borderRadius = _tlbRad;
-  exportBtn.style.cursor = "pointer";
-  exportBtn.style.whiteSpace = "nowrap";
-  exportBtn.style.flexShrink = "1";
-  exportBtn.style.background = _tlbBg;
-  exportBtn.style.color = _tlbFg;
-  exportBtn.style.border = `1px solid ${_tlbBd}`;
-  exportBtn.style.opacity = _tlbOpacity;
-  exportBtn.style.display = styleSettings.hideExportBtn ? "none" : "inline-flex";
-  _attachHoverTooltip(exportBtn, () => toolbarCompact ? (t.exportConfig || "Export Config 📤") : "");
-  exportBtn.onclick = () => {
+  const _exportParts = _buildToolbarActionBtn({
+    id: TOOLBAR_BTN_IDS.hideExportBtn.id,
+    applyIcon: (el) => _applyIconToBtn(el, ICONS.exportConfig.emoji, ICONS.exportConfig.line, ICONS.exportConfig.fill, ICONS.exportConfig.size),
+    getLabelText: () => (t.exportConfig || "Export Config 📤").replace(/\s*📤\s*$/, ""),
+    getTooltip: () => toolbarCompactMode ? (t.exportConfig || "Export Config 📤") : "",
+    onClick: () => {
     const config = {
       siteGroups: groups,
-      searchConfig: searchConfig,
-      safeSearchEnabled:  safeSearchEnabled,
-      searchRegionEnabled: searchRegionEnabled,
-      safeSearchNoticedOnce:   safeSearchNoticedOnce,
-      searchRegionNoticedOnce: searchRegionNoticedOnce,
-      defaultPanelOpen: defaultPanelOpen,
+      searchConfig: syntaxConfig,
+      safeSearchEnabled:  syntaxSafeSearchOn,
+      searchRegionEnabled: syntaxRegionOn,
+      safeSearchNoticedOnce:   _syntaxSafeSearchNoticed,
+      searchRegionNoticedOnce: _syntaxRegionNoticed,
+      defaultPanelOpen: panelDefaultOpen,
       panelTheme: panelTheme,
       styleSettings: styleSettings,
-      sitePanelLang: lang,
-      se_engines: se_engines,
-      se_panelPinned: se_panelPinned,
-      se_panelPos: se_panelPos,
-      showAddresses: showAddresses,
-      toolbarCompact: toolbarCompact,
-      searchConfigCollapsed: GM_getValue("searchConfigCollapsed", false),
-      toggleButtonTop: GM_getValue("toggleButtonTop", null),
-      toggleButtonLeft: GM_getValue("toggleButtonLeft", null),
-      styleFloatPos: GM_getValue("styleFloatPos", null),
-      manuallyClosed: GM_getValue("manuallyClosed", false),
-      domainBlacklist: domainBlacklist,
+      sitePanelLang: uiLang,
+      se_engines: engineList,
+      se_panelPinned: enginePanelPinned,
+      se_panelPos: enginePanelPos,
+      showAddresses: showSiteAddresses,
+      toolbarCompact: toolbarCompactMode,
+      searchConfigCollapsed: GM_getValue(STORAGE_KEYS.SEARCH_CONFIG_COLLAPSED, false),
+      toggleButtonTop: GM_getValue(STORAGE_KEYS.TOGGLE_BUTTON_TOP, null),
+      toggleButtonLeft: GM_getValue(STORAGE_KEYS.TOGGLE_BUTTON_LEFT, null),
+      styleFloatPos: GM_getValue(STORAGE_KEYS.STYLE_FLOAT_POS, null),
+      manuallyClosed: GM_getValue(STORAGE_KEYS.MANUALLY_CLOSED, false),
+      domainBlacklist: blacklistDomains,
     };
     const jsonString = JSON.stringify(config, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
@@ -11479,37 +11363,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         warn("Failed to copy to clipboard:", err);
         showToast(t.copied || "Copied! 📋");
       });
-  };
+    },
+  });
+  const exportBtn = _exportParts.btn;
+  const _updateExportBtn = _exportParts.update;
+  exportBtn.style.display = styleSettings.hideExportBtn ? "none" : "inline-flex";
   buttonContainer.appendChild(exportBtn);
 
-  const importBtn = document.createElement("button");
-  importBtn.id = "toolbar-import-btn";
-  importBtn.style.alignItems = "center";
-  importBtn.style.justifyContent = "center";
-  importBtn.style.gap = "4px";
-  const importIconEl  = document.createElement("span");
-  const importLabelEl = document.createElement("span");
-  importLabelEl.style.fontSize = _tlbFontSize;
-  importBtn.appendChild(importIconEl);
-  importBtn.appendChild(importLabelEl);
-  function _updateImportBtn() {
-    _applyIconToBtn(importIconEl, ICONS.importConfig.emoji, ICONS.importConfig.line, ICONS.importConfig.fill, ICONS.importConfig.size);
-    importLabelEl.textContent = toolbarCompact ? "" : (t.importConfig || "Import Config 📥").replace(/\s*📥\s*$/, "");
-    importBtn.style.gap = toolbarCompact ? "0" : "4px";
-    importBtn.style.padding = toolbarCompact ? "3px 6px" : "4px 8px";
-  }
-  _updateImportBtn();
-  importBtn.style.borderRadius = _tlbRad;
-  importBtn.style.cursor = "pointer";
-  importBtn.style.whiteSpace = "nowrap";
-  importBtn.style.flexShrink = "1";
-  importBtn.style.background = _tlbBg;
-  importBtn.style.color = _tlbFg;
-  importBtn.style.border = `1px solid ${_tlbBd}`;
-  importBtn.style.opacity = _tlbOpacity;
-  importBtn.style.display = styleSettings.hideImportBtn ? "none" : "inline-flex";
-  _attachHoverTooltip(importBtn, () => toolbarCompact ? (t.importConfig || "Import Config 📥") : "");
-  importBtn.onclick = () => {
+  const _importParts = _buildToolbarActionBtn({
+    id: TOOLBAR_BTN_IDS.hideImportBtn.id,
+    applyIcon: (el) => _applyIconToBtn(el, ICONS.importConfig.emoji, ICONS.importConfig.line, ICONS.importConfig.fill, ICONS.importConfig.size),
+    getLabelText: () => (t.importConfig || "Import Config 📥").replace(/\s*📥\s*$/, ""),
+    getTooltip: () => toolbarCompactMode ? (t.importConfig || "Import Config 📥") : "",
+    onClick: () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = ".json";
@@ -11545,15 +11411,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           if (config.searchConfig && typeof config.searchConfig === "object") {
             const _cfgKeys = ["isExpanded", "resetOnReload", "exclude1", "exclude2"];
             for (const k of _cfgKeys) {
-              if (k in config.searchConfig) searchConfig[k] = config.searchConfig[k];
+              if (k in config.searchConfig) syntaxConfig[k] = config.searchConfig[k];
             }
           }
-          safeSearchEnabled  = config.safeSearchEnabled  ?? safeSearchEnabled;
-          searchRegionEnabled = config.searchRegionEnabled ?? searchRegionEnabled;
-          defaultPanelOpen = config.defaultPanelOpen ?? defaultPanelOpen;
-          GM_setValue("defaultPanelOpen", defaultPanelOpen);
+          syntaxSafeSearchOn  = config.safeSearchEnabled  ?? syntaxSafeSearchOn;
+          syntaxRegionOn = config.searchRegionEnabled ?? syntaxRegionOn;
+          panelDefaultOpen = config.defaultPanelOpen ?? panelDefaultOpen;
+          GM_setValue(STORAGE_KEYS.DEFAULT_PANEL_OPEN, panelDefaultOpen);
           panelTheme = config.panelTheme || panelTheme;
-          GM_setValue("panelTheme", panelTheme);
+          GM_setValue(STORAGE_KEYS.PANEL_THEME, panelTheme);
           if (config.styleSettings && typeof config.styleSettings === "object") {
             const _ssAllowedKeys = [
               "style", "borderRadius", "contrast", "opacity", "fontSize", "isExpanded",
@@ -11582,16 +11448,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               if (k in config.styleSettings) styleSettings[k] = config.styleSettings[k];
             }
           }
-          GM_setValue("styleSettings", styleSettings);
-          lang = config.sitePanelLang || lang;
-          GM_setValue("sitePanelLang", lang);
+          GM_setValue(STORAGE_KEYS.STYLE_SETTINGS, styleSettings);
+          uiLang = config.sitePanelLang || uiLang;
+          GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, uiLang);
           if (config.safeSearchNoticedOnce !== undefined) {
-            safeSearchNoticedOnce = config.safeSearchNoticedOnce;
-            GM_setValue("safeSearchNoticedOnce", safeSearchNoticedOnce);
+            _syntaxSafeSearchNoticed = config.safeSearchNoticedOnce;
+            GM_setValue(STORAGE_KEYS.SAFE_SEARCH_NOTICED_ONCE, _syntaxSafeSearchNoticed);
           }
           if (config.searchRegionNoticedOnce !== undefined) {
-            searchRegionNoticedOnce = config.searchRegionNoticedOnce;
-            GM_setValue("searchRegionNoticedOnce", searchRegionNoticedOnce);
+            _syntaxRegionNoticed = config.searchRegionNoticedOnce;
+            GM_setValue(STORAGE_KEYS.SEARCH_REGION_NOTICED_ONCE, _syntaxRegionNoticed);
           }
           if (Array.isArray(config.se_engines) && config.se_engines.length > 0) {
             const _isValidEngine = (e) => {
@@ -11604,40 +11470,40 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               } catch { return false; }
             };
             const _filtered = config.se_engines.filter(_isValidEngine);
-            if (_filtered.length > 0) se_engines = _filtered;
+            if (_filtered.length > 0) engineList = _filtered;
           }
-          if (config.se_panelPinned !== undefined) se_panelPinned = config.se_panelPinned;
+          if (config.se_panelPinned !== undefined) enginePanelPinned = config.se_panelPinned;
           if (config.se_panelPos !== null && typeof config.se_panelPos === "object") {
             const { left: _l, top: _t } = config.se_panelPos;
             if (typeof _l === "number" && typeof _t === "number") {
-              se_panelPos = { left: _l, top: _t };
+              enginePanelPos = { left: _l, top: _t };
             }
           }
           if (config.showAddresses !== undefined) {
-            showAddresses = config.showAddresses;
-            GM_setValue("showAddresses", showAddresses);
+            showSiteAddresses = config.showAddresses;
+            GM_setValue(STORAGE_KEYS.SHOW_ADDRESSES, showSiteAddresses);
           }
           if (config.toolbarCompact !== undefined) {
-            toolbarCompact = config.toolbarCompact;
-            GM_setValue("toolbarCompact", toolbarCompact);
+            toolbarCompactMode = config.toolbarCompact;
+            GM_setValue(STORAGE_KEYS.TOOLBAR_COMPACT, toolbarCompactMode);
           }
           if (config.searchConfigCollapsed !== undefined)
-            GM_setValue("searchConfigCollapsed", config.searchConfigCollapsed);
+            GM_setValue(STORAGE_KEYS.SEARCH_CONFIG_COLLAPSED, config.searchConfigCollapsed);
           if (config.toggleButtonTop != null)
-            GM_setValue("toggleButtonTop", config.toggleButtonTop);
+            GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_TOP, config.toggleButtonTop);
           if (config.toggleButtonLeft != null)
-            GM_setValue("toggleButtonLeft", config.toggleButtonLeft);
+            GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_LEFT, config.toggleButtonLeft);
           if (config.styleFloatPos != null)
-            GM_setValue("styleFloatPos", config.styleFloatPos);
+            GM_setValue(STORAGE_KEYS.STYLE_FLOAT_POS, config.styleFloatPos);
           if (config.manuallyClosed !== undefined)
-            GM_setValue("manuallyClosed", config.manuallyClosed);
+            GM_setValue(STORAGE_KEYS.MANUALLY_CLOSED, config.manuallyClosed);
           if (Array.isArray(config.domainBlacklist)) {
-            domainBlacklist = [...new Set(
+            blacklistDomains = [...new Set(
               config.domainBlacklist
                 .map(d => (typeof d === "string" ? parseSmartDomain(d.trim()) : null))
                 .filter(Boolean)
             )];
-            GM_setValue("domainBlacklist", domainBlacklist);
+            GM_setValue(STORAGE_KEYS.DOMAIN_BLACKLIST, blacklistDomains);
           }
           se_save();
           save();
@@ -11656,7 +11522,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     document.body.appendChild(fileInput);
     fileInput.click();
     setTimeout(() => fileInput.remove(), 30000);
-  };
+    },
+  });
+  const importBtn = _importParts.btn;
+  const _updateImportBtn = _importParts.update;
+  importBtn.style.display = styleSettings.hideImportBtn ? "none" : "inline-flex";
   buttonContainer.appendChild(importBtn);
 
   const syntaxHelpBtn = document.createElement("button");
@@ -11675,55 +11545,32 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   syntaxHelpBtn.onclick = () => showSyntaxPanel();
   syntaxHelpBtn.style.display = styleSettings.hideSyntaxBtn ? "none" : "inline-flex";
 
-  const blacklistBtnEl = document.createElement("button");
-  blacklistBtnEl.id = "blacklist-btn";
-  blacklistBtnEl.style.padding = "4px 8px";
-  blacklistBtnEl.style.borderRadius = _tlbRad;
-  blacklistBtnEl.style.cursor = "pointer";
-  blacklistBtnEl.style.whiteSpace = "nowrap";
-  blacklistBtnEl.style.flexShrink = "1";
-  blacklistBtnEl.style.background = _tlbBg;
-  blacklistBtnEl.style.color = _tlbFg;
-  blacklistBtnEl.style.border = `1px solid ${_tlbBd}`;
-  blacklistBtnEl.style.opacity = _tlbOpacity;
-  blacklistBtnEl.style.display = "inline-flex";
-  blacklistBtnEl.style.alignItems = "center";
-  blacklistBtnEl.style.justifyContent = "center";
-  blacklistBtnEl.style.gap = "3px";
-  const blacklistIconEl  = document.createElement("span");
-  const blacklistCountEl = document.createElement("span");
-  const blacklistLabelEl = document.createElement("span");
-  blacklistCountEl.style.fontSize = _tlbFontSize;
-  blacklistLabelEl.style.fontSize = _tlbFontSize;
-  blacklistBtnEl.appendChild(blacklistIconEl);
-  blacklistBtnEl.appendChild(blacklistCountEl);
-  blacklistBtnEl.appendChild(blacklistLabelEl);
-  const _blCount = Array.isArray(domainBlacklist) ? domainBlacklist.filter(d => d.trim()).length : 0;
-  function _updateBlacklistBtn() {
-    _applyIconToBtn(blacklistIconEl, ICONS.blacklist.emoji, ICONS.blacklist.line, ICONS.blacklist.fill, ICONS.blacklist.size);
-    blacklistCountEl.textContent = _blCount > 0 ? String(_blCount) : "";
-    if (toolbarCompact) {
-      blacklistLabelEl.textContent = "";
-      blacklistBtnEl.title = "";
-    } else {
-      blacklistLabelEl.textContent = (t.blacklistBtn || "🚫 Blacklist").replace(/^\s*🚫\s*/, "");
-      blacklistBtnEl.title = _blCount > 0
-        ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
-        : (t.blacklistTitle || "Domain Blacklist");
-    }
-    const _isIconOnly = toolbarCompact && _blCount === 0;
-    blacklistBtnEl.style.gap = _isIconOnly ? "0" : "3px";
-    blacklistBtnEl.style.padding = _isIconOnly ? "3px 6px" : "4px 8px";
-  }
-  _updateBlacklistBtn();
-  _attachHoverTooltip(blacklistBtnEl, () =>
-    toolbarCompact
-      ? (_blCount > 0
-          ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
-          : (t.blacklistTitle || "Domain Blacklist"))
-      : ""
-  );
-  blacklistBtnEl.onclick = () => showBlacklistDialog();
+  const _blCount = Array.isArray(blacklistDomains) ? blacklistDomains.filter(d => d.trim()).length : 0;
+  const _blacklistParts = _buildToolbarActionBtn({
+    id: TOOLBAR_BTN_IDS.hideBlacklistBtn.id,
+    hasCount: true,
+    compactGap: "3px",
+    isIconOnly: () => toolbarCompactMode && _blCount === 0,
+    applyIcon: (el) => _applyIconToBtn(el, ICONS.blacklist.emoji, ICONS.blacklist.line, ICONS.blacklist.fill, ICONS.blacklist.size),
+    getCountText: () => _blCount > 0 ? String(_blCount) : "",
+    getLabelText: () => (t.blacklistBtn || "🚫 Blacklist").replace(/^\s*🚫\s*/, ""),
+    getTooltip: () =>
+      toolbarCompactMode
+        ? (_blCount > 0
+            ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
+            : (t.blacklistTitle || "Domain Blacklist"))
+        : "",
+    afterUpdate: (btn) => {
+      btn.title = toolbarCompactMode
+        ? ""
+        : (_blCount > 0
+            ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
+            : (t.blacklistTitle || "Domain Blacklist"));
+    },
+    onClick: () => showBlacklistDialog(),
+  });
+  const blacklistBtnEl = _blacklistParts.btn;
+  const _updateBlacklistBtn = _blacklistParts.update;
   blacklistBtnEl.style.display = styleSettings.hideBlacklistBtn ? "none" : "inline-flex";
   buttonContainer.appendChild(blacklistBtnEl);
   buttonContainer.appendChild(syntaxHelpBtn);
@@ -11734,8 +11581,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   function buildPanelControls() {
   const groupSlot = document.createElement("div");
   groupSlot.id = "panel-group-slot";
-  panel.appendChild(panelBody);
-  panelBody.appendChild(groupSlot);
+  panel.appendChild(panelBodyEl);
+  panelBodyEl.appendChild(groupSlot);
 
   const searchConfigWrap = document.createElement("div");
   searchConfigWrap.id = "search-config-wrap";
@@ -11762,7 +11609,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const _tsEngine = getTimeFilterEngine();
 
-  let _initTimeVal = "";
+  let _timeFilterInitVal = "";
   if (_tsEngine) {
     try {
       const _u = new URL(location.href);
@@ -11775,13 +11622,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
             [1440,"d"],[2880,"d2"],[4320,"d3"],[10080,"w"],[30240,"w3"],
             [43200,"m"],[129600,"m3"],[259200,"m6"],[525960,"y"]];
           const _found = _biaMap.find(([n]) => n >= _mins);
-          _initTimeVal = _found ? _found[1] : "y";
+          _timeFilterInitVal = _found ? _found[1] : "y";
         }
       } else if (_tsEngine === "bing") {
         const _bingFiltersRev = { 'ex1:"ez1"': "d", 'ex1:"ez2"': "w", 'ex1:"ez3"': "m" };
         const _rawFilters = _u.searchParams.get("filters") || "";
         if (_bingFiltersRev[_rawFilters]) {
-          _initTimeVal = _bingFiltersRev[_rawFilters];
+          _timeFilterInitVal = _bingFiltersRev[_rawFilters];
         } else if (/ex1:"ez5_(\d+)_(\d+)"/.test(_rawFilters)) {
           const [, s, e] = _rawFilters.match(/ex1:"ez5_(\d+)_(\d+)"/);
           const _span = parseInt(e) - parseInt(s);
@@ -11789,44 +11636,44 @@ KR │ 패널 고정 (won't disappear after navigation)`;
             [365,"y"],[730,"y2"],[1095,"y3"],[1461,"y4"],[1826,"y5"],[2191,"y6"],
             [2556,"y7"],[2922,"y8"],[3287,"y9"]];
           const _found = _rangeMap.find(([n]) => _span <= n);
-          _initTimeVal = _found ? _found[1] : "y9";
+          _timeFilterInitVal = _found ? _found[1] : "y9";
         } else {
-          _initTimeVal = "";
+          _timeFilterInitVal = "";
         }
       } else if (_tsEngine === "yahoo") {
         const _ageRev = { "1d":"d","1w":"w","1m":"m","1y":"y" };
-        _initTimeVal = _ageRev[_u.searchParams.get("age")||""] || "";
+        _timeFilterInitVal = _ageRev[_u.searchParams.get("age")||""] || "";
       } else if (_tsEngine === "duckduckgo") {
         const _df = _u.searchParams.get("df") || "";
         const _ddgPreset = { d:"d", w:"w", m:"m", y:"y" };
         if (_ddgPreset[_df]) {
-          _initTimeVal = _ddgPreset[_df];
+          _timeFilterInitVal = _ddgPreset[_df];
         } else if (/^\d{4}-\d{2}-\d{2}\.\.\d{4}-\d{2}-\d{2}$/.test(_df)) {
           const _span = Math.round((Date.now() - new Date(_df.split("..")[0]).getTime()) / 86400000);
           const _found = _DATE_SPAN_MAP.find(([n]) => _span <= n);
-          _initTimeVal = _found ? _found[1] : "y9";
+          _timeFilterInitVal = _found ? _found[1] : "y9";
         }
       } else if (_tsEngine === "brave") {
         const _tf = _u.searchParams.get("tf") || "";
         const _brPreset = { pd:"d", pw:"w", pm:"m", py:"y" };
         if (_brPreset[_tf]) {
-          _initTimeVal = _brPreset[_tf];
+          _timeFilterInitVal = _brPreset[_tf];
         } else if (/^\d{4}-\d{2}-\d{2}to\d{4}-\d{2}-\d{2}$/.test(_tf)) {
           const _span = Math.round((Date.now() - new Date(_tf.split("to")[0]).getTime()) / 86400000);
           const _found = _DATE_SPAN_MAP.find(([n]) => _span <= n);
-          _initTimeVal = _found ? _found[1] : "y9";
+          _timeFilterInitVal = _found ? _found[1] : "y9";
         }
       } else if (_tsEngine === "yandex") {
         const _wRev = { "1":"d", "2":"w", "3":"m", "4":"y" };
-        _initTimeVal = _wRev[_u.searchParams.get("within")||""] || "";
+        _timeFilterInitVal = _wRev[_u.searchParams.get("within")||""] || "";
       } else if (_tsEngine === "naver") {
         const _nso = _u.searchParams.get("nso") || "";
         const _pMatch = _nso.match(/p:([^,]+)/);
         const _nsoRev = { "1d":"d","1w":"w","1m":"m","3m":"m3","6m":"m6","1y":"y" };
-        _initTimeVal = _pMatch ? (_nsoRev[_pMatch[1]] || "") : "";
+        _timeFilterInitVal = _pMatch ? (_nsoRev[_pMatch[1]] || "") : "";
       } else {
         const _m = (_u.searchParams.get("tbs")||"").match(/qdr:([a-z0-9]+)/);
-        _initTimeVal = _m ? _m[1] : "";
+        _timeFilterInitVal = _m ? _m[1] : "";
       }
     } catch(_) {}
   }
@@ -11928,7 +11775,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     opt.className = "icon-btn seg-time-btn";
     opt.dataset.value = value;
     opt.textContent = label;
-    const _isActive = value === _initTimeVal;
+    const _isActive = value === _timeFilterInitVal;
     opt.style.cssText = `
       flex:1; border:none; border-right:1px solid ${_segBorder}; border-radius:0;
       background:${_isActive ? _segActiveBg : "transparent"};
@@ -11954,7 +11801,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   if (_lastSeg) _lastSeg.style.borderRight = `1px solid ${_segBorder}`;
 
   {
-    const _yearExtOptions = TIME_OPTIONS.filter(o => /^y[2-9]$/.test(o.value));
+    const _yearExtOptions = timeFilterOptions.filter(o => /^y[2-9]$/.test(o.value));
     if (_yearExtOptions.length > 0) {
       const _yearSel = document.createElement("select");
       _yearSel.title = "2–9 years";
@@ -11979,7 +11826,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         opt.textContent = label;
         _yearSel.appendChild(opt);
       });
-      _yearSel.value = /^y[2-9]$/.test(_initTimeVal) ? _initTimeVal : "";
+      _yearSel.value = /^y[2-9]$/.test(_timeFilterInitVal) ? _timeFilterInitVal : "";
       _yearSel.addEventListener("change", (e) => {
         if (!_tsEngine) return;
         const val = e.target.value;
@@ -12006,8 +11853,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _customBtn.title = t.timeCustomLabel || "Custom date range";
     _customBtn.style.cssText = `
       flex-shrink:0; border:1px solid ${_segBorder}; border-radius:999px;
-      background:${_initTimeVal === "__custom__" ? _segActiveBg : _segBg};
-      color:inherit; font-size:11px; font-weight:${_initTimeVal === "__custom__" ? "600" : "400"};
+      background:${_timeFilterInitVal === "__custom__" ? _segActiveBg : _segBg};
+      color:inherit; font-size:11px; font-weight:${_timeFilterInitVal === "__custom__" ? "600" : "400"};
       padding:3px 7px; cursor:${_tsEngine ? "pointer" : "not-allowed"};
       transition:background 0.12s;
       pointer-events:${_tsEngine ? "auto" : "none"};
@@ -12039,7 +11886,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const collapsibleContent = document.createElement("div");
   collapsibleContent.id = "search-config-content";
-  collapsibleContent.style.display = searchConfig.isExpanded
+  collapsibleContent.style.display = syntaxConfig.isExpanded
     ? "grid"
     : "none";
   collapsibleContent.style.gridTemplateColumns =
@@ -12081,14 +11928,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.customButtonBg || (panelTheme === "dark" ? "#4a4a4a" : "#f5f5f5");
   };
   expandCollapseBtn.onclick = () => {
-    searchConfig.isExpanded = !searchConfig.isExpanded;
+    syntaxConfig.isExpanded = !syntaxConfig.isExpanded;
     save();
-    expandCollapseBtn.textContent = searchConfig.isExpanded
+    expandCollapseBtn.textContent = syntaxConfig.isExpanded
       ? t.collapse
       : t.expand;
     const styleFloat = document.getElementById("style-config-wrap");
     if (styleFloat) {
-      if (searchConfig.isExpanded) {
+      if (syntaxConfig.isExpanded) {
         _fadeShow(styleFloat, "block");
         _positionStyleFloat(styleFloat);
       } else {
@@ -12145,14 +11992,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.panelWidth     = parseInt(panel.style.width)     || getEffectivePanelWidth();
       styleSettings.panelMaxHeight = parseInt(panel.style.maxHeight) || 87;
       styleSettings.panelUserSized = true;
-      GM_setValue("styleSettings", styleSettings);
+      GM_setValue(STORAGE_KEYS.STYLE_SETTINGS, styleSettings);
       window.removeEventListener("mousemove", _rOnMove, true);
       window.removeEventListener("mouseup",   _rOnUp,   true);
-      setTimeout(() => { _isDraggingPanel = false; }, 50);
+      setTimeout(() => { _dragPanelActive = false; }, 50);
     }
     grip.addEventListener("mousedown", (e) => {
       _rDragging = true;
-      _isDraggingPanel = true;
+      _dragPanelActive = true;
       _rStartX = e.clientX; _rStartY = e.clientY;
       _rStartW = panel.offsetWidth; _rStartH = panel.offsetHeight;
       _rNextW = _rStartW; _rNextH = _rStartH;
@@ -12165,9 +12012,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   function rebuildPanel() {
     closeDpDropdown();
-    document.removeEventListener("mousemove", _sfOnMove);
-    document.removeEventListener("mouseup",   _sfOnUp);
-    _sfDragging = false;
+    document.removeEventListener("mousemove", _dragStyleFloatOnMove);
+    document.removeEventListener("mouseup",   _dragStyleFloatOnUp);
+    _dragStyleFloatActive = false;
 
     const wasVisible = (() => {
       const p = document.getElementById("site-group-panel");
@@ -12227,26 +12074,26 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         : (t.compactOn  || "Compact Mode");
     }
 
-    GM_setValue("compactMode", on);
+    GM_setValue(STORAGE_KEYS.COMPACT_MODE, on);
   }
 
   function _buildCompactPanel() {
-    if (__cpDragMoveHandler) {
-      document.removeEventListener("mousemove", __cpDragMoveHandler);
-      __cpDragMoveHandler = null;
+    if (_hdlCompactDragMove) {
+      document.removeEventListener("mousemove", _hdlCompactDragMove);
+      _hdlCompactDragMove = null;
     }
-    if (__cpDragUpHandler) {
-      document.removeEventListener("mouseup", __cpDragUpHandler);
-      __cpDragUpHandler = null;
+    if (_hdlCompactDragUp) {
+      document.removeEventListener("mouseup", _hdlCompactDragUp);
+      _hdlCompactDragUp = null;
     }
     const _old = document.getElementById("set-compact-panel");
     if (_old) _old.remove();
 
     const _isDark = (styleSettings.theme || "dark") !== "light";
-    const _initTheme = GM_getValue("compactTheme", _isDark ? "dark" : "light");
+    const _initTheme = GM_getValue(STORAGE_KEYS.COMPACT_THEME, _isDark ? "dark" : "light");
 
-    const _savedLeft = GM_getValue("compactPanelLeft", null);
-    const _savedTop  = GM_getValue("compactPanelTop",  null);
+    const _savedLeft = GM_getValue(STORAGE_KEYS.COMPACT_PANEL_LEFT, null);
+    const _savedTop  = GM_getValue(STORAGE_KEYS.COMPACT_PANEL_TOP,  null);
 
     const _cp = document.createElement("div");
     _cp.id = "set-compact-panel";
@@ -12276,14 +12123,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const s = document.createElement("span"); _lines.appendChild(s);
     }
 
-    let _curTheme = GM_getValue("compactTheme", _isDark ? "dark" : "light");
+    let _curTheme = GM_getValue(STORAGE_KEYS.COMPACT_THEME, _isDark ? "dark" : "light");
     const _themeBtn = document.createElement("button");    _themeBtn.className = "scp-theme-btn";
     _themeBtn.textContent = _curTheme === "dark" ? "🌙" : "☀️";
     _themeBtn.title = "Toggle theme";
     _themeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       _curTheme = _curTheme === "dark" ? "light" : "dark";
-      GM_setValue("compactTheme", _curTheme);
+      GM_setValue(STORAGE_KEYS.COMPACT_THEME, _curTheme);
       _cp.dataset.cpTheme = _curTheme;
       _themeBtn.textContent = _curTheme === "dark" ? "🌙" : "☀️";
     });
@@ -12306,7 +12153,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _sel.className = "scp-group-select";
     _sel.title = "Switch group";
     const _savedGrpIdx = Math.min(
-      GM_getValue("compactGroupIdx", 0),
+      GM_getValue(STORAGE_KEYS.COMPACT_GROUP_IDX, 0),
       Math.max(0, groups.length - 1)
     );
     groups.forEach((g, i) => {
@@ -12379,7 +12226,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     _sel.addEventListener("change", () => {
       const _idx = parseInt(_sel.value, 10);
-      GM_setValue("compactGroupIdx", _idx);
+      GM_setValue(STORAGE_KEYS.COMPACT_GROUP_IDX, _idx);
       _renderSites(_idx);
     });
 
@@ -12390,11 +12237,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const _next = Math.max(0, Math.min(_cur + (e.deltaY > 0 ? 1 : -1), groups.length - 1));
       if (_next === _cur) return;
       _sel.value = _next;
-      GM_setValue("compactGroupIdx", _next);
+      GM_setValue(STORAGE_KEYS.COMPACT_GROUP_IDX, _next);
       _renderSites(_next);
     }, { passive: false });
 
-    const _pinned = (typeof se_engines !== "undefined" ? se_engines : [])
+    const _pinned = (typeof engineList !== "undefined" ? engineList : [])
       .slice(0, SE_PINNED_COUNT);
 
     if (_pinned.length > 0) {
@@ -12466,8 +12313,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _cp.style.left  = _cl + "px";
         _cp.style.top   = _ct + "px";
         _cp.style.right = "auto";
-        GM_setValue("compactPanelLeft", _cp.style.left);
-        GM_setValue("compactPanelTop",  _cp.style.top);
+        GM_setValue(STORAGE_KEYS.COMPACT_PANEL_LEFT, _cp.style.left);
+        GM_setValue(STORAGE_KEYS.COMPACT_PANEL_TOP,  _cp.style.top);
       }
     });
     let _dx = 0, _dy = 0, _dragging = false;
@@ -12482,7 +12329,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       e.preventDefault();
     });
 
-    __cpDragMoveHandler = (e) => {
+    _hdlCompactDragMove = (e) => {
       if (!_dragging) return;
       const nl = Math.max(0, Math.min(e.clientX - _dx, window.innerWidth  - _cp.offsetWidth));
       const nt = Math.max(0, Math.min(e.clientY - _dy, window.innerHeight - _cp.offsetHeight));
@@ -12490,29 +12337,29 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _cp.style.top   = nt + "px";
       _cp.style.right = "auto";
     };
-    document.addEventListener("mousemove", __cpDragMoveHandler);
+    document.addEventListener("mousemove", _hdlCompactDragMove);
 
-    __cpDragUpHandler = () => {
+    _hdlCompactDragUp = () => {
       if (!_dragging) return;
       _dragging = false;
       _handle.style.cursor = "grab";
-      GM_setValue("compactPanelLeft", _cp.style.left);
-      GM_setValue("compactPanelTop",  _cp.style.top);
+      GM_setValue(STORAGE_KEYS.COMPACT_PANEL_LEFT, _cp.style.left);
+      GM_setValue(STORAGE_KEYS.COMPACT_PANEL_TOP,  _cp.style.top);
     };
-    document.addEventListener("mouseup", __cpDragUpHandler);
+    document.addEventListener("mouseup", _hdlCompactDragUp);
   }
 
   function _buildCompactBtn() {
     const _old = document.getElementById("set-compact-btn");
     if (_old) _old.remove();
 
-    if (__compactBtnObserver) {
-      __compactBtnObserver.disconnect();
-      __compactBtnObserver = null;
+    if (_obsCompactBtn) {
+      _obsCompactBtn.disconnect();
+      _obsCompactBtn = null;
     }
-    if (__compactMouseupHandler) {
-      document.removeEventListener("mouseup", __compactMouseupHandler);
-      __compactMouseupHandler = null;
+    if (_hdlCompactMouseup) {
+      document.removeEventListener("mouseup", _hdlCompactMouseup);
+      _hdlCompactMouseup = null;
     }
 
     const _tb = document.getElementById("site-toggle-simple");
@@ -12522,7 +12369,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const _btn = document.createElement("button");
     _btn.id = "set-compact-btn";
     _btn.dataset.theme = _isDark ? "dark" : "light";
-    const _isCompact = GM_getValue("compactMode", false);
+    const _isCompact = GM_getValue(STORAGE_KEYS.COMPACT_MODE, false);
     _btn.textContent   = _isCompact ? "⊟" : "⊞";
     _btn.dataset.label = _isCompact
       ? (t.compactOff || "Exit Compact")
@@ -12541,8 +12388,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
     requestAnimationFrame(_posBtn);
 
-    __compactBtnObserver = new MutationObserver(_posBtn);
-    __compactBtnObserver.observe(_tb, { attributes: true, attributeFilter: ["style"] });
+    _obsCompactBtn = new MutationObserver(_posBtn);
+    _obsCompactBtn.observe(_tb, { attributes: true, attributeFilter: ["style"] });
 
     let _hoverTimer = null;
     function _showBtn() {
@@ -12558,10 +12405,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _tbIsDragging = true;
       clearTimeout(_hoverTimer);
     });
-    __compactMouseupHandler = () => {
+    _hdlCompactMouseup = () => {
       setTimeout(() => { _tbIsDragging = false; }, 50);
     };
-    document.addEventListener("mouseup", __compactMouseupHandler, { passive: true });
+    document.addEventListener("mouseup", _hdlCompactMouseup, { passive: true });
 
     _tb.addEventListener("mouseenter", () => {
       if (_tbIsDragging) return;
@@ -12577,13 +12424,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     _btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const _on = !GM_getValue("compactMode", false);
+      const _on = !GM_getValue(STORAGE_KEYS.COMPACT_MODE, false);
       _applyCompactMode(_on);
     });
 
-    const _needHint = !GM_getValue("compactHintShown", false);
+    const _needHint = !GM_getValue(STORAGE_KEYS.COMPACT_HINT_SHOWN, false);
     if (_needHint) {
-      GM_setValue("compactHintShown", true);
+      GM_setValue(STORAGE_KEYS.COMPACT_HINT_SHOWN, true);
       setTimeout(() => {
         const _panel = document.getElementById("site-group-panel");
         const _wasVisible = _panel && _panel.style.display !== "none";
@@ -12607,26 +12454,26 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   function createPanel() {
     buildMainPanelShell();
 
-    headerContainer = buildHeader();
+    panelHeaderEl = buildHeader();
     const { searchContainer, buttonContainer, searchInput } = buildSearchSection();
 
     const { groupSlot, searchConfigWrap, searchConfigHeaderRow } = buildPanelControls();
 
-    if (__styleFloatResizeHandler) {
-      window.removeEventListener("resize", __styleFloatResizeHandler);
+    if (_hdlStyleFloatResize) {
+      window.removeEventListener("resize", _hdlStyleFloatResize);
     }
-    __styleFloatResizeHandler = () => {
+    _hdlStyleFloatResize = () => {
       const el = document.getElementById("style-config-wrap");
       if (el && el.style.display !== "none") {
         _positionStyleFloat(el);
       }
     };
-    window.addEventListener("resize", __styleFloatResizeHandler);
+    window.addEventListener("resize", _hdlStyleFloatResize);
 
     buildStyleConfigPanel(searchConfigHeaderRow);
 
-    panelBody.insertBefore(searchConfigWrap, groupSlot);
-    panelBody.insertBefore(buttonContainer,  groupSlot);
+    panelBodyEl.insertBefore(searchConfigWrap, groupSlot);
+    panelBodyEl.insertBefore(buttonContainer,  groupSlot);
 
     let _grpDragRAF = 0;
     panel.addEventListener("dragover", (e) => {
@@ -12701,7 +12548,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     setTimeout(triggerKwFlash, 600);
     setTimeout(_injectBlockBtns, 700);
 
-    if (GM_getValue("compactMode", false)) {
+    if (GM_getValue(STORAGE_KEYS.COMPACT_MODE, false)) {
       _applyCompactMode(true);
     }
   }
@@ -12727,24 +12574,24 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   function _buildModifiedKeyword(keyword) {
     if (!keyword || !keyword.trim()) {
-      return { text: keyword || "", filetype: filetypeValue || "" };
+      return { text: keyword || "", filetype: syntaxFiletypeVal || "" };
     }
     let text = keyword;
-    if (intitleEnabled) {
+    if (syntaxIntitleOn) {
       text = `intitle:${text}`;
-    } else if (inurlEnabled) {
+    } else if (syntaxInurlOn) {
       text = `inurl:${text}`;
     }
-    if (exactMatchEnabled) {
-      if (intitleEnabled) {
+    if (syntaxExactMatchOn) {
+      if (syntaxIntitleOn) {
         text = `intitle:"${keyword}"`;
-      } else if (inurlEnabled) {
+      } else if (syntaxInurlOn) {
         text = `inurl:"${keyword}"`;
       } else {
         text = `"${keyword}"`;
       }
     }
-    return { text, filetype: filetypeValue || "" };
+    return { text, filetype: syntaxFiletypeVal || "" };
   }
 
   function applySiteFilter(keyword) {
@@ -12818,16 +12665,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         .replace(/(?:^|\s)-?site:[^\s]+/gi, "")
         .trim();
 
-      if (filetypeValue) {
+      if (syntaxFiletypeVal) {
         newQuery = newQuery.replace(/(?:^|\s)filetype:[^\s]+/gi, "").trim();
       }
-      if (intitleEnabled) {
+      if (syntaxIntitleOn) {
         newQuery = newQuery.replace(/(?:^|\s)intitle:/gi, " ").trim();
       }
-      if (inurlEnabled) {
+      if (syntaxInurlOn) {
         newQuery = newQuery.replace(/(?:^|\s)inurl:/gi, " ").trim();
       }
-      if (exactMatchEnabled && newQuery.startsWith('"') && newQuery.endsWith('"')) {
+      if (syntaxExactMatchOn && newQuery.startsWith('"') && newQuery.endsWith('"')) {
         newQuery = newQuery.slice(1, -1).trim();
       }
 
@@ -12836,8 +12683,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       if (filetype) newQuery = `${newQuery} filetype:${filetype}`.trim();
 
       const isBaidu = window.location.hostname.includes("baidu.com");
-      if (!isBaidu && Array.isArray(domainBlacklist) && domainBlacklist.length > 0) {
-        const blackStr = domainBlacklist
+      if (!isBaidu && Array.isArray(blacklistDomains) && blacklistDomains.length > 0) {
+        const blackStr = blacklistDomains
           .map(d => d.trim())
           .filter(d => d.length > 0)
           .map(d => `-site:${d}`)
@@ -12855,10 +12702,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function showBlacklistDialog() {
-    if (__blacklistDialogOpen) return;
-    __blacklistDialogOpen = true;
+    if (_dlgBlacklistOpen) return;
+    _dlgBlacklistOpen = true;
 
-    const t_bl = LANGUAGES[lang] || LANGUAGES["en"];
+    const t_bl = LANGUAGES[uiLang] || LANGUAGES["en"];
     const isDark = panelTheme === "dark";
     const bgColor = styleSettings.customBackgroundColor || (isDark ? "#2a2a2a" : "#fff");
     const fgColor = styleSettings.textColor || (isDark ? "#eee" : "#111");
@@ -12908,7 +12755,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     box.appendChild(hint);
 
     const textarea = document.createElement("textarea");
-    textarea.value = Array.isArray(domainBlacklist) ? domainBlacklist.join("\n") : "";
+    textarea.value = Array.isArray(blacklistDomains) ? blacklistDomains.join("\n") : "";
     textarea.placeholder = "pinterest.com\nquora.com\nmedium.com";
     Object.assign(textarea.style, {
       width: "100%", minHeight: "140px", boxSizing: "border-box",
@@ -12922,7 +12769,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     const countRow = document.createElement("div");
     countRow.style.cssText = `font-size:${fSize - 1}px; color:${isDark ? "#aaa" : "#666"};`;
-    const currentCount = Array.isArray(domainBlacklist) ? domainBlacklist.filter(d => d.trim()).length : 0;
+    const currentCount = Array.isArray(blacklistDomains) ? blacklistDomains.filter(d => d.trim()).length : 0;
     countRow.textContent = (t_bl.blacklistCount ? t_bl.blacklistCount(currentCount) : `Blocking ${currentCount} domain(s)`);
     textarea.addEventListener("input", () => {
       const lines = textarea.value.split("\n").filter(l => l.trim());
@@ -12937,7 +12784,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const weakenChk = document.createElement("input");
     weakenChk.type    = "checkbox";
     weakenChk.id      = "bl-weaken-chk";
-    weakenChk.checked = blacklistWeakenMode;
+    weakenChk.checked = blacklistWeakenOn;
     weakenChk.style.cssText = "cursor:pointer; flex-shrink:0; width:14px; height:14px;";
     const weakenLbl = document.createElement("label");
     weakenLbl.htmlFor     = "bl-weaken-chk";
@@ -12970,13 +12817,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     box.appendChild(btnRow);
 
     function closeDialog() {
-      __blacklistDialogOpen = false;
+      _dlgBlacklistOpen = false;
       document.removeEventListener("keydown", escHandler);
       overlay.remove();
     }
     function safeClose() {
       const hasContent = textarea.value.trim().length > 0;
-      const isModified = textarea.value.trim() !== (Array.isArray(domainBlacklist) ? domainBlacklist.join("\n") : "");
+      const isModified = textarea.value.trim() !== (Array.isArray(blacklistDomains) ? blacklistDomains.join("\n") : "");
       if (hasContent && isModified) {
         cancelBtn.textContent = (t_bl.confirm || "Confirm") + "?";
         cancelBtn.style.background = "#e05252";
@@ -13014,25 +12861,28 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         }
       });
 
-      domainBlacklist = [...new Set(valid)];
-      GM_setValue("domainBlacklist", domainBlacklist);
+      blacklistDomains = [...new Set(valid)];
+      GM_setValue(STORAGE_KEYS.DOMAIN_BLACKLIST, blacklistDomains);
       save();
 
-      const blBtn = document.getElementById("blacklist-btn");
-      if (blBtn) {
-        const cnt = domainBlacklist.filter(d => d.trim()).length;
-        blBtn.textContent = cnt > 0 ? `🚫 ${cnt}` : (t_bl.blacklistBtn || "🚫 Blacklist");
+      const blBtn = document.getElementById(TOOLBAR_BTN_IDS.hideBlacklistBtn.id);
+      if (blBtn && blBtn.children[1] && blBtn.children[2]) {
+        const cnt = blacklistDomains.filter(d => d.trim()).length;
+        blBtn.children[1].textContent = cnt > 0 ? String(cnt) : "";
+        blBtn.children[2].textContent = toolbarCompactMode
+          ? ""
+          : (t_bl.blacklistBtn || "🚫 Blacklist").replace(/^\s*🚫\s*/, "");
         blBtn.title = cnt > 0
           ? (t_bl.blacklistCount ? t_bl.blacklistCount(cnt) : `Blocking ${cnt}`) + "\n" + (t_bl.blacklistTitle || "Domain Blacklist")
           : (t_bl.blacklistTitle || "Domain Blacklist");
       }
 
-      blacklistWeakenMode = weakenChk.checked;
-      GM_setValue("blacklistWeakenMode", blacklistWeakenMode);
+      blacklistWeakenOn = weakenChk.checked;
+      GM_setValue(STORAGE_KEYS.BLACKLIST_WEAKEN_MODE, blacklistWeakenOn);
 
       _refreshBlacklistDOM();
 
-      const msg = t_bl.blacklistSaved ? t_bl.blacklistSaved(domainBlacklist.length) : `Saved — ${domainBlacklist.length} blocked`;
+      const msg = t_bl.blacklistSaved ? t_bl.blacklistSaved(blacklistDomains.length) : `Saved — ${blacklistDomains.length} blocked`;
       showToast(msg);
       if (invalid.length > 0) {
         invalid.forEach(d => {
@@ -13123,7 +12973,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function showUndoMessage(deletedSite, groupIndex, siteIndex) {
-    const currentLangData = LANGUAGES[lang] || LANGUAGES["zh_TW"];
+    const currentLangData = LANGUAGES[uiLang] || LANGUAGES["zh_TW"];
     const existingMsg = document.getElementById("undo-message");
     if (existingMsg) {
       existingMsg.remove();
@@ -13279,7 +13129,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function showOnboarding() {
-    if (GM_getValue("onboardingDone", false)) return;
+    if (GM_getValue(STORAGE_KEYS.ONBOARDING_DONE, false)) return;
 
     const ob = t.onboarding || {};
     const isDark = panelTheme === "dark";
@@ -13402,8 +13252,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
 
     function finish() {
-      GM_setValue("onboardingDone", true);
-      GM_setValue("compactHintShown", false);
+      GM_setValue(STORAGE_KEYS.ONBOARDING_DONE, true);
+      GM_setValue(STORAGE_KEYS.COMPACT_HINT_SHOWN, false);
       document.removeEventListener("keydown", _obEscHandler);
       overlay.style.animation = "obFadeIn 0.2s ease reverse";
       setTimeout(() => overlay.remove(), 200);
@@ -13426,15 +13276,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   function createToggleButton() {
     log(
-      "Creating toggle button with defaultPanelOpen:",
-      defaultPanelOpen,
+      "Creating toggle button with panelDefaultOpen:",
+      panelDefaultOpen,
     );
 
-    if (__toggleButtonObserver) {
-      __toggleButtonObserver.disconnect();
+    if (_obsToggleButton) {
+      _obsToggleButton.disconnect();
     }
 
-    __toggleButtonObserver = new MutationObserver((mutations) => {
+    _obsToggleButton = new MutationObserver((mutations) => {
       const btn = document.getElementById("site-toggle-simple");
       if (!btn && document.body) {
         warn("Toggle button removed, recreating...");
@@ -13442,7 +13292,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       }
     });
 
-    __toggleButtonObserver.observe(document.body, {
+    _obsToggleButton.observe(document.body, {
       childList: true,
       subtree: false,
     });
@@ -13450,25 +13300,25 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     window.addEventListener(
       "unload",
       () => {
-        if (__toggleButtonObserver) {
-          __toggleButtonObserver.disconnect();
-          __toggleButtonObserver = null;
+        if (_obsToggleButton) {
+          _obsToggleButton.disconnect();
+          _obsToggleButton = null;
         }
-        if (__compactBtnObserver) {
-          __compactBtnObserver.disconnect();
-          __compactBtnObserver = null;
+        if (_obsCompactBtn) {
+          _obsCompactBtn.disconnect();
+          _obsCompactBtn = null;
         }
-        if (__compactMouseupHandler) {
-          document.removeEventListener("mouseup", __compactMouseupHandler);
-          __compactMouseupHandler = null;
+        if (_hdlCompactMouseup) {
+          document.removeEventListener("mouseup", _hdlCompactMouseup);
+          _hdlCompactMouseup = null;
         }
-        if (__cpDragMoveHandler) {
-          document.removeEventListener("mousemove", __cpDragMoveHandler);
-          __cpDragMoveHandler = null;
+        if (_hdlCompactDragMove) {
+          document.removeEventListener("mousemove", _hdlCompactDragMove);
+          _hdlCompactDragMove = null;
         }
-        if (__cpDragUpHandler) {
-          document.removeEventListener("mouseup", __cpDragUpHandler);
-          __cpDragUpHandler = null;
+        if (_hdlCompactDragUp) {
+          document.removeEventListener("mouseup", _hdlCompactDragUp);
+          _hdlCompactDragUp = null;
         }
       },
       { once: true },
@@ -13482,8 +13332,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const toggleBtnSimple = document.createElement("button");
     toggleBtnSimple.id = "site-toggle-simple";
 
-    const savedTop  = GM_getValue("toggleButtonTop",  null);
-    const savedLeft = GM_getValue("toggleButtonLeft", null);
+    const savedTop  = GM_getValue(STORAGE_KEYS.TOGGLE_BUTTON_TOP,  null);
+    const savedLeft = GM_getValue(STORAGE_KEYS.TOGGLE_BUTTON_LEFT, null);
 
     const defaultTop  = Math.round(window.innerHeight * 0.42) + "px";
     const defaultLeft = (window.innerWidth - 64) + "px";
@@ -13510,8 +13360,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         isDragging = false;
         toggleBtnSimple.style.top  = defaultTop;
         toggleBtnSimple.style.left = defaultLeft;
-        GM_setValue("toggleButtonTop",  defaultTop);
-        GM_setValue("toggleButtonLeft", defaultLeft);
+        GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_TOP,  defaultTop);
+        GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_LEFT, defaultLeft);
         showToast(t.toggleReset || "🔍 Reset position");
       }, 1500);
     });
@@ -13538,8 +13388,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           const newTop  = toggleBtnSimple.style.top;
           const newLeft = toggleBtnSimple.style.left;
           if (isValidPixelValue(newTop) && isValidPixelValue(newLeft)) {
-            GM_setValue("toggleButtonTop",  newTop);
-            GM_setValue("toggleButtonLeft", newLeft);
+            GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_TOP,  newTop);
+            GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_LEFT, newLeft);
           }
         }
       }
@@ -13550,7 +13400,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const clickDuration = Date.now() - dragStartTime;
       if (clickDuration < 200 || !dragStartTime) {
 
-        if (GM_getValue("compactMode", false)) {
+        if (GM_getValue(STORAGE_KEYS.COMPACT_MODE, false)) {
           const _cp = document.getElementById("set-compact-panel");
           if (_cp) {
             const _cpHidden = _cp.style.display === "none";
@@ -13570,8 +13420,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           panel = document.getElementById("site-group-panel");
           if (panel) {
             showPanel(panel);
-            manuallyClosed = false;
-            GM_setValue("manuallyClosed", manuallyClosed);
+            _panelManuallyClosed = false;
+            GM_setValue(STORAGE_KEYS.MANUALLY_CLOSED, _panelManuallyClosed);
           }
           return;
         }
@@ -13579,16 +13429,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const isPanelHidden = panel.style.display === "none";
         if (isPanelHidden) {
           showPanel(panel);
-          manuallyClosed = false;
+          _panelManuallyClosed = false;
         } else {
           hidePanel(panel);
-          manuallyClosed = true;
+          _panelManuallyClosed = true;
         }
-        GM_setValue("manuallyClosed", manuallyClosed);
+        GM_setValue(STORAGE_KEYS.MANUALLY_CLOSED, _panelManuallyClosed);
 
-        panel.dataset.manuallyClosed = manuallyClosed ? "true" : "false";
+        panel.dataset._panelManuallyClosed = _panelManuallyClosed ? "true" : "false";
         setTimeout(() => {
-          delete panel.dataset.manuallyClosed;
+          delete panel.dataset._panelManuallyClosed;
         }, 1000);
       }
     };
@@ -13602,20 +13452,20 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     setTimeout(() => {
       if (!document.body) return;
       let panel = document.getElementById("site-group-panel");
-      if (defaultPanelOpen && !panel?.dataset.manuallyClosed) {
+      if (panelDefaultOpen && !panel?.dataset._panelManuallyClosed) {
         if (!panel) {
           createPanel();
           panel = document.getElementById("site-group-panel");
         }
-        if (panel && !GM_getValue("compactMode", false)) {
+        if (panel && !GM_getValue(STORAGE_KEYS.COMPACT_MODE, false)) {
           showPanel(panel);
-          manuallyClosed = false;
-          GM_setValue("manuallyClosed", manuallyClosed);
+          _panelManuallyClosed = false;
+          GM_setValue(STORAGE_KEYS.MANUALLY_CLOSED, _panelManuallyClosed);
         }
       }
     }, 100);
 
-    if (!defaultPanelOpen) {
+    if (!panelDefaultOpen) {
       setTimeout(() => {
         if (!document.body) return;
         if (!document.getElementById("site-group-panel")) {
@@ -13674,9 +13524,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
             renderSites(panel);
             setTimeout(triggerKwFlash, 350);
             setTimeout(_injectBlockBtns, 400);
-            if (defaultPanelOpen && !manuallyClosed && !GM_getValue("compactMode", false)) {
+            if (panelDefaultOpen && !_panelManuallyClosed && !GM_getValue(STORAGE_KEYS.COMPACT_MODE, false)) {
               showPanel(panel);
-            } else if (GM_getValue("compactMode", false)) {
+            } else if (GM_getValue(STORAGE_KEYS.COMPACT_MODE, false)) {
               if (!document.getElementById("set-compact-panel")) {
                 _buildCompactPanel();
               }
