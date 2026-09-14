@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.6.0.34
+// @version      2.6.0.40
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -98,15 +98,6 @@
     COMPACT_HINT_SHOWN:     "compactHintShown",
     HIDE_LOCK_HINT_BANNER:  "hideLockHintBanner",
     ONBOARDING_DONE:        "onboardingDone",
-  };
-
-  const TOOLBAR_BTN_IDS = {
-    hideAddGroupBtn:      { id: "toolbar-add-group-btn", show: "inline-flex" },
-    hideAddressToggleBtn: { id: "se-toggle-address-btn", show: "inline-flex" },
-    hideExportBtn:        { id: "toolbar-export-btn",    show: "inline-flex" },
-    hideImportBtn:        { id: "toolbar-import-btn",    show: "inline-flex" },
-    hideModGroup:         { id: "syntax-mod-group",      show: "flex"        },
-    hideBlacklistBtn:     { id: "blacklist-btn",          show: "inline-flex" },
   };
 
   const STYLE_DEFAULTS = {
@@ -2807,7 +2798,7 @@
     document.querySelectorAll(".se-help-btn").forEach(_h => {
       _applyIconToBtn(_h, ICONS.help.emoji, ICONS.help.line, ICONS.help.fill, ICONS.help.size);
     });
-    const _tAddr = document.getElementById(TOOLBAR_BTN_IDS.hideAddressToggleBtn.id);
+    const _tAddr = document.getElementById("se-toggle-address-btn");
     if (_tAddr) {
       const _addrStyle = styleSettings.iconStyle || "emoji";
       if (_addrStyle !== "emoji") {
@@ -2844,13 +2835,13 @@
       }
     }
 
-    const _addGroupIcon = document.getElementById(TOOLBAR_BTN_IDS.hideAddGroupBtn.id)?.firstElementChild;
+    const _addGroupIcon = document.getElementById("toolbar-add-group-btn")?.firstElementChild;
     if (_addGroupIcon) _applyIconToBtn(_addGroupIcon, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
-    const _exportIcon = document.getElementById(TOOLBAR_BTN_IDS.hideExportBtn.id)?.firstElementChild;
+    const _exportIcon = document.getElementById("toolbar-export-btn")?.firstElementChild;
     if (_exportIcon) _applyIconToBtn(_exportIcon, ICONS.exportConfig.emoji, ICONS.exportConfig.line, ICONS.exportConfig.fill, ICONS.exportConfig.size);
-    const _importIcon = document.getElementById(TOOLBAR_BTN_IDS.hideImportBtn.id)?.firstElementChild;
+    const _importIcon = document.getElementById("toolbar-import-btn")?.firstElementChild;
     if (_importIcon) _applyIconToBtn(_importIcon, ICONS.importConfig.emoji, ICONS.importConfig.line, ICONS.importConfig.fill, ICONS.importConfig.size);
-    const _blacklistIcon = document.getElementById(TOOLBAR_BTN_IDS.hideBlacklistBtn.id)?.firstElementChild;
+    const _blacklistIcon = document.getElementById("blacklist-btn")?.firstElementChild;
     if (_blacklistIcon) _applyIconToBtn(_blacklistIcon, ICONS.blacklist.emoji, ICONS.blacklist.line, ICONS.blacklist.fill, ICONS.blacklist.size);
     const _syntaxHelpBtn = document.getElementById("syntax-help-btn");
     if (_syntaxHelpBtn) _applyIconToBtn(_syntaxHelpBtn, ICONS.syntaxHelp.emoji, ICONS.syntaxHelp.line, ICONS.syntaxHelp.fill, ICONS.syntaxHelp.size);
@@ -4481,6 +4472,85 @@
     return s;
   }
 
+  function mkTooltip(triggerEl, getAnchorEl, text, opts) {
+    opts = opts || {};
+    const isDark = opts.isDark ?? (panelTheme === "dark");
+    const side = opts.side || "right";
+    const tip = document.createElement("div");
+    tip.style.cssText = `
+      display:none; position:fixed;
+      background:${opts.bg || (isDark ? "#2a2a4a" : "#f8f8ff")};
+      border:1px solid ${opts.border || (isDark ? "#555" : "#ccc")};
+      border-radius:8px; padding:10px 12px;
+      font-size:${opts.fontSize ?? (styleSettings.fontSize - 1)}px;
+      white-space:pre-wrap; line-height:1.65;
+      color:${opts.color || (isDark ? "#fff" : "#000")};
+      box-shadow:0 6px 24px rgba(0,0,0,0.28);
+      z-index:2147483660; min-width:${opts.minWidth || "240px"}; max-width:${opts.maxWidth || "300px"};
+      pointer-events:none;
+    `;
+    tip.textContent = text || "";
+    document.body.appendChild(tip);
+
+    const defaultSuppress = () => _dragPanelActive || _dragEnginePanel.active;
+    const shouldSuppress = opts.shouldSuppress || defaultSuppress;
+
+    triggerEl.addEventListener("mouseenter", () => {
+      if (shouldSuppress()) return;
+      tip.style.display = "block";
+      requestAnimationFrame(() => {
+        const anchorEl = getAnchorEl();
+        if (!anchorEl) return;
+        const r = anchorEl.getBoundingClientRect();
+        const tipW = tip.offsetWidth || 260;
+        const tipH = tip.offsetHeight || 140;
+        const margin = 8;
+
+        let tipLeft;
+        if (side === "left") {
+          tipLeft = r.left - tipW - margin;
+          if (tipLeft < margin) tipLeft = r.right + margin;
+          if (tipLeft + tipW > window.innerWidth - margin) tipLeft = margin;
+        } else {
+          tipLeft = r.right + margin;
+          if (tipLeft + tipW > window.innerWidth - margin) tipLeft = r.left - tipW - margin;
+          if (tipLeft < margin) tipLeft = margin;
+        }
+
+        let tipTop = r.top;
+        if (tipTop + tipH > window.innerHeight - margin) tipTop = window.innerHeight - tipH - margin;
+        if (tipTop < margin) tipTop = margin;
+
+        tip.style.left = tipLeft + "px";
+        tip.style.top = tipTop + "px";
+      });
+    });
+    triggerEl.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+
+    return tip;
+  }
+
+  function _makeDraggable(getBoxEl, state, onDrop) {
+    function onMove(e) {
+      if (!state.active) return;
+      const el = getBoxEl();
+      if (!el) return;
+      const nx = Math.max(0, Math.min(e.clientX - state.x, window.innerWidth  - el.offsetWidth));
+      const ny = Math.max(0, Math.min(e.clientY - state.y, window.innerHeight - el.offsetHeight));
+      el.style.left  = nx + "px";
+      el.style.top   = ny + "px";
+      el.style.right = "auto";
+      return { nx, ny };
+    }
+    function onUp() {
+      if (!state.active) return;
+      state.active = false;
+      const el = getBoxEl();
+      if (el && onDrop) onDrop(parseInt(el.style.left), parseInt(el.style.top), el);
+    }
+    return { onMove, onUp };
+  }
+
   function _exitMultiSelect(blk, mBtn, sBtn) {
     blk.dataset.multiSelectActive = "false";
     blk._multiSelected.clear();
@@ -5947,10 +6017,10 @@
     save();
 
     const cnt = blacklistDomains.filter(d => d.trim()).length;
-    const blBtn = document.getElementById(TOOLBAR_BTN_IDS.hideBlacklistBtn.id);
-    if (blBtn && blBtn.children[1]) {
-      blBtn.children[1].textContent = cnt > 0 ? String(cnt) : "";
-      blBtn.title = toolbarCompactMode ? "" : `Blocking ${cnt} domain(s)`;
+    const blBtn = document.getElementById("blacklist-btn");
+    if (blBtn) {
+      blBtn.textContent = `🚫 ${cnt}`;
+      blBtn.title = `Blocking ${cnt} domain(s)`;
     }
 
     _applyBlacklistToDOM();
@@ -6341,41 +6411,18 @@
   panelHelpBtn.style.cssText = "cursor:help; font-size:12px; opacity:0.55; flex-shrink:0;";
   const _oldHelpTip = document.getElementById("set-panel-help-tip");
   if (_oldHelpTip) _oldHelpTip.remove();
-  const panelHelpTip = document.createElement("div");
+  const panelHelpTip = mkTooltip(
+    panelHelpBtn,
+    () => panel,
+    t.panelHelp || "",
+    {
+      side: "right",
+      color: styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000"),
+      minWidth: "260px",
+      maxWidth: "320px",
+    }
+  );
   panelHelpTip.id = "set-panel-help-tip";
-  panelHelpTip.style.cssText = `
-    display:none; position:fixed;
-    background:${panelTheme === "dark" ? "#2a2a4a" : "#f8f8ff"};
-    border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
-    border-radius:8px; padding:10px 12px;
-    font-size:${styleSettings.fontSize - 1}px;
-    white-space:pre-wrap; line-height:1.65;
-    color:${styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000")};
-    box-shadow:0 6px 24px rgba(0,0,0,0.28);
-    z-index:2147483660; min-width:260px; max-width:320px;
-    pointer-events:none;
-  `;
-  panelHelpTip.textContent = t.panelHelp || "";
-  document.body.appendChild(panelHelpTip);
-  panelHelpBtn.addEventListener("mouseenter", () => {
-    if (_dragPanelActive || _dragEnginePanel.active) return;
-    panelHelpTip.style.display = "block";
-    requestAnimationFrame(() => {
-      const r = panel.getBoundingClientRect();
-      const tipW = panelHelpTip.offsetWidth || 280;
-      const tipH = panelHelpTip.offsetHeight || 200;
-      const margin = 8;
-      let tipLeft = r.right + margin;
-      if (tipLeft + tipW > window.innerWidth - margin) tipLeft = r.left - tipW - margin;
-      if (tipLeft < margin) tipLeft = margin;
-      let tipTop = r.top;
-      if (tipTop + tipH > window.innerHeight - margin) tipTop = window.innerHeight - tipH - margin;
-      if (tipTop < margin) tipTop = margin;
-      panelHelpTip.style.left = tipLeft + "px";
-      panelHelpTip.style.top = tipTop + "px";
-    });
-  });
-  panelHelpBtn.addEventListener("mouseleave", () => { panelHelpTip.style.display = "none"; });
   headerLeft.appendChild(panelHelpBtn);
 
   const langBtn = document.createElement("button");
@@ -7108,33 +7155,23 @@
     );
   }
 
-  function _epOnMove(e) {
-    if (!_dragEnginePanel.active || !enginePanelFloat) return;
-    const nx = Math.max(
-      0,
-      Math.min(e.clientX - _dragEnginePanel.x, window.innerWidth  - enginePanelFloat.offsetWidth),
-    );
-    const ny = Math.max(
-      0,
-      Math.min(e.clientY - _dragEnginePanel.y, window.innerHeight - enginePanelFloat.offsetHeight),
-    );
-    enginePanelFloat.style.left  = nx + "px";
-    enginePanelFloat.style.top   = ny + "px";
-    enginePanelFloat.style.right = "auto";
-  }
-  function _epOnUp() {
-    if (!_dragEnginePanel.active) return;
-    _dragEnginePanel.active = false;
-    if (_engineDragTitleBarRef) _engineDragTitleBarRef.style.cursor = "grab";
-    if (enginePanelFloat) {
+  const { onMove: _epOnMove, onUp: _epOnUpCore } = _makeDraggable(
+    () => enginePanelFloat,
+    _dragEnginePanel,
+    () => {
       enginePanelPos = {
         left: parseInt(enginePanelFloat.style.left),
         top:  parseInt(enginePanelFloat.style.top),
       };
       se_save();
+      document.removeEventListener("mousemove", _epOnMove);
+      document.removeEventListener("mouseup",   _epOnUp);
     }
-    document.removeEventListener("mousemove", _epOnMove);
-    document.removeEventListener("mouseup",   _epOnUp);
+  );
+  function _epOnUp() {
+    if (!_dragEnginePanel.active) return;
+    _epOnUpCore();
+    if (_engineDragTitleBarRef) _engineDragTitleBarRef.style.cursor = "grab";
   }
 
   function _buildEpUsageBanner(isDark, st) {
@@ -7226,52 +7263,13 @@
     helpBtn.textContent = "❓";
     helpBtn.style.cssText = `cursor:help; font-size:12px; opacity:0.7; position:relative; flex-shrink:0; display:inline-flex; align-items:center;`;
 
-    const helpTip = document.createElement("div");
-    helpTip.style.cssText = `
-      display:none; position:fixed;
-      background:${isDark ? "#2a2a4a" : "#f8f8ff"};
-      border:1px solid ${border}; border-radius:8px;
-      padding:10px 12px; font-size:${styleSettings.fontSize - 1}px;
-      white-space:pre-wrap; line-height:1.65; color:${fg};
-      box-shadow:0 6px 24px rgba(0,0,0,0.28);
-      z-index:2147483660; min-width:240px; max-width:300px;
-      pointer-events:none;
-    `;
-    helpTip.textContent = st.helpTooltip || "";
-    document.body.appendChild(helpTip);
+    const helpTip = mkTooltip(
+      helpBtn,
+      () => enginePanelFloat,
+      st.helpTooltip || "",
+      { side: "left", isDark, border, color: fg }
+    );
     enginePanelHelpTip = helpTip;
-
-    helpBtn.addEventListener("mouseenter", () => {
-      if (_dragPanelActive || _dragEnginePanel.active) return;
-      helpTip.style.display = "block";
-      requestAnimationFrame(() => {
-        if (!enginePanelFloat) return;
-        const panelRect = enginePanelFloat.getBoundingClientRect();
-        const tipW = helpTip.offsetWidth || 260;
-        const tipH = helpTip.offsetHeight || 140;
-        const margin = 8;
-
-        let tipLeft = panelRect.left - tipW - margin;
-        let tipTop = panelRect.top;
-
-        if (tipLeft < margin) {
-          tipLeft = panelRect.right + margin;
-        }
-        if (tipLeft + tipW > window.innerWidth - margin) {
-          tipLeft = margin;
-        }
-        if (tipTop + tipH > window.innerHeight - margin) {
-          tipTop = window.innerHeight - tipH - margin;
-        }
-        if (tipTop < margin) tipTop = margin;
-
-        helpTip.style.left = tipLeft + "px";
-        helpTip.style.top = tipTop + "px";
-      });
-    });
-    helpBtn.addEventListener("mouseleave", () => {
-      helpTip.style.display = "none";
-    });
 
     epTitleLeft.appendChild(epDot);
     epTitleLeft.appendChild(epTitleText);
@@ -7321,8 +7319,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const epCloseBtn = document.createElement("button");
     epCloseBtn.textContent = "✕";
     epCloseBtn.title = t.close;
+    const epCloseBtnColor = isDark ? "#888" : "#aaa";
     epCloseBtn.style.cssText = `
-      background:none; border:none; cursor:pointer; color:${isDark ? "#888" : "#aaa"};
+      background:none; border:none; cursor:pointer; color:${epCloseBtnColor};
       font-size:14px; line-height:1; padding:2px 4px; border-radius:4px;
       transition:color 0.15s,background 0.15s; flex-shrink:0;
     `;
@@ -7331,7 +7330,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       epCloseBtn.style.background = isDark ? "#3a1a1a" : "#ffe8e8";
     });
     epCloseBtn.addEventListener("mouseleave", () => {
-      epCloseBtn.style.color = isDark ? "#888" : "#aaa";
+      epCloseBtn.style.color = epCloseBtnColor;
       epCloseBtn.style.background = "none";
     });
     epCloseBtn.addEventListener("click", (e) => {
@@ -7483,8 +7482,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         newWinBtn.textContent = st.newWindowBtn || "⧉";
         newWinBtn.title =
           (st.newWindowTitle || "New Window") + " — " + engine.name;
+        const newWinBtnBg = isDark ? "#2a3a2a" : "#f0fff0";
         newWinBtn.style.cssText = `
-          background:${isDark ? "#2a3a2a" : "#f0fff0"};
+          background:${newWinBtnBg};
           border:1px solid ${isDark ? "#3a6a3a" : "#b0d8b0"};
           border-radius:4px; cursor:pointer; padding:2px 5px;
           font-size:11px; flex-shrink:0;
@@ -7497,7 +7497,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         );
         newWinBtn.addEventListener(
           "mouseleave",
-          () => (newWinBtn.style.background = isDark ? "#2a3a2a" : "#f0fff0"),
+          () => (newWinBtn.style.background = newWinBtnBg),
         );
         newWinBtn.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -7521,9 +7521,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const delBtn = document.createElement("button");
         delBtn.textContent = "✕";
         delBtn.title = engine.name;
+        const delBtnColor = isDark ? "#666" : "#ccc";
         delBtn.style.cssText = `
           background:none; border:none; cursor:pointer;
-          color:${isDark ? "#666" : "#ccc"}; font-size:12px;
+          color:${delBtnColor}; font-size:12px;
           flex-shrink:0; padding:0 1px; transition:color 0.15s;
         `;
         delBtn.addEventListener(
@@ -7532,7 +7533,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         );
         delBtn.addEventListener(
           "mouseleave",
-          () => (delBtn.style.color = isDark ? "#666" : "#ccc"),
+          () => (delBtn.style.color = delBtnColor),
         );
         delBtn.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -7677,16 +7678,17 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   
       const manualToggleBtn = document.createElement("button");
       manualToggleBtn.textContent = (st.addSectionLabel || "Add Engine") + " ▾";
+      const manualToggleBtnColor = isDark ? "#555" : "#bbb";
       manualToggleBtn.style.cssText = `
         background:none; border:none; cursor:pointer; padding:3px 0;
-        color:${isDark ? "#555" : "#bbb"}; font-size:${styleSettings.fontSize - 1}px;
+        color:${manualToggleBtnColor}; font-size:${styleSettings.fontSize - 1}px;
         width:100%; text-align:left; transition:color 0.15s;
       `;
       manualToggleBtn.addEventListener("mouseenter", () => {
         manualToggleBtn.style.color = isDark ? "#888" : "#999";
       });
       manualToggleBtn.addEventListener("mouseleave", () => {
-        manualToggleBtn.style.color = isDark ? "#555" : "#bbb";
+        manualToggleBtn.style.color = manualToggleBtnColor;
       });
   
       let manualOpen = false;
@@ -7727,10 +7729,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   
       const addBtn2 = document.createElement("button");
       addBtn2.textContent = st.addBtn || "➕ Add";
+      const addBtn2Bg = isDark ? "#222" : "#f5f5f5";
       addBtn2.style.cssText = `
         padding:5px 8px; border-radius:6px; cursor:pointer;
         border:1px solid ${isDark ? "#444" : "#ddd"};
-        background:${isDark ? "#222" : "#f5f5f5"};
+        background:${addBtn2Bg};
         color:${isDark ? "#aaa" : "#888"};
         font-size:${styleSettings.fontSize}px;
         transition:background 0.15s; width:100%;
@@ -7739,7 +7742,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         addBtn2.style.background = isDark ? "#2a2a3a" : "#ececec";
       });
       addBtn2.addEventListener("mouseleave", () => {
-        addBtn2.style.background = isDark ? "#222" : "#f5f5f5";
+        addBtn2.style.background = addBtn2Bg;
       });
       addBtn2.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -7781,62 +7784,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _positionExtraPanel();
   }
 
-  function _bindStylePanel(refs) {
-    const {
-      panelLayoutHeader,
-      generalStyleContainer,
-      generalStyleHeader,
-      borderRadiusLabel,
-      contrastLabel,
-      opacityLabel,
-      groupOpacityLabel,
-      buttonOpacityLabel,
-      siteButtonWidthLabel,
-      panelBgColorLabel,
-      glowHeader,
-      glowToggleLbl,
-      glowColorLbl,
-      glowStrLbl,
-      glowInsetLbl,
-      sheenToggleLbl,
-      sheenAngleLbl,
-      sheenOpLbl,
-      siteGlowLbl,
-      groupGlowLbl,
-      vignetteHeader,
-      _sbsHeader,
-      _sbsPresetLbl,
-      _sbsBgLbl,
-      _sbsBgOpLbl,
-      _sbsFgLbl,
-      _sbsGlowToggleLbl,
-      _sbsGlowColorLbl,
-      _sbsGlowStrLbl,
-      toggleBtnStyleContainer,
-      _tbsHeader,
-      textStyleHeader,
-      fontSizeLabel,
-      textBackgroundColorLabel,
-      textBorderLabel,
-      textOpacityCompensationLabel,
-      backgroundOverlayHeader,
-      overlayDarkeningLabel,
-      overlayStrengthLabel,
-      imageLabel,
-      imageModeLabel,
-      imageOffsetXLabel,
-      imageOffsetYLabel,
-      imageScaleLabel,
-      imageOpacityLabel,
-      multiSelectHeader,
-      msColorLabel,
-      msOpacityLabel,
-      customThemeHeader,
-      backgroundColorLabel,
-      textColorLabel,
-      buttonBgLabel,
-    } = refs;
-
   const _hc = panelTheme === "dark"
     ? "rgba(80,180,255,0.85)"
     : "rgba(30,140,240,0.75)";
@@ -7874,172 +7821,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     el.style.cursor = "default";
     el.addEventListener("mouseenter", onEnter);
     el.addEventListener("mouseleave", onLeave);
-  }
-
-  _bind(panelLayoutHeader,
-    () => _hlPanel(true),
-    () => _hlPanel(false)
-  );
-
-  _bind(generalStyleHeader,
-    () => _hlSet([".group-block", "button:not(.icon-btn)"], true),
-    () => _hlSet([".group-block", "button:not(.icon-btn)"], false)
-  );
-
-  _bind(glowHeader,
-    () => _hlPanel(true),
-    () => _hlPanel(false)
-  );
-
-  _bind(vignetteHeader,
-    () => _hlPanel(true),
-    () => _hlPanel(false)
-  );
-
-  _bind(_tbsHeader,
-    () => _hlEls([document.getElementById("site-toggle-simple")], true),
-    () => _hlEls([document.getElementById("site-toggle-simple")], false)
-  );
-
-  _bind(textStyleHeader,
-    () => _hlSet([".site-label", ".group-name"], true),
-    () => _hlSet([".site-label", ".group-name"], false)
-  );
-
-  _bind(backgroundOverlayHeader,
-    () => _hlPanel(true),
-    () => _hlPanel(false)
-  );
-
-  _bind(multiSelectHeader,
-    () => _hlSet([".multi-btn", ".multi-send-btn"], true),
-    () => _hlSet([".multi-btn", ".multi-send-btn"], false)
-  );
-
-  _bind(customThemeHeader,
-    () => _hlSet([".group-block", ".draggable-site"], true),
-    () => _hlSet([".group-block", ".draggable-site"], false)
-  );
-
-  _bind(borderRadiusLabel,
-    () => _hlSet([".group-block", ".draggable-site"], true),
-    () => _hlSet([".group-block", ".draggable-site"], false)
-  );
-
-  _bind(contrastLabel,
-    () => _hlSet(["button:not(.icon-btn)", ".draggable-site"], true),
-    () => _hlSet(["button:not(.icon-btn)", ".draggable-site"], false)
-  );
-
-  _bind(opacityLabel,
-    () => _hlPanel(true),
-    () => _hlPanel(false)
-  );
-
-  _bind(groupOpacityLabel,
-    () => _hlSet([".group-block"], true),
-    () => _hlSet([".group-block"], false)
-  );
-
-  _bind(buttonOpacityLabel,
-    () => _hlSet([".draggable-site", "button:not(.icon-btn)"], true),
-    () => _hlSet([".draggable-site", "button:not(.icon-btn)"], false)
-  );
-
-  _bind(siteButtonWidthLabel,
-    () => _hlSet([".draggable-site"], true),
-    () => _hlSet([".draggable-site"], false)
-  );
-
-  _bind(panelBgColorLabel,  () => _hlPanel(true), () => _hlPanel(false));
-
-  _bind(glowToggleLbl,  () => _hlPanel(true), () => _hlPanel(false));
-  _bind(glowColorLbl,   () => _hlPanel(true), () => _hlPanel(false));
-  _bind(glowStrLbl,     () => _hlPanel(true), () => _hlPanel(false));
-  _bind(glowInsetLbl,   () => _hlPanel(true), () => _hlPanel(false));
-  _bind(sheenToggleLbl, () => _hlPanel(true), () => _hlPanel(false));
-  _bind(sheenAngleLbl,  () => _hlPanel(true), () => _hlPanel(false));
-  _bind(sheenOpLbl,     () => _hlPanel(true), () => _hlPanel(false));
-
-  _bind(siteGlowLbl,
-    () => _hlSet([".draggable-site"], true),
-    () => _hlSet([".draggable-site"], false)
-  );
-  _bind(groupGlowLbl,
-    () => _hlSet([".group-block"], true),
-    () => _hlSet([".group-block"], false)
-  );
-
-  toggleBtnStyleContainer.querySelectorAll("label").forEach(lbl => {
-    _bind(lbl,
-      () => _hlEls([document.getElementById("site-toggle-simple")], true),
-      () => _hlEls([document.getElementById("site-toggle-simple")], false)
-    );
-  });
-
-  _bind(fontSizeLabel,
-    () => _hlSet([".site-label", ".group-name"], true),
-    () => _hlSet([".site-label", ".group-name"], false)
-  );
-  _bind(textBackgroundColorLabel,
-    () => _hlSet([".site-label"], true),
-    () => _hlSet([".site-label"], false)
-  );
-  _bind(textBorderLabel,
-    () => _hlSet([".site-label", ".group-name"], true),
-    () => _hlSet([".site-label", ".group-name"], false)
-  );
-  _bind(textOpacityCompensationLabel,
-    () => _hlSet([".site-label", ".group-name"], true),
-    () => _hlSet([".site-label", ".group-name"], false)
-  );
-
-  _bind(overlayDarkeningLabel,  () => _hlPanel(true), () => _hlPanel(false));
-  _bind(overlayStrengthLabel,   () => _hlPanel(true), () => _hlPanel(false));
-
-  _bind(imageLabel,        () => _hlPanel(true), () => _hlPanel(false));
-  _bind(imageModeLabel,    () => _hlPanel(true), () => _hlPanel(false));
-  _bind(imageOffsetXLabel, () => _hlPanel(true), () => _hlPanel(false));
-  _bind(imageOffsetYLabel, () => _hlPanel(true), () => _hlPanel(false));
-  _bind(imageScaleLabel,   () => _hlPanel(true), () => _hlPanel(false));
-  _bind(imageOpacityLabel, () => _hlPanel(true), () => _hlPanel(false));
-
-  _bind(msColorLabel,
-    () => _hlSet([".multi-btn", ".multi-send-btn"], true),
-    () => _hlSet([".multi-btn", ".multi-send-btn"], false)
-  );
-  _bind(msOpacityLabel,
-    () => _hlSet([".multi-btn", ".multi-send-btn"], true),
-    () => _hlSet([".multi-btn", ".multi-send-btn"], false)
-  );
-
-  _bind(backgroundColorLabel,
-    () => _hlPanel(true),
-    () => _hlPanel(false)
-  );
-  _bind(textColorLabel,
-    () => _hlSet([".site-label", ".group-name"], true),
-    () => _hlSet([".site-label", ".group-name"], false)
-  );
-  _bind(buttonBgLabel,
-    () => _hlSet([".draggable-site", "button:not(.icon-btn)"], true),
-    () => _hlSet([".draggable-site", "button:not(.icon-btn)"], false)
-  );
-
-  function _hlSearchBar(on) {
-    const _scw = document.getElementById("search-config-wrap");
-    if (!_scw) return;
-    _scw.style.outline       = on ? _DASHED : _NONE;
-    _scw.style.outlineOffset = on ? "3px"   : _NONE;
-  }
-  _bind(_sbsHeader,
-    () => _hlSearchBar(true),
-    () => _hlSearchBar(false)
-  );
-  [_sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
-   _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl].forEach(lbl => {
-    _bind(lbl, () => _hlSearchBar(true), () => _hlSearchBar(false));
-  });
   }
 
   function buildStyleConfigPanel(searchConfigHeaderRow) {
@@ -8437,6 +8218,37 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     return { row, refreshActive };
   }
 
+  function mkColorInput(labelText, initialVal, onInput, opts) {
+    opts = opts || {};
+    const row = document.createElement("div");
+    row.style.cssText = rowCss();
+    const label = document.createElement("label");
+    label.textContent = labelText;
+    label.style.cssText = labelCss();
+    row.appendChild(label);
+
+    const input = document.createElement("input");
+    input.type = "color";
+    input.value = initialVal;
+    input.oninput = () => onInput(input.value);
+    row.appendChild(input);
+
+    let resetBtn = null;
+    if (opts.resetVal !== undefined) {
+      resetBtn = makeResetBtn(opts.resetVal, (dv) => {
+        if (opts.onReset) {
+          opts.onReset(dv);
+        } else {
+          input.value = dv;
+          onInput(dv);
+        }
+      });
+      row.appendChild(resetBtn);
+    }
+
+    return { row, label, input, resetBtn };
+  }
+
   function makeResetBtn(defaultVal, callback) {
     const btn = document.createElement("button");
     btn.textContent = "↺";
@@ -8534,8 +8346,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       chk.onchange = () => {
         styleSettings.hideBlacklistBtn = chk.checked;
         save();
-        const btn = document.getElementById(TOOLBAR_BTN_IDS.hideBlacklistBtn.id);
-        if (btn) btn.style.display = chk.checked ? "none" : TOOLBAR_BTN_IDS.hideBlacklistBtn.show;
+        const btn = document.getElementById("blacklist-btn");
+        if (btn) btn.style.display = chk.checked ? "none" : "";
         if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
       };
       const _openBl = document.createElement("button");
@@ -8578,7 +8390,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       chk.onchange = () => {
         styleSettings[key] = chk.checked;
         save();
-        const _map = TOOLBAR_BTN_IDS[key];
+        const _idMap = {
+          hideAddGroupBtn:      { id: "toolbar-add-group-btn", show: "inline-flex" },
+          hideAddressToggleBtn: { id: "se-toggle-address-btn",  show: "inline-flex"  },
+          hideExportBtn:        { id: "toolbar-export-btn",     show: "inline-flex" },
+          hideImportBtn:        { id: "toolbar-import-btn",     show: "inline-flex" },
+          hideModGroup:         { id: "syntax-mod-group",       show: "flex"         },
+        };
+        const _map = _idMap[key];
         const el = _map && document.getElementById(_map.id);
         if (el) el.style.display = chk.checked ? "none" : _map.show;
         if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
@@ -8627,7 +8446,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       t.hideAddressToggleBtnLabel || "Hide 🔁 Address Toggle Button",
       "🔁", t.toggleShow || "Show Addresses",
       () => {
-        const btn = document.getElementById(TOOLBAR_BTN_IDS.hideAddressToggleBtn.id);
+        const btn = document.getElementById("se-toggle-address-btn");
         if (btn) btn.click();
       }
     );
@@ -8637,7 +8456,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       t.hideExportBtnLabel || "Hide 📤 Export Button",
       "📤", t.exportConfig || "Export Config",
       () => {
-        const btn = document.getElementById(TOOLBAR_BTN_IDS.hideExportBtn.id);
+        const btn = document.getElementById("toolbar-export-btn");
         if (btn) btn.click();
       }
     );
@@ -8647,7 +8466,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       t.hideImportBtnLabel || "Hide 📥 Import Button",
       "📥", t.importConfig || "Import Config",
       () => {
-        const btn = document.getElementById(TOOLBAR_BTN_IDS.hideImportBtn.id);
+        const btn = document.getElementById("toolbar-import-btn");
         if (btn) btn.click();
       }
     );
@@ -8656,6 +8475,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       "hideModGroup",
       t.hideModGroupLabel || "Hide Modifier Button Group (◇T🔗📄)",
       "◇", ""
+    );
+
+    _bind(panelLayoutHeader,
+      () => _hlPanel(true),
+      () => _hlPanel(false)
     );
 
     return { panelLayoutContainer, panelLayoutHeader };
@@ -8692,26 +8516,18 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       glowToggleRow.appendChild(glowToggle);
       glowSection.appendChild(glowToggleRow);
 
-      const glowColorRow = document.createElement("div");
-      glowColorRow.style.cssText = rowCss();
-      const glowColorLbl = document.createElement("label");
-      glowColorLbl.textContent = t.borderGlowColor || "Glow Color";
-      glowColorLbl.style.cssText = labelCss();
-      glowColorRow.appendChild(glowColorLbl);
-      const glowColorInput = document.createElement("input");
-      glowColorInput.type = "color";
-      glowColorInput.value = styleSettings.borderGlowColor || "#00bfff";
-      glowColorInput.oninput = () => {
-        styleSettings.borderGlowColor = glowColorInput.value;
-        _debouncedSave();
-      };
-      const glowColorReset = makeResetBtn(STYLE_DEFAULTS.borderGlowColor, (dv) => {
-        glowColorInput.value = dv;
-        styleSettings.borderGlowColor = dv;
-        save(); applyTheme(panelTheme);
-      });
-      glowColorRow.appendChild(glowColorInput);
-      glowColorRow.appendChild(glowColorReset);
+      const { row: glowColorRow, label: glowColorLbl, input: glowColorInput } = mkColorInput(
+        t.borderGlowColor || "Glow Color",
+        styleSettings.borderGlowColor || "#00bfff",
+        (v) => {
+          styleSettings.borderGlowColor = v;
+          _debouncedSave();
+        },
+        {
+          resetVal: "#00bfff",
+          onReset: (dv) => { glowColorInput.value = dv; styleSettings.borderGlowColor = dv; save(); applyTheme(panelTheme); },
+        }
+      );
       glowSection.appendChild(glowColorRow);
 
       const glowStrRow = document.createElement("div");
@@ -8821,7 +8637,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         styleSettings.enableSiteGlow = siteGlowToggle.checked;
         save(); applyTheme(panelTheme);
       };
-      const _rb_siteGlow = makeResetBtn(STYLE_DEFAULTS.enableSiteGlow, (dv) => {
+      const _rb_siteGlow = makeResetBtn(false, (dv) => {
         siteGlowToggle.checked = dv;
         styleSettings.enableSiteGlow = dv;
         save(); applyTheme(panelTheme);
@@ -8843,7 +8659,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         styleSettings.enableGroupGlow = groupGlowToggle.checked;
         save(); applyTheme(panelTheme);
       };
-      const _rb_groupGlow = makeResetBtn(STYLE_DEFAULTS.enableGroupGlow, (dv) => {
+      const _rb_groupGlow = makeResetBtn(false, (dv) => {
         groupGlowToggle.checked = dv;
         styleSettings.enableGroupGlow = dv;
         save(); applyTheme(panelTheme);
@@ -8855,6 +8671,24 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       parent.appendChild(glowSection);
       _setGroupEnabled(!!styleSettings.enableBorderGlow,  glowColorRow, glowStrRow, glowInsetRow);
       _setGroupEnabled(!!styleSettings.enableSheen,        sheenAngleRow, sheenOpRow);
+
+      _bind(glowHeader,     () => _hlPanel(true), () => _hlPanel(false));
+      _bind(glowToggleLbl,  () => _hlPanel(true), () => _hlPanel(false));
+      _bind(glowColorLbl,   () => _hlPanel(true), () => _hlPanel(false));
+      _bind(glowStrLbl,     () => _hlPanel(true), () => _hlPanel(false));
+      _bind(glowInsetLbl,   () => _hlPanel(true), () => _hlPanel(false));
+      _bind(sheenToggleLbl, () => _hlPanel(true), () => _hlPanel(false));
+      _bind(sheenAngleLbl,  () => _hlPanel(true), () => _hlPanel(false));
+      _bind(sheenOpLbl,     () => _hlPanel(true), () => _hlPanel(false));
+      _bind(siteGlowLbl,
+        () => _hlSet([".draggable-site"], true),
+        () => _hlSet([".draggable-site"], false)
+      );
+      _bind(groupGlowLbl,
+        () => _hlSet([".group-block"], true),
+        () => _hlSet([".group-block"], false)
+      );
+
       return {
         glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl,
         sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl,
@@ -8939,7 +8773,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _debouncedSave();
         applyTheme(panelTheme);
       };
-      const _rb_size = makeResetBtn(STYLE_DEFAULTS.vignetteSize, (dv) => {
+      const _rb_size = makeResetBtn(120, (dv) => {
         sizeInput.value = dv;
         _vs_size.textContent = dv + "px";
         styleSettings.vignetteSize = dv;
@@ -8950,27 +8784,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       sizeRow.appendChild(_rb_size);
       vigSection.appendChild(sizeRow);
 
-      const colorRow = document.createElement("div");
-      colorRow.style.cssText = rowCss();
-      const colorLbl = document.createElement("label");
-      colorLbl.textContent = t.vignetteColor || "Color";
-      colorLbl.style.cssText = labelCss();
-      colorRow.appendChild(colorLbl);
-      const colorInput = document.createElement("input");
-      colorInput.type = "color";
-      colorInput.value = styleSettings.vignetteColor || "#000000";
-      colorInput.oninput = () => {
-        styleSettings.vignetteColor = colorInput.value;
-        _debouncedSave();
-        applyTheme(panelTheme);
-      };
-      const _rb_color = makeResetBtn(STYLE_DEFAULTS.vignetteColor, (dv) => {
-        colorInput.value = dv;
-        styleSettings.vignetteColor = dv;
-        save(); applyTheme(panelTheme);
-      });
-      colorRow.appendChild(colorInput);
-      colorRow.appendChild(_rb_color);
+      const { row: colorRow, input: colorInput } = mkColorInput(
+        t.vignetteColor || "Color",
+        styleSettings.vignetteColor || "#000000",
+        (v) => {
+          styleSettings.vignetteColor = v;
+          _debouncedSave();
+          applyTheme(panelTheme);
+        },
+        {
+          resetVal: "#000000",
+          onReset: (dv) => { colorInput.value = dv; styleSettings.vignetteColor = dv; save(); applyTheme(panelTheme); },
+        }
+      );
       vigSection.appendChild(colorRow);
 
       const opRow = document.createElement("div");
@@ -8990,7 +8816,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _debouncedSave();
         applyTheme(panelTheme);
       };
-      const _rb_op = makeResetBtn(STYLE_DEFAULTS.vignetteOpacity, (dv) => {
+      const _rb_op = makeResetBtn(0.45, (dv) => {
         opInput.value = dv;
         _vs_op.textContent = parseFloat(dv).toFixed(2);
         styleSettings.vignetteOpacity = dv;
@@ -9010,6 +8836,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
       parent.appendChild(vigSection);
       _setGroupEnabled(!!styleSettings.enableVignette, ..._subRows);
+
+      _bind(vignetteHeader,
+        () => _hlPanel(true),
+        () => _hlPanel(false)
+      );
+
       return { vignetteHeader };
     }
 
@@ -9064,27 +8896,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _sbsPresetRow.appendChild(_presetBtnWrap);
       searchBarSection.appendChild(_sbsPresetRow);
 
-      const _sbsBgRow = document.createElement("div");
-      _sbsBgRow.style.cssText = rowCss();
-      const _sbsBgLbl = document.createElement("label");
-      _sbsBgLbl.textContent = t.searchBarBgColor || "Bar BG Color";
-      _sbsBgLbl.style.cssText = labelCss();
-      _sbsBgRow.appendChild(_sbsBgLbl);
-      const sbsBgInput = document.createElement("input");
-      sbsBgInput.type = "color";
-      sbsBgInput.value = styleSettings.searchBarBg || "#333333";
-      sbsBgInput.oninput = () => {
-        styleSettings.searchBarBg = sbsBgInput.value;
-        _debouncedSave();
-      };
+      const { row: _sbsBgRow, label: _sbsBgLbl, input: sbsBgInput } = mkColorInput(
+        t.searchBarBgColor || "Bar BG Color",
+        styleSettings.searchBarBg || "#333333",
+        (v) => {
+          styleSettings.searchBarBg = v;
+          _debouncedSave();
+        },
+        {
+          resetVal: "",
+          onReset: (dv) => { sbsBgInput.value = dv || "#333333"; styleSettings.searchBarBg = dv; save(); applyTheme(panelTheme); },
+        }
+      );
       _sbsBgInputRef = sbsBgInput;
-      const _rb_sbsBg = makeResetBtn(STYLE_DEFAULTS.searchBarBg, (dv) => {
-        sbsBgInput.value = dv || "#333333";
-        styleSettings.searchBarBg = dv;
-        save(); applyTheme(panelTheme);
-      });
-      _sbsBgRow.appendChild(sbsBgInput);
-      _sbsBgRow.appendChild(_rb_sbsBg);
       searchBarSection.appendChild(_sbsBgRow);
 
       const _sbsBgOpRow = document.createElement("div");
@@ -9105,7 +8929,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       };
       _sbsBgOpInputRef = sbsBgOpInput;
       _sbsBgOpSpanRef  = sbsBgOpSpan;
-      const _rb_sbsBgOp = makeResetBtn(STYLE_DEFAULTS.searchBarBgOpacity, (dv) => {
+      const _rb_sbsBgOp = makeResetBtn(0, (dv) => {
         sbsBgOpInput.value = dv;
         sbsBgOpSpan.textContent = parseFloat(dv).toFixed(2);
         styleSettings.searchBarBgOpacity = dv;
@@ -9116,27 +8940,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _sbsBgOpRow.appendChild(_rb_sbsBgOp);
       searchBarSection.appendChild(_sbsBgOpRow);
 
-      const _sbsFgRow = document.createElement("div");
-      _sbsFgRow.style.cssText = rowCss();
-      const _sbsFgLbl = document.createElement("label");
-      _sbsFgLbl.textContent = t.searchBarFgColor || "Bar Text Color";
-      _sbsFgLbl.style.cssText = labelCss();
-      _sbsFgRow.appendChild(_sbsFgLbl);
-      const sbsFgInput = document.createElement("input");
-      sbsFgInput.type = "color";
-      sbsFgInput.value = styleSettings.searchBarFg || "#eeeeee";
-      sbsFgInput.oninput = () => {
-        styleSettings.searchBarFg = sbsFgInput.value;
-        _debouncedSave();
-      };
+      const { row: _sbsFgRow, label: _sbsFgLbl, input: sbsFgInput } = mkColorInput(
+        t.searchBarFgColor || "Bar Text Color",
+        styleSettings.searchBarFg || "#eeeeee",
+        (v) => {
+          styleSettings.searchBarFg = v;
+          _debouncedSave();
+        },
+        {
+          resetVal: "",
+          onReset: (dv) => { sbsFgInput.value = dv || "#eeeeee"; styleSettings.searchBarFg = dv; save(); applyTheme(panelTheme); },
+        }
+      );
       _sbsFgInputRef = sbsFgInput;
-      const _rb_sbsFg = makeResetBtn(STYLE_DEFAULTS.searchBarFg, (dv) => {
-        sbsFgInput.value = dv || "#eeeeee";
-        styleSettings.searchBarFg = dv;
-        save(); applyTheme(panelTheme);
-      });
-      _sbsFgRow.appendChild(sbsFgInput);
-      _sbsFgRow.appendChild(_rb_sbsFg);
       searchBarSection.appendChild(_sbsFgRow);
 
       const _sbsGlowToggleRow = document.createElement("div");
@@ -9157,26 +8973,18 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _sbsGlowToggleRow.appendChild(_sbsGlowToggle);
       searchBarSection.appendChild(_sbsGlowToggleRow);
 
-      const _sbsGlowColorRow = document.createElement("div");
-      _sbsGlowColorRow.style.cssText = rowCss();
-      const _sbsGlowColorLbl = document.createElement("label");
-      _sbsGlowColorLbl.textContent = t.searchBarGlowColor || "Glow Color";
-      _sbsGlowColorLbl.style.cssText = labelCss();
-      _sbsGlowColorRow.appendChild(_sbsGlowColorLbl);
-      const _sbsGlowColorInput = document.createElement("input");
-      _sbsGlowColorInput.type = "color";
-      _sbsGlowColorInput.value = styleSettings.searchBarGlowColor || "#5599ff";
-      _sbsGlowColorInput.oninput = () => {
-        styleSettings.searchBarGlowColor = _sbsGlowColorInput.value;
-        _debouncedSave();
-      };
-      const _rb_sbsGlowColor = makeResetBtn(STYLE_DEFAULTS.searchBarGlowColor, (dv) => {
-        _sbsGlowColorInput.value = dv;
-        styleSettings.searchBarGlowColor = dv;
-        save(); applyTheme(panelTheme);
-      });
-      _sbsGlowColorRow.appendChild(_sbsGlowColorInput);
-      _sbsGlowColorRow.appendChild(_rb_sbsGlowColor);
+      const { row: _sbsGlowColorRow, label: _sbsGlowColorLbl, input: _sbsGlowColorInput } = mkColorInput(
+        t.searchBarGlowColor || "Glow Color",
+        styleSettings.searchBarGlowColor || "#5599ff",
+        (v) => {
+          styleSettings.searchBarGlowColor = v;
+          _debouncedSave();
+        },
+        {
+          resetVal: "#5599ff",
+          onReset: (dv) => { _sbsGlowColorInput.value = dv; styleSettings.searchBarGlowColor = dv; save(); applyTheme(panelTheme); },
+        }
+      );
       searchBarSection.appendChild(_sbsGlowColorRow);
 
       const _sbsGlowStrRow = document.createElement("div");
@@ -9195,7 +9003,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         _vs_sbsGlowStr.textContent = _sbsGlowStrInput.value + "px";
         _debouncedSave();
       };
-      const _rb_sbsGlowStr = makeResetBtn(STYLE_DEFAULTS.searchBarGlowStrength, (dv) => {
+      const _rb_sbsGlowStr = makeResetBtn(6, (dv) => {
         _sbsGlowStrInput.value = dv;
         _vs_sbsGlowStr.textContent = dv + "px";
         styleSettings.searchBarGlowStrength = dv;
@@ -9208,6 +9016,22 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
       parent.appendChild(searchBarSection);
       _setGroupEnabled(!!styleSettings.searchBarGlowEnabled, _sbsGlowColorRow, _sbsGlowStrRow);
+
+      function _hlSearchBar(on) {
+        const _scw = document.getElementById("search-config-wrap");
+        if (!_scw) return;
+        _scw.style.outline       = on ? _DASHED : _NONE;
+        _scw.style.outlineOffset = on ? "3px"   : _NONE;
+      }
+      _bind(_sbsHeader,
+        () => _hlSearchBar(true),
+        () => _hlSearchBar(false)
+      );
+      [_sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
+       _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl].forEach(lbl => {
+        _bind(lbl, () => _hlSearchBar(true), () => _hlSearchBar(false));
+      });
+
       return {
         _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
         _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl,
@@ -9477,7 +9301,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         }
       });
     };
-    const _rb_siteButtonWidth = makeResetBtn(STYLE_DEFAULTS.siteButtonWidth, (dv) => {
+    const _rb_siteButtonWidth = makeResetBtn(0, (dv) => {
       siteButtonWidthInput.value = dv;
       styleSettings.siteButtonWidth = dv;
       _vs_siteButtonWidth.textContent = t.siteButtonWidthAuto || "Auto";
@@ -9497,30 +9321,18 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     siteButtonWidthRow.appendChild(_rb_siteButtonWidth);
     generalStyleContainer.appendChild(siteButtonWidthRow);
 
-    const panelBgColorRow = document.createElement("div");
-    panelBgColorRow.style.cssText = rowCss();
-    const panelBgColorLabel = document.createElement("label");
-    panelBgColorLabel.textContent = t.panelBgColor || "Panel Background Color";
-    panelBgColorLabel.style.cssText = labelCss();
-    panelBgColorRow.appendChild(panelBgColorLabel);
-    const panelBgColorInput = document.createElement("input");
-    panelBgColorInput.type = "color";
-    panelBgColorInput.value = styleSettings.backgroundColor
-      || (panelTheme === "dark" ? "#333333" : "#ffffff");
-    panelBgColorInput.oninput = () => {
-      styleSettings.backgroundColor = panelBgColorInput.value;
-      _debouncedSave();
-    };
-    const panelBgColorReset = makeResetBtn(
-      panelTheme === "dark" ? "#333333" : "#ffffff",
-      (dv) => {
-        panelBgColorInput.value = dv;
-        styleSettings.backgroundColor = dv;
-        save(); applyTheme(panelTheme);
+    const { row: panelBgColorRow, label: panelBgColorLabel, input: panelBgColorInput } = mkColorInput(
+      t.panelBgColor || "Panel Background Color",
+      styleSettings.backgroundColor || (panelTheme === "dark" ? "#333333" : "#ffffff"),
+      (v) => {
+        styleSettings.backgroundColor = v;
+        _debouncedSave();
+      },
+      {
+        resetVal: panelTheme === "dark" ? "#333333" : "#ffffff",
+        onReset: (dv) => { panelBgColorInput.value = dv; styleSettings.backgroundColor = dv; save(); applyTheme(panelTheme); },
       }
     );
-    panelBgColorRow.appendChild(panelBgColorInput);
-    panelBgColorRow.appendChild(panelBgColorReset);
     generalStyleContainer.appendChild(panelBgColorRow);
 
     const {
@@ -9535,7 +9347,37 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl,
     } = _buildGsSearchBarSection(generalStyleContainer);
 
-    return { generalStyleContainer, generalStyleHeader, _toggleBtnStyleAnchor, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl };
+    _bind(generalStyleHeader,
+      () => _hlSet([".group-block", "button:not(.icon-btn)"], true),
+      () => _hlSet([".group-block", "button:not(.icon-btn)"], false)
+    );
+    _bind(borderRadiusLabel,
+      () => _hlSet([".group-block", ".draggable-site"], true),
+      () => _hlSet([".group-block", ".draggable-site"], false)
+    );
+    _bind(contrastLabel,
+      () => _hlSet(["button:not(.icon-btn)", ".draggable-site"], true),
+      () => _hlSet(["button:not(.icon-btn)", ".draggable-site"], false)
+    );
+    _bind(opacityLabel,       () => _hlPanel(true), () => _hlPanel(false));
+    _bind(groupOpacityLabel,
+      () => _hlSet([".group-block"], true),
+      () => _hlSet([".group-block"], false)
+    );
+    _bind(buttonOpacityLabel,
+      () => _hlSet([".draggable-site", "button:not(.icon-btn)"], true),
+      () => _hlSet([".draggable-site", "button:not(.icon-btn)"], false)
+    );
+    _bind(siteButtonWidthLabel,
+      () => _hlSet([".draggable-site"], true),
+      () => _hlSet([".draggable-site"], false)
+    );
+    _bind(panelBgColorLabel,  () => _hlPanel(true), () => _hlPanel(false));
+
+    return {
+      generalStyleContainer, generalStyleHeader,
+      _layoutAnchors: { toggleBtnStyle: _toggleBtnStyleAnchor },
+      borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl };
     }
 
     function _buildToggleBtnStyleSection() {
@@ -9656,7 +9498,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
       };
-      const _cbReset = makeResetBtn(STYLE_DEFAULTS.toggleBtnBg, (dv) => {
+      const _cbReset = makeResetBtn("", (dv) => {
         styleSettings.toggleBtnBg = dv;
         _ci.value = "#ffffff";
         save();
@@ -9691,7 +9533,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
       };
-      const _rb = makeResetBtn(STYLE_DEFAULTS.toggleBtnBgOpacity, (dv) => {
+      const _rb = makeResetBtn(0, (dv) => {
         _si.value = dv;
         styleSettings.toggleBtnBgOpacity = dv;
         _vs.textContent = "0.00";
@@ -9743,7 +9585,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
       };
-      const _rb = makeResetBtn(STYLE_DEFAULTS.toggleBtnGlowColor, (dv) => {
+      const _rb = makeResetBtn("#00bfff", (dv) => {
         _ci.value = dv;
         styleSettings.toggleBtnGlowColor = dv;
         save();
@@ -9773,7 +9615,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const tb = document.getElementById("site-toggle-simple");
         if (tb) applyToggleBtnStyle(tb);
       };
-      const _rb = makeResetBtn(STYLE_DEFAULTS.toggleBtnGlowStrength, (dv) => {
+      const _rb = makeResetBtn(12, (dv) => {
         _si.value = dv;
         styleSettings.toggleBtnGlowStrength = dv;
         _vs.textContent = dv + "px";
@@ -9787,6 +9629,17 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       toggleBtnStyleContainer.appendChild(_tbGlowStrRow);
     })();
     _setGroupEnabled(!!styleSettings.enableToggleBtnGlow, _tbGlowColorRow, _tbGlowStrRow);
+
+    _bind(_tbsHeader,
+      () => _hlEls([document.getElementById("site-toggle-simple")], true),
+      () => _hlEls([document.getElementById("site-toggle-simple")], false)
+    );
+    toggleBtnStyleContainer.querySelectorAll("label").forEach(lbl => {
+      _bind(lbl,
+        () => _hlEls([document.getElementById("site-toggle-simple")], true),
+        () => _hlEls([document.getElementById("site-toggle-simple")], false)
+      );
+    });
 
     return { toggleBtnStyleContainer, _tbsHeader };
     }
@@ -9838,25 +9691,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     fontSizeRow.appendChild(_rb_fontSizeInput);
     textStyleContainer.appendChild(fontSizeRow);
 
-    const textBackgroundColorRow = document.createElement("div");
-    textBackgroundColorRow.style.cssText = rowCss();
-
-    const textBackgroundColorLabel = document.createElement("label");
-    textBackgroundColorLabel.textContent =
-      t.textBackgroundColor || "Text Background Color";
-    textBackgroundColorLabel.style.cssText = labelCss();
-    textBackgroundColorRow.appendChild(textBackgroundColorLabel);
-
-    const textBackgroundColorInput = document.createElement("input");
-    textBackgroundColorInput.type = "color";
-    textBackgroundColorInput.value =
-      styleSettings.textBackgroundColor || "#ffffff";
-    textBackgroundColorInput.oninput = () => {
-      styleSettings.textBackgroundColor = textBackgroundColorInput.value;
-      _debouncedSave();
-      _debouncedApply();
-    };
-    textBackgroundColorRow.appendChild(textBackgroundColorInput);
+    const { row: textBackgroundColorRow, label: textBackgroundColorLabel, input: textBackgroundColorInput } = mkColorInput(
+      t.textBackgroundColor || "Text Background Color",
+      styleSettings.textBackgroundColor || "#ffffff",
+      (v) => {
+        styleSettings.textBackgroundColor = v;
+        _debouncedSave();
+        _debouncedApply();
+      }
+    );
     textStyleContainer.appendChild(textBackgroundColorRow);
 
     const textBorderRow = document.createElement("div");
@@ -9875,7 +9718,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       save();
       applyTheme(panelTheme);
     };
-    const _rb_textBorderInput = makeResetBtn(STYLE_DEFAULTS.textBorder, (dv) => {
+    const _rb_textBorderInput = makeResetBtn(false, (dv) => {
       textBorderInput.checked = dv;
       styleSettings.textBorder = dv;
       save(); applyTheme(panelTheme);
@@ -9920,6 +9763,27 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     textOpacityCompensationRow.appendChild(_rb_textOpacityCompensationInput);
     textStyleContainer.appendChild(textOpacityCompensationRow);
 
+    _bind(textStyleHeader,
+      () => _hlSet([".site-label", ".group-name"], true),
+      () => _hlSet([".site-label", ".group-name"], false)
+    );
+    _bind(fontSizeLabel,
+      () => _hlSet([".site-label", ".group-name"], true),
+      () => _hlSet([".site-label", ".group-name"], false)
+    );
+    _bind(textBackgroundColorLabel,
+      () => _hlSet([".site-label"], true),
+      () => _hlSet([".site-label"], false)
+    );
+    _bind(textBorderLabel,
+      () => _hlSet([".site-label", ".group-name"], true),
+      () => _hlSet([".site-label", ".group-name"], false)
+    );
+    _bind(textOpacityCompensationLabel,
+      () => _hlSet([".site-label", ".group-name"], true),
+      () => _hlSet([".site-label", ".group-name"], false)
+    );
+
     return { textStyleContainer, textStyleHeader, fontSizeLabel, textBackgroundColorLabel, textBorderLabel, textOpacityCompensationLabel };
     }
 
@@ -9956,7 +9820,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       save();
       applyTheme(panelTheme);
     };
-    const _rb_overlayDarkeningInput = makeResetBtn(STYLE_DEFAULTS.enableOverlayDarkening, (dv) => {
+    const _rb_overlayDarkeningInput = makeResetBtn(false, (dv) => {
       overlayDarkeningInput.checked = dv;
       styleSettings.enableOverlayDarkening = dv;
       _setGroupEnabled(dv, overlayStrengthRow);
@@ -10225,6 +10089,16 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     _setGroupEnabled(!!styleSettings.enableOverlayDarkening, overlayStrengthRow);
 
+    _bind(backgroundOverlayHeader, () => _hlPanel(true), () => _hlPanel(false));
+    _bind(overlayDarkeningLabel,   () => _hlPanel(true), () => _hlPanel(false));
+    _bind(overlayStrengthLabel,    () => _hlPanel(true), () => _hlPanel(false));
+    _bind(imageLabel,        () => _hlPanel(true), () => _hlPanel(false));
+    _bind(imageModeLabel,    () => _hlPanel(true), () => _hlPanel(false));
+    _bind(imageOffsetXLabel, () => _hlPanel(true), () => _hlPanel(false));
+    _bind(imageOffsetYLabel, () => _hlPanel(true), () => _hlPanel(false));
+    _bind(imageScaleLabel,   () => _hlPanel(true), () => _hlPanel(false));
+    _bind(imageOpacityLabel, () => _hlPanel(true), () => _hlPanel(false));
+
     return { backgroundOverlayContainer, backgroundOverlayHeader, overlayDarkeningLabel, overlayStrengthLabel, imageLabel, imageModeLabel, imageOffsetXLabel, imageOffsetYLabel, imageScaleLabel, imageOpacityLabel };
     }
 
@@ -10243,20 +10117,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     multiSelectHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
     multiSelectContainer.appendChild(multiSelectHeader);
 
-    const msColorRow = document.createElement("div");
-    msColorRow.style.cssText = rowCss();
-    const msColorLabel = document.createElement("label");
-    msColorLabel.textContent = t.multiSelectColor || "Select Highlight Color";
-    msColorLabel.style.cssText = labelCss();
-    msColorRow.appendChild(msColorLabel);
-    const msColorInput = document.createElement("input");
-    msColorInput.type = "color";
-    msColorInput.value = styleSettings.multiSelectColor || "#ffc400";
-    msColorInput.oninput = () => {
-      styleSettings.multiSelectColor = msColorInput.value;
-      _debouncedSave();
-    };
-    msColorRow.appendChild(msColorInput);
+    const { row: msColorRow, label: msColorLabel, input: msColorInput } = mkColorInput(
+      t.multiSelectColor || "Select Highlight Color",
+      styleSettings.multiSelectColor || "#ffc400",
+      (v) => {
+        styleSettings.multiSelectColor = v;
+        _debouncedSave();
+      }
+    );
     multiSelectContainer.appendChild(msColorRow);
 
     const msOpacityRow = document.createElement("div");
@@ -10278,7 +10146,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _debouncedSave();
     };
     const _vs_msOpacity = makeValueSpan(parseFloat(msOpacityInput.value).toFixed(2));
-    const _rb_msOpacity = makeResetBtn(STYLE_DEFAULTS.multiSelectOpacity, (dv) => {
+    const _rb_msOpacity = makeResetBtn(0.85, (dv) => {
       msOpacityInput.value = dv;
       styleSettings.multiSelectOpacity = dv;
       _vs_msOpacity.textContent = String(dv);
@@ -10288,6 +10156,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     msOpacityRow.appendChild(_vs_msOpacity);
     msOpacityRow.appendChild(_rb_msOpacity);
     multiSelectContainer.appendChild(msOpacityRow);
+
+    _bind(multiSelectHeader,
+      () => _hlSet([".multi-btn", ".multi-send-btn"], true),
+      () => _hlSet([".multi-btn", ".multi-send-btn"], false)
+    );
+    _bind(msColorLabel,
+      () => _hlSet([".multi-btn", ".multi-send-btn"], true),
+      () => _hlSet([".multi-btn", ".multi-send-btn"], false)
+    );
+    _bind(msOpacityLabel,
+      () => _hlSet([".multi-btn", ".multi-send-btn"], true),
+      () => _hlSet([".multi-btn", ".multi-send-btn"], false)
+    );
 
     return { multiSelectContainer, multiSelectHeader, msColorLabel, msOpacityLabel };
     }
@@ -10308,69 +10189,49 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     customThemeHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
     customThemeContainer.appendChild(customThemeHeader);
 
-    const backgroundColorRow = document.createElement("div");
-    backgroundColorRow.style.cssText = rowCss();
-
-    const backgroundColorLabel = document.createElement("label");
-    backgroundColorLabel.textContent = t.backgroundColor || "Background Color";
-    backgroundColorLabel.style.cssText = labelCss();
-    backgroundColorRow.appendChild(backgroundColorLabel);
-
-    const backgroundColorInput = document.createElement("input");
-    backgroundColorInput.type = "color";
-    backgroundColorInput.value = styleSettings.customBackgroundColor;
-    backgroundColorInput.oninput = () => {
-      styleSettings.customBackgroundColor = backgroundColorInput.value;
-      save();
-      _debouncedApply();
-    };
-    backgroundColorRow.appendChild(backgroundColorInput);
+    const { row: backgroundColorRow, label: backgroundColorLabel, input: backgroundColorInput } = mkColorInput(
+      t.backgroundColor || "Background Color",
+      styleSettings.customBackgroundColor,
+      (v) => { styleSettings.customBackgroundColor = v; save(); _debouncedApply(); }
+    );
     customThemeContainer.appendChild(backgroundColorRow);
 
-    const textColorRow = document.createElement("div");
-    textColorRow.style.cssText = rowCss();
-
-    const textColorLabel = document.createElement("label");
-    textColorLabel.textContent = t.textColor || "Text Color";
-    textColorLabel.style.cssText = labelCss();
-    textColorRow.appendChild(textColorLabel);
-
-    const textColorInput = document.createElement("input");
-    textColorInput.type = "color";
-    textColorInput.value = styleSettings.customTextColor;
-    textColorInput.oninput = () => {
-      styleSettings.customTextColor = textColorInput.value;
-      save();
-      _debouncedApply();
-    };
-    textColorRow.appendChild(textColorInput);
+    const { row: textColorRow, label: textColorLabel, input: textColorInput } = mkColorInput(
+      t.textColor || "Text Color",
+      styleSettings.customTextColor,
+      (v) => { styleSettings.customTextColor = v; save(); _debouncedApply(); }
+    );
     customThemeContainer.appendChild(textColorRow);
 
-    const buttonBgRow = document.createElement("div");
-    buttonBgRow.style.cssText = rowCss();
-
-    const buttonBgLabel = document.createElement("label");
-    buttonBgLabel.textContent = t.customButtonBg || "Button Background";
-
-    buttonBgLabel.style.cssText = labelCss();
-    buttonBgRow.appendChild(buttonBgLabel);
-
-    const buttonBgInput = document.createElement("input");
-    buttonBgInput.type = "color";
-    buttonBgInput.value = styleSettings.customButtonBg;
-    buttonBgInput.oninput = () => {
-      styleSettings.customButtonBg = buttonBgInput.value;
-      save();
-      _debouncedApply();
-    };
-    buttonBgRow.appendChild(buttonBgInput);
+    const { row: buttonBgRow, label: buttonBgLabel, input: buttonBgInput } = mkColorInput(
+      t.customButtonBg || "Button Background",
+      styleSettings.customButtonBg,
+      (v) => { styleSettings.customButtonBg = v; save(); _debouncedApply(); }
+    );
     customThemeContainer.appendChild(buttonBgRow);
+
+    _bind(customThemeHeader,
+      () => _hlSet([".group-block", ".draggable-site"], true),
+      () => _hlSet([".group-block", ".draggable-site"], false)
+    );
+    _bind(backgroundColorLabel,
+      () => _hlPanel(true),
+      () => _hlPanel(false)
+    );
+    _bind(textColorLabel,
+      () => _hlSet([".site-label", ".group-name"], true),
+      () => _hlSet([".site-label", ".group-name"], false)
+    );
+    _bind(buttonBgLabel,
+      () => _hlSet([".draggable-site", "button:not(.icon-btn)"], true),
+      () => _hlSet([".draggable-site", "button:not(.icon-btn)"], false)
+    );
 
     return { customThemeContainer, customThemeHeader, backgroundColorLabel, textColorLabel, buttonBgLabel };
     }
 
     const { panelLayoutContainer, panelLayoutHeader } = _buildPanelLayoutSection();
-    const { generalStyleContainer, generalStyleHeader, _toggleBtnStyleAnchor, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl } = _buildGeneralStyleSection();
+    const { generalStyleContainer, generalStyleHeader, _layoutAnchors, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl } = _buildGeneralStyleSection();
     const { toggleBtnStyleContainer, _tbsHeader } = _buildToggleBtnStyleSection();
     const { textStyleContainer, textStyleHeader, fontSizeLabel, textBackgroundColorLabel, textBorderLabel, textOpacityCompensationLabel } = _buildTextStyleSection();
     const { backgroundOverlayContainer, backgroundOverlayHeader, overlayDarkeningLabel, overlayStrengthLabel, imageLabel, imageModeLabel, imageOffsetXLabel, imageOffsetYLabel, imageScaleLabel, imageOpacityLabel } = _buildBgOverlaySection();
@@ -10378,72 +10239,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const { customThemeContainer, customThemeHeader, backgroundColorLabel, textColorLabel, buttonBgLabel } = _buildCustomThemeSection();
 
     styleConfigContent.appendChild(panelLayoutContainer);
-    generalStyleContainer.insertBefore(toggleBtnStyleContainer, _toggleBtnStyleAnchor);
-    _toggleBtnStyleAnchor.remove();
+    generalStyleContainer.insertBefore(toggleBtnStyleContainer, _layoutAnchors.toggleBtnStyle);
+    _layoutAnchors.toggleBtnStyle.remove();
     styleConfigContent.appendChild(generalStyleContainer);
     styleConfigContent.appendChild(textStyleContainer);
     styleConfigContent.appendChild(backgroundOverlayContainer);
     styleConfigContent.appendChild(multiSelectContainer);
     styleConfigContent.appendChild(customThemeContainer);
-
-    _bindStylePanel({
-      panelLayoutContainer,
-      panelLayoutHeader,
-      generalStyleContainer,
-      generalStyleHeader,
-      borderRadiusLabel,
-      contrastLabel,
-      opacityLabel,
-      groupOpacityLabel,
-      buttonOpacityLabel,
-      siteButtonWidthLabel,
-      panelBgColorLabel,
-      glowHeader,
-      glowToggleLbl,
-      glowColorLbl,
-      glowStrLbl,
-      glowInsetLbl,
-      sheenToggleLbl,
-      sheenAngleLbl,
-      sheenOpLbl,
-      siteGlowLbl,
-      groupGlowLbl,
-      _sbsHeader,
-      _sbsPresetLbl,
-      _sbsBgLbl,
-      _sbsBgOpLbl,
-      _sbsFgLbl,
-      _sbsGlowToggleLbl,
-      _sbsGlowColorLbl,
-      _sbsGlowStrLbl,
-      toggleBtnStyleContainer,
-      _tbsHeader,
-      textStyleContainer,
-      textStyleHeader,
-      fontSizeLabel,
-      textBackgroundColorLabel,
-      textBorderLabel,
-      textOpacityCompensationLabel,
-      backgroundOverlayContainer,
-      backgroundOverlayHeader,
-      overlayDarkeningLabel,
-      overlayStrengthLabel,
-      imageLabel,
-      imageModeLabel,
-      imageOffsetXLabel,
-      imageOffsetYLabel,
-      imageScaleLabel,
-      imageOpacityLabel,
-      multiSelectContainer,
-      multiSelectHeader,
-      msColorLabel,
-      msOpacityLabel,
-      customThemeContainer,
-      customThemeHeader,
-      backgroundColorLabel,
-      textColorLabel,
-      buttonBgLabel,
-    });
 
   if (document.getElementById("style-config-wrap")) {
     document.getElementById("style-config-wrap").remove();
@@ -10961,86 +10763,48 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _updateBlacklistBtn();
   };
 
-  function _buildToolbarActionBtn(opts) {
-    const {
-      id,
-      hasCount = false,
-      nonCompactPadding = "4px 8px",
-      compactGap = "4px",
-      isIconOnly = () => toolbarCompactMode,
-      applyIcon,
-      getLabelText,
-      getCountText,
-      getTooltip,
-      onClick,
-    } = opts;
-
-    const btn = document.createElement("button");
-    if (id) btn.id = id;
-    btn.style.cssText = `
-      padding:${nonCompactPadding}; border-radius:${_tlbRad};
-      cursor:pointer; white-space:nowrap; font-size:11px; flex-shrink:1;
-      background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd}; opacity:${_tlbOpacity};
-      display:inline-flex; align-items:center; justify-content:center; gap:${compactGap};
-    `;
-    const iconEl  = document.createElement("span");
-    const labelEl = document.createElement("span");
-    labelEl.style.fontSize = _tlbFontSize;
-    btn.appendChild(iconEl);
-    let countEl = null;
-    if (hasCount) {
-      countEl = document.createElement("span");
-      countEl.style.fontSize = _tlbFontSize;
-      btn.appendChild(countEl);
-    }
-    btn.appendChild(labelEl);
-
-    function update() {
-      applyIcon(iconEl);
-      if (countEl) countEl.textContent = getCountText();
-      labelEl.textContent = toolbarCompactMode ? "" : getLabelText();
-      const _iconOnly = isIconOnly();
-      btn.style.gap = _iconOnly ? "0" : compactGap;
-      btn.style.padding = _iconOnly ? "3px 6px" : nonCompactPadding;
-      if (opts.afterUpdate) opts.afterUpdate(btn);
-    }
-    update();
-    _attachHoverTooltip(btn, getTooltip);
-    if (onClick) btn.addEventListener("click", onClick);
-
-    return { btn, iconEl, labelEl, countEl, update };
+  const addGroupBtn = document.createElement("button");
+  addGroupBtn.id = "toolbar-add-group-btn";
+  addGroupBtn.style.cssText = `
+    padding:3px 8px; border-radius:${_tlbRad};
+    cursor:pointer; white-space:nowrap; font-size:11px; flex-shrink:1;
+    background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd}; opacity:${_tlbOpacity};
+    display:inline-flex; align-items:center; justify-content:center; gap:4px;
+  `;
+  const addGroupIconEl  = document.createElement("span");
+  const addGroupLabelEl = document.createElement("span");
+  addGroupLabelEl.style.fontSize = _tlbFontSize;
+  addGroupBtn.appendChild(addGroupIconEl);
+  addGroupBtn.appendChild(addGroupLabelEl);
+  function _updateAddGroupBtn() {
+    _applyIconToBtn(addGroupIconEl, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
+    addGroupLabelEl.textContent = toolbarCompactMode ? "" : (t.addGroup || "Add Group ➕").replace(/\s*➕\s*$/, "");
+    addGroupBtn.style.gap = toolbarCompactMode ? "0" : "4px";
+    addGroupBtn.style.padding = toolbarCompactMode ? "3px 6px" : "3px 8px";
   }
-
-  const _addGroupParts = _buildToolbarActionBtn({
-    id: TOOLBAR_BTN_IDS.hideAddGroupBtn.id,
-    nonCompactPadding: "3px 8px",
-    applyIcon: (el) => _applyIconToBtn(el, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size),
-    getLabelText: () => (t.addGroup || "Add Group ➕").replace(/\s*➕\s*$/, ""),
-    getTooltip: () => toolbarCompactMode ? (t.addGroup || "Add Group ➕") : "",
-    onClick: () => {
-      if (_dlgPromptActive) {
-        warn("[Prompt] Another prompt is active, ignoring add-group request");
+  _updateAddGroupBtn();
+  addGroupBtn.style.display = styleSettings.hideAddGroupBtn ? "none" : "inline-flex";
+  _attachHoverTooltip(addGroupBtn, () => toolbarCompactMode ? (t.addGroup || "Add Group ➕") : "");
+  addGroupBtn.onclick = () => {
+    if (_dlgPromptActive) {
+      warn("[Prompt] Another prompt is active, ignoring add-group request");
+      return;
+    }
+    showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
+      if (!name || !name.trim()) {
+        showToast(t.emptyGroupName || "Group name cannot be empty!");
         return;
       }
-      showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
-        if (!name || !name.trim()) {
-          showToast(t.emptyGroupName || "Group name cannot be empty!");
-          return;
-        }
-        groups.push({ name: name.trim(), sites: [] });
-        save();
-        renderSites(panel);
-        panel.style.display = "block";
-        showToast(`${t.addGroup || "Group added"} ✅`);
-      });
-    },
-  });
-  const addGroupBtn = _addGroupParts.btn;
-  const _updateAddGroupBtn = _addGroupParts.update;
-  addGroupBtn.style.display = styleSettings.hideAddGroupBtn ? "none" : "inline-flex";
+      groups.push({ name: name.trim(), sites: [] });
+      save();
+      renderSites(panel);
+      panel.style.display = "block";
+      showToast(`${t.addGroup || "Group added"} ✅`);
+    });
+  };
 
   const toggleAddressBtn = document.createElement("button");
-  toggleAddressBtn.id = TOOLBAR_BTN_IDS.hideAddressToggleBtn.id;
+  toggleAddressBtn.id = "se-toggle-address-btn";
   toggleAddressBtn.style.cssText = `
     padding:3px 6px; border-radius:${_tlbRad};
     cursor:pointer; white-space:nowrap; font-size:13px;
@@ -11074,7 +10838,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   buttonContainer.appendChild(toggleAddressBtn);
 
   const modGroup = document.createElement("div");
-  modGroup.id = TOOLBAR_BTN_IDS.hideModGroup.id;
+  modGroup.id = "syntax-mod-group";
   modGroup.style.cssText =
     "display:flex; align-items:center; gap:3px; flex-shrink:0; position:relative;";
   modGroup.style.display = styleSettings.hideModGroup ? "none" : "flex";
@@ -11316,12 +11080,34 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   buttonContainer.appendChild(modGroup);
   buttonContainer.appendChild(addGroupBtn);
 
-  const _exportParts = _buildToolbarActionBtn({
-    id: TOOLBAR_BTN_IDS.hideExportBtn.id,
-    applyIcon: (el) => _applyIconToBtn(el, ICONS.exportConfig.emoji, ICONS.exportConfig.line, ICONS.exportConfig.fill, ICONS.exportConfig.size),
-    getLabelText: () => (t.exportConfig || "Export Config 📤").replace(/\s*📤\s*$/, ""),
-    getTooltip: () => toolbarCompactMode ? (t.exportConfig || "Export Config 📤") : "",
-    onClick: () => {
+  const exportBtn = document.createElement("button");
+  exportBtn.id = "toolbar-export-btn";
+  exportBtn.style.alignItems = "center";
+  exportBtn.style.justifyContent = "center";
+  exportBtn.style.gap = "4px";
+  const exportIconEl  = document.createElement("span");
+  const exportLabelEl = document.createElement("span");
+  exportLabelEl.style.fontSize = _tlbFontSize;
+  exportBtn.appendChild(exportIconEl);
+  exportBtn.appendChild(exportLabelEl);
+  function _updateExportBtn() {
+    _applyIconToBtn(exportIconEl, ICONS.exportConfig.emoji, ICONS.exportConfig.line, ICONS.exportConfig.fill, ICONS.exportConfig.size);
+    exportLabelEl.textContent = toolbarCompactMode ? "" : (t.exportConfig || "Export Config 📤").replace(/\s*📤\s*$/, "");
+    exportBtn.style.gap = toolbarCompactMode ? "0" : "4px";
+    exportBtn.style.padding = toolbarCompactMode ? "3px 6px" : "4px 8px";
+  }
+  _updateExportBtn();
+  exportBtn.style.borderRadius = _tlbRad;
+  exportBtn.style.cursor = "pointer";
+  exportBtn.style.whiteSpace = "nowrap";
+  exportBtn.style.flexShrink = "1";
+  exportBtn.style.background = _tlbBg;
+  exportBtn.style.color = _tlbFg;
+  exportBtn.style.border = `1px solid ${_tlbBd}`;
+  exportBtn.style.opacity = _tlbOpacity;
+  exportBtn.style.display = styleSettings.hideExportBtn ? "none" : "inline-flex";
+  _attachHoverTooltip(exportBtn, () => toolbarCompactMode ? (t.exportConfig || "Export Config 📤") : "");
+  exportBtn.onclick = () => {
     const config = {
       siteGroups: groups,
       searchConfig: syntaxConfig,
@@ -11363,19 +11149,37 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         warn("Failed to copy to clipboard:", err);
         showToast(t.copied || "Copied! 📋");
       });
-    },
-  });
-  const exportBtn = _exportParts.btn;
-  const _updateExportBtn = _exportParts.update;
-  exportBtn.style.display = styleSettings.hideExportBtn ? "none" : "inline-flex";
+  };
   buttonContainer.appendChild(exportBtn);
 
-  const _importParts = _buildToolbarActionBtn({
-    id: TOOLBAR_BTN_IDS.hideImportBtn.id,
-    applyIcon: (el) => _applyIconToBtn(el, ICONS.importConfig.emoji, ICONS.importConfig.line, ICONS.importConfig.fill, ICONS.importConfig.size),
-    getLabelText: () => (t.importConfig || "Import Config 📥").replace(/\s*📥\s*$/, ""),
-    getTooltip: () => toolbarCompactMode ? (t.importConfig || "Import Config 📥") : "",
-    onClick: () => {
+  const importBtn = document.createElement("button");
+  importBtn.id = "toolbar-import-btn";
+  importBtn.style.alignItems = "center";
+  importBtn.style.justifyContent = "center";
+  importBtn.style.gap = "4px";
+  const importIconEl  = document.createElement("span");
+  const importLabelEl = document.createElement("span");
+  importLabelEl.style.fontSize = _tlbFontSize;
+  importBtn.appendChild(importIconEl);
+  importBtn.appendChild(importLabelEl);
+  function _updateImportBtn() {
+    _applyIconToBtn(importIconEl, ICONS.importConfig.emoji, ICONS.importConfig.line, ICONS.importConfig.fill, ICONS.importConfig.size);
+    importLabelEl.textContent = toolbarCompactMode ? "" : (t.importConfig || "Import Config 📥").replace(/\s*📥\s*$/, "");
+    importBtn.style.gap = toolbarCompactMode ? "0" : "4px";
+    importBtn.style.padding = toolbarCompactMode ? "3px 6px" : "4px 8px";
+  }
+  _updateImportBtn();
+  importBtn.style.borderRadius = _tlbRad;
+  importBtn.style.cursor = "pointer";
+  importBtn.style.whiteSpace = "nowrap";
+  importBtn.style.flexShrink = "1";
+  importBtn.style.background = _tlbBg;
+  importBtn.style.color = _tlbFg;
+  importBtn.style.border = `1px solid ${_tlbBd}`;
+  importBtn.style.opacity = _tlbOpacity;
+  importBtn.style.display = styleSettings.hideImportBtn ? "none" : "inline-flex";
+  _attachHoverTooltip(importBtn, () => toolbarCompactMode ? (t.importConfig || "Import Config 📥") : "");
+  importBtn.onclick = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = ".json";
@@ -11522,11 +11326,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     document.body.appendChild(fileInput);
     fileInput.click();
     setTimeout(() => fileInput.remove(), 30000);
-    },
-  });
-  const importBtn = _importParts.btn;
-  const _updateImportBtn = _importParts.update;
-  importBtn.style.display = styleSettings.hideImportBtn ? "none" : "inline-flex";
+  };
   buttonContainer.appendChild(importBtn);
 
   const syntaxHelpBtn = document.createElement("button");
@@ -11545,32 +11345,55 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   syntaxHelpBtn.onclick = () => showSyntaxPanel();
   syntaxHelpBtn.style.display = styleSettings.hideSyntaxBtn ? "none" : "inline-flex";
 
+  const blacklistBtnEl = document.createElement("button");
+  blacklistBtnEl.id = "blacklist-btn";
+  blacklistBtnEl.style.padding = "4px 8px";
+  blacklistBtnEl.style.borderRadius = _tlbRad;
+  blacklistBtnEl.style.cursor = "pointer";
+  blacklistBtnEl.style.whiteSpace = "nowrap";
+  blacklistBtnEl.style.flexShrink = "1";
+  blacklistBtnEl.style.background = _tlbBg;
+  blacklistBtnEl.style.color = _tlbFg;
+  blacklistBtnEl.style.border = `1px solid ${_tlbBd}`;
+  blacklistBtnEl.style.opacity = _tlbOpacity;
+  blacklistBtnEl.style.display = "inline-flex";
+  blacklistBtnEl.style.alignItems = "center";
+  blacklistBtnEl.style.justifyContent = "center";
+  blacklistBtnEl.style.gap = "3px";
+  const blacklistIconEl  = document.createElement("span");
+  const blacklistCountEl = document.createElement("span");
+  const blacklistLabelEl = document.createElement("span");
+  blacklistCountEl.style.fontSize = _tlbFontSize;
+  blacklistLabelEl.style.fontSize = _tlbFontSize;
+  blacklistBtnEl.appendChild(blacklistIconEl);
+  blacklistBtnEl.appendChild(blacklistCountEl);
+  blacklistBtnEl.appendChild(blacklistLabelEl);
   const _blCount = Array.isArray(blacklistDomains) ? blacklistDomains.filter(d => d.trim()).length : 0;
-  const _blacklistParts = _buildToolbarActionBtn({
-    id: TOOLBAR_BTN_IDS.hideBlacklistBtn.id,
-    hasCount: true,
-    compactGap: "3px",
-    isIconOnly: () => toolbarCompactMode && _blCount === 0,
-    applyIcon: (el) => _applyIconToBtn(el, ICONS.blacklist.emoji, ICONS.blacklist.line, ICONS.blacklist.fill, ICONS.blacklist.size),
-    getCountText: () => _blCount > 0 ? String(_blCount) : "",
-    getLabelText: () => (t.blacklistBtn || "🚫 Blacklist").replace(/^\s*🚫\s*/, ""),
-    getTooltip: () =>
-      toolbarCompactMode
-        ? (_blCount > 0
-            ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
-            : (t.blacklistTitle || "Domain Blacklist"))
-        : "",
-    afterUpdate: (btn) => {
-      btn.title = toolbarCompactMode
-        ? ""
-        : (_blCount > 0
-            ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
-            : (t.blacklistTitle || "Domain Blacklist"));
-    },
-    onClick: () => showBlacklistDialog(),
-  });
-  const blacklistBtnEl = _blacklistParts.btn;
-  const _updateBlacklistBtn = _blacklistParts.update;
+  function _updateBlacklistBtn() {
+    _applyIconToBtn(blacklistIconEl, ICONS.blacklist.emoji, ICONS.blacklist.line, ICONS.blacklist.fill, ICONS.blacklist.size);
+    blacklistCountEl.textContent = _blCount > 0 ? String(_blCount) : "";
+    if (toolbarCompactMode) {
+      blacklistLabelEl.textContent = "";
+      blacklistBtnEl.title = "";
+    } else {
+      blacklistLabelEl.textContent = (t.blacklistBtn || "🚫 Blacklist").replace(/^\s*🚫\s*/, "");
+      blacklistBtnEl.title = _blCount > 0
+        ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
+        : (t.blacklistTitle || "Domain Blacklist");
+    }
+    const _isIconOnly = toolbarCompactMode && _blCount === 0;
+    blacklistBtnEl.style.gap = _isIconOnly ? "0" : "3px";
+    blacklistBtnEl.style.padding = _isIconOnly ? "3px 6px" : "4px 8px";
+  }
+  _updateBlacklistBtn();
+  _attachHoverTooltip(blacklistBtnEl, () =>
+    toolbarCompactMode
+      ? (_blCount > 0
+          ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
+          : (t.blacklistTitle || "Domain Blacklist"))
+      : ""
+  );
+  blacklistBtnEl.onclick = () => showBlacklistDialog();
   blacklistBtnEl.style.display = styleSettings.hideBlacklistBtn ? "none" : "inline-flex";
   buttonContainer.appendChild(blacklistBtnEl);
   buttonContainer.appendChild(syntaxHelpBtn);
@@ -12317,35 +12140,31 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         GM_setValue(STORAGE_KEYS.COMPACT_PANEL_TOP,  _cp.style.top);
       }
     });
-    let _dx = 0, _dy = 0, _dragging = false;
+    const _cpDragState = { active: false, x: 0, y: 0 };
 
     _handle.addEventListener("mousedown", (e) => {
       if (e.target === _exitBtn) return;
-      _dragging = true;
+      _cpDragState.active = true;
       const r = _cp.getBoundingClientRect();
-      _dx = e.clientX - r.left;
-      _dy = e.clientY - r.top;
+      _cpDragState.x = e.clientX - r.left;
+      _cpDragState.y = e.clientY - r.top;
       _handle.style.cursor = "grabbing";
       e.preventDefault();
     });
 
-    _hdlCompactDragMove = (e) => {
-      if (!_dragging) return;
-      const nl = Math.max(0, Math.min(e.clientX - _dx, window.innerWidth  - _cp.offsetWidth));
-      const nt = Math.max(0, Math.min(e.clientY - _dy, window.innerHeight - _cp.offsetHeight));
-      _cp.style.left  = nl + "px";
-      _cp.style.top   = nt + "px";
-      _cp.style.right = "auto";
-    };
+    const _cpDrag = _makeDraggable(
+      () => _cp,
+      _cpDragState,
+      () => {
+        _handle.style.cursor = "grab";
+        GM_setValue(STORAGE_KEYS.COMPACT_PANEL_LEFT, _cp.style.left);
+        GM_setValue(STORAGE_KEYS.COMPACT_PANEL_TOP,  _cp.style.top);
+      }
+    );
+    _hdlCompactDragMove = _cpDrag.onMove;
     document.addEventListener("mousemove", _hdlCompactDragMove);
 
-    _hdlCompactDragUp = () => {
-      if (!_dragging) return;
-      _dragging = false;
-      _handle.style.cursor = "grab";
-      GM_setValue(STORAGE_KEYS.COMPACT_PANEL_LEFT, _cp.style.left);
-      GM_setValue(STORAGE_KEYS.COMPACT_PANEL_TOP,  _cp.style.top);
-    };
+    _hdlCompactDragUp = _cpDrag.onUp;
     document.addEventListener("mouseup", _hdlCompactDragUp);
   }
 
@@ -12865,13 +12684,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       GM_setValue(STORAGE_KEYS.DOMAIN_BLACKLIST, blacklistDomains);
       save();
 
-      const blBtn = document.getElementById(TOOLBAR_BTN_IDS.hideBlacklistBtn.id);
-      if (blBtn && blBtn.children[1] && blBtn.children[2]) {
+      const blBtn = document.getElementById("blacklist-btn");
+      if (blBtn) {
         const cnt = blacklistDomains.filter(d => d.trim()).length;
-        blBtn.children[1].textContent = cnt > 0 ? String(cnt) : "";
-        blBtn.children[2].textContent = toolbarCompactMode
-          ? ""
-          : (t_bl.blacklistBtn || "🚫 Blacklist").replace(/^\s*🚫\s*/, "");
+        blBtn.textContent = cnt > 0 ? `🚫 ${cnt}` : (t_bl.blacklistBtn || "🚫 Blacklist");
         blBtn.title = cnt > 0
           ? (t_bl.blacklistCount ? t_bl.blacklistCount(cnt) : `Blocking ${cnt}`) + "\n" + (t_bl.blacklistTitle || "Domain Blacklist")
           : (t_bl.blacklistTitle || "Domain Blacklist");
