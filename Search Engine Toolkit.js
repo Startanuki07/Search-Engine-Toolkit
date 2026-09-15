@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.6.0.40
+// @version      2.7.0.0
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -7823,6 +7823,2087 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     el.addEventListener("mouseleave", onLeave);
   }
 
+  function rowCss() {
+    return "display: flex; align-items: center; margin-bottom: 6px; width: 100%; justify-content: space-between;";
+  }
+
+  function labelCss() {
+    return `flex-shrink: 0; font-size: 12px; margin-right: 6px; color: ${panelTheme === "dark" ? "#eee" : "#111"};`;
+  }
+
+  function sliderCss() {
+    return "flex: 1; min-width: 60px; margin: 0 6px;";
+  }
+
+  function checkboxRowCss() {
+    return "display: flex; align-items: center; margin-bottom: 6px; width: 100%; justify-content: flex-start;";
+  }
+
+  function makeValueSpan(val) {
+    const span = document.createElement("span");
+    span.textContent = val;
+    span.style.cssText = "width: 40px; text-align: right; font-size: 11px; flex-shrink: 0;";
+    return span;
+  }
+
+  function _buildButtonGroup(labelText, options, datasetKey, getCurrentVal, onSelect) {
+    const row = document.createElement("div");
+    row.style.cssText = rowCss() + "flex-wrap:wrap; gap:4px;";
+    const lbl = document.createElement("label");
+    lbl.textContent = labelText;
+    lbl.style.cssText = labelCss();
+    row.appendChild(lbl);
+    const wrap = document.createElement("div");
+    wrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
+
+    const refreshActive = () => {
+      const current = getCurrentVal();
+      wrap.querySelectorAll("button").forEach(btn2 => {
+        const now = btn2.dataset[datasetKey] === current;
+        const isDark = panelTheme === "dark";
+        btn2.style.background = now ? (isDark ? "#334466" : "#ddeeff") : "transparent";
+        btn2.style.color = now ? (isDark ? "#88aaff" : "#0055cc") : "inherit";
+      });
+    };
+
+    options.forEach(({ v, lb }) => {
+      const b = document.createElement("button");
+      b.textContent = lb;
+      b.dataset[datasetKey] = v;
+      const isDark = panelTheme === "dark";
+      const active = getCurrentVal() === v;
+      b.style.cssText = `
+        padding:2px 8px; border-radius:4px; cursor:pointer;
+        font-size:${styleSettings.fontSize - 1}px; white-space:nowrap;
+        border:1px solid ${isDark ? "#555" : "#ccc"};
+        background:${active ? (isDark ? "#334466" : "#ddeeff") : "transparent"};
+        color:${active ? (isDark ? "#88aaff" : "#0055cc") : "inherit"};
+        transition: background .15s, color .15s;
+      `;
+      b.addEventListener("click", () => {
+        onSelect(v);
+        refreshActive();
+      });
+      wrap.appendChild(b);
+    });
+
+    row.appendChild(wrap);
+    return { row, refreshActive };
+  }
+
+  function mkColorInput(labelText, initialVal, onInput, opts) {
+    opts = opts || {};
+    const row = document.createElement("div");
+    row.style.cssText = rowCss();
+    const label = document.createElement("label");
+    label.textContent = labelText;
+    label.style.cssText = labelCss();
+    row.appendChild(label);
+
+    const input = document.createElement("input");
+    input.type = "color";
+    input.value = initialVal;
+    input.oninput = () => onInput(input.value);
+    row.appendChild(input);
+
+    let resetBtn = null;
+    if (opts.resetVal !== undefined) {
+      resetBtn = makeResetBtn(opts.resetVal, (dv) => {
+        if (opts.onReset) {
+          opts.onReset(dv);
+        } else {
+          input.value = dv;
+          onInput(dv);
+        }
+      });
+      row.appendChild(resetBtn);
+    }
+
+    return { row, label, input, resetBtn };
+  }
+
+  function makeResetBtn(defaultVal, callback) {
+    const btn = document.createElement("button");
+    btn.textContent = "↺";
+    btn.title = t.resetToDefault || "Reset to Default";
+    btn.style.cssText = "background: transparent; border: none; cursor: pointer; padding: 0 4px; font-size: 14px; margin-left: 2px; flex-shrink: 0; color: inherit; opacity: 0.7;";
+    btn.onmouseover = () => btn.style.opacity = "1";
+    btn.onmouseout = () => btn.style.opacity = "0.7";
+    btn.onclick = (e) => {
+      e.preventDefault();
+      callback(defaultVal);
+    };
+    return btn;
+  }
+
+  function _setGroupEnabled(enabled, ...rows) {
+    rows.forEach(row => {
+      if (!row) return;
+      row.style.opacity       = enabled ? "1"    : "0.38";
+      row.style.pointerEvents = enabled ? ""     : "none";
+      row.style.transition    = "opacity 0.18s";
+    });
+  }
+
+  function _buildPanelLayoutSection() {
+  const panelLayoutContainer = document.createElement("div");
+  panelLayoutContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
+  panelLayoutContainer.style.borderRadius = styleSettings.borderRadius + "px";
+  panelLayoutContainer.style.padding = "6px";
+  panelLayoutContainer.style.display = "flex";
+  panelLayoutContainer.style.flexDirection = "column";
+  panelLayoutContainer.style.gap = "0";
+  panelLayoutContainer.style.maxWidth = "490px";
+
+  const panelLayoutHeader = document.createElement("div");
+  panelLayoutHeader.textContent = t.panelLayoutLabel || "Panel Layout";
+  panelLayoutHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  panelLayoutContainer.appendChild(panelLayoutHeader);
+
+  (function() {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex; align-items:center; gap:6px; margin-top:6px; padding-left:2px;";
+    const chk = document.createElement("input");
+    chk.type = "checkbox";
+    chk.id = "hide-syntax-btn-chk";
+    chk.checked = !!styleSettings.hideSyntaxBtn;
+    chk.style.cssText = "cursor:pointer; flex-shrink:0;";
+    const lbl = document.createElement("label");
+    lbl.htmlFor = "hide-syntax-btn-chk";
+    lbl.textContent = t.hideSyntaxBtnLabel || "Hide 📖 Syntax Help Button";
+    lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+    chk.onchange = () => {
+      styleSettings.hideSyntaxBtn = chk.checked;
+      save();
+      const btn = document.getElementById("syntax-help-btn");
+      if (btn) btn.style.display = chk.checked ? "none" : "";
+      if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
+    };
+    const _openSyntax = document.createElement("button");
+    _openSyntax.textContent = "📖";
+    _openSyntax.title = t.syntaxHelp || "Search Syntax Reference";
+    _openSyntax.style.cssText = `
+      padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
+      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+      background:transparent; font-size:12px; line-height:1.6;
+      transition:background .15s;
+    `;
+    _openSyntax.addEventListener("mouseenter", () => {
+      _openSyntax.style.background = panelTheme === "dark" ? "#333" : "#f0f0f0";
+    });
+    _openSyntax.addEventListener("mouseleave", () => {
+      _openSyntax.style.background = "transparent";
+    });
+    _openSyntax.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showSyntaxPanel();
+    });
+    row.appendChild(chk);
+    row.appendChild(lbl);
+    row.appendChild(_openSyntax);
+    panelLayoutContainer.appendChild(row);
+  })();
+
+  (function() {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex; align-items:center; gap:6px; margin-top:4px; padding-left:2px;";
+    const chk = document.createElement("input");
+    chk.type = "checkbox";
+    chk.id = "hide-blacklist-btn-chk";
+    chk.checked = !!styleSettings.hideBlacklistBtn;
+    chk.style.cssText = "cursor:pointer; flex-shrink:0;";
+    const lbl = document.createElement("label");
+    lbl.htmlFor = "hide-blacklist-btn-chk";
+    lbl.textContent = t.hideBlacklistBtnLabel || "Hide 🚫 Blacklist Button";
+    lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+    chk.onchange = () => {
+      styleSettings.hideBlacklistBtn = chk.checked;
+      save();
+      const btn = document.getElementById("blacklist-btn");
+      if (btn) btn.style.display = chk.checked ? "none" : "";
+      if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
+    };
+    const _openBl = document.createElement("button");
+    _openBl.textContent = "🚫";
+    _openBl.title = t.blacklistTitle || "Domain Blacklist";
+    _openBl.style.cssText = `
+      padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
+      border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
+      background:transparent; font-size:12px; line-height:1.6;
+      transition:background .15s;
+    `;
+    _openBl.addEventListener("mouseenter", () => {
+      _openBl.style.background = panelTheme === "dark" ? "#333" : "#f0f0f0";
+    });
+    _openBl.addEventListener("mouseleave", () => {
+      _openBl.style.background = "transparent";
+    });
+    _openBl.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showBlacklistDialog();
+    });
+    row.appendChild(chk);
+    row.appendChild(lbl);
+    row.appendChild(_openBl);
+    panelLayoutContainer.appendChild(row);
+  })();
+
+  function _makeHideRow(key, labelText, icon, title, onOpen) {
+    const _isDk = panelTheme === "dark";
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex; align-items:center; gap:6px; margin-top:4px; padding-left:2px;";
+    const chk = document.createElement("input");
+    chk.type = "checkbox";
+    chk.checked = !!styleSettings[key];
+    chk.style.cssText = "cursor:pointer; flex-shrink:0;";
+    const lbl = document.createElement("label");
+    lbl.textContent = labelText;
+    lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+    lbl.addEventListener("click", () => { chk.checked = !chk.checked; chk.dispatchEvent(new Event("change")); });
+    chk.onchange = () => {
+      styleSettings[key] = chk.checked;
+      save();
+      const _idMap = {
+        hideAddGroupBtn:      { id: "toolbar-add-group-btn", show: "inline-flex" },
+        hideAddressToggleBtn: { id: "se-toggle-address-btn",  show: "inline-flex"  },
+        hideExportBtn:        { id: "toolbar-export-btn",     show: "inline-flex" },
+        hideImportBtn:        { id: "toolbar-import-btn",     show: "inline-flex" },
+        hideModGroup:         { id: "syntax-mod-group",       show: "flex"         },
+      };
+      const _map = _idMap[key];
+      const el = _map && document.getElementById(_map.id);
+      if (el) el.style.display = chk.checked ? "none" : _map.show;
+      if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
+    };
+    row.appendChild(chk);
+    row.appendChild(lbl);
+    if (onOpen) {
+      const _openBtn = document.createElement("button");
+      _openBtn.textContent = icon;
+      _openBtn.title = title;
+      _openBtn.style.cssText = `
+        padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
+        border:1px solid ${_isDk ? "#555" : "#ccc"};
+        background:transparent; font-size:12px; line-height:1.6;
+        transition:background .15s;
+      `;
+      _openBtn.addEventListener("mouseenter", () => {
+        _openBtn.style.background = _isDk ? "#333" : "#f0f0f0";
+      });
+      _openBtn.addEventListener("mouseleave", () => {
+        _openBtn.style.background = "transparent";
+      });
+      _openBtn.addEventListener("click", (e) => { e.stopPropagation(); onOpen(); });
+      row.appendChild(_openBtn);
+    }
+    panelLayoutContainer.appendChild(row);
+  }
+
+  _makeHideRow(
+    "hideAddGroupBtn",
+    t.hideAddGroupBtnLabel || "Hide ➕ Add Group Button",
+    "➕", t.addGroup || "Add Group",
+    () => {
+      if (_dlgPromptActive) return;
+      showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
+        if (!name || !name.trim()) { showToast(t.emptyGroupName || "Group name cannot be empty!"); return; }
+        groups.push({ name: name.trim(), sites: [] });
+        save(); renderSites(panel);
+        showToast(`${t.addGroup || "Group added"} ✅`);
+      });
+    }
+  );
+
+  _makeHideRow(
+    "hideAddressToggleBtn",
+    t.hideAddressToggleBtnLabel || "Hide 🔁 Address Toggle Button",
+    "🔁", t.toggleShow || "Show Addresses",
+    () => {
+      const btn = document.getElementById("se-toggle-address-btn");
+      if (btn) btn.click();
+    }
+  );
+
+  _makeHideRow(
+    "hideExportBtn",
+    t.hideExportBtnLabel || "Hide 📤 Export Button",
+    "📤", t.exportConfig || "Export Config",
+    () => {
+      const btn = document.getElementById("toolbar-export-btn");
+      if (btn) btn.click();
+    }
+  );
+
+  _makeHideRow(
+    "hideImportBtn",
+    t.hideImportBtnLabel || "Hide 📥 Import Button",
+    "📥", t.importConfig || "Import Config",
+    () => {
+      const btn = document.getElementById("toolbar-import-btn");
+      if (btn) btn.click();
+    }
+  );
+
+  _makeHideRow(
+    "hideModGroup",
+    t.hideModGroupLabel || "Hide Modifier Button Group (◇T🔗📄)",
+    "◇", ""
+  );
+
+  _bind(panelLayoutHeader,
+    () => _hlPanel(true),
+    () => _hlPanel(false)
+  );
+
+  return { panelLayoutContainer, panelLayoutHeader };
+  }
+
+  function _buildTextStyleSection() {
+  const textStyleContainer = document.createElement("div");
+  textStyleContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
+  textStyleContainer.style.borderRadius = styleSettings.borderRadius + "px";
+  textStyleContainer.style.padding = "6px";
+  textStyleContainer.style.display = "flex";
+  textStyleContainer.style.flexDirection = "column";
+  textStyleContainer.style.gap = "0";
+  textStyleContainer.style.maxWidth = "490px";
+
+  const textStyleHeader = document.createElement("div");
+  textStyleHeader.textContent = t.fontSize || "Text Settings";
+  textStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  textStyleContainer.appendChild(textStyleHeader);
+
+  const fontSizeRow = document.createElement("div");
+  fontSizeRow.style.cssText = rowCss();
+
+  const fontSizeLabel = document.createElement("label");
+  fontSizeLabel.textContent = t.fontSize || "Font Size";
+  fontSizeLabel.style.cssText = labelCss();
+  fontSizeRow.appendChild(fontSizeLabel);
+
+  const fontSizeInput = document.createElement("input");
+  fontSizeInput.type = "range";
+  fontSizeInput.min = "10";
+  fontSizeInput.max = "16";
+  fontSizeInput.value = styleSettings.fontSize;
+  fontSizeInput.style.cssText = sliderCss();
+  fontSizeInput.oninput = () => {
+    styleSettings.fontSize = parseInt(fontSizeInput.value);
+    _debouncedSave();
+    _debouncedApply();
+    _vs_fontSizeInput.textContent = fontSizeInput.value+"px";
+  };
+  const _vs_fontSizeInput = makeValueSpan(fontSizeInput.value+"px");
+  const _rb_fontSizeInput = makeResetBtn(STYLE_DEFAULTS.fontSize, (dv) => {
+    fontSizeInput.value = dv;
+    styleSettings.fontSize = dv;
+    _vs_fontSizeInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  fontSizeRow.appendChild(fontSizeInput);
+  fontSizeRow.appendChild(_vs_fontSizeInput);
+  fontSizeRow.appendChild(_rb_fontSizeInput);
+  textStyleContainer.appendChild(fontSizeRow);
+
+  const { row: textBackgroundColorRow, label: textBackgroundColorLabel, input: textBackgroundColorInput } = mkColorInput(
+    t.textBackgroundColor || "Text Background Color",
+    styleSettings.textBackgroundColor || "#ffffff",
+    (v) => {
+      styleSettings.textBackgroundColor = v;
+      _debouncedSave();
+      _debouncedApply();
+    }
+  );
+  textStyleContainer.appendChild(textBackgroundColorRow);
+
+  const textBorderRow = document.createElement("div");
+  textBorderRow.style.cssText = checkboxRowCss();
+
+  const textBorderLabel = document.createElement("label");
+  textBorderLabel.textContent = t.textBorder || "Enable Text Border";
+  textBorderLabel.style.cssText = labelCss();
+  textBorderRow.appendChild(textBorderLabel);
+
+  const textBorderInput = document.createElement("input");
+  textBorderInput.type = "checkbox";
+  textBorderInput.checked = styleSettings.textBorder;
+  textBorderInput.onchange = () => {
+    styleSettings.textBorder = textBorderInput.checked;
+    save();
+    applyTheme(panelTheme);
+  };
+  const _rb_textBorderInput = makeResetBtn(false, (dv) => {
+    textBorderInput.checked = dv;
+    styleSettings.textBorder = dv;
+    save(); applyTheme(panelTheme);
+  });
+  textBorderRow.appendChild(textBorderInput);
+  textBorderRow.appendChild(_rb_textBorderInput);
+  textStyleContainer.appendChild(textBorderRow);
+
+  const textOpacityCompensationRow = document.createElement("div");
+  textOpacityCompensationRow.style.cssText = rowCss();
+
+  const textOpacityCompensationLabel = document.createElement("label");
+  textOpacityCompensationLabel.textContent =
+    t.textOpacityCompensation || "Text Clarity Boost";
+  textOpacityCompensationLabel.style.cssText = labelCss();
+  textOpacityCompensationRow.appendChild(textOpacityCompensationLabel);
+
+  const textOpacityCompensationInput = document.createElement("input");
+  textOpacityCompensationInput.type = "range";
+  textOpacityCompensationInput.min = "0.3";
+  textOpacityCompensationInput.max = "2.0";
+  textOpacityCompensationInput.step = "0.1";
+  textOpacityCompensationInput.value = styleSettings.textOpacityCompensation;
+  textOpacityCompensationInput.style.cssText = sliderCss();
+  textOpacityCompensationInput.oninput = () => {
+    styleSettings.textOpacityCompensation = parseFloat(
+      textOpacityCompensationInput.value,
+    );
+    _debouncedSave();
+    _debouncedApply();
+    _vs_textOpacityCompensationInput.textContent = parseFloat(textOpacityCompensationInput.value).toFixed(1);
+  };
+  const _vs_textOpacityCompensationInput = makeValueSpan(parseFloat(textOpacityCompensationInput.value).toFixed(1));
+  const _rb_textOpacityCompensationInput = makeResetBtn(STYLE_DEFAULTS.textOpacityCompensation, (dv) => {
+    textOpacityCompensationInput.value = dv;
+    styleSettings.textOpacityCompensation = dv;
+    _vs_textOpacityCompensationInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  textOpacityCompensationRow.appendChild(textOpacityCompensationInput);
+  textOpacityCompensationRow.appendChild(_vs_textOpacityCompensationInput);
+  textOpacityCompensationRow.appendChild(_rb_textOpacityCompensationInput);
+  textStyleContainer.appendChild(textOpacityCompensationRow);
+
+  _bind(textStyleHeader,
+    () => _hlSet([".site-label", ".group-name"], true),
+    () => _hlSet([".site-label", ".group-name"], false)
+  );
+  _bind(fontSizeLabel,
+    () => _hlSet([".site-label", ".group-name"], true),
+    () => _hlSet([".site-label", ".group-name"], false)
+  );
+  _bind(textBackgroundColorLabel,
+    () => _hlSet([".site-label"], true),
+    () => _hlSet([".site-label"], false)
+  );
+  _bind(textBorderLabel,
+    () => _hlSet([".site-label", ".group-name"], true),
+    () => _hlSet([".site-label", ".group-name"], false)
+  );
+  _bind(textOpacityCompensationLabel,
+    () => _hlSet([".site-label", ".group-name"], true),
+    () => _hlSet([".site-label", ".group-name"], false)
+  );
+
+  return { textStyleContainer, textStyleHeader, fontSizeLabel, textBackgroundColorLabel, textBorderLabel, textOpacityCompensationLabel };
+  }
+
+  function _buildMultiSelectSection() {
+  const multiSelectContainer = document.createElement("div");
+  multiSelectContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
+  multiSelectContainer.style.padding = "6px";
+  multiSelectContainer.style.borderRadius = styleSettings.borderRadius + "px";
+  multiSelectContainer.style.display = "flex";
+  multiSelectContainer.style.flexDirection = "column";
+  multiSelectContainer.style.gap = "0";
+  multiSelectContainer.style.maxWidth = "490px";
+
+  const multiSelectHeader = document.createElement("div");
+  multiSelectHeader.textContent = t.multiSelectMode || "Multi-select Mode";
+  multiSelectHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  multiSelectContainer.appendChild(multiSelectHeader);
+
+  const { row: msColorRow, label: msColorLabel, input: msColorInput } = mkColorInput(
+    t.multiSelectColor || "Select Highlight Color",
+    styleSettings.multiSelectColor || "#ffc400",
+    (v) => {
+      styleSettings.multiSelectColor = v;
+      _debouncedSave();
+    }
+  );
+  multiSelectContainer.appendChild(msColorRow);
+
+  const msOpacityRow = document.createElement("div");
+  msOpacityRow.style.cssText = rowCss();
+  const msOpacityLabel = document.createElement("label");
+  msOpacityLabel.textContent = t.multiSelectOpacity || "Highlight Opacity";
+  msOpacityLabel.style.cssText = labelCss();
+  msOpacityRow.appendChild(msOpacityLabel);
+  const msOpacityInput = document.createElement("input");
+  msOpacityInput.type = "range";
+  msOpacityInput.min = "0";
+  msOpacityInput.max = "1";
+  msOpacityInput.step = "0.05";
+  msOpacityInput.value = styleSettings.multiSelectOpacity != null ? styleSettings.multiSelectOpacity : 0.85;
+  msOpacityInput.style.cssText = sliderCss();
+  msOpacityInput.oninput = () => {
+    styleSettings.multiSelectOpacity = parseFloat(msOpacityInput.value);
+    _vs_msOpacity.textContent = parseFloat(msOpacityInput.value).toFixed(2);
+    _debouncedSave();
+  };
+  const _vs_msOpacity = makeValueSpan(parseFloat(msOpacityInput.value).toFixed(2));
+  const _rb_msOpacity = makeResetBtn(0.85, (dv) => {
+    msOpacityInput.value = dv;
+    styleSettings.multiSelectOpacity = dv;
+    _vs_msOpacity.textContent = String(dv);
+    save();
+  });
+  msOpacityRow.appendChild(msOpacityInput);
+  msOpacityRow.appendChild(_vs_msOpacity);
+  msOpacityRow.appendChild(_rb_msOpacity);
+  multiSelectContainer.appendChild(msOpacityRow);
+
+  _bind(multiSelectHeader,
+    () => _hlSet([".multi-btn", ".multi-send-btn"], true),
+    () => _hlSet([".multi-btn", ".multi-send-btn"], false)
+  );
+  _bind(msColorLabel,
+    () => _hlSet([".multi-btn", ".multi-send-btn"], true),
+    () => _hlSet([".multi-btn", ".multi-send-btn"], false)
+  );
+  _bind(msOpacityLabel,
+    () => _hlSet([".multi-btn", ".multi-send-btn"], true),
+    () => _hlSet([".multi-btn", ".multi-send-btn"], false)
+  );
+
+  return { multiSelectContainer, multiSelectHeader, msColorLabel, msOpacityLabel };
+  }
+
+  function _buildGsGlowSheenSection(parent) {
+    const _isDark = panelTheme === "dark";
+    const glowSection = document.createElement("div");
+    glowSection.style.cssText = `
+      border:1px solid ${_isDark ? "#555" : "#ccc"};
+      border-radius:${styleSettings.borderRadius}px;
+      padding:7px 8px; margin-top:6px; display:flex;
+      flex-direction:column; gap:4px;
+    `;
+    const glowHeader = document.createElement("div");
+    glowHeader.textContent = "✨ " + (t.glowLabel || "Border Glow / Sheen");
+    glowHeader.style.cssText = `font-weight:bold; font-size:11px; margin-bottom:2px; color:${_isDark ? "#eee" : "#111"};`;
+    glowSection.appendChild(glowHeader);
+
+    const glowToggleRow = document.createElement("div");
+    glowToggleRow.style.cssText = checkboxRowCss();
+    const glowToggleLbl = document.createElement("label");
+    glowToggleLbl.textContent = t.enableBorderGlow || "Border Glow";
+    glowToggleLbl.style.cssText = labelCss();
+    glowToggleRow.appendChild(glowToggleLbl);
+    const glowToggle = document.createElement("input");
+    glowToggle.type = "checkbox";
+    glowToggle.checked = !!styleSettings.enableBorderGlow;
+    glowToggle.onchange = () => {
+      styleSettings.enableBorderGlow = glowToggle.checked;
+      _setGroupEnabled(glowToggle.checked, glowColorRow, glowStrRow, glowInsetRow);
+      save(); applyTheme(panelTheme);
+    };
+    glowToggleRow.appendChild(glowToggle);
+    glowSection.appendChild(glowToggleRow);
+
+    const { row: glowColorRow, label: glowColorLbl, input: glowColorInput } = mkColorInput(
+      t.borderGlowColor || "Glow Color",
+      styleSettings.borderGlowColor || "#00bfff",
+      (v) => {
+        styleSettings.borderGlowColor = v;
+        _debouncedSave();
+      },
+      {
+        resetVal: "#00bfff",
+        onReset: (dv) => { glowColorInput.value = dv; styleSettings.borderGlowColor = dv; save(); applyTheme(panelTheme); },
+      }
+    );
+    glowSection.appendChild(glowColorRow);
+
+    const glowStrRow = document.createElement("div");
+    glowStrRow.style.cssText = rowCss();
+    const glowStrLbl = document.createElement("label");
+    glowStrLbl.textContent = t.borderGlowStrength || "Glow Strength";
+    glowStrLbl.style.cssText = labelCss();
+    glowStrRow.appendChild(glowStrLbl);
+    const glowStrInput = document.createElement("input");
+    glowStrInput.type = "range"; glowStrInput.min = "4"; glowStrInput.max = "32"; glowStrInput.step = "1";
+    glowStrInput.value = styleSettings.borderGlowStrength || 12;
+    glowStrInput.style.cssText = sliderCss();
+    const _vs_glowStr = makeValueSpan(glowStrInput.value + "px");
+    glowStrInput.oninput = () => {
+      styleSettings.borderGlowStrength = parseInt(glowStrInput.value);
+      _vs_glowStr.textContent = glowStrInput.value + "px";
+      _debouncedSave();
+    };
+    glowStrRow.appendChild(glowStrInput);
+    glowStrRow.appendChild(_vs_glowStr);
+    glowSection.appendChild(glowStrRow);
+
+    const glowInsetRow = document.createElement("div");
+    glowInsetRow.style.cssText = checkboxRowCss();
+    const glowInsetLbl = document.createElement("label");
+    glowInsetLbl.textContent = t.borderGlowInset || "Inset Glow";
+    glowInsetLbl.style.cssText = labelCss();
+    glowInsetRow.appendChild(glowInsetLbl);
+    const glowInsetToggle = document.createElement("input");
+    glowInsetToggle.type = "checkbox";
+    glowInsetToggle.checked = styleSettings.borderGlowInset !== false;
+    glowInsetToggle.onchange = () => {
+      styleSettings.borderGlowInset = glowInsetToggle.checked;
+      save(); applyTheme(panelTheme);
+    };
+    glowInsetRow.appendChild(glowInsetToggle);
+    glowSection.appendChild(glowInsetRow);
+
+    const sheenToggleRow = document.createElement("div");
+    sheenToggleRow.style.cssText = checkboxRowCss() + "margin-top:4px;border-top:1px solid " +
+      (_isDark ? "#444" : "#eee") + ";padding-top:5px;";
+    const sheenToggleLbl = document.createElement("label");
+    sheenToggleLbl.textContent = t.enableSheen || "Sheen Effect";
+    sheenToggleLbl.style.cssText = labelCss();
+    sheenToggleRow.appendChild(sheenToggleLbl);
+    const sheenToggle = document.createElement("input");
+    sheenToggle.type = "checkbox";
+    sheenToggle.checked = !!styleSettings.enableSheen;
+    sheenToggle.onchange = () => {
+      styleSettings.enableSheen = sheenToggle.checked;
+      _setGroupEnabled(sheenToggle.checked, sheenAngleRow, sheenOpRow);
+      save(); applyTheme(panelTheme);
+    };
+    sheenToggleRow.appendChild(sheenToggle);
+    glowSection.appendChild(sheenToggleRow);
+
+    const sheenAngleRow = document.createElement("div");
+    sheenAngleRow.style.cssText = rowCss();
+    const sheenAngleLbl = document.createElement("label");
+    sheenAngleLbl.textContent = t.sheenAngle || "Sheen Angle";
+    sheenAngleLbl.style.cssText = labelCss();
+    sheenAngleRow.appendChild(sheenAngleLbl);
+    const sheenAngleInput = document.createElement("input");
+    sheenAngleInput.type = "range"; sheenAngleInput.min = "0"; sheenAngleInput.max = "360"; sheenAngleInput.step = "5";
+    sheenAngleInput.value = styleSettings.sheenAngle ?? 135;
+    sheenAngleInput.style.cssText = sliderCss();
+    const _vs_sheenAngle = makeValueSpan(sheenAngleInput.value + "°");
+    sheenAngleInput.oninput = () => {
+      styleSettings.sheenAngle = parseInt(sheenAngleInput.value);
+      _vs_sheenAngle.textContent = sheenAngleInput.value + "°";
+      _debouncedSave();
+    };
+    sheenAngleRow.appendChild(sheenAngleInput);
+    sheenAngleRow.appendChild(_vs_sheenAngle);
+    glowSection.appendChild(sheenAngleRow);
+
+    const sheenOpRow = document.createElement("div");
+    sheenOpRow.style.cssText = rowCss();
+    const sheenOpLbl = document.createElement("label");
+    sheenOpLbl.textContent = t.sheenOpacity || "Sheen Intensity";
+    sheenOpLbl.style.cssText = labelCss();
+    sheenOpRow.appendChild(sheenOpLbl);
+    const sheenOpInput = document.createElement("input");
+    sheenOpInput.type = "range"; sheenOpInput.min = "0.02"; sheenOpInput.max = "0.25"; sheenOpInput.step = "0.01";
+    sheenOpInput.value = styleSettings.sheenOpacity ?? 0.08;
+    sheenOpInput.style.cssText = sliderCss();
+    const _vs_sheenOp = makeValueSpan(parseFloat(sheenOpInput.value).toFixed(2));
+    sheenOpInput.oninput = () => {
+      styleSettings.sheenOpacity = parseFloat(sheenOpInput.value);
+      _vs_sheenOp.textContent = styleSettings.sheenOpacity.toFixed(2);
+      _debouncedSave();
+    };
+    sheenOpRow.appendChild(sheenOpInput);
+    sheenOpRow.appendChild(_vs_sheenOp);
+    glowSection.appendChild(sheenOpRow);
+
+    const siteGlowRow = document.createElement("div");
+    siteGlowRow.style.cssText = checkboxRowCss();
+    const siteGlowLbl = document.createElement("label");
+    siteGlowLbl.textContent = t.enableSiteGlow || "Site Button Glow";
+    siteGlowLbl.style.cssText = labelCss();
+    siteGlowRow.appendChild(siteGlowLbl);
+    const siteGlowToggle = document.createElement("input");
+    siteGlowToggle.type = "checkbox";
+    siteGlowToggle.checked = !!styleSettings.enableSiteGlow;
+    siteGlowToggle.onchange = () => {
+      styleSettings.enableSiteGlow = siteGlowToggle.checked;
+      save(); applyTheme(panelTheme);
+    };
+    const _rb_siteGlow = makeResetBtn(false, (dv) => {
+      siteGlowToggle.checked = dv;
+      styleSettings.enableSiteGlow = dv;
+      save(); applyTheme(panelTheme);
+    });
+    siteGlowRow.appendChild(siteGlowToggle);
+    siteGlowRow.appendChild(_rb_siteGlow);
+    glowSection.appendChild(siteGlowRow);
+
+    const groupGlowRow = document.createElement("div");
+    groupGlowRow.style.cssText = checkboxRowCss();
+    const groupGlowLbl = document.createElement("label");
+    groupGlowLbl.textContent = t.enableGroupGlow || "Group Block Glow";
+    groupGlowLbl.style.cssText = labelCss();
+    groupGlowRow.appendChild(groupGlowLbl);
+    const groupGlowToggle = document.createElement("input");
+    groupGlowToggle.type = "checkbox";
+    groupGlowToggle.checked = !!styleSettings.enableGroupGlow;
+    groupGlowToggle.onchange = () => {
+      styleSettings.enableGroupGlow = groupGlowToggle.checked;
+      save(); applyTheme(panelTheme);
+    };
+    const _rb_groupGlow = makeResetBtn(false, (dv) => {
+      groupGlowToggle.checked = dv;
+      styleSettings.enableGroupGlow = dv;
+      save(); applyTheme(panelTheme);
+    });
+    groupGlowRow.appendChild(groupGlowToggle);
+    groupGlowRow.appendChild(_rb_groupGlow);
+    glowSection.appendChild(groupGlowRow);
+
+    parent.appendChild(glowSection);
+    _setGroupEnabled(!!styleSettings.enableBorderGlow,  glowColorRow, glowStrRow, glowInsetRow);
+    _setGroupEnabled(!!styleSettings.enableSheen,        sheenAngleRow, sheenOpRow);
+
+    _bind(glowHeader,     () => _hlPanel(true), () => _hlPanel(false));
+    _bind(glowToggleLbl,  () => _hlPanel(true), () => _hlPanel(false));
+    _bind(glowColorLbl,   () => _hlPanel(true), () => _hlPanel(false));
+    _bind(glowStrLbl,     () => _hlPanel(true), () => _hlPanel(false));
+    _bind(glowInsetLbl,   () => _hlPanel(true), () => _hlPanel(false));
+    _bind(sheenToggleLbl, () => _hlPanel(true), () => _hlPanel(false));
+    _bind(sheenAngleLbl,  () => _hlPanel(true), () => _hlPanel(false));
+    _bind(sheenOpLbl,     () => _hlPanel(true), () => _hlPanel(false));
+    _bind(siteGlowLbl,
+      () => _hlSet([".draggable-site"], true),
+      () => _hlSet([".draggable-site"], false)
+    );
+    _bind(groupGlowLbl,
+      () => _hlSet([".group-block"], true),
+      () => _hlSet([".group-block"], false)
+    );
+
+    return {
+      glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl,
+      sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl,
+    };
+  }
+
+  function _buildGsVignetteSection(parent) {
+    const _isDark = panelTheme === "dark";
+    const vigSection = document.createElement("div");
+    vigSection.style.cssText = `
+      border:1px solid ${_isDark ? "#555" : "#ccc"};
+      border-radius:${styleSettings.borderRadius}px;
+      padding:7px 8px; margin-top:6px; display:flex;
+      flex-direction:column; gap:4px;
+    `;
+
+    const vigHeaderRow = document.createElement("div");
+    vigHeaderRow.style.cssText = checkboxRowCss() + "margin-bottom:0;";
+    const vignetteHeader = document.createElement("div");
+    vignetteHeader.textContent = "🌑 " + (t.vignetteLabel || "Vignette");
+    vignetteHeader.style.cssText = `font-weight:bold; font-size:11px; margin-right:6px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+    const vigToggle = document.createElement("input");
+    vigToggle.type = "checkbox";
+    vigToggle.checked = !!styleSettings.enableVignette;
+    vigHeaderRow.appendChild(vignetteHeader);
+    vigHeaderRow.appendChild(vigToggle);
+    vigSection.appendChild(vigHeaderRow);
+
+    const cornerRow = document.createElement("div");
+    cornerRow.style.cssText = rowCss();
+    const cornerLbl = document.createElement("label");
+    cornerLbl.textContent = t.vignetteCorners || "Corners";
+    cornerLbl.style.cssText = labelCss();
+    cornerRow.appendChild(cornerLbl);
+
+    const cornerGrid = document.createElement("div");
+    cornerGrid.style.cssText = `
+      display:grid; grid-template-columns:1fr 1fr; gap:3px 8px;
+      flex:1; font-size:11px;
+    `;
+    const _corners = [
+      { key: "vignetteCornerTL", label: "↖ " + (t.vignetteCornerTL || "Top-L") },
+      { key: "vignetteCornerTR", label: "↗ " + (t.vignetteCornerTR || "Top-R") },
+      { key: "vignetteCornerBL", label: "↙ " + (t.vignetteCornerBL || "Bot-L") },
+      { key: "vignetteCornerBR", label: "↘ " + (t.vignetteCornerBR || "Bot-R") },
+    ];
+    const _cornerChecks = {};
+    _corners.forEach(({ key, label }) => {
+      const wrap = document.createElement("label");
+      wrap.style.cssText = "display:flex; align-items:center; gap:3px; cursor:pointer;";
+      const chk = document.createElement("input");
+      chk.type = "checkbox";
+      chk.checked = styleSettings[key] !== false;
+      chk.onchange = () => {
+        styleSettings[key] = chk.checked;
+        save(); applyTheme(panelTheme);
+      };
+      const span = document.createElement("span");
+      span.textContent = label;
+      wrap.appendChild(chk);
+      wrap.appendChild(span);
+      cornerGrid.appendChild(wrap);
+      _cornerChecks[key] = chk;
+    });
+    cornerRow.appendChild(cornerGrid);
+    vigSection.appendChild(cornerRow);
+
+    const sizeRow = document.createElement("div");
+    sizeRow.style.cssText = rowCss();
+    const sizeLbl = document.createElement("label");
+    sizeLbl.textContent = t.vignetteSize || "Size";
+    sizeLbl.style.cssText = labelCss();
+    sizeRow.appendChild(sizeLbl);
+    const sizeInput = document.createElement("input");
+    sizeInput.type = "range"; sizeInput.min = "20"; sizeInput.max = "600"; sizeInput.step = "10";
+    sizeInput.value = styleSettings.vignetteSize ?? 120;
+    sizeInput.style.cssText = sliderCss();
+    const _vs_size = makeValueSpan(sizeInput.value + "px");
+    sizeInput.oninput = () => {
+      styleSettings.vignetteSize = parseInt(sizeInput.value);
+      _vs_size.textContent = sizeInput.value + "px";
+      _debouncedSave();
+      applyTheme(panelTheme);
+    };
+    const _rb_size = makeResetBtn(120, (dv) => {
+      sizeInput.value = dv;
+      _vs_size.textContent = dv + "px";
+      styleSettings.vignetteSize = dv;
+      save(); applyTheme(panelTheme);
+    });
+    sizeRow.appendChild(sizeInput);
+    sizeRow.appendChild(_vs_size);
+    sizeRow.appendChild(_rb_size);
+    vigSection.appendChild(sizeRow);
+
+    const { row: colorRow, input: colorInput } = mkColorInput(
+      t.vignetteColor || "Color",
+      styleSettings.vignetteColor || "#000000",
+      (v) => {
+        styleSettings.vignetteColor = v;
+        _debouncedSave();
+        applyTheme(panelTheme);
+      },
+      {
+        resetVal: "#000000",
+        onReset: (dv) => { colorInput.value = dv; styleSettings.vignetteColor = dv; save(); applyTheme(panelTheme); },
+      }
+    );
+    vigSection.appendChild(colorRow);
+
+    const opRow = document.createElement("div");
+    opRow.style.cssText = rowCss();
+    const opLbl = document.createElement("label");
+    opLbl.textContent = t.vignetteOpacity || "Opacity";
+    opLbl.style.cssText = labelCss();
+    opRow.appendChild(opLbl);
+    const opInput = document.createElement("input");
+    opInput.type = "range"; opInput.min = "0.05"; opInput.max = "1.0"; opInput.step = "0.05";
+    opInput.value = styleSettings.vignetteOpacity ?? 0.45;
+    opInput.style.cssText = sliderCss();
+    const _vs_op = makeValueSpan(parseFloat(opInput.value).toFixed(2));
+    opInput.oninput = () => {
+      styleSettings.vignetteOpacity = parseFloat(opInput.value);
+      _vs_op.textContent = styleSettings.vignetteOpacity.toFixed(2);
+      _debouncedSave();
+      applyTheme(panelTheme);
+    };
+    const _rb_op = makeResetBtn(0.45, (dv) => {
+      opInput.value = dv;
+      _vs_op.textContent = parseFloat(dv).toFixed(2);
+      styleSettings.vignetteOpacity = dv;
+      save(); applyTheme(panelTheme);
+    });
+    opRow.appendChild(opInput);
+    opRow.appendChild(_vs_op);
+    opRow.appendChild(_rb_op);
+    vigSection.appendChild(opRow);
+
+    const _subRows = [cornerRow, sizeRow, colorRow, opRow];
+    vigToggle.onchange = () => {
+      styleSettings.enableVignette = vigToggle.checked;
+      _setGroupEnabled(vigToggle.checked, ..._subRows);
+      save(); applyTheme(panelTheme);
+    };
+
+    parent.appendChild(vigSection);
+    _setGroupEnabled(!!styleSettings.enableVignette, ..._subRows);
+
+    _bind(vignetteHeader,
+      () => _hlPanel(true),
+      () => _hlPanel(false)
+    );
+
+    return { vignetteHeader };
+  }
+
+  function _buildGsSearchBarSection(parent) {
+    const _isDark = panelTheme === "dark";
+    const searchBarSection = document.createElement("div");
+    searchBarSection.style.cssText = `
+      border:1px solid ${_isDark ? "#555" : "#ccc"};
+      border-radius:${styleSettings.borderRadius}px;
+      padding:7px 8px; margin-top:6px; display:flex;
+      flex-direction:column; gap:4px;
+    `;
+    const _sbsHeader = document.createElement("div");
+    _sbsHeader.textContent = "🔍 " + (t.searchBarStyleLabel || "Search Bar Style");
+    _sbsHeader.style.cssText = `font-weight:bold; font-size:11px; margin-bottom:2px; color:${_isDark ? "#eee" : "#111"};`;
+    searchBarSection.appendChild(_sbsHeader);
+
+    const _sbsPresetRow = document.createElement("div");
+    _sbsPresetRow.style.cssText = rowCss();
+    const _sbsPresetLbl = document.createElement("label");
+    _sbsPresetLbl.textContent = t.searchBarPreset || "Quick Preset";
+    _sbsPresetLbl.style.cssText = labelCss();
+    _sbsPresetRow.appendChild(_sbsPresetLbl);
+    const _presetBtnWrap = document.createElement("div");
+    _presetBtnWrap.style.cssText = "display:flex;gap:4px;flex:1;justify-content:flex-end;";
+    const _sbsPresets = [
+      { icon:"↺",  title:"重置 / Reset",    bg:"",        bgOp:0,    fg:"" },
+      { icon:"🌑",  title:"暗底 / Dark BG",  bg:"#1a1a1a", bgOp:0.75, fg:"#eeeeee" },
+      { icon:"☀️",  title:"亮底 / Light BG", bg:"#ffffff", bgOp:0.85, fg:"#111111" },
+    ];
+    let _sbsBgInputRef, _sbsBgOpInputRef, _sbsBgOpSpanRef, _sbsFgInputRef;
+    _sbsPresets.forEach(p => {
+      const pb = document.createElement("button");
+      pb.textContent = p.icon;
+      pb.title = p.title;
+      pb.className = "icon-btn";
+      pb.style.cssText = `padding:2px 7px;border-radius:5px;font-size:12px;cursor:pointer;
+        background:${_isDark?"#4a4a4a":"#eee"};
+        border:1px solid ${_isDark?"#666":"#ccc"};color:inherit;`;
+      pb.onclick = () => {
+        styleSettings.searchBarBg        = p.bg;
+        styleSettings.searchBarBgOpacity = p.bgOp;
+        styleSettings.searchBarFg        = p.fg;
+        if (_sbsBgInputRef)   _sbsBgInputRef.value          = p.bg   || "#333333";
+        if (_sbsBgOpInputRef) _sbsBgOpInputRef.value         = p.bgOp;
+        if (_sbsBgOpSpanRef)  _sbsBgOpSpanRef.textContent   = p.bgOp.toFixed(2);
+        if (_sbsFgInputRef)   _sbsFgInputRef.value          = p.fg   || "#eeeeee";
+        save(); applyTheme(panelTheme);
+      };
+      _presetBtnWrap.appendChild(pb);
+    });
+    _sbsPresetRow.appendChild(_presetBtnWrap);
+    searchBarSection.appendChild(_sbsPresetRow);
+
+    const { row: _sbsBgRow, label: _sbsBgLbl, input: sbsBgInput } = mkColorInput(
+      t.searchBarBgColor || "Bar BG Color",
+      styleSettings.searchBarBg || "#333333",
+      (v) => {
+        styleSettings.searchBarBg = v;
+        _debouncedSave();
+      },
+      {
+        resetVal: "",
+        onReset: (dv) => { sbsBgInput.value = dv || "#333333"; styleSettings.searchBarBg = dv; save(); applyTheme(panelTheme); },
+      }
+    );
+    _sbsBgInputRef = sbsBgInput;
+    searchBarSection.appendChild(_sbsBgRow);
+
+    const _sbsBgOpRow = document.createElement("div");
+    _sbsBgOpRow.style.cssText = rowCss();
+    const _sbsBgOpLbl = document.createElement("label");
+    _sbsBgOpLbl.textContent = t.searchBarBgOpacity || "Bar BG Opacity";
+    _sbsBgOpLbl.style.cssText = labelCss();
+    _sbsBgOpRow.appendChild(_sbsBgOpLbl);
+    const sbsBgOpInput = document.createElement("input");
+    sbsBgOpInput.type = "range"; sbsBgOpInput.min = "0"; sbsBgOpInput.max = "1"; sbsBgOpInput.step = "0.05";
+    sbsBgOpInput.value = styleSettings.searchBarBgOpacity ?? 0;
+    sbsBgOpInput.style.cssText = sliderCss();
+    const sbsBgOpSpan = makeValueSpan(parseFloat(sbsBgOpInput.value).toFixed(2));
+    sbsBgOpInput.oninput = () => {
+      styleSettings.searchBarBgOpacity = parseFloat(sbsBgOpInput.value);
+      sbsBgOpSpan.textContent = styleSettings.searchBarBgOpacity.toFixed(2);
+      _debouncedSave();
+    };
+    _sbsBgOpInputRef = sbsBgOpInput;
+    _sbsBgOpSpanRef  = sbsBgOpSpan;
+    const _rb_sbsBgOp = makeResetBtn(0, (dv) => {
+      sbsBgOpInput.value = dv;
+      sbsBgOpSpan.textContent = parseFloat(dv).toFixed(2);
+      styleSettings.searchBarBgOpacity = dv;
+      save(); applyTheme(panelTheme);
+    });
+    _sbsBgOpRow.appendChild(sbsBgOpInput);
+    _sbsBgOpRow.appendChild(sbsBgOpSpan);
+    _sbsBgOpRow.appendChild(_rb_sbsBgOp);
+    searchBarSection.appendChild(_sbsBgOpRow);
+
+    const { row: _sbsFgRow, label: _sbsFgLbl, input: sbsFgInput } = mkColorInput(
+      t.searchBarFgColor || "Bar Text Color",
+      styleSettings.searchBarFg || "#eeeeee",
+      (v) => {
+        styleSettings.searchBarFg = v;
+        _debouncedSave();
+      },
+      {
+        resetVal: "",
+        onReset: (dv) => { sbsFgInput.value = dv || "#eeeeee"; styleSettings.searchBarFg = dv; save(); applyTheme(panelTheme); },
+      }
+    );
+    _sbsFgInputRef = sbsFgInput;
+    searchBarSection.appendChild(_sbsFgRow);
+
+    const _sbsGlowToggleRow = document.createElement("div");
+    _sbsGlowToggleRow.style.cssText = checkboxRowCss() + "margin-top:4px;border-top:1px solid " +
+      (_isDark ? "#444" : "#eee") + ";padding-top:5px;";
+    const _sbsGlowToggleLbl = document.createElement("label");
+    _sbsGlowToggleLbl.textContent = t.searchBarGlowEnabled || "Bar Glow";
+    _sbsGlowToggleLbl.style.cssText = labelCss();
+    _sbsGlowToggleRow.appendChild(_sbsGlowToggleLbl);
+    const _sbsGlowToggle = document.createElement("input");
+    _sbsGlowToggle.type = "checkbox";
+    _sbsGlowToggle.checked = !!styleSettings.searchBarGlowEnabled;
+    _sbsGlowToggle.onchange = () => {
+      styleSettings.searchBarGlowEnabled = _sbsGlowToggle.checked;
+      _setGroupEnabled(_sbsGlowToggle.checked, _sbsGlowColorRow, _sbsGlowStrRow);
+      save(); applyTheme(panelTheme);
+    };
+    _sbsGlowToggleRow.appendChild(_sbsGlowToggle);
+    searchBarSection.appendChild(_sbsGlowToggleRow);
+
+    const { row: _sbsGlowColorRow, label: _sbsGlowColorLbl, input: _sbsGlowColorInput } = mkColorInput(
+      t.searchBarGlowColor || "Glow Color",
+      styleSettings.searchBarGlowColor || "#5599ff",
+      (v) => {
+        styleSettings.searchBarGlowColor = v;
+        _debouncedSave();
+      },
+      {
+        resetVal: "#5599ff",
+        onReset: (dv) => { _sbsGlowColorInput.value = dv; styleSettings.searchBarGlowColor = dv; save(); applyTheme(panelTheme); },
+      }
+    );
+    searchBarSection.appendChild(_sbsGlowColorRow);
+
+    const _sbsGlowStrRow = document.createElement("div");
+    _sbsGlowStrRow.style.cssText = rowCss();
+    const _sbsGlowStrLbl = document.createElement("label");
+    _sbsGlowStrLbl.textContent = t.searchBarGlowStrength || "Glow Strength";
+    _sbsGlowStrLbl.style.cssText = labelCss();
+    _sbsGlowStrRow.appendChild(_sbsGlowStrLbl);
+    const _sbsGlowStrInput = document.createElement("input");
+    _sbsGlowStrInput.type = "range"; _sbsGlowStrInput.min = "2"; _sbsGlowStrInput.max = "16"; _sbsGlowStrInput.step = "1";
+    _sbsGlowStrInput.value = styleSettings.searchBarGlowStrength || 6;
+    _sbsGlowStrInput.style.cssText = sliderCss();
+    const _vs_sbsGlowStr = makeValueSpan(_sbsGlowStrInput.value + "px");
+    _sbsGlowStrInput.oninput = () => {
+      styleSettings.searchBarGlowStrength = parseInt(_sbsGlowStrInput.value);
+      _vs_sbsGlowStr.textContent = _sbsGlowStrInput.value + "px";
+      _debouncedSave();
+    };
+    const _rb_sbsGlowStr = makeResetBtn(6, (dv) => {
+      _sbsGlowStrInput.value = dv;
+      _vs_sbsGlowStr.textContent = dv + "px";
+      styleSettings.searchBarGlowStrength = dv;
+      save(); applyTheme(panelTheme);
+    });
+    _sbsGlowStrRow.appendChild(_sbsGlowStrInput);
+    _sbsGlowStrRow.appendChild(_vs_sbsGlowStr);
+    _sbsGlowStrRow.appendChild(_rb_sbsGlowStr);
+    searchBarSection.appendChild(_sbsGlowStrRow);
+
+    parent.appendChild(searchBarSection);
+    _setGroupEnabled(!!styleSettings.searchBarGlowEnabled, _sbsGlowColorRow, _sbsGlowStrRow);
+
+    function _hlSearchBar(on) {
+      const _scw = document.getElementById("search-config-wrap");
+      if (!_scw) return;
+      _scw.style.outline       = on ? _DASHED : _NONE;
+      _scw.style.outlineOffset = on ? "3px"   : _NONE;
+    }
+    _bind(_sbsHeader,
+      () => _hlSearchBar(true),
+      () => _hlSearchBar(false)
+    );
+    [_sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
+     _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl].forEach(lbl => {
+      _bind(lbl, () => _hlSearchBar(true), () => _hlSearchBar(false));
+    });
+
+    return {
+      _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
+      _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl,
+    };
+  }
+
+  function _buildGeneralStyleSection() {
+  const generalStyleContainer = document.createElement("div");
+  generalStyleContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
+  generalStyleContainer.style.borderRadius =
+    styleSettings.borderRadius + "px";
+  generalStyleContainer.style.padding = "6px";
+  generalStyleContainer.style.display = "flex";
+  generalStyleContainer.style.flexDirection = "column";
+  generalStyleContainer.style.gap = "0";
+  generalStyleContainer.style.maxWidth = "490px";
+
+  const generalStyleHeader = document.createElement("div");
+  generalStyleHeader.textContent = t.style || "Style";
+  generalStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  generalStyleContainer.appendChild(generalStyleHeader);
+
+  const _styleOptEntries = Object.entries(t.styleOptions || {});
+  const { row: styleGroupRow } = _buildButtonGroup(
+    t.style || "Style",
+    _styleOptEntries.map(([key, label]) => ({ v: key, lb: label })),
+    "styleVal",
+    () => styleSettings.style,
+    (key) => {
+      styleSettings.style = key;
+      Object.assign(styleSettings, STYLE_PRESETS[key] || {});
+      save();
+      applyTheme(panelTheme);
+      borderRadiusInput.value = styleSettings.borderRadius;
+      _vs_borderRadiusInput.textContent = styleSettings.borderRadius + "px";
+      opacityInput.value = styleSettings.opacity;
+      _vs_opacityInput.textContent = parseFloat(styleSettings.opacity).toFixed(1);
+      groupOpacityInput.value = styleSettings.groupOpacity;
+      _vs_groupOpacityInput.textContent = parseFloat(styleSettings.groupOpacity).toFixed(1);
+      buttonOpacityInput.value = styleSettings.buttonOpacity;
+      _vs_buttonOpacityInput.textContent = parseFloat(styleSettings.buttonOpacity).toFixed(1);
+    }
+  );
+  generalStyleContainer.appendChild(styleGroupRow);
+
+  (function() {
+    const { row } = _buildButtonGroup(
+      t.iconStyleLabel || "Icon Style",
+      [
+        { v: "emoji",    lb: t.toggleBtnIconEmoji   || "🔍 Emoji" },
+        { v: "svg-line", lb: t.toggleBtnIconSvgLine || "SVG Outline" },
+        { v: "svg-fill", lb: t.toggleBtnIconSvgFill || "SVG Filled" },
+      ],
+      "iconVal",
+      () => styleSettings.iconStyle || "emoji",
+      (v) => {
+        styleSettings.iconStyle = v;
+        save();
+        applyAllBtnIcons();
+      }
+    );
+    generalStyleContainer.appendChild(row);
+  })();
+
+  const _toggleBtnStyleAnchor = document.createElement("div");
+  generalStyleContainer.appendChild(_toggleBtnStyleAnchor);
+
+  const borderRadiusRow = document.createElement("div");
+  borderRadiusRow.style.cssText = rowCss();
+
+  const borderRadiusLabel = document.createElement("label");
+  borderRadiusLabel.textContent = t.borderRadius || "Border Radius";
+  borderRadiusLabel.style.cssText = labelCss();
+  borderRadiusRow.appendChild(borderRadiusLabel);
+
+  const borderRadiusInput = document.createElement("input");
+  borderRadiusInput.type = "range";
+  borderRadiusInput.min = "0";
+  borderRadiusInput.max = "20";
+  borderRadiusInput.value = styleSettings.borderRadius;
+  borderRadiusInput.style.cssText = sliderCss();
+  borderRadiusInput.oninput = () => {
+    styleSettings.borderRadius = parseInt(borderRadiusInput.value);
+    _debouncedSave();
+    _debouncedApply();
+    _vs_borderRadiusInput.textContent = borderRadiusInput.value+"px";
+  };
+  const _vs_borderRadiusInput = makeValueSpan(borderRadiusInput.value+"px");
+  const _rb_borderRadiusInput = makeResetBtn(STYLE_DEFAULTS.borderRadius, (dv) => {
+    borderRadiusInput.value = dv;
+    styleSettings.borderRadius = dv;
+    _vs_borderRadiusInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  borderRadiusRow.appendChild(borderRadiusInput);
+  borderRadiusRow.appendChild(_vs_borderRadiusInput);
+  borderRadiusRow.appendChild(_rb_borderRadiusInput);
+  generalStyleContainer.appendChild(borderRadiusRow);
+
+  const contrastRow = document.createElement("div");
+  contrastRow.style.cssText = rowCss();
+
+  const contrastLabel = document.createElement("label");
+  contrastLabel.textContent = t.contrast || "Contrast";
+  contrastLabel.style.cssText = labelCss();
+  contrastRow.appendChild(contrastLabel);
+
+  const contrastInput = document.createElement("input");
+  contrastInput.type = "range";
+  contrastInput.min = "-50";
+  contrastInput.max = "50";
+  contrastInput.value = styleSettings.contrast;
+  contrastInput.style.cssText = sliderCss();
+  contrastInput.oninput = () => {
+    styleSettings.contrast = parseInt(contrastInput.value);
+    _debouncedSave();
+    _debouncedApply();
+    _vs_contrastInput.textContent = contrastInput.value;
+  };
+  const _vs_contrastInput = makeValueSpan(contrastInput.value);
+  const _rb_contrastInput = makeResetBtn(STYLE_DEFAULTS.contrast, (dv) => {
+    contrastInput.value = dv;
+    styleSettings.contrast = dv;
+    _vs_contrastInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  contrastRow.appendChild(contrastInput);
+  contrastRow.appendChild(_vs_contrastInput);
+  contrastRow.appendChild(_rb_contrastInput);
+  generalStyleContainer.appendChild(contrastRow);
+
+  const opacityRow = document.createElement("div");
+  opacityRow.style.cssText = rowCss();
+
+  const opacityLabel = document.createElement("label");
+  opacityLabel.textContent = t.opacity || "Opacity";
+  opacityLabel.style.cssText = labelCss();
+  opacityRow.appendChild(opacityLabel);
+
+  const opacityInput = document.createElement("input");
+  opacityInput.type = "range";
+  opacityInput.min = "0.3";
+  opacityInput.max = "1";
+  opacityInput.step = "0.1";
+  opacityInput.value = styleSettings.opacity;
+  opacityInput.style.cssText = sliderCss();
+  opacityInput.oninput = () => {
+    styleSettings.opacity = parseFloat(opacityInput.value);
+    _debouncedSave();
+    _debouncedApply();
+    _vs_opacityInput.textContent = parseFloat(opacityInput.value).toFixed(1);
+  };
+  const _vs_opacityInput = makeValueSpan(parseFloat(opacityInput.value).toFixed(1));
+  const _rb_opacityInput = makeResetBtn(STYLE_DEFAULTS.opacity, (dv) => {
+    opacityInput.value = dv;
+    styleSettings.opacity = dv;
+    _vs_opacityInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  opacityRow.appendChild(opacityInput);
+  opacityRow.appendChild(_vs_opacityInput);
+  opacityRow.appendChild(_rb_opacityInput);
+  generalStyleContainer.appendChild(opacityRow);
+
+  const groupOpacityRow = document.createElement("div");
+  groupOpacityRow.style.cssText = rowCss();
+
+  const groupOpacityLabel = document.createElement("label");
+  groupOpacityLabel.textContent = t.groupOpacity || "Group Opacity";
+  groupOpacityLabel.style.cssText = labelCss();
+  groupOpacityRow.appendChild(groupOpacityLabel);
+
+  const groupOpacityInput = document.createElement("input");
+  groupOpacityInput.type = "range";
+  groupOpacityInput.min = "0.3";
+  groupOpacityInput.max = "1";
+  groupOpacityInput.step = "0.1";
+  groupOpacityInput.value = styleSettings.groupOpacity;
+  groupOpacityInput.style.cssText = sliderCss();
+  groupOpacityInput.oninput = () => {
+    styleSettings.groupOpacity = parseFloat(groupOpacityInput.value);
+    _debouncedSave();
+    _debouncedApply();
+    _vs_groupOpacityInput.textContent = parseFloat(groupOpacityInput.value).toFixed(1);
+  };
+  const _vs_groupOpacityInput = makeValueSpan(parseFloat(groupOpacityInput.value).toFixed(1));
+  const _rb_groupOpacityInput = makeResetBtn(STYLE_DEFAULTS.groupOpacity, (dv) => {
+    groupOpacityInput.value = dv;
+    styleSettings.groupOpacity = dv;
+    _vs_groupOpacityInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  groupOpacityRow.appendChild(groupOpacityInput);
+  groupOpacityRow.appendChild(_vs_groupOpacityInput);
+  groupOpacityRow.appendChild(_rb_groupOpacityInput);
+  generalStyleContainer.appendChild(groupOpacityRow);
+
+  const buttonOpacityRow = document.createElement("div");
+  buttonOpacityRow.style.cssText = rowCss();
+
+  const buttonOpacityLabel = document.createElement("label");
+  buttonOpacityLabel.textContent = t.buttonOpacity || "Button Opacity";
+  buttonOpacityLabel.style.cssText = labelCss();
+  buttonOpacityRow.appendChild(buttonOpacityLabel);
+
+  const buttonOpacityInput = document.createElement("input");
+  buttonOpacityInput.type = "range";
+  buttonOpacityInput.min = "0.3";
+  buttonOpacityInput.max = "1";
+  buttonOpacityInput.step = "0.1";
+  buttonOpacityInput.value = styleSettings.buttonOpacity;
+  buttonOpacityInput.style.cssText = sliderCss();
+  buttonOpacityInput.oninput = () => {
+    styleSettings.buttonOpacity = parseFloat(buttonOpacityInput.value);
+    _debouncedSave();
+    _debouncedApply();
+    _vs_buttonOpacityInput.textContent = parseFloat(buttonOpacityInput.value).toFixed(1);
+  };
+  const _vs_buttonOpacityInput = makeValueSpan(parseFloat(buttonOpacityInput.value).toFixed(1));
+  const _rb_buttonOpacityInput = makeResetBtn(STYLE_DEFAULTS.buttonOpacity, (dv) => {
+    buttonOpacityInput.value = dv;
+    styleSettings.buttonOpacity = dv;
+    _vs_buttonOpacityInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  buttonOpacityRow.appendChild(buttonOpacityInput);
+  buttonOpacityRow.appendChild(_vs_buttonOpacityInput);
+  buttonOpacityRow.appendChild(_rb_buttonOpacityInput);
+  generalStyleContainer.appendChild(buttonOpacityRow);
+
+  const siteButtonWidthRow = document.createElement("div");
+  siteButtonWidthRow.style.cssText = rowCss();
+  const siteButtonWidthLabel = document.createElement("label");
+  siteButtonWidthLabel.textContent = t.siteButtonWidth || "Site Button Width";
+  siteButtonWidthLabel.style.cssText = labelCss();
+  siteButtonWidthRow.appendChild(siteButtonWidthLabel);
+  const siteButtonWidthInput = document.createElement("input");
+  siteButtonWidthInput.type = "range";
+  siteButtonWidthInput.min = 0;
+  siteButtonWidthInput.max = 110;
+  siteButtonWidthInput.step = 4;
+  siteButtonWidthInput.value = styleSettings.siteButtonWidth ?? 0;
+  siteButtonWidthInput.style.cssText = sliderCss();
+  const _vs_siteButtonWidth = makeValueSpan(
+    (styleSettings.siteButtonWidth > 0 ? styleSettings.siteButtonWidth + "px" : (t.siteButtonWidthAuto || "Auto"))
+  );
+  siteButtonWidthInput.oninput = () => {
+    const v = parseInt(siteButtonWidthInput.value, 10);
+    styleSettings.siteButtonWidth = v;
+    _vs_siteButtonWidth.textContent = v > 0 ? v + "px" : (t.siteButtonWidthAuto || "Auto");
+    _debouncedSave();
+    document.querySelectorAll(".site-container").forEach(sc => {
+      const _minCell = v > 0 ? v : 104;
+      sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(${_minCell}px, 1fr))`;
+    });
+    document.querySelectorAll(".draggable-site").forEach(el => {
+      if (v > 0) {
+        el.style.width    = v + "px";
+        el.style.maxWidth = v + "px";
+        const lbl = el.querySelector(".site-label");
+        if (lbl) lbl.style.display = v <= 28 ? "none" : "";
+      } else {
+        el.style.width    = "";
+        el.style.maxWidth = "none";
+        const lbl = el.querySelector(".site-label");
+        if (lbl) lbl.style.display = "";
+      }
+    });
+  };
+  const _rb_siteButtonWidth = makeResetBtn(0, (dv) => {
+    siteButtonWidthInput.value = dv;
+    styleSettings.siteButtonWidth = dv;
+    _vs_siteButtonWidth.textContent = t.siteButtonWidthAuto || "Auto";
+    save();
+    document.querySelectorAll(".site-container").forEach(sc => {
+      sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(104px, 1fr))`;
+    });
+    document.querySelectorAll(".draggable-site").forEach(el => {
+      el.style.width    = "";
+      el.style.maxWidth = "none";
+      const lbl = el.querySelector(".site-label");
+      if (lbl) lbl.style.display = "";
+    });
+  });
+  siteButtonWidthRow.appendChild(siteButtonWidthInput);
+  siteButtonWidthRow.appendChild(_vs_siteButtonWidth);
+  siteButtonWidthRow.appendChild(_rb_siteButtonWidth);
+  generalStyleContainer.appendChild(siteButtonWidthRow);
+
+  const { row: panelBgColorRow, label: panelBgColorLabel, input: panelBgColorInput } = mkColorInput(
+    t.panelBgColor || "Panel Background Color",
+    styleSettings.backgroundColor || (panelTheme === "dark" ? "#333333" : "#ffffff"),
+    (v) => {
+      styleSettings.backgroundColor = v;
+      _debouncedSave();
+    },
+    {
+      resetVal: panelTheme === "dark" ? "#333333" : "#ffffff",
+      onReset: (dv) => { panelBgColorInput.value = dv; styleSettings.backgroundColor = dv; save(); applyTheme(panelTheme); },
+    }
+  );
+  generalStyleContainer.appendChild(panelBgColorRow);
+
+  const {
+    glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl,
+    sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl,
+  } = _buildGsGlowSheenSection(generalStyleContainer);
+
+  const { vignetteHeader } = _buildGsVignetteSection(generalStyleContainer);
+
+  const {
+    _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
+    _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl,
+  } = _buildGsSearchBarSection(generalStyleContainer);
+
+  _bind(generalStyleHeader,
+    () => _hlSet([".group-block", "button:not(.icon-btn)"], true),
+    () => _hlSet([".group-block", "button:not(.icon-btn)"], false)
+  );
+  _bind(borderRadiusLabel,
+    () => _hlSet([".group-block", ".draggable-site"], true),
+    () => _hlSet([".group-block", ".draggable-site"], false)
+  );
+  _bind(contrastLabel,
+    () => _hlSet(["button:not(.icon-btn)", ".draggable-site"], true),
+    () => _hlSet(["button:not(.icon-btn)", ".draggable-site"], false)
+  );
+  _bind(opacityLabel,       () => _hlPanel(true), () => _hlPanel(false));
+  _bind(groupOpacityLabel,
+    () => _hlSet([".group-block"], true),
+    () => _hlSet([".group-block"], false)
+  );
+  _bind(buttonOpacityLabel,
+    () => _hlSet([".draggable-site", "button:not(.icon-btn)"], true),
+    () => _hlSet([".draggable-site", "button:not(.icon-btn)"], false)
+  );
+  _bind(siteButtonWidthLabel,
+    () => _hlSet([".draggable-site"], true),
+    () => _hlSet([".draggable-site"], false)
+  );
+  _bind(panelBgColorLabel,  () => _hlPanel(true), () => _hlPanel(false));
+
+  return {
+    generalStyleContainer, generalStyleHeader,
+    _layoutAnchors: { toggleBtnStyle: _toggleBtnStyleAnchor },
+    borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl };
+  }
+
+  function _buildToggleBtnStyleSection() {
+  const toggleBtnStyleContainer = document.createElement("div");
+  toggleBtnStyleContainer.style.cssText = `
+    display:flex; flex-direction:column;
+    gap:0; max-width:490px; margin-top:0;
+  `;
+  const _tbsHeader = document.createElement("div");
+  _tbsHeader.textContent = t.toggleBtnStyleLabel || "Toggle Button Style";
+  _tbsHeader.style.cssText = `font-weight:bold; margin-bottom:6px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  toggleBtnStyleContainer.appendChild(_tbsHeader);
+
+  (function() {
+    const { row } = _buildButtonGroup(
+      t.toggleBtnShapeLabel || "Shape",
+      [
+        { v: "circle",         lb: t.toggleBtnShapeCircle        || "● Circle" },
+        { v: "rounded-square", lb: t.toggleBtnShapeRoundedSquare || "▢ Rounded" },
+      ],
+      "shapeVal",
+      () => styleSettings.toggleBtnShape || "circle",
+      (v) => {
+        styleSettings.toggleBtnShape = v;
+        save();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+      }
+    );
+    toggleBtnStyleContainer.appendChild(row);
+  })();
+
+  (function() {
+    const _isDkP = panelTheme === "dark";
+    const row = document.createElement("div");
+    row.style.cssText = rowCss() + "flex-wrap:wrap; align-items:center; gap:4px;";
+    const lbl = document.createElement("label");
+    lbl.textContent = t.svgIconColorLabel || "SVG Icon Color";
+    lbl.style.cssText = labelCss();
+    row.appendChild(lbl);
+    const _cRow = document.createElement("div");
+    _cRow.style.cssText = "display:flex; gap:5px; flex:1; flex-wrap:wrap; align-items:center;";
+    const PALETTE = [
+      { hex:"",        title:"Inherit (theme)" },
+      { hex:"#ffffff", title:"White"   },
+      { hex:"#dddddd", title:"Silver"  },
+      { hex:"#222222", title:"Black"   },
+      { hex:"#4a90d9", title:"Blue"    },
+      { hex:"#2ecc71", title:"Green"   },
+      { hex:"#e74c3c", title:"Red"     },
+      { hex:"#f39c12", title:"Amber"   },
+      { hex:"#9b59b6", title:"Purple"  },
+      { hex:"#1abc9c", title:"Teal"    },
+    ];
+    let _cci;
+    PALETTE.forEach(({ hex, title }) => {
+      const sw = document.createElement("button");
+      sw.title = title;
+      sw.dataset.palette = hex;
+      const _isAct = (styleSettings.svgIconColor || "") === hex;
+      sw.style.cssText = [
+        "width:18px; height:18px; border-radius:50%; cursor:pointer; flex-shrink:0;",
+        `border:2px solid ${_isAct ? (_isDkP ? "#88aaff" : "#4a90d9") : "rgba(0,0,0,0)"};`,
+        hex ? `background:${hex};` : "background:conic-gradient(#ccc 50%, #fff 50%);",
+        "box-shadow:inset 0 0 0 1px rgba(0,0,0,.18); transition:border-color .12s;",
+      ].join(" ");
+      sw.addEventListener("click", () => {
+        styleSettings.svgIconColor = hex;
+        save();
+        applyAllBtnIcons();
+        const tb = document.getElementById("site-toggle-simple");
+        if (tb) applyToggleBtnStyle(tb);
+        _cRow.querySelectorAll("button[data-palette]").forEach(b2 => {
+          b2.style.borderColor = b2.dataset.palette === hex
+            ? (_isDkP ? "#88aaff" : "#4a90d9") : "rgba(0,0,0,0)";
+        });
+        if (_cci && hex) _cci.value = hex;
+      });
+      _cRow.appendChild(sw);
+    });
+    _cci = document.createElement("input");
+    _cci.type  = "color";
+    _cci.title = "Custom color";
+    _cci.value = /^#[0-9a-fA-F]{6}$/.test(styleSettings.svgIconColor || "")
+      ? styleSettings.svgIconColor : "#4a90d9";
+    _cci.style.cssText = "width:22px; height:18px; border:none; cursor:pointer; padding:0; border-radius:3px; flex-shrink:0;";
+    _cci.oninput = () => {
+      styleSettings.svgIconColor = _cci.value;
+      _debouncedSave();
+      applyAllBtnIcons();
+      const tb = document.getElementById("site-toggle-simple");
+      if (tb) applyToggleBtnStyle(tb);
+      _cRow.querySelectorAll("button[data-palette]").forEach(b2 => {
+        b2.style.borderColor = "rgba(0,0,0,0)";
+      });
+    };
+    _cRow.appendChild(_cci);
+    row.appendChild(_cRow);
+    toggleBtnStyleContainer.appendChild(row);
+  })();
+
+  (function() {
+    const row = document.createElement("div");
+    row.style.cssText = rowCss();
+    const lbl = document.createElement("label");
+    lbl.textContent = t.toggleBtnBgColorLabel || "BG Color";
+    lbl.style.cssText = labelCss();
+    row.appendChild(lbl);
+    const _cWrap = document.createElement("div");
+    _cWrap.style.cssText = "display:flex; align-items:center; gap:6px; flex:1;";
+    const _ci = document.createElement("input");
+    _ci.type = "color";
+    _ci.value = styleSettings.toggleBtnBg || "#ffffff";
+    _ci.style.cssText = "width:36px; height:24px; border:none; cursor:pointer; padding:0; border-radius:3px;";
+    _ci.oninput = () => {
+      styleSettings.toggleBtnBg = _ci.value;
+      _debouncedSave();
+      const tb = document.getElementById("site-toggle-simple");
+      if (tb) applyToggleBtnStyle(tb);
+    };
+    const _cbReset = makeResetBtn("", (dv) => {
+      styleSettings.toggleBtnBg = dv;
+      _ci.value = "#ffffff";
+      save();
+      const tb = document.getElementById("site-toggle-simple");
+      if (tb) applyToggleBtnStyle(tb);
+    });
+    _cWrap.appendChild(_ci);
+    _cWrap.appendChild(_cbReset);
+    row.appendChild(_cWrap);
+    toggleBtnStyleContainer.appendChild(row);
+  })();
+
+  (function() {
+    const row = document.createElement("div");
+    row.style.cssText = rowCss();
+    const lbl = document.createElement("label");
+    lbl.textContent = t.toggleBtnBgOpacityLabel || "BG Opacity";
+    lbl.style.cssText = labelCss();
+    row.appendChild(lbl);
+    const _si = document.createElement("input");
+    _si.type = "range";
+    _si.min = "0"; _si.max = "1"; _si.step = "0.05";
+    _si.value = styleSettings.toggleBtnBgOpacity ?? 0;
+    _si.style.cssText = sliderCss();
+    const _vs = makeValueSpan(
+      parseFloat(_si.value).toFixed(2)
+    );
+    _si.oninput = () => {
+      styleSettings.toggleBtnBgOpacity = parseFloat(_si.value);
+      _vs.textContent = parseFloat(_si.value).toFixed(2);
+      _debouncedSave();
+      const tb = document.getElementById("site-toggle-simple");
+      if (tb) applyToggleBtnStyle(tb);
+    };
+    const _rb = makeResetBtn(0, (dv) => {
+      _si.value = dv;
+      styleSettings.toggleBtnBgOpacity = dv;
+      _vs.textContent = "0.00";
+      save();
+      const tb = document.getElementById("site-toggle-simple");
+      if (tb) applyToggleBtnStyle(tb);
+    });
+    row.appendChild(_si);
+    row.appendChild(_vs);
+    row.appendChild(_rb);
+    toggleBtnStyleContainer.appendChild(row);
+  })();
+
+  const _tbGlowColorRow = document.createElement("div");
+  const _tbGlowStrRow   = document.createElement("div");
+  (function() {
+    const row = document.createElement("div");
+    row.style.cssText = checkboxRowCss();
+    const lbl = document.createElement("label");
+    lbl.textContent = t.enableToggleBtnGlow || "Glow";
+    lbl.style.cssText = labelCss();
+    row.appendChild(lbl);
+    const _tg = document.createElement("input");
+    _tg.type = "checkbox";
+    _tg.checked = !!styleSettings.enableToggleBtnGlow;
+    _tg.onchange = () => {
+      styleSettings.enableToggleBtnGlow = _tg.checked;
+      _setGroupEnabled(_tg.checked, _tbGlowColorRow, _tbGlowStrRow);
+      save();
+      const tb = document.getElementById("site-toggle-simple");
+      if (tb) applyToggleBtnStyle(tb);
+    };
+    row.appendChild(_tg);
+    toggleBtnStyleContainer.appendChild(row);
+  })();
+
+  (function() {
+    _tbGlowColorRow.style.cssText = rowCss();
+    const lbl = document.createElement("label");
+    lbl.textContent = t.toggleBtnGlowColor || "Glow Color";
+    lbl.style.cssText = labelCss();
+    _tbGlowColorRow.appendChild(lbl);
+    const _ci = document.createElement("input");
+    _ci.type = "color";
+    _ci.value = styleSettings.toggleBtnGlowColor || "#00bfff";
+    _ci.oninput = () => {
+      styleSettings.toggleBtnGlowColor = _ci.value;
+      _debouncedSave();
+      const tb = document.getElementById("site-toggle-simple");
+      if (tb) applyToggleBtnStyle(tb);
+    };
+    const _rb = makeResetBtn("#00bfff", (dv) => {
+      _ci.value = dv;
+      styleSettings.toggleBtnGlowColor = dv;
+      save();
+      const tb = document.getElementById("site-toggle-simple");
+      if (tb) applyToggleBtnStyle(tb);
+    });
+    _tbGlowColorRow.appendChild(_ci);
+    _tbGlowColorRow.appendChild(_rb);
+    toggleBtnStyleContainer.appendChild(_tbGlowColorRow);
+  })();
+
+  (function() {
+    _tbGlowStrRow.style.cssText = rowCss();
+    const lbl = document.createElement("label");
+    lbl.textContent = t.toggleBtnGlowStrength || "Glow Strength";
+    lbl.style.cssText = labelCss();
+    _tbGlowStrRow.appendChild(lbl);
+    const _si = document.createElement("input");
+    _si.type = "range"; _si.min = "4"; _si.max = "32"; _si.step = "1";
+    _si.value = styleSettings.toggleBtnGlowStrength || 12;
+    _si.style.cssText = sliderCss();
+    const _vs = makeValueSpan(_si.value + "px");
+    _si.oninput = () => {
+      styleSettings.toggleBtnGlowStrength = parseInt(_si.value);
+      _vs.textContent = _si.value + "px";
+      _debouncedSave();
+      const tb = document.getElementById("site-toggle-simple");
+      if (tb) applyToggleBtnStyle(tb);
+    };
+    const _rb = makeResetBtn(12, (dv) => {
+      _si.value = dv;
+      styleSettings.toggleBtnGlowStrength = dv;
+      _vs.textContent = dv + "px";
+      save();
+      const tb = document.getElementById("site-toggle-simple");
+      if (tb) applyToggleBtnStyle(tb);
+    });
+    _tbGlowStrRow.appendChild(_si);
+    _tbGlowStrRow.appendChild(_vs);
+    _tbGlowStrRow.appendChild(_rb);
+    toggleBtnStyleContainer.appendChild(_tbGlowStrRow);
+  })();
+  _setGroupEnabled(!!styleSettings.enableToggleBtnGlow, _tbGlowColorRow, _tbGlowStrRow);
+
+  _bind(_tbsHeader,
+    () => _hlEls([document.getElementById("site-toggle-simple")], true),
+    () => _hlEls([document.getElementById("site-toggle-simple")], false)
+  );
+  toggleBtnStyleContainer.querySelectorAll("label").forEach(lbl => {
+    _bind(lbl,
+      () => _hlEls([document.getElementById("site-toggle-simple")], true),
+      () => _hlEls([document.getElementById("site-toggle-simple")], false)
+    );
+  });
+
+  return { toggleBtnStyleContainer, _tbsHeader };
+  }
+
+  function _buildBgOverlaySection() {
+  const backgroundOverlayContainer = document.createElement("div");
+  backgroundOverlayContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
+  backgroundOverlayContainer.style.borderRadius =
+    styleSettings.borderRadius + "px";
+  backgroundOverlayContainer.style.padding = "6px";
+  backgroundOverlayContainer.style.display = "flex";
+  backgroundOverlayContainer.style.flexDirection = "column";
+  backgroundOverlayContainer.style.gap = "0";
+  backgroundOverlayContainer.style.maxWidth = "490px";
+
+  const backgroundOverlayHeader = document.createElement("div");
+  backgroundOverlayHeader.textContent = t.backgroundImage || "Background & Overlay";
+  backgroundOverlayHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  backgroundOverlayContainer.appendChild(backgroundOverlayHeader);
+
+  const overlayDarkeningRow = document.createElement("div");
+  overlayDarkeningRow.style.cssText = checkboxRowCss();
+
+  const overlayDarkeningLabel = document.createElement("label");
+  overlayDarkeningLabel.textContent = t.enableOverlayDarkening || "Overlay Darkening";
+  overlayDarkeningLabel.style.cssText = labelCss();
+  overlayDarkeningRow.appendChild(overlayDarkeningLabel);
+
+  const overlayDarkeningInput = document.createElement("input");
+  overlayDarkeningInput.type = "checkbox";
+  overlayDarkeningInput.checked = styleSettings.enableOverlayDarkening;
+  overlayDarkeningInput.onchange = () => {
+    styleSettings.enableOverlayDarkening = overlayDarkeningInput.checked;
+    _setGroupEnabled(overlayDarkeningInput.checked, overlayStrengthRow);
+    save();
+    applyTheme(panelTheme);
+  };
+  const _rb_overlayDarkeningInput = makeResetBtn(false, (dv) => {
+    overlayDarkeningInput.checked = dv;
+    styleSettings.enableOverlayDarkening = dv;
+    _setGroupEnabled(dv, overlayStrengthRow);
+    save(); applyTheme(panelTheme);
+  });
+  overlayDarkeningRow.appendChild(overlayDarkeningInput);
+  overlayDarkeningRow.appendChild(_rb_overlayDarkeningInput);
+  backgroundOverlayContainer.appendChild(overlayDarkeningRow);
+
+  const overlayStrengthRow = document.createElement("div");
+  overlayStrengthRow.style.cssText = rowCss();
+
+  const overlayStrengthLabel = document.createElement("label");
+  overlayStrengthLabel.textContent = t.overlayStrength || "Overlay Strength";
+  overlayStrengthLabel.style.cssText = labelCss();
+  overlayStrengthRow.appendChild(overlayStrengthLabel);
+
+  const overlayStrengthInput = document.createElement("input");
+  overlayStrengthInput.type = "range";
+  overlayStrengthInput.min = "0.0";
+  overlayStrengthInput.max = "1.0";
+  overlayStrengthInput.step = "0.1";
+  overlayStrengthInput.value = styleSettings.overlayStrength || 0.5;
+  overlayStrengthInput.style.cssText = sliderCss();
+  overlayStrengthInput.oninput = () => {
+    styleSettings.overlayStrength = parseFloat(overlayStrengthInput.value);
+    _debouncedSave();
+    _debouncedApply();
+    _vs_overlayStrengthInput.textContent = parseFloat(overlayStrengthInput.value).toFixed(1);
+  };
+  const _vs_overlayStrengthInput = makeValueSpan(parseFloat(overlayStrengthInput.value).toFixed(1));
+  const _rb_overlayStrengthInput = makeResetBtn(STYLE_DEFAULTS.overlayStrength, (dv) => {
+    overlayStrengthInput.value = dv;
+    styleSettings.overlayStrength = dv;
+    _vs_overlayStrengthInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  overlayStrengthRow.appendChild(overlayStrengthInput);
+  overlayStrengthRow.appendChild(_vs_overlayStrengthInput);
+  overlayStrengthRow.appendChild(_rb_overlayStrengthInput);
+  backgroundOverlayContainer.appendChild(overlayStrengthRow);
+
+  const imageRow = document.createElement("div");
+  imageRow.style.cssText = rowCss();
+
+  const imageLabel = document.createElement("label");
+  imageLabel.textContent = t.backgroundImage || "Background Image";
+  imageLabel.style.cssText = labelCss();
+  imageRow.appendChild(imageLabel);
+
+  const imageInput = document.createElement("input");
+  imageInput.type = "file";
+  imageInput.accept = "image/*";
+  imageInput.style.cssText = "flex: 1; min-width: 0; margin: 0 6px; font-size: 11px; overflow: hidden;";
+  imageInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        showToast(t.processingImage || "🖼️ Processing image...", 800);
+        _downscaleImage(ev.target.result).then((resized) => {
+          styleSettings.backgroundImage = resized;
+          save();
+          applyTheme(panelTheme);
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  imageRow.appendChild(imageInput);
+
+  const clearImageBtn = document.createElement("button");
+  clearImageBtn.textContent = t.clearImage || "Clear Image🗑️";
+  clearImageBtn.style.padding = "2px 6px";
+  clearImageBtn.style.borderRadius = styleSettings.borderRadius + "px";
+  clearImageBtn.style.cursor = "pointer";
+  clearImageBtn.style.whiteSpace = "nowrap";
+  clearImageBtn.style.flexShrink = "0";
+  clearImageBtn.onclick = () => {
+    styleSettings.backgroundImage = "";
+    save();
+    applyTheme(panelTheme);
+  };
+  imageRow.appendChild(clearImageBtn);
+  backgroundOverlayContainer.appendChild(imageRow);
+
+  const imageModeRow = document.createElement("div");
+  imageModeRow.style.cssText = rowCss();
+
+  const imageModeLabel = document.createElement("label");
+  imageModeLabel.textContent = t.imageMode || "Image Mode";
+  imageModeLabel.style.cssText = labelCss();
+  imageModeRow.appendChild(imageModeLabel);
+
+  const imageModeSelect = document.createElement("select");
+  imageModeSelect.style.cssText = sliderCss();
+  Object.entries(t.imageModes || {}).forEach(([key, value]) => {
+    const option = document.createElement("option");
+    option.value = key;
+    option.textContent = value;
+    if (styleSettings.imageMode === key) option.selected = true;
+    imageModeSelect.appendChild(option);
+  });
+  function syncImageOffsetVisibility() {
+    const isCenter = styleSettings.imageMode === "center";
+    imageOffsetXRow.style.opacity = isCenter ? "0.35" : "1";
+    imageOffsetXRow.style.pointerEvents = isCenter ? "none" : "";
+    imageOffsetYRow.style.opacity = isCenter ? "0.35" : "1";
+    imageOffsetYRow.style.pointerEvents = isCenter ? "none" : "";
+  }
+  imageModeSelect.onchange = () => {
+    styleSettings.imageMode = imageModeSelect.value;
+    save();
+    applyTheme(panelTheme);
+    syncImageOffsetVisibility();
+  };
+  imageModeRow.appendChild(imageModeSelect);
+  backgroundOverlayContainer.appendChild(imageModeRow);
+
+  const imageOffsetXRow = document.createElement("div");
+  imageOffsetXRow.style.cssText = rowCss();
+
+  const imageOffsetXLabel = document.createElement("label");
+  imageOffsetXLabel.textContent = t.imageOffsetX || "Image X Offset";
+  imageOffsetXLabel.style.cssText = labelCss();
+  imageOffsetXRow.appendChild(imageOffsetXLabel);
+
+  const imageOffsetXInput = document.createElement("input");
+  imageOffsetXInput.type = "range";
+  imageOffsetXInput.min = "-1000";
+  imageOffsetXInput.max = "1000";
+  imageOffsetXInput.value = styleSettings.imageOffsetX;
+  imageOffsetXInput.style.cssText = sliderCss();
+  imageOffsetXInput.oninput = () => {
+    styleSettings.imageOffsetX = parseInt(imageOffsetXInput.value);
+    _debouncedSave();
+    const p = document.getElementById("site-group-panel");
+    if (p && styleSettings.backgroundImage && styleSettings.imageMode !== "center") {
+      p.style.backgroundPosition = `${styleSettings.imageOffsetX}px ${styleSettings.imageOffsetY || 0}px`;
+    }
+    _vs_imageOffsetXInput.textContent = imageOffsetXInput.value+"px";
+  };
+  const _vs_imageOffsetXInput = makeValueSpan(imageOffsetXInput.value+"px");
+  const _rb_imageOffsetXInput = makeResetBtn(STYLE_DEFAULTS.imageOffsetX, (dv) => {
+    imageOffsetXInput.value = dv;
+    styleSettings.imageOffsetX = dv;
+    _vs_imageOffsetXInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  imageOffsetXRow.appendChild(imageOffsetXInput);
+  imageOffsetXRow.appendChild(_vs_imageOffsetXInput);
+  imageOffsetXRow.appendChild(_rb_imageOffsetXInput);
+  backgroundOverlayContainer.appendChild(imageOffsetXRow);
+
+  const imageOffsetYRow = document.createElement("div");
+  imageOffsetYRow.style.cssText = rowCss();
+
+  const imageOffsetYLabel = document.createElement("label");
+  imageOffsetYLabel.textContent = t.imageOffsetY || "Image Y Offset";
+  imageOffsetYLabel.style.cssText = labelCss();
+  imageOffsetYRow.appendChild(imageOffsetYLabel);
+
+  const imageOffsetYInput = document.createElement("input");
+  imageOffsetYInput.type = "range";
+  imageOffsetYInput.min = "-1000";
+  imageOffsetYInput.max = "1000";
+  imageOffsetYInput.value = styleSettings.imageOffsetY;
+  imageOffsetYInput.style.cssText = sliderCss();
+  imageOffsetYInput.oninput = () => {
+    styleSettings.imageOffsetY = parseInt(imageOffsetYInput.value);
+    _debouncedSave();
+    const p = document.getElementById("site-group-panel");
+    if (p && styleSettings.backgroundImage && styleSettings.imageMode !== "center") {
+      p.style.backgroundPosition = `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY}px`;
+    }
+    _vs_imageOffsetYInput.textContent = imageOffsetYInput.value+"px";
+  };
+  const _vs_imageOffsetYInput = makeValueSpan(imageOffsetYInput.value+"px");
+  const _rb_imageOffsetYInput = makeResetBtn(STYLE_DEFAULTS.imageOffsetY, (dv) => {
+    imageOffsetYInput.value = dv;
+    styleSettings.imageOffsetY = dv;
+    _vs_imageOffsetYInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  imageOffsetYRow.appendChild(imageOffsetYInput);
+  imageOffsetYRow.appendChild(_vs_imageOffsetYInput);
+  imageOffsetYRow.appendChild(_rb_imageOffsetYInput);
+  backgroundOverlayContainer.appendChild(imageOffsetYRow);
+  syncImageOffsetVisibility();
+
+  const imageScaleRow = document.createElement("div");
+  imageScaleRow.style.cssText = rowCss();
+
+  const imageScaleLabel = document.createElement("label");
+  imageScaleLabel.textContent = t.imageScale || "Image Scale";
+  imageScaleLabel.style.cssText = labelCss();
+  imageScaleRow.appendChild(imageScaleLabel);
+
+  const imageScaleInput = document.createElement("input");
+  imageScaleInput.type = "range";
+  imageScaleInput.min = "0.5";
+  imageScaleInput.max = "3.0";
+  imageScaleInput.step = "0.1";
+  imageScaleInput.value = styleSettings.imageScale;
+  imageScaleInput.style.cssText = sliderCss();
+  imageScaleInput.oninput = () => {
+    styleSettings.imageScale = parseFloat(imageScaleInput.value);
+    _debouncedSave();
+    const p = document.getElementById("site-group-panel");
+    if (p && styleSettings.backgroundImage) {
+      p.style.backgroundSize = `${styleSettings.imageScale * 100}%`;
+    }
+    _vs_imageScaleInput.textContent = parseFloat(imageScaleInput.value).toFixed(1)+"x";
+  };
+  const _vs_imageScaleInput = makeValueSpan(parseFloat(imageScaleInput.value).toFixed(1)+"x");
+  const _rb_imageScaleInput = makeResetBtn(STYLE_DEFAULTS.imageScale, (dv) => {
+    imageScaleInput.value = dv;
+    styleSettings.imageScale = dv;
+    _vs_imageScaleInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  imageScaleRow.appendChild(imageScaleInput);
+  imageScaleRow.appendChild(_vs_imageScaleInput);
+  imageScaleRow.appendChild(_rb_imageScaleInput);
+  backgroundOverlayContainer.appendChild(imageScaleRow);
+
+  const imageOpacityRow = document.createElement("div");
+  imageOpacityRow.style.cssText = rowCss();
+
+  const imageOpacityLabel = document.createElement("label");
+  imageOpacityLabel.textContent = t.imageOpacity || "Image Opacity";
+  imageOpacityLabel.style.cssText = labelCss();
+  imageOpacityRow.appendChild(imageOpacityLabel);
+
+  const imageOpacityInput = document.createElement("input");
+  imageOpacityInput.type = "range";
+  imageOpacityInput.min = "0.3";
+  imageOpacityInput.max = "1.0";
+  imageOpacityInput.step = "0.1";
+  imageOpacityInput.value = styleSettings.imageOpacity;
+  imageOpacityInput.style.cssText = sliderCss();
+  imageOpacityInput.oninput = () => {
+    styleSettings.imageOpacity = parseFloat(imageOpacityInput.value);
+    _debouncedSave();
+    const p = document.getElementById("site-group-panel");
+    if (p && styleSettings.backgroundImage) {
+      const _safe = /^(https?:|data:image\/)/.test(styleSettings.backgroundImage) ? styleSettings.backgroundImage : "";
+      if (_safe) {
+        const dim = 1 - styleSettings.imageOpacity;
+        p.style.backgroundImage = `linear-gradient(rgba(0,0,0,${dim}), rgba(0,0,0,${dim})), url(${_safe})`;
+      }
+    }
+    _vs_imageOpacityInput.textContent = parseFloat(imageOpacityInput.value).toFixed(1);
+  };
+  const _vs_imageOpacityInput = makeValueSpan(parseFloat(imageOpacityInput.value).toFixed(1));
+  const _rb_imageOpacityInput = makeResetBtn(STYLE_DEFAULTS.imageOpacity, (dv) => {
+    imageOpacityInput.value = dv;
+    styleSettings.imageOpacity = dv;
+    _vs_imageOpacityInput.textContent = String(dv);
+    save(); applyTheme(panelTheme);
+  });
+  imageOpacityRow.appendChild(imageOpacityInput);
+  imageOpacityRow.appendChild(_vs_imageOpacityInput);
+  imageOpacityRow.appendChild(_rb_imageOpacityInput);
+  backgroundOverlayContainer.appendChild(imageOpacityRow);
+
+  _setGroupEnabled(!!styleSettings.enableOverlayDarkening, overlayStrengthRow);
+
+  _bind(backgroundOverlayHeader, () => _hlPanel(true), () => _hlPanel(false));
+  _bind(overlayDarkeningLabel,   () => _hlPanel(true), () => _hlPanel(false));
+  _bind(overlayStrengthLabel,    () => _hlPanel(true), () => _hlPanel(false));
+  _bind(imageLabel,        () => _hlPanel(true), () => _hlPanel(false));
+  _bind(imageModeLabel,    () => _hlPanel(true), () => _hlPanel(false));
+  _bind(imageOffsetXLabel, () => _hlPanel(true), () => _hlPanel(false));
+  _bind(imageOffsetYLabel, () => _hlPanel(true), () => _hlPanel(false));
+  _bind(imageScaleLabel,   () => _hlPanel(true), () => _hlPanel(false));
+  _bind(imageOpacityLabel, () => _hlPanel(true), () => _hlPanel(false));
+
+  return { backgroundOverlayContainer, backgroundOverlayHeader, overlayDarkeningLabel, overlayStrengthLabel, imageLabel, imageModeLabel, imageOffsetXLabel, imageOffsetYLabel, imageScaleLabel, imageOpacityLabel };
+  }
+
+  function _buildCustomThemeSection() {
+  const customThemeContainer = document.createElement("div");
+  customThemeContainer.id = "custom-theme-container";
+  customThemeContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
+  customThemeContainer.style.padding = "6px";
+  customThemeContainer.style.borderRadius = styleSettings.borderRadius + "px";
+  customThemeContainer.style.display =
+    styleSettings.theme === "custom" ? "flex" : "none";
+  customThemeContainer.style.flexDirection = "column";
+  customThemeContainer.style.gap = "0";
+  customThemeContainer.style.maxWidth = "490px";
+
+  const customThemeHeader = document.createElement("div");
+  customThemeHeader.textContent = t.customThemeLabel || "Custom Theme";
+  customThemeHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  customThemeContainer.appendChild(customThemeHeader);
+
+  const { row: backgroundColorRow, label: backgroundColorLabel, input: backgroundColorInput } = mkColorInput(
+    t.backgroundColor || "Background Color",
+    styleSettings.customBackgroundColor,
+    (v) => { styleSettings.customBackgroundColor = v; save(); _debouncedApply(); }
+  );
+  customThemeContainer.appendChild(backgroundColorRow);
+
+  const { row: textColorRow, label: textColorLabel, input: textColorInput } = mkColorInput(
+    t.textColor || "Text Color",
+    styleSettings.customTextColor,
+    (v) => { styleSettings.customTextColor = v; save(); _debouncedApply(); }
+  );
+  customThemeContainer.appendChild(textColorRow);
+
+  const { row: buttonBgRow, label: buttonBgLabel, input: buttonBgInput } = mkColorInput(
+    t.customButtonBg || "Button Background",
+    styleSettings.customButtonBg,
+    (v) => { styleSettings.customButtonBg = v; save(); _debouncedApply(); }
+  );
+  customThemeContainer.appendChild(buttonBgRow);
+
+  _bind(customThemeHeader,
+    () => _hlSet([".group-block", ".draggable-site"], true),
+    () => _hlSet([".group-block", ".draggable-site"], false)
+  );
+  _bind(backgroundColorLabel,
+    () => _hlPanel(true),
+    () => _hlPanel(false)
+  );
+  _bind(textColorLabel,
+    () => _hlSet([".site-label", ".group-name"], true),
+    () => _hlSet([".site-label", ".group-name"], false)
+  );
+  _bind(buttonBgLabel,
+    () => _hlSet([".draggable-site", "button:not(.icon-btn)"], true),
+    () => _hlSet([".draggable-site", "button:not(.icon-btn)"], false)
+  );
+
+  return { customThemeContainer, customThemeHeader, backgroundColorLabel, textColorLabel, buttonBgLabel };
+  }
+
   function buildStyleConfigPanel(searchConfigHeaderRow) {
   const styleConfigWrap = document.createElement("div");
   styleConfigWrap.id = "style-config-wrap";
@@ -8056,8 +10137,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   themeSelect.onchange = () => {
     styleSettings.theme = themeSelect.value;
     panelTheme = styleSettings.theme;
-    customThemeContainer.style.display =
-      styleSettings.theme === "custom" ? "flex" : "none";
+    const _customThemeContainer = document.getElementById("custom-theme-container");
+    if (_customThemeContainer) {
+      _customThemeContainer.style.display =
+        styleSettings.theme === "custom" ? "flex" : "none";
+    }
     save();
     applyTheme(panelTheme);
     rebuildPanel();
@@ -8150,2093 +10234,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   styleConfigContent.style.gap = "6px";
   styleFloatBody.appendChild(styleConfigContent);
 
-  function rowCss() {
-    return "display: flex; align-items: center; margin-bottom: 6px; width: 100%; justify-content: space-between;";
-  }
-
-  function labelCss() {
-    return `flex-shrink: 0; font-size: 12px; margin-right: 6px; color: ${panelTheme === "dark" ? "#eee" : "#111"};`;
-  }
-
-  function sliderCss() {
-    return "flex: 1; min-width: 60px; margin: 0 6px;";
-  }
-
-  function checkboxRowCss() {
-    return "display: flex; align-items: center; margin-bottom: 6px; width: 100%; justify-content: flex-start;";
-  }
-
-  function makeValueSpan(val) {
-    const span = document.createElement("span");
-    span.textContent = val;
-    span.style.cssText = "width: 40px; text-align: right; font-size: 11px; flex-shrink: 0;";
-    return span;
-  }
-
-  function _buildButtonGroup(labelText, options, datasetKey, getCurrentVal, onSelect) {
-    const row = document.createElement("div");
-    row.style.cssText = rowCss() + "flex-wrap:wrap; gap:4px;";
-    const lbl = document.createElement("label");
-    lbl.textContent = labelText;
-    lbl.style.cssText = labelCss();
-    row.appendChild(lbl);
-    const wrap = document.createElement("div");
-    wrap.style.cssText = "display:flex; gap:4px; flex:1; flex-wrap:wrap;";
-
-    const refreshActive = () => {
-      const current = getCurrentVal();
-      wrap.querySelectorAll("button").forEach(btn2 => {
-        const now = btn2.dataset[datasetKey] === current;
-        const isDark = panelTheme === "dark";
-        btn2.style.background = now ? (isDark ? "#334466" : "#ddeeff") : "transparent";
-        btn2.style.color = now ? (isDark ? "#88aaff" : "#0055cc") : "inherit";
-      });
-    };
-
-    options.forEach(({ v, lb }) => {
-      const b = document.createElement("button");
-      b.textContent = lb;
-      b.dataset[datasetKey] = v;
-      const isDark = panelTheme === "dark";
-      const active = getCurrentVal() === v;
-      b.style.cssText = `
-        padding:2px 8px; border-radius:4px; cursor:pointer;
-        font-size:${styleSettings.fontSize - 1}px; white-space:nowrap;
-        border:1px solid ${isDark ? "#555" : "#ccc"};
-        background:${active ? (isDark ? "#334466" : "#ddeeff") : "transparent"};
-        color:${active ? (isDark ? "#88aaff" : "#0055cc") : "inherit"};
-        transition: background .15s, color .15s;
-      `;
-      b.addEventListener("click", () => {
-        onSelect(v);
-        refreshActive();
-      });
-      wrap.appendChild(b);
-    });
-
-    row.appendChild(wrap);
-    return { row, refreshActive };
-  }
-
-  function mkColorInput(labelText, initialVal, onInput, opts) {
-    opts = opts || {};
-    const row = document.createElement("div");
-    row.style.cssText = rowCss();
-    const label = document.createElement("label");
-    label.textContent = labelText;
-    label.style.cssText = labelCss();
-    row.appendChild(label);
-
-    const input = document.createElement("input");
-    input.type = "color";
-    input.value = initialVal;
-    input.oninput = () => onInput(input.value);
-    row.appendChild(input);
-
-    let resetBtn = null;
-    if (opts.resetVal !== undefined) {
-      resetBtn = makeResetBtn(opts.resetVal, (dv) => {
-        if (opts.onReset) {
-          opts.onReset(dv);
-        } else {
-          input.value = dv;
-          onInput(dv);
-        }
-      });
-      row.appendChild(resetBtn);
-    }
-
-    return { row, label, input, resetBtn };
-  }
-
-  function makeResetBtn(defaultVal, callback) {
-    const btn = document.createElement("button");
-    btn.textContent = "↺";
-    btn.title = t.resetToDefault || "Reset to Default";
-    btn.style.cssText = "background: transparent; border: none; cursor: pointer; padding: 0 4px; font-size: 14px; margin-left: 2px; flex-shrink: 0; color: inherit; opacity: 0.7;";
-    btn.onmouseover = () => btn.style.opacity = "1";
-    btn.onmouseout = () => btn.style.opacity = "0.7";
-    btn.onclick = (e) => {
-      e.preventDefault();
-      callback(defaultVal);
-    };
-    return btn;
-  }
-
-  function _setGroupEnabled(enabled, ...rows) {
-    rows.forEach(row => {
-      if (!row) return;
-      row.style.opacity       = enabled ? "1"    : "0.38";
-      row.style.pointerEvents = enabled ? ""     : "none";
-      row.style.transition    = "opacity 0.18s";
-    });
-  }
-
-    function _buildPanelLayoutSection() {
-    const panelLayoutContainer = document.createElement("div");
-    panelLayoutContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
-    panelLayoutContainer.style.borderRadius = styleSettings.borderRadius + "px";
-    panelLayoutContainer.style.padding = "6px";
-    panelLayoutContainer.style.display = "flex";
-    panelLayoutContainer.style.flexDirection = "column";
-    panelLayoutContainer.style.gap = "0";
-    panelLayoutContainer.style.maxWidth = "490px";
-
-    const panelLayoutHeader = document.createElement("div");
-    panelLayoutHeader.textContent = t.panelLayoutLabel || "Panel Layout";
-    panelLayoutHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-    panelLayoutContainer.appendChild(panelLayoutHeader);
-
-    (function() {
-      const row = document.createElement("div");
-      row.style.cssText = "display:flex; align-items:center; gap:6px; margin-top:6px; padding-left:2px;";
-      const chk = document.createElement("input");
-      chk.type = "checkbox";
-      chk.id = "hide-syntax-btn-chk";
-      chk.checked = !!styleSettings.hideSyntaxBtn;
-      chk.style.cssText = "cursor:pointer; flex-shrink:0;";
-      const lbl = document.createElement("label");
-      lbl.htmlFor = "hide-syntax-btn-chk";
-      lbl.textContent = t.hideSyntaxBtnLabel || "Hide 📖 Syntax Help Button";
-      lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-      chk.onchange = () => {
-        styleSettings.hideSyntaxBtn = chk.checked;
-        save();
-        const btn = document.getElementById("syntax-help-btn");
-        if (btn) btn.style.display = chk.checked ? "none" : "";
-        if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
-      };
-      const _openSyntax = document.createElement("button");
-      _openSyntax.textContent = "📖";
-      _openSyntax.title = t.syntaxHelp || "Search Syntax Reference";
-      _openSyntax.style.cssText = `
-        padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
-        border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
-        background:transparent; font-size:12px; line-height:1.6;
-        transition:background .15s;
-      `;
-      _openSyntax.addEventListener("mouseenter", () => {
-        _openSyntax.style.background = panelTheme === "dark" ? "#333" : "#f0f0f0";
-      });
-      _openSyntax.addEventListener("mouseleave", () => {
-        _openSyntax.style.background = "transparent";
-      });
-      _openSyntax.addEventListener("click", (e) => {
-        e.stopPropagation();
-        showSyntaxPanel();
-      });
-      row.appendChild(chk);
-      row.appendChild(lbl);
-      row.appendChild(_openSyntax);
-      panelLayoutContainer.appendChild(row);
-    })();
-
-    (function() {
-      const row = document.createElement("div");
-      row.style.cssText = "display:flex; align-items:center; gap:6px; margin-top:4px; padding-left:2px;";
-      const chk = document.createElement("input");
-      chk.type = "checkbox";
-      chk.id = "hide-blacklist-btn-chk";
-      chk.checked = !!styleSettings.hideBlacklistBtn;
-      chk.style.cssText = "cursor:pointer; flex-shrink:0;";
-      const lbl = document.createElement("label");
-      lbl.htmlFor = "hide-blacklist-btn-chk";
-      lbl.textContent = t.hideBlacklistBtnLabel || "Hide 🚫 Blacklist Button";
-      lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-      chk.onchange = () => {
-        styleSettings.hideBlacklistBtn = chk.checked;
-        save();
-        const btn = document.getElementById("blacklist-btn");
-        if (btn) btn.style.display = chk.checked ? "none" : "";
-        if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
-      };
-      const _openBl = document.createElement("button");
-      _openBl.textContent = "🚫";
-      _openBl.title = t.blacklistTitle || "Domain Blacklist";
-      _openBl.style.cssText = `
-        padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
-        border:1px solid ${panelTheme === "dark" ? "#555" : "#ccc"};
-        background:transparent; font-size:12px; line-height:1.6;
-        transition:background .15s;
-      `;
-      _openBl.addEventListener("mouseenter", () => {
-        _openBl.style.background = panelTheme === "dark" ? "#333" : "#f0f0f0";
-      });
-      _openBl.addEventListener("mouseleave", () => {
-        _openBl.style.background = "transparent";
-      });
-      _openBl.addEventListener("click", (e) => {
-        e.stopPropagation();
-        showBlacklistDialog();
-      });
-      row.appendChild(chk);
-      row.appendChild(lbl);
-      row.appendChild(_openBl);
-      panelLayoutContainer.appendChild(row);
-    })();
-
-    function _makeHideRow(key, labelText, icon, title, onOpen) {
-      const _isDk = panelTheme === "dark";
-      const row = document.createElement("div");
-      row.style.cssText = "display:flex; align-items:center; gap:6px; margin-top:4px; padding-left:2px;";
-      const chk = document.createElement("input");
-      chk.type = "checkbox";
-      chk.checked = !!styleSettings[key];
-      chk.style.cssText = "cursor:pointer; flex-shrink:0;";
-      const lbl = document.createElement("label");
-      lbl.textContent = labelText;
-      lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-      lbl.addEventListener("click", () => { chk.checked = !chk.checked; chk.dispatchEvent(new Event("change")); });
-      chk.onchange = () => {
-        styleSettings[key] = chk.checked;
-        save();
-        const _idMap = {
-          hideAddGroupBtn:      { id: "toolbar-add-group-btn", show: "inline-flex" },
-          hideAddressToggleBtn: { id: "se-toggle-address-btn",  show: "inline-flex"  },
-          hideExportBtn:        { id: "toolbar-export-btn",     show: "inline-flex" },
-          hideImportBtn:        { id: "toolbar-import-btn",     show: "inline-flex" },
-          hideModGroup:         { id: "syntax-mod-group",       show: "flex"         },
-        };
-        const _map = _idMap[key];
-        const el = _map && document.getElementById(_map.id);
-        if (el) el.style.display = chk.checked ? "none" : _map.show;
-        if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
-      };
-      row.appendChild(chk);
-      row.appendChild(lbl);
-      if (onOpen) {
-        const _openBtn = document.createElement("button");
-        _openBtn.textContent = icon;
-        _openBtn.title = title;
-        _openBtn.style.cssText = `
-          padding:1px 6px; border-radius:4px; cursor:pointer; flex-shrink:0;
-          border:1px solid ${_isDk ? "#555" : "#ccc"};
-          background:transparent; font-size:12px; line-height:1.6;
-          transition:background .15s;
-        `;
-        _openBtn.addEventListener("mouseenter", () => {
-          _openBtn.style.background = _isDk ? "#333" : "#f0f0f0";
-        });
-        _openBtn.addEventListener("mouseleave", () => {
-          _openBtn.style.background = "transparent";
-        });
-        _openBtn.addEventListener("click", (e) => { e.stopPropagation(); onOpen(); });
-        row.appendChild(_openBtn);
-      }
-      panelLayoutContainer.appendChild(row);
-    }
-
-    _makeHideRow(
-      "hideAddGroupBtn",
-      t.hideAddGroupBtnLabel || "Hide ➕ Add Group Button",
-      "➕", t.addGroup || "Add Group",
-      () => {
-        if (_dlgPromptActive) return;
-        showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
-          if (!name || !name.trim()) { showToast(t.emptyGroupName || "Group name cannot be empty!"); return; }
-          groups.push({ name: name.trim(), sites: [] });
-          save(); renderSites(panel);
-          showToast(`${t.addGroup || "Group added"} ✅`);
-        });
-      }
-    );
-
-    _makeHideRow(
-      "hideAddressToggleBtn",
-      t.hideAddressToggleBtnLabel || "Hide 🔁 Address Toggle Button",
-      "🔁", t.toggleShow || "Show Addresses",
-      () => {
-        const btn = document.getElementById("se-toggle-address-btn");
-        if (btn) btn.click();
-      }
-    );
-
-    _makeHideRow(
-      "hideExportBtn",
-      t.hideExportBtnLabel || "Hide 📤 Export Button",
-      "📤", t.exportConfig || "Export Config",
-      () => {
-        const btn = document.getElementById("toolbar-export-btn");
-        if (btn) btn.click();
-      }
-    );
-
-    _makeHideRow(
-      "hideImportBtn",
-      t.hideImportBtnLabel || "Hide 📥 Import Button",
-      "📥", t.importConfig || "Import Config",
-      () => {
-        const btn = document.getElementById("toolbar-import-btn");
-        if (btn) btn.click();
-      }
-    );
-
-    _makeHideRow(
-      "hideModGroup",
-      t.hideModGroupLabel || "Hide Modifier Button Group (◇T🔗📄)",
-      "◇", ""
-    );
-
-    _bind(panelLayoutHeader,
-      () => _hlPanel(true),
-      () => _hlPanel(false)
-    );
-
-    return { panelLayoutContainer, panelLayoutHeader };
-    }
-
-    function _buildGsGlowSheenSection(parent) {
-      const _isDark = panelTheme === "dark";
-      const glowSection = document.createElement("div");
-      glowSection.style.cssText = `
-        border:1px solid ${_isDark ? "#555" : "#ccc"};
-        border-radius:${styleSettings.borderRadius}px;
-        padding:7px 8px; margin-top:6px; display:flex;
-        flex-direction:column; gap:4px;
-      `;
-      const glowHeader = document.createElement("div");
-      glowHeader.textContent = "✨ " + (t.glowLabel || "Border Glow / Sheen");
-      glowHeader.style.cssText = `font-weight:bold; font-size:11px; margin-bottom:2px; color:${_isDark ? "#eee" : "#111"};`;
-      glowSection.appendChild(glowHeader);
-
-      const glowToggleRow = document.createElement("div");
-      glowToggleRow.style.cssText = checkboxRowCss();
-      const glowToggleLbl = document.createElement("label");
-      glowToggleLbl.textContent = t.enableBorderGlow || "Border Glow";
-      glowToggleLbl.style.cssText = labelCss();
-      glowToggleRow.appendChild(glowToggleLbl);
-      const glowToggle = document.createElement("input");
-      glowToggle.type = "checkbox";
-      glowToggle.checked = !!styleSettings.enableBorderGlow;
-      glowToggle.onchange = () => {
-        styleSettings.enableBorderGlow = glowToggle.checked;
-        _setGroupEnabled(glowToggle.checked, glowColorRow, glowStrRow, glowInsetRow);
-        save(); applyTheme(panelTheme);
-      };
-      glowToggleRow.appendChild(glowToggle);
-      glowSection.appendChild(glowToggleRow);
-
-      const { row: glowColorRow, label: glowColorLbl, input: glowColorInput } = mkColorInput(
-        t.borderGlowColor || "Glow Color",
-        styleSettings.borderGlowColor || "#00bfff",
-        (v) => {
-          styleSettings.borderGlowColor = v;
-          _debouncedSave();
-        },
-        {
-          resetVal: "#00bfff",
-          onReset: (dv) => { glowColorInput.value = dv; styleSettings.borderGlowColor = dv; save(); applyTheme(panelTheme); },
-        }
-      );
-      glowSection.appendChild(glowColorRow);
-
-      const glowStrRow = document.createElement("div");
-      glowStrRow.style.cssText = rowCss();
-      const glowStrLbl = document.createElement("label");
-      glowStrLbl.textContent = t.borderGlowStrength || "Glow Strength";
-      glowStrLbl.style.cssText = labelCss();
-      glowStrRow.appendChild(glowStrLbl);
-      const glowStrInput = document.createElement("input");
-      glowStrInput.type = "range"; glowStrInput.min = "4"; glowStrInput.max = "32"; glowStrInput.step = "1";
-      glowStrInput.value = styleSettings.borderGlowStrength || 12;
-      glowStrInput.style.cssText = sliderCss();
-      const _vs_glowStr = makeValueSpan(glowStrInput.value + "px");
-      glowStrInput.oninput = () => {
-        styleSettings.borderGlowStrength = parseInt(glowStrInput.value);
-        _vs_glowStr.textContent = glowStrInput.value + "px";
-        _debouncedSave();
-      };
-      glowStrRow.appendChild(glowStrInput);
-      glowStrRow.appendChild(_vs_glowStr);
-      glowSection.appendChild(glowStrRow);
-
-      const glowInsetRow = document.createElement("div");
-      glowInsetRow.style.cssText = checkboxRowCss();
-      const glowInsetLbl = document.createElement("label");
-      glowInsetLbl.textContent = t.borderGlowInset || "Inset Glow";
-      glowInsetLbl.style.cssText = labelCss();
-      glowInsetRow.appendChild(glowInsetLbl);
-      const glowInsetToggle = document.createElement("input");
-      glowInsetToggle.type = "checkbox";
-      glowInsetToggle.checked = styleSettings.borderGlowInset !== false;
-      glowInsetToggle.onchange = () => {
-        styleSettings.borderGlowInset = glowInsetToggle.checked;
-        save(); applyTheme(panelTheme);
-      };
-      glowInsetRow.appendChild(glowInsetToggle);
-      glowSection.appendChild(glowInsetRow);
-
-      const sheenToggleRow = document.createElement("div");
-      sheenToggleRow.style.cssText = checkboxRowCss() + "margin-top:4px;border-top:1px solid " +
-        (_isDark ? "#444" : "#eee") + ";padding-top:5px;";
-      const sheenToggleLbl = document.createElement("label");
-      sheenToggleLbl.textContent = t.enableSheen || "Sheen Effect";
-      sheenToggleLbl.style.cssText = labelCss();
-      sheenToggleRow.appendChild(sheenToggleLbl);
-      const sheenToggle = document.createElement("input");
-      sheenToggle.type = "checkbox";
-      sheenToggle.checked = !!styleSettings.enableSheen;
-      sheenToggle.onchange = () => {
-        styleSettings.enableSheen = sheenToggle.checked;
-        _setGroupEnabled(sheenToggle.checked, sheenAngleRow, sheenOpRow);
-        save(); applyTheme(panelTheme);
-      };
-      sheenToggleRow.appendChild(sheenToggle);
-      glowSection.appendChild(sheenToggleRow);
-
-      const sheenAngleRow = document.createElement("div");
-      sheenAngleRow.style.cssText = rowCss();
-      const sheenAngleLbl = document.createElement("label");
-      sheenAngleLbl.textContent = t.sheenAngle || "Sheen Angle";
-      sheenAngleLbl.style.cssText = labelCss();
-      sheenAngleRow.appendChild(sheenAngleLbl);
-      const sheenAngleInput = document.createElement("input");
-      sheenAngleInput.type = "range"; sheenAngleInput.min = "0"; sheenAngleInput.max = "360"; sheenAngleInput.step = "5";
-      sheenAngleInput.value = styleSettings.sheenAngle ?? 135;
-      sheenAngleInput.style.cssText = sliderCss();
-      const _vs_sheenAngle = makeValueSpan(sheenAngleInput.value + "°");
-      sheenAngleInput.oninput = () => {
-        styleSettings.sheenAngle = parseInt(sheenAngleInput.value);
-        _vs_sheenAngle.textContent = sheenAngleInput.value + "°";
-        _debouncedSave();
-      };
-      sheenAngleRow.appendChild(sheenAngleInput);
-      sheenAngleRow.appendChild(_vs_sheenAngle);
-      glowSection.appendChild(sheenAngleRow);
-
-      const sheenOpRow = document.createElement("div");
-      sheenOpRow.style.cssText = rowCss();
-      const sheenOpLbl = document.createElement("label");
-      sheenOpLbl.textContent = t.sheenOpacity || "Sheen Intensity";
-      sheenOpLbl.style.cssText = labelCss();
-      sheenOpRow.appendChild(sheenOpLbl);
-      const sheenOpInput = document.createElement("input");
-      sheenOpInput.type = "range"; sheenOpInput.min = "0.02"; sheenOpInput.max = "0.25"; sheenOpInput.step = "0.01";
-      sheenOpInput.value = styleSettings.sheenOpacity ?? 0.08;
-      sheenOpInput.style.cssText = sliderCss();
-      const _vs_sheenOp = makeValueSpan(parseFloat(sheenOpInput.value).toFixed(2));
-      sheenOpInput.oninput = () => {
-        styleSettings.sheenOpacity = parseFloat(sheenOpInput.value);
-        _vs_sheenOp.textContent = styleSettings.sheenOpacity.toFixed(2);
-        _debouncedSave();
-      };
-      sheenOpRow.appendChild(sheenOpInput);
-      sheenOpRow.appendChild(_vs_sheenOp);
-      glowSection.appendChild(sheenOpRow);
-
-      const siteGlowRow = document.createElement("div");
-      siteGlowRow.style.cssText = checkboxRowCss();
-      const siteGlowLbl = document.createElement("label");
-      siteGlowLbl.textContent = t.enableSiteGlow || "Site Button Glow";
-      siteGlowLbl.style.cssText = labelCss();
-      siteGlowRow.appendChild(siteGlowLbl);
-      const siteGlowToggle = document.createElement("input");
-      siteGlowToggle.type = "checkbox";
-      siteGlowToggle.checked = !!styleSettings.enableSiteGlow;
-      siteGlowToggle.onchange = () => {
-        styleSettings.enableSiteGlow = siteGlowToggle.checked;
-        save(); applyTheme(panelTheme);
-      };
-      const _rb_siteGlow = makeResetBtn(false, (dv) => {
-        siteGlowToggle.checked = dv;
-        styleSettings.enableSiteGlow = dv;
-        save(); applyTheme(panelTheme);
-      });
-      siteGlowRow.appendChild(siteGlowToggle);
-      siteGlowRow.appendChild(_rb_siteGlow);
-      glowSection.appendChild(siteGlowRow);
-
-      const groupGlowRow = document.createElement("div");
-      groupGlowRow.style.cssText = checkboxRowCss();
-      const groupGlowLbl = document.createElement("label");
-      groupGlowLbl.textContent = t.enableGroupGlow || "Group Block Glow";
-      groupGlowLbl.style.cssText = labelCss();
-      groupGlowRow.appendChild(groupGlowLbl);
-      const groupGlowToggle = document.createElement("input");
-      groupGlowToggle.type = "checkbox";
-      groupGlowToggle.checked = !!styleSettings.enableGroupGlow;
-      groupGlowToggle.onchange = () => {
-        styleSettings.enableGroupGlow = groupGlowToggle.checked;
-        save(); applyTheme(panelTheme);
-      };
-      const _rb_groupGlow = makeResetBtn(false, (dv) => {
-        groupGlowToggle.checked = dv;
-        styleSettings.enableGroupGlow = dv;
-        save(); applyTheme(panelTheme);
-      });
-      groupGlowRow.appendChild(groupGlowToggle);
-      groupGlowRow.appendChild(_rb_groupGlow);
-      glowSection.appendChild(groupGlowRow);
-
-      parent.appendChild(glowSection);
-      _setGroupEnabled(!!styleSettings.enableBorderGlow,  glowColorRow, glowStrRow, glowInsetRow);
-      _setGroupEnabled(!!styleSettings.enableSheen,        sheenAngleRow, sheenOpRow);
-
-      _bind(glowHeader,     () => _hlPanel(true), () => _hlPanel(false));
-      _bind(glowToggleLbl,  () => _hlPanel(true), () => _hlPanel(false));
-      _bind(glowColorLbl,   () => _hlPanel(true), () => _hlPanel(false));
-      _bind(glowStrLbl,     () => _hlPanel(true), () => _hlPanel(false));
-      _bind(glowInsetLbl,   () => _hlPanel(true), () => _hlPanel(false));
-      _bind(sheenToggleLbl, () => _hlPanel(true), () => _hlPanel(false));
-      _bind(sheenAngleLbl,  () => _hlPanel(true), () => _hlPanel(false));
-      _bind(sheenOpLbl,     () => _hlPanel(true), () => _hlPanel(false));
-      _bind(siteGlowLbl,
-        () => _hlSet([".draggable-site"], true),
-        () => _hlSet([".draggable-site"], false)
-      );
-      _bind(groupGlowLbl,
-        () => _hlSet([".group-block"], true),
-        () => _hlSet([".group-block"], false)
-      );
-
-      return {
-        glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl,
-        sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl,
-      };
-    }
-
-    function _buildGsVignetteSection(parent) {
-      const _isDark = panelTheme === "dark";
-      const vigSection = document.createElement("div");
-      vigSection.style.cssText = `
-        border:1px solid ${_isDark ? "#555" : "#ccc"};
-        border-radius:${styleSettings.borderRadius}px;
-        padding:7px 8px; margin-top:6px; display:flex;
-        flex-direction:column; gap:4px;
-      `;
-
-      const vigHeaderRow = document.createElement("div");
-      vigHeaderRow.style.cssText = checkboxRowCss() + "margin-bottom:0;";
-      const vignetteHeader = document.createElement("div");
-      vignetteHeader.textContent = "🌑 " + (t.vignetteLabel || "Vignette");
-      vignetteHeader.style.cssText = `font-weight:bold; font-size:11px; margin-right:6px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-      const vigToggle = document.createElement("input");
-      vigToggle.type = "checkbox";
-      vigToggle.checked = !!styleSettings.enableVignette;
-      vigHeaderRow.appendChild(vignetteHeader);
-      vigHeaderRow.appendChild(vigToggle);
-      vigSection.appendChild(vigHeaderRow);
-
-      const cornerRow = document.createElement("div");
-      cornerRow.style.cssText = rowCss();
-      const cornerLbl = document.createElement("label");
-      cornerLbl.textContent = t.vignetteCorners || "Corners";
-      cornerLbl.style.cssText = labelCss();
-      cornerRow.appendChild(cornerLbl);
-
-      const cornerGrid = document.createElement("div");
-      cornerGrid.style.cssText = `
-        display:grid; grid-template-columns:1fr 1fr; gap:3px 8px;
-        flex:1; font-size:11px;
-      `;
-      const _corners = [
-        { key: "vignetteCornerTL", label: "↖ " + (t.vignetteCornerTL || "Top-L") },
-        { key: "vignetteCornerTR", label: "↗ " + (t.vignetteCornerTR || "Top-R") },
-        { key: "vignetteCornerBL", label: "↙ " + (t.vignetteCornerBL || "Bot-L") },
-        { key: "vignetteCornerBR", label: "↘ " + (t.vignetteCornerBR || "Bot-R") },
-      ];
-      const _cornerChecks = {};
-      _corners.forEach(({ key, label }) => {
-        const wrap = document.createElement("label");
-        wrap.style.cssText = "display:flex; align-items:center; gap:3px; cursor:pointer;";
-        const chk = document.createElement("input");
-        chk.type = "checkbox";
-        chk.checked = styleSettings[key] !== false;
-        chk.onchange = () => {
-          styleSettings[key] = chk.checked;
-          save(); applyTheme(panelTheme);
-        };
-        const span = document.createElement("span");
-        span.textContent = label;
-        wrap.appendChild(chk);
-        wrap.appendChild(span);
-        cornerGrid.appendChild(wrap);
-        _cornerChecks[key] = chk;
-      });
-      cornerRow.appendChild(cornerGrid);
-      vigSection.appendChild(cornerRow);
-
-      const sizeRow = document.createElement("div");
-      sizeRow.style.cssText = rowCss();
-      const sizeLbl = document.createElement("label");
-      sizeLbl.textContent = t.vignetteSize || "Size";
-      sizeLbl.style.cssText = labelCss();
-      sizeRow.appendChild(sizeLbl);
-      const sizeInput = document.createElement("input");
-      sizeInput.type = "range"; sizeInput.min = "20"; sizeInput.max = "600"; sizeInput.step = "10";
-      sizeInput.value = styleSettings.vignetteSize ?? 120;
-      sizeInput.style.cssText = sliderCss();
-      const _vs_size = makeValueSpan(sizeInput.value + "px");
-      sizeInput.oninput = () => {
-        styleSettings.vignetteSize = parseInt(sizeInput.value);
-        _vs_size.textContent = sizeInput.value + "px";
-        _debouncedSave();
-        applyTheme(panelTheme);
-      };
-      const _rb_size = makeResetBtn(120, (dv) => {
-        sizeInput.value = dv;
-        _vs_size.textContent = dv + "px";
-        styleSettings.vignetteSize = dv;
-        save(); applyTheme(panelTheme);
-      });
-      sizeRow.appendChild(sizeInput);
-      sizeRow.appendChild(_vs_size);
-      sizeRow.appendChild(_rb_size);
-      vigSection.appendChild(sizeRow);
-
-      const { row: colorRow, input: colorInput } = mkColorInput(
-        t.vignetteColor || "Color",
-        styleSettings.vignetteColor || "#000000",
-        (v) => {
-          styleSettings.vignetteColor = v;
-          _debouncedSave();
-          applyTheme(panelTheme);
-        },
-        {
-          resetVal: "#000000",
-          onReset: (dv) => { colorInput.value = dv; styleSettings.vignetteColor = dv; save(); applyTheme(panelTheme); },
-        }
-      );
-      vigSection.appendChild(colorRow);
-
-      const opRow = document.createElement("div");
-      opRow.style.cssText = rowCss();
-      const opLbl = document.createElement("label");
-      opLbl.textContent = t.vignetteOpacity || "Opacity";
-      opLbl.style.cssText = labelCss();
-      opRow.appendChild(opLbl);
-      const opInput = document.createElement("input");
-      opInput.type = "range"; opInput.min = "0.05"; opInput.max = "1.0"; opInput.step = "0.05";
-      opInput.value = styleSettings.vignetteOpacity ?? 0.45;
-      opInput.style.cssText = sliderCss();
-      const _vs_op = makeValueSpan(parseFloat(opInput.value).toFixed(2));
-      opInput.oninput = () => {
-        styleSettings.vignetteOpacity = parseFloat(opInput.value);
-        _vs_op.textContent = styleSettings.vignetteOpacity.toFixed(2);
-        _debouncedSave();
-        applyTheme(panelTheme);
-      };
-      const _rb_op = makeResetBtn(0.45, (dv) => {
-        opInput.value = dv;
-        _vs_op.textContent = parseFloat(dv).toFixed(2);
-        styleSettings.vignetteOpacity = dv;
-        save(); applyTheme(panelTheme);
-      });
-      opRow.appendChild(opInput);
-      opRow.appendChild(_vs_op);
-      opRow.appendChild(_rb_op);
-      vigSection.appendChild(opRow);
-
-      const _subRows = [cornerRow, sizeRow, colorRow, opRow];
-      vigToggle.onchange = () => {
-        styleSettings.enableVignette = vigToggle.checked;
-        _setGroupEnabled(vigToggle.checked, ..._subRows);
-        save(); applyTheme(panelTheme);
-      };
-
-      parent.appendChild(vigSection);
-      _setGroupEnabled(!!styleSettings.enableVignette, ..._subRows);
-
-      _bind(vignetteHeader,
-        () => _hlPanel(true),
-        () => _hlPanel(false)
-      );
-
-      return { vignetteHeader };
-    }
-
-    function _buildGsSearchBarSection(parent) {
-      const _isDark = panelTheme === "dark";
-      const searchBarSection = document.createElement("div");
-      searchBarSection.style.cssText = `
-        border:1px solid ${_isDark ? "#555" : "#ccc"};
-        border-radius:${styleSettings.borderRadius}px;
-        padding:7px 8px; margin-top:6px; display:flex;
-        flex-direction:column; gap:4px;
-      `;
-      const _sbsHeader = document.createElement("div");
-      _sbsHeader.textContent = "🔍 " + (t.searchBarStyleLabel || "Search Bar Style");
-      _sbsHeader.style.cssText = `font-weight:bold; font-size:11px; margin-bottom:2px; color:${_isDark ? "#eee" : "#111"};`;
-      searchBarSection.appendChild(_sbsHeader);
-
-      const _sbsPresetRow = document.createElement("div");
-      _sbsPresetRow.style.cssText = rowCss();
-      const _sbsPresetLbl = document.createElement("label");
-      _sbsPresetLbl.textContent = t.searchBarPreset || "Quick Preset";
-      _sbsPresetLbl.style.cssText = labelCss();
-      _sbsPresetRow.appendChild(_sbsPresetLbl);
-      const _presetBtnWrap = document.createElement("div");
-      _presetBtnWrap.style.cssText = "display:flex;gap:4px;flex:1;justify-content:flex-end;";
-      const _sbsPresets = [
-        { icon:"↺",  title:"重置 / Reset",    bg:"",        bgOp:0,    fg:"" },
-        { icon:"🌑",  title:"暗底 / Dark BG",  bg:"#1a1a1a", bgOp:0.75, fg:"#eeeeee" },
-        { icon:"☀️",  title:"亮底 / Light BG", bg:"#ffffff", bgOp:0.85, fg:"#111111" },
-      ];
-      let _sbsBgInputRef, _sbsBgOpInputRef, _sbsBgOpSpanRef, _sbsFgInputRef;
-      _sbsPresets.forEach(p => {
-        const pb = document.createElement("button");
-        pb.textContent = p.icon;
-        pb.title = p.title;
-        pb.className = "icon-btn";
-        pb.style.cssText = `padding:2px 7px;border-radius:5px;font-size:12px;cursor:pointer;
-          background:${_isDark?"#4a4a4a":"#eee"};
-          border:1px solid ${_isDark?"#666":"#ccc"};color:inherit;`;
-        pb.onclick = () => {
-          styleSettings.searchBarBg        = p.bg;
-          styleSettings.searchBarBgOpacity = p.bgOp;
-          styleSettings.searchBarFg        = p.fg;
-          if (_sbsBgInputRef)   _sbsBgInputRef.value          = p.bg   || "#333333";
-          if (_sbsBgOpInputRef) _sbsBgOpInputRef.value         = p.bgOp;
-          if (_sbsBgOpSpanRef)  _sbsBgOpSpanRef.textContent   = p.bgOp.toFixed(2);
-          if (_sbsFgInputRef)   _sbsFgInputRef.value          = p.fg   || "#eeeeee";
-          save(); applyTheme(panelTheme);
-        };
-        _presetBtnWrap.appendChild(pb);
-      });
-      _sbsPresetRow.appendChild(_presetBtnWrap);
-      searchBarSection.appendChild(_sbsPresetRow);
-
-      const { row: _sbsBgRow, label: _sbsBgLbl, input: sbsBgInput } = mkColorInput(
-        t.searchBarBgColor || "Bar BG Color",
-        styleSettings.searchBarBg || "#333333",
-        (v) => {
-          styleSettings.searchBarBg = v;
-          _debouncedSave();
-        },
-        {
-          resetVal: "",
-          onReset: (dv) => { sbsBgInput.value = dv || "#333333"; styleSettings.searchBarBg = dv; save(); applyTheme(panelTheme); },
-        }
-      );
-      _sbsBgInputRef = sbsBgInput;
-      searchBarSection.appendChild(_sbsBgRow);
-
-      const _sbsBgOpRow = document.createElement("div");
-      _sbsBgOpRow.style.cssText = rowCss();
-      const _sbsBgOpLbl = document.createElement("label");
-      _sbsBgOpLbl.textContent = t.searchBarBgOpacity || "Bar BG Opacity";
-      _sbsBgOpLbl.style.cssText = labelCss();
-      _sbsBgOpRow.appendChild(_sbsBgOpLbl);
-      const sbsBgOpInput = document.createElement("input");
-      sbsBgOpInput.type = "range"; sbsBgOpInput.min = "0"; sbsBgOpInput.max = "1"; sbsBgOpInput.step = "0.05";
-      sbsBgOpInput.value = styleSettings.searchBarBgOpacity ?? 0;
-      sbsBgOpInput.style.cssText = sliderCss();
-      const sbsBgOpSpan = makeValueSpan(parseFloat(sbsBgOpInput.value).toFixed(2));
-      sbsBgOpInput.oninput = () => {
-        styleSettings.searchBarBgOpacity = parseFloat(sbsBgOpInput.value);
-        sbsBgOpSpan.textContent = styleSettings.searchBarBgOpacity.toFixed(2);
-        _debouncedSave();
-      };
-      _sbsBgOpInputRef = sbsBgOpInput;
-      _sbsBgOpSpanRef  = sbsBgOpSpan;
-      const _rb_sbsBgOp = makeResetBtn(0, (dv) => {
-        sbsBgOpInput.value = dv;
-        sbsBgOpSpan.textContent = parseFloat(dv).toFixed(2);
-        styleSettings.searchBarBgOpacity = dv;
-        save(); applyTheme(panelTheme);
-      });
-      _sbsBgOpRow.appendChild(sbsBgOpInput);
-      _sbsBgOpRow.appendChild(sbsBgOpSpan);
-      _sbsBgOpRow.appendChild(_rb_sbsBgOp);
-      searchBarSection.appendChild(_sbsBgOpRow);
-
-      const { row: _sbsFgRow, label: _sbsFgLbl, input: sbsFgInput } = mkColorInput(
-        t.searchBarFgColor || "Bar Text Color",
-        styleSettings.searchBarFg || "#eeeeee",
-        (v) => {
-          styleSettings.searchBarFg = v;
-          _debouncedSave();
-        },
-        {
-          resetVal: "",
-          onReset: (dv) => { sbsFgInput.value = dv || "#eeeeee"; styleSettings.searchBarFg = dv; save(); applyTheme(panelTheme); },
-        }
-      );
-      _sbsFgInputRef = sbsFgInput;
-      searchBarSection.appendChild(_sbsFgRow);
-
-      const _sbsGlowToggleRow = document.createElement("div");
-      _sbsGlowToggleRow.style.cssText = checkboxRowCss() + "margin-top:4px;border-top:1px solid " +
-        (_isDark ? "#444" : "#eee") + ";padding-top:5px;";
-      const _sbsGlowToggleLbl = document.createElement("label");
-      _sbsGlowToggleLbl.textContent = t.searchBarGlowEnabled || "Bar Glow";
-      _sbsGlowToggleLbl.style.cssText = labelCss();
-      _sbsGlowToggleRow.appendChild(_sbsGlowToggleLbl);
-      const _sbsGlowToggle = document.createElement("input");
-      _sbsGlowToggle.type = "checkbox";
-      _sbsGlowToggle.checked = !!styleSettings.searchBarGlowEnabled;
-      _sbsGlowToggle.onchange = () => {
-        styleSettings.searchBarGlowEnabled = _sbsGlowToggle.checked;
-        _setGroupEnabled(_sbsGlowToggle.checked, _sbsGlowColorRow, _sbsGlowStrRow);
-        save(); applyTheme(panelTheme);
-      };
-      _sbsGlowToggleRow.appendChild(_sbsGlowToggle);
-      searchBarSection.appendChild(_sbsGlowToggleRow);
-
-      const { row: _sbsGlowColorRow, label: _sbsGlowColorLbl, input: _sbsGlowColorInput } = mkColorInput(
-        t.searchBarGlowColor || "Glow Color",
-        styleSettings.searchBarGlowColor || "#5599ff",
-        (v) => {
-          styleSettings.searchBarGlowColor = v;
-          _debouncedSave();
-        },
-        {
-          resetVal: "#5599ff",
-          onReset: (dv) => { _sbsGlowColorInput.value = dv; styleSettings.searchBarGlowColor = dv; save(); applyTheme(panelTheme); },
-        }
-      );
-      searchBarSection.appendChild(_sbsGlowColorRow);
-
-      const _sbsGlowStrRow = document.createElement("div");
-      _sbsGlowStrRow.style.cssText = rowCss();
-      const _sbsGlowStrLbl = document.createElement("label");
-      _sbsGlowStrLbl.textContent = t.searchBarGlowStrength || "Glow Strength";
-      _sbsGlowStrLbl.style.cssText = labelCss();
-      _sbsGlowStrRow.appendChild(_sbsGlowStrLbl);
-      const _sbsGlowStrInput = document.createElement("input");
-      _sbsGlowStrInput.type = "range"; _sbsGlowStrInput.min = "2"; _sbsGlowStrInput.max = "16"; _sbsGlowStrInput.step = "1";
-      _sbsGlowStrInput.value = styleSettings.searchBarGlowStrength || 6;
-      _sbsGlowStrInput.style.cssText = sliderCss();
-      const _vs_sbsGlowStr = makeValueSpan(_sbsGlowStrInput.value + "px");
-      _sbsGlowStrInput.oninput = () => {
-        styleSettings.searchBarGlowStrength = parseInt(_sbsGlowStrInput.value);
-        _vs_sbsGlowStr.textContent = _sbsGlowStrInput.value + "px";
-        _debouncedSave();
-      };
-      const _rb_sbsGlowStr = makeResetBtn(6, (dv) => {
-        _sbsGlowStrInput.value = dv;
-        _vs_sbsGlowStr.textContent = dv + "px";
-        styleSettings.searchBarGlowStrength = dv;
-        save(); applyTheme(panelTheme);
-      });
-      _sbsGlowStrRow.appendChild(_sbsGlowStrInput);
-      _sbsGlowStrRow.appendChild(_vs_sbsGlowStr);
-      _sbsGlowStrRow.appendChild(_rb_sbsGlowStr);
-      searchBarSection.appendChild(_sbsGlowStrRow);
-
-      parent.appendChild(searchBarSection);
-      _setGroupEnabled(!!styleSettings.searchBarGlowEnabled, _sbsGlowColorRow, _sbsGlowStrRow);
-
-      function _hlSearchBar(on) {
-        const _scw = document.getElementById("search-config-wrap");
-        if (!_scw) return;
-        _scw.style.outline       = on ? _DASHED : _NONE;
-        _scw.style.outlineOffset = on ? "3px"   : _NONE;
-      }
-      _bind(_sbsHeader,
-        () => _hlSearchBar(true),
-        () => _hlSearchBar(false)
-      );
-      [_sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
-       _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl].forEach(lbl => {
-        _bind(lbl, () => _hlSearchBar(true), () => _hlSearchBar(false));
-      });
-
-      return {
-        _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
-        _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl,
-      };
-    }
-
-    function _buildGeneralStyleSection() {
-    const generalStyleContainer = document.createElement("div");
-    generalStyleContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
-    generalStyleContainer.style.borderRadius =
-      styleSettings.borderRadius + "px";
-    generalStyleContainer.style.padding = "6px";
-    generalStyleContainer.style.display = "flex";
-    generalStyleContainer.style.flexDirection = "column";
-    generalStyleContainer.style.gap = "0";
-    generalStyleContainer.style.maxWidth = "490px";
-
-    const generalStyleHeader = document.createElement("div");
-    generalStyleHeader.textContent = t.style || "Style";
-    generalStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-    generalStyleContainer.appendChild(generalStyleHeader);
-
-    const _styleOptEntries = Object.entries(t.styleOptions || {});
-    const { row: styleGroupRow } = _buildButtonGroup(
-      t.style || "Style",
-      _styleOptEntries.map(([key, label]) => ({ v: key, lb: label })),
-      "styleVal",
-      () => styleSettings.style,
-      (key) => {
-        styleSettings.style = key;
-        Object.assign(styleSettings, STYLE_PRESETS[key] || {});
-        save();
-        applyTheme(panelTheme);
-        borderRadiusInput.value = styleSettings.borderRadius;
-        _vs_borderRadiusInput.textContent = styleSettings.borderRadius + "px";
-        opacityInput.value = styleSettings.opacity;
-        _vs_opacityInput.textContent = parseFloat(styleSettings.opacity).toFixed(1);
-        groupOpacityInput.value = styleSettings.groupOpacity;
-        _vs_groupOpacityInput.textContent = parseFloat(styleSettings.groupOpacity).toFixed(1);
-        buttonOpacityInput.value = styleSettings.buttonOpacity;
-        _vs_buttonOpacityInput.textContent = parseFloat(styleSettings.buttonOpacity).toFixed(1);
-      }
-    );
-    generalStyleContainer.appendChild(styleGroupRow);
-
-    (function() {
-      const { row } = _buildButtonGroup(
-        t.iconStyleLabel || "Icon Style",
-        [
-          { v: "emoji",    lb: t.toggleBtnIconEmoji   || "🔍 Emoji" },
-          { v: "svg-line", lb: t.toggleBtnIconSvgLine || "SVG Outline" },
-          { v: "svg-fill", lb: t.toggleBtnIconSvgFill || "SVG Filled" },
-        ],
-        "iconVal",
-        () => styleSettings.iconStyle || "emoji",
-        (v) => {
-          styleSettings.iconStyle = v;
-          save();
-          applyAllBtnIcons();
-        }
-      );
-      generalStyleContainer.appendChild(row);
-    })();
-
-    const _toggleBtnStyleAnchor = document.createElement("div");
-    generalStyleContainer.appendChild(_toggleBtnStyleAnchor);
-
-    const borderRadiusRow = document.createElement("div");
-    borderRadiusRow.style.cssText = rowCss();
-
-    const borderRadiusLabel = document.createElement("label");
-    borderRadiusLabel.textContent = t.borderRadius || "Border Radius";
-    borderRadiusLabel.style.cssText = labelCss();
-    borderRadiusRow.appendChild(borderRadiusLabel);
-
-    const borderRadiusInput = document.createElement("input");
-    borderRadiusInput.type = "range";
-    borderRadiusInput.min = "0";
-    borderRadiusInput.max = "20";
-    borderRadiusInput.value = styleSettings.borderRadius;
-    borderRadiusInput.style.cssText = sliderCss();
-    borderRadiusInput.oninput = () => {
-      styleSettings.borderRadius = parseInt(borderRadiusInput.value);
-      _debouncedSave();
-      _debouncedApply();
-      _vs_borderRadiusInput.textContent = borderRadiusInput.value+"px";
-    };
-    const _vs_borderRadiusInput = makeValueSpan(borderRadiusInput.value+"px");
-    const _rb_borderRadiusInput = makeResetBtn(STYLE_DEFAULTS.borderRadius, (dv) => {
-      borderRadiusInput.value = dv;
-      styleSettings.borderRadius = dv;
-      _vs_borderRadiusInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    borderRadiusRow.appendChild(borderRadiusInput);
-    borderRadiusRow.appendChild(_vs_borderRadiusInput);
-    borderRadiusRow.appendChild(_rb_borderRadiusInput);
-    generalStyleContainer.appendChild(borderRadiusRow);
-
-    const contrastRow = document.createElement("div");
-    contrastRow.style.cssText = rowCss();
-
-    const contrastLabel = document.createElement("label");
-    contrastLabel.textContent = t.contrast || "Contrast";
-    contrastLabel.style.cssText = labelCss();
-    contrastRow.appendChild(contrastLabel);
-
-    const contrastInput = document.createElement("input");
-    contrastInput.type = "range";
-    contrastInput.min = "-50";
-    contrastInput.max = "50";
-    contrastInput.value = styleSettings.contrast;
-    contrastInput.style.cssText = sliderCss();
-    contrastInput.oninput = () => {
-      styleSettings.contrast = parseInt(contrastInput.value);
-      _debouncedSave();
-      _debouncedApply();
-      _vs_contrastInput.textContent = contrastInput.value;
-    };
-    const _vs_contrastInput = makeValueSpan(contrastInput.value);
-    const _rb_contrastInput = makeResetBtn(STYLE_DEFAULTS.contrast, (dv) => {
-      contrastInput.value = dv;
-      styleSettings.contrast = dv;
-      _vs_contrastInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    contrastRow.appendChild(contrastInput);
-    contrastRow.appendChild(_vs_contrastInput);
-    contrastRow.appendChild(_rb_contrastInput);
-    generalStyleContainer.appendChild(contrastRow);
-
-    const opacityRow = document.createElement("div");
-    opacityRow.style.cssText = rowCss();
-
-    const opacityLabel = document.createElement("label");
-    opacityLabel.textContent = t.opacity || "Opacity";
-    opacityLabel.style.cssText = labelCss();
-    opacityRow.appendChild(opacityLabel);
-
-    const opacityInput = document.createElement("input");
-    opacityInput.type = "range";
-    opacityInput.min = "0.3";
-    opacityInput.max = "1";
-    opacityInput.step = "0.1";
-    opacityInput.value = styleSettings.opacity;
-    opacityInput.style.cssText = sliderCss();
-    opacityInput.oninput = () => {
-      styleSettings.opacity = parseFloat(opacityInput.value);
-      _debouncedSave();
-      _debouncedApply();
-      _vs_opacityInput.textContent = parseFloat(opacityInput.value).toFixed(1);
-    };
-    const _vs_opacityInput = makeValueSpan(parseFloat(opacityInput.value).toFixed(1));
-    const _rb_opacityInput = makeResetBtn(STYLE_DEFAULTS.opacity, (dv) => {
-      opacityInput.value = dv;
-      styleSettings.opacity = dv;
-      _vs_opacityInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    opacityRow.appendChild(opacityInput);
-    opacityRow.appendChild(_vs_opacityInput);
-    opacityRow.appendChild(_rb_opacityInput);
-    generalStyleContainer.appendChild(opacityRow);
-
-    const groupOpacityRow = document.createElement("div");
-    groupOpacityRow.style.cssText = rowCss();
-
-    const groupOpacityLabel = document.createElement("label");
-    groupOpacityLabel.textContent = t.groupOpacity || "Group Opacity";
-    groupOpacityLabel.style.cssText = labelCss();
-    groupOpacityRow.appendChild(groupOpacityLabel);
-
-    const groupOpacityInput = document.createElement("input");
-    groupOpacityInput.type = "range";
-    groupOpacityInput.min = "0.3";
-    groupOpacityInput.max = "1";
-    groupOpacityInput.step = "0.1";
-    groupOpacityInput.value = styleSettings.groupOpacity;
-    groupOpacityInput.style.cssText = sliderCss();
-    groupOpacityInput.oninput = () => {
-      styleSettings.groupOpacity = parseFloat(groupOpacityInput.value);
-      _debouncedSave();
-      _debouncedApply();
-      _vs_groupOpacityInput.textContent = parseFloat(groupOpacityInput.value).toFixed(1);
-    };
-    const _vs_groupOpacityInput = makeValueSpan(parseFloat(groupOpacityInput.value).toFixed(1));
-    const _rb_groupOpacityInput = makeResetBtn(STYLE_DEFAULTS.groupOpacity, (dv) => {
-      groupOpacityInput.value = dv;
-      styleSettings.groupOpacity = dv;
-      _vs_groupOpacityInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    groupOpacityRow.appendChild(groupOpacityInput);
-    groupOpacityRow.appendChild(_vs_groupOpacityInput);
-    groupOpacityRow.appendChild(_rb_groupOpacityInput);
-    generalStyleContainer.appendChild(groupOpacityRow);
-
-    const buttonOpacityRow = document.createElement("div");
-    buttonOpacityRow.style.cssText = rowCss();
-
-    const buttonOpacityLabel = document.createElement("label");
-    buttonOpacityLabel.textContent = t.buttonOpacity || "Button Opacity";
-    buttonOpacityLabel.style.cssText = labelCss();
-    buttonOpacityRow.appendChild(buttonOpacityLabel);
-
-    const buttonOpacityInput = document.createElement("input");
-    buttonOpacityInput.type = "range";
-    buttonOpacityInput.min = "0.3";
-    buttonOpacityInput.max = "1";
-    buttonOpacityInput.step = "0.1";
-    buttonOpacityInput.value = styleSettings.buttonOpacity;
-    buttonOpacityInput.style.cssText = sliderCss();
-    buttonOpacityInput.oninput = () => {
-      styleSettings.buttonOpacity = parseFloat(buttonOpacityInput.value);
-      _debouncedSave();
-      _debouncedApply();
-      _vs_buttonOpacityInput.textContent = parseFloat(buttonOpacityInput.value).toFixed(1);
-    };
-    const _vs_buttonOpacityInput = makeValueSpan(parseFloat(buttonOpacityInput.value).toFixed(1));
-    const _rb_buttonOpacityInput = makeResetBtn(STYLE_DEFAULTS.buttonOpacity, (dv) => {
-      buttonOpacityInput.value = dv;
-      styleSettings.buttonOpacity = dv;
-      _vs_buttonOpacityInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    buttonOpacityRow.appendChild(buttonOpacityInput);
-    buttonOpacityRow.appendChild(_vs_buttonOpacityInput);
-    buttonOpacityRow.appendChild(_rb_buttonOpacityInput);
-    generalStyleContainer.appendChild(buttonOpacityRow);
-
-    const siteButtonWidthRow = document.createElement("div");
-    siteButtonWidthRow.style.cssText = rowCss();
-    const siteButtonWidthLabel = document.createElement("label");
-    siteButtonWidthLabel.textContent = t.siteButtonWidth || "Site Button Width";
-    siteButtonWidthLabel.style.cssText = labelCss();
-    siteButtonWidthRow.appendChild(siteButtonWidthLabel);
-    const siteButtonWidthInput = document.createElement("input");
-    siteButtonWidthInput.type = "range";
-    siteButtonWidthInput.min = 0;
-    siteButtonWidthInput.max = 110;
-    siteButtonWidthInput.step = 4;
-    siteButtonWidthInput.value = styleSettings.siteButtonWidth ?? 0;
-    siteButtonWidthInput.style.cssText = sliderCss();
-    const _vs_siteButtonWidth = makeValueSpan(
-      (styleSettings.siteButtonWidth > 0 ? styleSettings.siteButtonWidth + "px" : (t.siteButtonWidthAuto || "Auto"))
-    );
-    siteButtonWidthInput.oninput = () => {
-      const v = parseInt(siteButtonWidthInput.value, 10);
-      styleSettings.siteButtonWidth = v;
-      _vs_siteButtonWidth.textContent = v > 0 ? v + "px" : (t.siteButtonWidthAuto || "Auto");
-      _debouncedSave();
-      document.querySelectorAll(".site-container").forEach(sc => {
-        const _minCell = v > 0 ? v : 104;
-        sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(${_minCell}px, 1fr))`;
-      });
-      document.querySelectorAll(".draggable-site").forEach(el => {
-        if (v > 0) {
-          el.style.width    = v + "px";
-          el.style.maxWidth = v + "px";
-          const lbl = el.querySelector(".site-label");
-          if (lbl) lbl.style.display = v <= 28 ? "none" : "";
-        } else {
-          el.style.width    = "";
-          el.style.maxWidth = "none";
-          const lbl = el.querySelector(".site-label");
-          if (lbl) lbl.style.display = "";
-        }
-      });
-    };
-    const _rb_siteButtonWidth = makeResetBtn(0, (dv) => {
-      siteButtonWidthInput.value = dv;
-      styleSettings.siteButtonWidth = dv;
-      _vs_siteButtonWidth.textContent = t.siteButtonWidthAuto || "Auto";
-      save();
-      document.querySelectorAll(".site-container").forEach(sc => {
-        sc.style.gridTemplateColumns = `repeat(auto-fill, minmax(104px, 1fr))`;
-      });
-      document.querySelectorAll(".draggable-site").forEach(el => {
-        el.style.width    = "";
-        el.style.maxWidth = "none";
-        const lbl = el.querySelector(".site-label");
-        if (lbl) lbl.style.display = "";
-      });
-    });
-    siteButtonWidthRow.appendChild(siteButtonWidthInput);
-    siteButtonWidthRow.appendChild(_vs_siteButtonWidth);
-    siteButtonWidthRow.appendChild(_rb_siteButtonWidth);
-    generalStyleContainer.appendChild(siteButtonWidthRow);
-
-    const { row: panelBgColorRow, label: panelBgColorLabel, input: panelBgColorInput } = mkColorInput(
-      t.panelBgColor || "Panel Background Color",
-      styleSettings.backgroundColor || (panelTheme === "dark" ? "#333333" : "#ffffff"),
-      (v) => {
-        styleSettings.backgroundColor = v;
-        _debouncedSave();
-      },
-      {
-        resetVal: panelTheme === "dark" ? "#333333" : "#ffffff",
-        onReset: (dv) => { panelBgColorInput.value = dv; styleSettings.backgroundColor = dv; save(); applyTheme(panelTheme); },
-      }
-    );
-    generalStyleContainer.appendChild(panelBgColorRow);
-
-    const {
-      glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl,
-      sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl,
-    } = _buildGsGlowSheenSection(generalStyleContainer);
-
-    const { vignetteHeader } = _buildGsVignetteSection(generalStyleContainer);
-
-    const {
-      _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl,
-      _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl,
-    } = _buildGsSearchBarSection(generalStyleContainer);
-
-    _bind(generalStyleHeader,
-      () => _hlSet([".group-block", "button:not(.icon-btn)"], true),
-      () => _hlSet([".group-block", "button:not(.icon-btn)"], false)
-    );
-    _bind(borderRadiusLabel,
-      () => _hlSet([".group-block", ".draggable-site"], true),
-      () => _hlSet([".group-block", ".draggable-site"], false)
-    );
-    _bind(contrastLabel,
-      () => _hlSet(["button:not(.icon-btn)", ".draggable-site"], true),
-      () => _hlSet(["button:not(.icon-btn)", ".draggable-site"], false)
-    );
-    _bind(opacityLabel,       () => _hlPanel(true), () => _hlPanel(false));
-    _bind(groupOpacityLabel,
-      () => _hlSet([".group-block"], true),
-      () => _hlSet([".group-block"], false)
-    );
-    _bind(buttonOpacityLabel,
-      () => _hlSet([".draggable-site", "button:not(.icon-btn)"], true),
-      () => _hlSet([".draggable-site", "button:not(.icon-btn)"], false)
-    );
-    _bind(siteButtonWidthLabel,
-      () => _hlSet([".draggable-site"], true),
-      () => _hlSet([".draggable-site"], false)
-    );
-    _bind(panelBgColorLabel,  () => _hlPanel(true), () => _hlPanel(false));
-
-    return {
-      generalStyleContainer, generalStyleHeader,
-      _layoutAnchors: { toggleBtnStyle: _toggleBtnStyleAnchor },
-      borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl };
-    }
-
-    function _buildToggleBtnStyleSection() {
-    const toggleBtnStyleContainer = document.createElement("div");
-    toggleBtnStyleContainer.style.cssText = `
-      display:flex; flex-direction:column;
-      gap:0; max-width:490px; margin-top:0;
-    `;
-    const _tbsHeader = document.createElement("div");
-    _tbsHeader.textContent = t.toggleBtnStyleLabel || "Toggle Button Style";
-    _tbsHeader.style.cssText = `font-weight:bold; margin-bottom:6px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-    toggleBtnStyleContainer.appendChild(_tbsHeader);
-
-    (function() {
-      const { row } = _buildButtonGroup(
-        t.toggleBtnShapeLabel || "Shape",
-        [
-          { v: "circle",         lb: t.toggleBtnShapeCircle        || "● Circle" },
-          { v: "rounded-square", lb: t.toggleBtnShapeRoundedSquare || "▢ Rounded" },
-        ],
-        "shapeVal",
-        () => styleSettings.toggleBtnShape || "circle",
-        (v) => {
-          styleSettings.toggleBtnShape = v;
-          save();
-          const tb = document.getElementById("site-toggle-simple");
-          if (tb) applyToggleBtnStyle(tb);
-        }
-      );
-      toggleBtnStyleContainer.appendChild(row);
-    })();
-
-    (function() {
-      const _isDkP = panelTheme === "dark";
-      const row = document.createElement("div");
-      row.style.cssText = rowCss() + "flex-wrap:wrap; align-items:center; gap:4px;";
-      const lbl = document.createElement("label");
-      lbl.textContent = t.svgIconColorLabel || "SVG Icon Color";
-      lbl.style.cssText = labelCss();
-      row.appendChild(lbl);
-      const _cRow = document.createElement("div");
-      _cRow.style.cssText = "display:flex; gap:5px; flex:1; flex-wrap:wrap; align-items:center;";
-      const PALETTE = [
-        { hex:"",        title:"Inherit (theme)" },
-        { hex:"#ffffff", title:"White"   },
-        { hex:"#dddddd", title:"Silver"  },
-        { hex:"#222222", title:"Black"   },
-        { hex:"#4a90d9", title:"Blue"    },
-        { hex:"#2ecc71", title:"Green"   },
-        { hex:"#e74c3c", title:"Red"     },
-        { hex:"#f39c12", title:"Amber"   },
-        { hex:"#9b59b6", title:"Purple"  },
-        { hex:"#1abc9c", title:"Teal"    },
-      ];
-      let _cci;
-      PALETTE.forEach(({ hex, title }) => {
-        const sw = document.createElement("button");
-        sw.title = title;
-        sw.dataset.palette = hex;
-        const _isAct = (styleSettings.svgIconColor || "") === hex;
-        sw.style.cssText = [
-          "width:18px; height:18px; border-radius:50%; cursor:pointer; flex-shrink:0;",
-          `border:2px solid ${_isAct ? (_isDkP ? "#88aaff" : "#4a90d9") : "rgba(0,0,0,0)"};`,
-          hex ? `background:${hex};` : "background:conic-gradient(#ccc 50%, #fff 50%);",
-          "box-shadow:inset 0 0 0 1px rgba(0,0,0,.18); transition:border-color .12s;",
-        ].join(" ");
-        sw.addEventListener("click", () => {
-          styleSettings.svgIconColor = hex;
-          save();
-          applyAllBtnIcons();
-          const tb = document.getElementById("site-toggle-simple");
-          if (tb) applyToggleBtnStyle(tb);
-          _cRow.querySelectorAll("button[data-palette]").forEach(b2 => {
-            b2.style.borderColor = b2.dataset.palette === hex
-              ? (_isDkP ? "#88aaff" : "#4a90d9") : "rgba(0,0,0,0)";
-          });
-          if (_cci && hex) _cci.value = hex;
-        });
-        _cRow.appendChild(sw);
-      });
-      _cci = document.createElement("input");
-      _cci.type  = "color";
-      _cci.title = "Custom color";
-      _cci.value = /^#[0-9a-fA-F]{6}$/.test(styleSettings.svgIconColor || "")
-        ? styleSettings.svgIconColor : "#4a90d9";
-      _cci.style.cssText = "width:22px; height:18px; border:none; cursor:pointer; padding:0; border-radius:3px; flex-shrink:0;";
-      _cci.oninput = () => {
-        styleSettings.svgIconColor = _cci.value;
-        _debouncedSave();
-        applyAllBtnIcons();
-        const tb = document.getElementById("site-toggle-simple");
-        if (tb) applyToggleBtnStyle(tb);
-        _cRow.querySelectorAll("button[data-palette]").forEach(b2 => {
-          b2.style.borderColor = "rgba(0,0,0,0)";
-        });
-      };
-      _cRow.appendChild(_cci);
-      row.appendChild(_cRow);
-      toggleBtnStyleContainer.appendChild(row);
-    })();
-
-    (function() {
-      const row = document.createElement("div");
-      row.style.cssText = rowCss();
-      const lbl = document.createElement("label");
-      lbl.textContent = t.toggleBtnBgColorLabel || "BG Color";
-      lbl.style.cssText = labelCss();
-      row.appendChild(lbl);
-      const _cWrap = document.createElement("div");
-      _cWrap.style.cssText = "display:flex; align-items:center; gap:6px; flex:1;";
-      const _ci = document.createElement("input");
-      _ci.type = "color";
-      _ci.value = styleSettings.toggleBtnBg || "#ffffff";
-      _ci.style.cssText = "width:36px; height:24px; border:none; cursor:pointer; padding:0; border-radius:3px;";
-      _ci.oninput = () => {
-        styleSettings.toggleBtnBg = _ci.value;
-        _debouncedSave();
-        const tb = document.getElementById("site-toggle-simple");
-        if (tb) applyToggleBtnStyle(tb);
-      };
-      const _cbReset = makeResetBtn("", (dv) => {
-        styleSettings.toggleBtnBg = dv;
-        _ci.value = "#ffffff";
-        save();
-        const tb = document.getElementById("site-toggle-simple");
-        if (tb) applyToggleBtnStyle(tb);
-      });
-      _cWrap.appendChild(_ci);
-      _cWrap.appendChild(_cbReset);
-      row.appendChild(_cWrap);
-      toggleBtnStyleContainer.appendChild(row);
-    })();
-
-    (function() {
-      const row = document.createElement("div");
-      row.style.cssText = rowCss();
-      const lbl = document.createElement("label");
-      lbl.textContent = t.toggleBtnBgOpacityLabel || "BG Opacity";
-      lbl.style.cssText = labelCss();
-      row.appendChild(lbl);
-      const _si = document.createElement("input");
-      _si.type = "range";
-      _si.min = "0"; _si.max = "1"; _si.step = "0.05";
-      _si.value = styleSettings.toggleBtnBgOpacity ?? 0;
-      _si.style.cssText = sliderCss();
-      const _vs = makeValueSpan(
-        parseFloat(_si.value).toFixed(2)
-      );
-      _si.oninput = () => {
-        styleSettings.toggleBtnBgOpacity = parseFloat(_si.value);
-        _vs.textContent = parseFloat(_si.value).toFixed(2);
-        _debouncedSave();
-        const tb = document.getElementById("site-toggle-simple");
-        if (tb) applyToggleBtnStyle(tb);
-      };
-      const _rb = makeResetBtn(0, (dv) => {
-        _si.value = dv;
-        styleSettings.toggleBtnBgOpacity = dv;
-        _vs.textContent = "0.00";
-        save();
-        const tb = document.getElementById("site-toggle-simple");
-        if (tb) applyToggleBtnStyle(tb);
-      });
-      row.appendChild(_si);
-      row.appendChild(_vs);
-      row.appendChild(_rb);
-      toggleBtnStyleContainer.appendChild(row);
-    })();
-
-    const _tbGlowColorRow = document.createElement("div");
-    const _tbGlowStrRow   = document.createElement("div");
-    (function() {
-      const row = document.createElement("div");
-      row.style.cssText = checkboxRowCss();
-      const lbl = document.createElement("label");
-      lbl.textContent = t.enableToggleBtnGlow || "Glow";
-      lbl.style.cssText = labelCss();
-      row.appendChild(lbl);
-      const _tg = document.createElement("input");
-      _tg.type = "checkbox";
-      _tg.checked = !!styleSettings.enableToggleBtnGlow;
-      _tg.onchange = () => {
-        styleSettings.enableToggleBtnGlow = _tg.checked;
-        _setGroupEnabled(_tg.checked, _tbGlowColorRow, _tbGlowStrRow);
-        save();
-        const tb = document.getElementById("site-toggle-simple");
-        if (tb) applyToggleBtnStyle(tb);
-      };
-      row.appendChild(_tg);
-      toggleBtnStyleContainer.appendChild(row);
-    })();
-
-    (function() {
-      _tbGlowColorRow.style.cssText = rowCss();
-      const lbl = document.createElement("label");
-      lbl.textContent = t.toggleBtnGlowColor || "Glow Color";
-      lbl.style.cssText = labelCss();
-      _tbGlowColorRow.appendChild(lbl);
-      const _ci = document.createElement("input");
-      _ci.type = "color";
-      _ci.value = styleSettings.toggleBtnGlowColor || "#00bfff";
-      _ci.oninput = () => {
-        styleSettings.toggleBtnGlowColor = _ci.value;
-        _debouncedSave();
-        const tb = document.getElementById("site-toggle-simple");
-        if (tb) applyToggleBtnStyle(tb);
-      };
-      const _rb = makeResetBtn("#00bfff", (dv) => {
-        _ci.value = dv;
-        styleSettings.toggleBtnGlowColor = dv;
-        save();
-        const tb = document.getElementById("site-toggle-simple");
-        if (tb) applyToggleBtnStyle(tb);
-      });
-      _tbGlowColorRow.appendChild(_ci);
-      _tbGlowColorRow.appendChild(_rb);
-      toggleBtnStyleContainer.appendChild(_tbGlowColorRow);
-    })();
-
-    (function() {
-      _tbGlowStrRow.style.cssText = rowCss();
-      const lbl = document.createElement("label");
-      lbl.textContent = t.toggleBtnGlowStrength || "Glow Strength";
-      lbl.style.cssText = labelCss();
-      _tbGlowStrRow.appendChild(lbl);
-      const _si = document.createElement("input");
-      _si.type = "range"; _si.min = "4"; _si.max = "32"; _si.step = "1";
-      _si.value = styleSettings.toggleBtnGlowStrength || 12;
-      _si.style.cssText = sliderCss();
-      const _vs = makeValueSpan(_si.value + "px");
-      _si.oninput = () => {
-        styleSettings.toggleBtnGlowStrength = parseInt(_si.value);
-        _vs.textContent = _si.value + "px";
-        _debouncedSave();
-        const tb = document.getElementById("site-toggle-simple");
-        if (tb) applyToggleBtnStyle(tb);
-      };
-      const _rb = makeResetBtn(12, (dv) => {
-        _si.value = dv;
-        styleSettings.toggleBtnGlowStrength = dv;
-        _vs.textContent = dv + "px";
-        save();
-        const tb = document.getElementById("site-toggle-simple");
-        if (tb) applyToggleBtnStyle(tb);
-      });
-      _tbGlowStrRow.appendChild(_si);
-      _tbGlowStrRow.appendChild(_vs);
-      _tbGlowStrRow.appendChild(_rb);
-      toggleBtnStyleContainer.appendChild(_tbGlowStrRow);
-    })();
-    _setGroupEnabled(!!styleSettings.enableToggleBtnGlow, _tbGlowColorRow, _tbGlowStrRow);
-
-    _bind(_tbsHeader,
-      () => _hlEls([document.getElementById("site-toggle-simple")], true),
-      () => _hlEls([document.getElementById("site-toggle-simple")], false)
-    );
-    toggleBtnStyleContainer.querySelectorAll("label").forEach(lbl => {
-      _bind(lbl,
-        () => _hlEls([document.getElementById("site-toggle-simple")], true),
-        () => _hlEls([document.getElementById("site-toggle-simple")], false)
-      );
-    });
-
-    return { toggleBtnStyleContainer, _tbsHeader };
-    }
-
-    function _buildTextStyleSection() {
-    const textStyleContainer = document.createElement("div");
-    textStyleContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
-    textStyleContainer.style.borderRadius = styleSettings.borderRadius + "px";
-    textStyleContainer.style.padding = "6px";
-    textStyleContainer.style.display = "flex";
-    textStyleContainer.style.flexDirection = "column";
-    textStyleContainer.style.gap = "0";
-    textStyleContainer.style.maxWidth = "490px";
-
-    const textStyleHeader = document.createElement("div");
-    textStyleHeader.textContent = t.fontSize || "Text Settings";
-    textStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-    textStyleContainer.appendChild(textStyleHeader);
-
-    const fontSizeRow = document.createElement("div");
-    fontSizeRow.style.cssText = rowCss();
-
-    const fontSizeLabel = document.createElement("label");
-    fontSizeLabel.textContent = t.fontSize || "Font Size";
-    fontSizeLabel.style.cssText = labelCss();
-    fontSizeRow.appendChild(fontSizeLabel);
-
-    const fontSizeInput = document.createElement("input");
-    fontSizeInput.type = "range";
-    fontSizeInput.min = "10";
-    fontSizeInput.max = "16";
-    fontSizeInput.value = styleSettings.fontSize;
-    fontSizeInput.style.cssText = sliderCss();
-    fontSizeInput.oninput = () => {
-      styleSettings.fontSize = parseInt(fontSizeInput.value);
-      _debouncedSave();
-      _debouncedApply();
-      _vs_fontSizeInput.textContent = fontSizeInput.value+"px";
-    };
-    const _vs_fontSizeInput = makeValueSpan(fontSizeInput.value+"px");
-    const _rb_fontSizeInput = makeResetBtn(STYLE_DEFAULTS.fontSize, (dv) => {
-      fontSizeInput.value = dv;
-      styleSettings.fontSize = dv;
-      _vs_fontSizeInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    fontSizeRow.appendChild(fontSizeInput);
-    fontSizeRow.appendChild(_vs_fontSizeInput);
-    fontSizeRow.appendChild(_rb_fontSizeInput);
-    textStyleContainer.appendChild(fontSizeRow);
-
-    const { row: textBackgroundColorRow, label: textBackgroundColorLabel, input: textBackgroundColorInput } = mkColorInput(
-      t.textBackgroundColor || "Text Background Color",
-      styleSettings.textBackgroundColor || "#ffffff",
-      (v) => {
-        styleSettings.textBackgroundColor = v;
-        _debouncedSave();
-        _debouncedApply();
-      }
-    );
-    textStyleContainer.appendChild(textBackgroundColorRow);
-
-    const textBorderRow = document.createElement("div");
-    textBorderRow.style.cssText = checkboxRowCss();
-
-    const textBorderLabel = document.createElement("label");
-    textBorderLabel.textContent = t.textBorder || "Enable Text Border";
-    textBorderLabel.style.cssText = labelCss();
-    textBorderRow.appendChild(textBorderLabel);
-
-    const textBorderInput = document.createElement("input");
-    textBorderInput.type = "checkbox";
-    textBorderInput.checked = styleSettings.textBorder;
-    textBorderInput.onchange = () => {
-      styleSettings.textBorder = textBorderInput.checked;
-      save();
-      applyTheme(panelTheme);
-    };
-    const _rb_textBorderInput = makeResetBtn(false, (dv) => {
-      textBorderInput.checked = dv;
-      styleSettings.textBorder = dv;
-      save(); applyTheme(panelTheme);
-    });
-    textBorderRow.appendChild(textBorderInput);
-    textBorderRow.appendChild(_rb_textBorderInput);
-    textStyleContainer.appendChild(textBorderRow);
-
-    const textOpacityCompensationRow = document.createElement("div");
-    textOpacityCompensationRow.style.cssText = rowCss();
-
-    const textOpacityCompensationLabel = document.createElement("label");
-    textOpacityCompensationLabel.textContent =
-      t.textOpacityCompensation || "Text Clarity Boost";
-    textOpacityCompensationLabel.style.cssText = labelCss();
-    textOpacityCompensationRow.appendChild(textOpacityCompensationLabel);
-
-    const textOpacityCompensationInput = document.createElement("input");
-    textOpacityCompensationInput.type = "range";
-    textOpacityCompensationInput.min = "0.3";
-    textOpacityCompensationInput.max = "2.0";
-    textOpacityCompensationInput.step = "0.1";
-    textOpacityCompensationInput.value = styleSettings.textOpacityCompensation;
-    textOpacityCompensationInput.style.cssText = sliderCss();
-    textOpacityCompensationInput.oninput = () => {
-      styleSettings.textOpacityCompensation = parseFloat(
-        textOpacityCompensationInput.value,
-      );
-      _debouncedSave();
-      _debouncedApply();
-      _vs_textOpacityCompensationInput.textContent = parseFloat(textOpacityCompensationInput.value).toFixed(1);
-    };
-    const _vs_textOpacityCompensationInput = makeValueSpan(parseFloat(textOpacityCompensationInput.value).toFixed(1));
-    const _rb_textOpacityCompensationInput = makeResetBtn(STYLE_DEFAULTS.textOpacityCompensation, (dv) => {
-      textOpacityCompensationInput.value = dv;
-      styleSettings.textOpacityCompensation = dv;
-      _vs_textOpacityCompensationInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    textOpacityCompensationRow.appendChild(textOpacityCompensationInput);
-    textOpacityCompensationRow.appendChild(_vs_textOpacityCompensationInput);
-    textOpacityCompensationRow.appendChild(_rb_textOpacityCompensationInput);
-    textStyleContainer.appendChild(textOpacityCompensationRow);
-
-    _bind(textStyleHeader,
-      () => _hlSet([".site-label", ".group-name"], true),
-      () => _hlSet([".site-label", ".group-name"], false)
-    );
-    _bind(fontSizeLabel,
-      () => _hlSet([".site-label", ".group-name"], true),
-      () => _hlSet([".site-label", ".group-name"], false)
-    );
-    _bind(textBackgroundColorLabel,
-      () => _hlSet([".site-label"], true),
-      () => _hlSet([".site-label"], false)
-    );
-    _bind(textBorderLabel,
-      () => _hlSet([".site-label", ".group-name"], true),
-      () => _hlSet([".site-label", ".group-name"], false)
-    );
-    _bind(textOpacityCompensationLabel,
-      () => _hlSet([".site-label", ".group-name"], true),
-      () => _hlSet([".site-label", ".group-name"], false)
-    );
-
-    return { textStyleContainer, textStyleHeader, fontSizeLabel, textBackgroundColorLabel, textBorderLabel, textOpacityCompensationLabel };
-    }
-
-    function _buildBgOverlaySection() {
-    const backgroundOverlayContainer = document.createElement("div");
-    backgroundOverlayContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
-    backgroundOverlayContainer.style.borderRadius =
-      styleSettings.borderRadius + "px";
-    backgroundOverlayContainer.style.padding = "6px";
-    backgroundOverlayContainer.style.display = "flex";
-    backgroundOverlayContainer.style.flexDirection = "column";
-    backgroundOverlayContainer.style.gap = "0";
-    backgroundOverlayContainer.style.maxWidth = "490px";
-
-    const backgroundOverlayHeader = document.createElement("div");
-    backgroundOverlayHeader.textContent = t.backgroundImage || "Background & Overlay";
-    backgroundOverlayHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-    backgroundOverlayContainer.appendChild(backgroundOverlayHeader);
-
-    const overlayDarkeningRow = document.createElement("div");
-    overlayDarkeningRow.style.cssText = checkboxRowCss();
-
-    const overlayDarkeningLabel = document.createElement("label");
-    overlayDarkeningLabel.textContent = t.enableOverlayDarkening || "Overlay Darkening";
-    overlayDarkeningLabel.style.cssText = labelCss();
-    overlayDarkeningRow.appendChild(overlayDarkeningLabel);
-
-    const overlayDarkeningInput = document.createElement("input");
-    overlayDarkeningInput.type = "checkbox";
-    overlayDarkeningInput.checked = styleSettings.enableOverlayDarkening;
-    overlayDarkeningInput.onchange = () => {
-      styleSettings.enableOverlayDarkening = overlayDarkeningInput.checked;
-      _setGroupEnabled(overlayDarkeningInput.checked, overlayStrengthRow);
-      save();
-      applyTheme(panelTheme);
-    };
-    const _rb_overlayDarkeningInput = makeResetBtn(false, (dv) => {
-      overlayDarkeningInput.checked = dv;
-      styleSettings.enableOverlayDarkening = dv;
-      _setGroupEnabled(dv, overlayStrengthRow);
-      save(); applyTheme(panelTheme);
-    });
-    overlayDarkeningRow.appendChild(overlayDarkeningInput);
-    overlayDarkeningRow.appendChild(_rb_overlayDarkeningInput);
-    backgroundOverlayContainer.appendChild(overlayDarkeningRow);
-
-    const overlayStrengthRow = document.createElement("div");
-    overlayStrengthRow.style.cssText = rowCss();
-
-    const overlayStrengthLabel = document.createElement("label");
-    overlayStrengthLabel.textContent = t.overlayStrength || "Overlay Strength";
-    overlayStrengthLabel.style.cssText = labelCss();
-    overlayStrengthRow.appendChild(overlayStrengthLabel);
-
-    const overlayStrengthInput = document.createElement("input");
-    overlayStrengthInput.type = "range";
-    overlayStrengthInput.min = "0.0";
-    overlayStrengthInput.max = "1.0";
-    overlayStrengthInput.step = "0.1";
-    overlayStrengthInput.value = styleSettings.overlayStrength || 0.5;
-    overlayStrengthInput.style.cssText = sliderCss();
-    overlayStrengthInput.oninput = () => {
-      styleSettings.overlayStrength = parseFloat(overlayStrengthInput.value);
-      _debouncedSave();
-      _debouncedApply();
-      _vs_overlayStrengthInput.textContent = parseFloat(overlayStrengthInput.value).toFixed(1);
-    };
-    const _vs_overlayStrengthInput = makeValueSpan(parseFloat(overlayStrengthInput.value).toFixed(1));
-    const _rb_overlayStrengthInput = makeResetBtn(STYLE_DEFAULTS.overlayStrength, (dv) => {
-      overlayStrengthInput.value = dv;
-      styleSettings.overlayStrength = dv;
-      _vs_overlayStrengthInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    overlayStrengthRow.appendChild(overlayStrengthInput);
-    overlayStrengthRow.appendChild(_vs_overlayStrengthInput);
-    overlayStrengthRow.appendChild(_rb_overlayStrengthInput);
-    backgroundOverlayContainer.appendChild(overlayStrengthRow);
-
-    const imageRow = document.createElement("div");
-    imageRow.style.cssText = rowCss();
-
-    const imageLabel = document.createElement("label");
-    imageLabel.textContent = t.backgroundImage || "Background Image";
-    imageLabel.style.cssText = labelCss();
-    imageRow.appendChild(imageLabel);
-
-    const imageInput = document.createElement("input");
-    imageInput.type = "file";
-    imageInput.accept = "image/*";
-    imageInput.style.cssText = "flex: 1; min-width: 0; margin: 0 6px; font-size: 11px; overflow: hidden;";
-    imageInput.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          showToast(t.processingImage || "🖼️ Processing image...", 800);
-          _downscaleImage(ev.target.result).then((resized) => {
-            styleSettings.backgroundImage = resized;
-            save();
-            applyTheme(panelTheme);
-          });
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-    imageRow.appendChild(imageInput);
-
-    const clearImageBtn = document.createElement("button");
-    clearImageBtn.textContent = t.clearImage || "Clear Image🗑️";
-    clearImageBtn.style.padding = "2px 6px";
-    clearImageBtn.style.borderRadius = styleSettings.borderRadius + "px";
-    clearImageBtn.style.cursor = "pointer";
-    clearImageBtn.style.whiteSpace = "nowrap";
-    clearImageBtn.style.flexShrink = "0";
-    clearImageBtn.onclick = () => {
-      styleSettings.backgroundImage = "";
-      save();
-      applyTheme(panelTheme);
-    };
-    imageRow.appendChild(clearImageBtn);
-    backgroundOverlayContainer.appendChild(imageRow);
-
-    const imageModeRow = document.createElement("div");
-    imageModeRow.style.cssText = rowCss();
-
-    const imageModeLabel = document.createElement("label");
-    imageModeLabel.textContent = t.imageMode || "Image Mode";
-    imageModeLabel.style.cssText = labelCss();
-    imageModeRow.appendChild(imageModeLabel);
-
-    const imageModeSelect = document.createElement("select");
-    imageModeSelect.style.cssText = sliderCss();
-    Object.entries(t.imageModes || {}).forEach(([key, value]) => {
-      const option = document.createElement("option");
-      option.value = key;
-      option.textContent = value;
-      if (styleSettings.imageMode === key) option.selected = true;
-      imageModeSelect.appendChild(option);
-    });
-    function syncImageOffsetVisibility() {
-      const isCenter = styleSettings.imageMode === "center";
-      imageOffsetXRow.style.opacity = isCenter ? "0.35" : "1";
-      imageOffsetXRow.style.pointerEvents = isCenter ? "none" : "";
-      imageOffsetYRow.style.opacity = isCenter ? "0.35" : "1";
-      imageOffsetYRow.style.pointerEvents = isCenter ? "none" : "";
-    }
-    imageModeSelect.onchange = () => {
-      styleSettings.imageMode = imageModeSelect.value;
-      save();
-      applyTheme(panelTheme);
-      syncImageOffsetVisibility();
-    };
-    imageModeRow.appendChild(imageModeSelect);
-    backgroundOverlayContainer.appendChild(imageModeRow);
-
-    const imageOffsetXRow = document.createElement("div");
-    imageOffsetXRow.style.cssText = rowCss();
-
-    const imageOffsetXLabel = document.createElement("label");
-    imageOffsetXLabel.textContent = t.imageOffsetX || "Image X Offset";
-    imageOffsetXLabel.style.cssText = labelCss();
-    imageOffsetXRow.appendChild(imageOffsetXLabel);
-
-    const imageOffsetXInput = document.createElement("input");
-    imageOffsetXInput.type = "range";
-    imageOffsetXInput.min = "-1000";
-    imageOffsetXInput.max = "1000";
-    imageOffsetXInput.value = styleSettings.imageOffsetX;
-    imageOffsetXInput.style.cssText = sliderCss();
-    imageOffsetXInput.oninput = () => {
-      styleSettings.imageOffsetX = parseInt(imageOffsetXInput.value);
-      _debouncedSave();
-      const p = document.getElementById("site-group-panel");
-      if (p && styleSettings.backgroundImage && styleSettings.imageMode !== "center") {
-        p.style.backgroundPosition = `${styleSettings.imageOffsetX}px ${styleSettings.imageOffsetY || 0}px`;
-      }
-      _vs_imageOffsetXInput.textContent = imageOffsetXInput.value+"px";
-    };
-    const _vs_imageOffsetXInput = makeValueSpan(imageOffsetXInput.value+"px");
-    const _rb_imageOffsetXInput = makeResetBtn(STYLE_DEFAULTS.imageOffsetX, (dv) => {
-      imageOffsetXInput.value = dv;
-      styleSettings.imageOffsetX = dv;
-      _vs_imageOffsetXInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    imageOffsetXRow.appendChild(imageOffsetXInput);
-    imageOffsetXRow.appendChild(_vs_imageOffsetXInput);
-    imageOffsetXRow.appendChild(_rb_imageOffsetXInput);
-    backgroundOverlayContainer.appendChild(imageOffsetXRow);
-
-    const imageOffsetYRow = document.createElement("div");
-    imageOffsetYRow.style.cssText = rowCss();
-
-    const imageOffsetYLabel = document.createElement("label");
-    imageOffsetYLabel.textContent = t.imageOffsetY || "Image Y Offset";
-    imageOffsetYLabel.style.cssText = labelCss();
-    imageOffsetYRow.appendChild(imageOffsetYLabel);
-
-    const imageOffsetYInput = document.createElement("input");
-    imageOffsetYInput.type = "range";
-    imageOffsetYInput.min = "-1000";
-    imageOffsetYInput.max = "1000";
-    imageOffsetYInput.value = styleSettings.imageOffsetY;
-    imageOffsetYInput.style.cssText = sliderCss();
-    imageOffsetYInput.oninput = () => {
-      styleSettings.imageOffsetY = parseInt(imageOffsetYInput.value);
-      _debouncedSave();
-      const p = document.getElementById("site-group-panel");
-      if (p && styleSettings.backgroundImage && styleSettings.imageMode !== "center") {
-        p.style.backgroundPosition = `${styleSettings.imageOffsetX || 0}px ${styleSettings.imageOffsetY}px`;
-      }
-      _vs_imageOffsetYInput.textContent = imageOffsetYInput.value+"px";
-    };
-    const _vs_imageOffsetYInput = makeValueSpan(imageOffsetYInput.value+"px");
-    const _rb_imageOffsetYInput = makeResetBtn(STYLE_DEFAULTS.imageOffsetY, (dv) => {
-      imageOffsetYInput.value = dv;
-      styleSettings.imageOffsetY = dv;
-      _vs_imageOffsetYInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    imageOffsetYRow.appendChild(imageOffsetYInput);
-    imageOffsetYRow.appendChild(_vs_imageOffsetYInput);
-    imageOffsetYRow.appendChild(_rb_imageOffsetYInput);
-    backgroundOverlayContainer.appendChild(imageOffsetYRow);
-    syncImageOffsetVisibility();
-
-    const imageScaleRow = document.createElement("div");
-    imageScaleRow.style.cssText = rowCss();
-
-    const imageScaleLabel = document.createElement("label");
-    imageScaleLabel.textContent = t.imageScale || "Image Scale";
-    imageScaleLabel.style.cssText = labelCss();
-    imageScaleRow.appendChild(imageScaleLabel);
-
-    const imageScaleInput = document.createElement("input");
-    imageScaleInput.type = "range";
-    imageScaleInput.min = "0.5";
-    imageScaleInput.max = "3.0";
-    imageScaleInput.step = "0.1";
-    imageScaleInput.value = styleSettings.imageScale;
-    imageScaleInput.style.cssText = sliderCss();
-    imageScaleInput.oninput = () => {
-      styleSettings.imageScale = parseFloat(imageScaleInput.value);
-      _debouncedSave();
-      const p = document.getElementById("site-group-panel");
-      if (p && styleSettings.backgroundImage) {
-        p.style.backgroundSize = `${styleSettings.imageScale * 100}%`;
-      }
-      _vs_imageScaleInput.textContent = parseFloat(imageScaleInput.value).toFixed(1)+"x";
-    };
-    const _vs_imageScaleInput = makeValueSpan(parseFloat(imageScaleInput.value).toFixed(1)+"x");
-    const _rb_imageScaleInput = makeResetBtn(STYLE_DEFAULTS.imageScale, (dv) => {
-      imageScaleInput.value = dv;
-      styleSettings.imageScale = dv;
-      _vs_imageScaleInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    imageScaleRow.appendChild(imageScaleInput);
-    imageScaleRow.appendChild(_vs_imageScaleInput);
-    imageScaleRow.appendChild(_rb_imageScaleInput);
-    backgroundOverlayContainer.appendChild(imageScaleRow);
-
-    const imageOpacityRow = document.createElement("div");
-    imageOpacityRow.style.cssText = rowCss();
-
-    const imageOpacityLabel = document.createElement("label");
-    imageOpacityLabel.textContent = t.imageOpacity || "Image Opacity";
-    imageOpacityLabel.style.cssText = labelCss();
-    imageOpacityRow.appendChild(imageOpacityLabel);
-
-    const imageOpacityInput = document.createElement("input");
-    imageOpacityInput.type = "range";
-    imageOpacityInput.min = "0.3";
-    imageOpacityInput.max = "1.0";
-    imageOpacityInput.step = "0.1";
-    imageOpacityInput.value = styleSettings.imageOpacity;
-    imageOpacityInput.style.cssText = sliderCss();
-    imageOpacityInput.oninput = () => {
-      styleSettings.imageOpacity = parseFloat(imageOpacityInput.value);
-      _debouncedSave();
-      const p = document.getElementById("site-group-panel");
-      if (p && styleSettings.backgroundImage) {
-        const _safe = /^(https?:|data:image\/)/.test(styleSettings.backgroundImage) ? styleSettings.backgroundImage : "";
-        if (_safe) {
-          const dim = 1 - styleSettings.imageOpacity;
-          p.style.backgroundImage = `linear-gradient(rgba(0,0,0,${dim}), rgba(0,0,0,${dim})), url(${_safe})`;
-        }
-      }
-      _vs_imageOpacityInput.textContent = parseFloat(imageOpacityInput.value).toFixed(1);
-    };
-    const _vs_imageOpacityInput = makeValueSpan(parseFloat(imageOpacityInput.value).toFixed(1));
-    const _rb_imageOpacityInput = makeResetBtn(STYLE_DEFAULTS.imageOpacity, (dv) => {
-      imageOpacityInput.value = dv;
-      styleSettings.imageOpacity = dv;
-      _vs_imageOpacityInput.textContent = String(dv);
-      save(); applyTheme(panelTheme);
-    });
-    imageOpacityRow.appendChild(imageOpacityInput);
-    imageOpacityRow.appendChild(_vs_imageOpacityInput);
-    imageOpacityRow.appendChild(_rb_imageOpacityInput);
-    backgroundOverlayContainer.appendChild(imageOpacityRow);
-
-    _setGroupEnabled(!!styleSettings.enableOverlayDarkening, overlayStrengthRow);
-
-    _bind(backgroundOverlayHeader, () => _hlPanel(true), () => _hlPanel(false));
-    _bind(overlayDarkeningLabel,   () => _hlPanel(true), () => _hlPanel(false));
-    _bind(overlayStrengthLabel,    () => _hlPanel(true), () => _hlPanel(false));
-    _bind(imageLabel,        () => _hlPanel(true), () => _hlPanel(false));
-    _bind(imageModeLabel,    () => _hlPanel(true), () => _hlPanel(false));
-    _bind(imageOffsetXLabel, () => _hlPanel(true), () => _hlPanel(false));
-    _bind(imageOffsetYLabel, () => _hlPanel(true), () => _hlPanel(false));
-    _bind(imageScaleLabel,   () => _hlPanel(true), () => _hlPanel(false));
-    _bind(imageOpacityLabel, () => _hlPanel(true), () => _hlPanel(false));
-
-    return { backgroundOverlayContainer, backgroundOverlayHeader, overlayDarkeningLabel, overlayStrengthLabel, imageLabel, imageModeLabel, imageOffsetXLabel, imageOffsetYLabel, imageScaleLabel, imageOpacityLabel };
-    }
-
-    function _buildMultiSelectSection() {
-    const multiSelectContainer = document.createElement("div");
-    multiSelectContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
-    multiSelectContainer.style.padding = "6px";
-    multiSelectContainer.style.borderRadius = styleSettings.borderRadius + "px";
-    multiSelectContainer.style.display = "flex";
-    multiSelectContainer.style.flexDirection = "column";
-    multiSelectContainer.style.gap = "0";
-    multiSelectContainer.style.maxWidth = "490px";
-
-    const multiSelectHeader = document.createElement("div");
-    multiSelectHeader.textContent = t.multiSelectMode || "Multi-select Mode";
-    multiSelectHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-    multiSelectContainer.appendChild(multiSelectHeader);
-
-    const { row: msColorRow, label: msColorLabel, input: msColorInput } = mkColorInput(
-      t.multiSelectColor || "Select Highlight Color",
-      styleSettings.multiSelectColor || "#ffc400",
-      (v) => {
-        styleSettings.multiSelectColor = v;
-        _debouncedSave();
-      }
-    );
-    multiSelectContainer.appendChild(msColorRow);
-
-    const msOpacityRow = document.createElement("div");
-    msOpacityRow.style.cssText = rowCss();
-    const msOpacityLabel = document.createElement("label");
-    msOpacityLabel.textContent = t.multiSelectOpacity || "Highlight Opacity";
-    msOpacityLabel.style.cssText = labelCss();
-    msOpacityRow.appendChild(msOpacityLabel);
-    const msOpacityInput = document.createElement("input");
-    msOpacityInput.type = "range";
-    msOpacityInput.min = "0";
-    msOpacityInput.max = "1";
-    msOpacityInput.step = "0.05";
-    msOpacityInput.value = styleSettings.multiSelectOpacity != null ? styleSettings.multiSelectOpacity : 0.85;
-    msOpacityInput.style.cssText = sliderCss();
-    msOpacityInput.oninput = () => {
-      styleSettings.multiSelectOpacity = parseFloat(msOpacityInput.value);
-      _vs_msOpacity.textContent = parseFloat(msOpacityInput.value).toFixed(2);
-      _debouncedSave();
-    };
-    const _vs_msOpacity = makeValueSpan(parseFloat(msOpacityInput.value).toFixed(2));
-    const _rb_msOpacity = makeResetBtn(0.85, (dv) => {
-      msOpacityInput.value = dv;
-      styleSettings.multiSelectOpacity = dv;
-      _vs_msOpacity.textContent = String(dv);
-      save();
-    });
-    msOpacityRow.appendChild(msOpacityInput);
-    msOpacityRow.appendChild(_vs_msOpacity);
-    msOpacityRow.appendChild(_rb_msOpacity);
-    multiSelectContainer.appendChild(msOpacityRow);
-
-    _bind(multiSelectHeader,
-      () => _hlSet([".multi-btn", ".multi-send-btn"], true),
-      () => _hlSet([".multi-btn", ".multi-send-btn"], false)
-    );
-    _bind(msColorLabel,
-      () => _hlSet([".multi-btn", ".multi-send-btn"], true),
-      () => _hlSet([".multi-btn", ".multi-send-btn"], false)
-    );
-    _bind(msOpacityLabel,
-      () => _hlSet([".multi-btn", ".multi-send-btn"], true),
-      () => _hlSet([".multi-btn", ".multi-send-btn"], false)
-    );
-
-    return { multiSelectContainer, multiSelectHeader, msColorLabel, msOpacityLabel };
-    }
-
-    function _buildCustomThemeSection() {
-    const customThemeContainer = document.createElement("div");
-    customThemeContainer.style.border = `1px solid ${panelTheme === "dark" ? "#555" : "#ccc"}`;
-    customThemeContainer.style.padding = "6px";
-    customThemeContainer.style.borderRadius = styleSettings.borderRadius + "px";
-    customThemeContainer.style.display =
-      styleSettings.theme === "custom" ? "flex" : "none";
-    customThemeContainer.style.flexDirection = "column";
-    customThemeContainer.style.gap = "0";
-    customThemeContainer.style.maxWidth = "490px";
-
-    const customThemeHeader = document.createElement("div");
-    customThemeHeader.textContent = t.customThemeLabel || "Custom Theme";
-    customThemeHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
-    customThemeContainer.appendChild(customThemeHeader);
-
-    const { row: backgroundColorRow, label: backgroundColorLabel, input: backgroundColorInput } = mkColorInput(
-      t.backgroundColor || "Background Color",
-      styleSettings.customBackgroundColor,
-      (v) => { styleSettings.customBackgroundColor = v; save(); _debouncedApply(); }
-    );
-    customThemeContainer.appendChild(backgroundColorRow);
-
-    const { row: textColorRow, label: textColorLabel, input: textColorInput } = mkColorInput(
-      t.textColor || "Text Color",
-      styleSettings.customTextColor,
-      (v) => { styleSettings.customTextColor = v; save(); _debouncedApply(); }
-    );
-    customThemeContainer.appendChild(textColorRow);
-
-    const { row: buttonBgRow, label: buttonBgLabel, input: buttonBgInput } = mkColorInput(
-      t.customButtonBg || "Button Background",
-      styleSettings.customButtonBg,
-      (v) => { styleSettings.customButtonBg = v; save(); _debouncedApply(); }
-    );
-    customThemeContainer.appendChild(buttonBgRow);
-
-    _bind(customThemeHeader,
-      () => _hlSet([".group-block", ".draggable-site"], true),
-      () => _hlSet([".group-block", ".draggable-site"], false)
-    );
-    _bind(backgroundColorLabel,
-      () => _hlPanel(true),
-      () => _hlPanel(false)
-    );
-    _bind(textColorLabel,
-      () => _hlSet([".site-label", ".group-name"], true),
-      () => _hlSet([".site-label", ".group-name"], false)
-    );
-    _bind(buttonBgLabel,
-      () => _hlSet([".draggable-site", "button:not(.icon-btn)"], true),
-      () => _hlSet([".draggable-site", "button:not(.icon-btn)"], false)
-    );
-
-    return { customThemeContainer, customThemeHeader, backgroundColorLabel, textColorLabel, buttonBgLabel };
-    }
-
-    const { panelLayoutContainer, panelLayoutHeader } = _buildPanelLayoutSection();
-    const { generalStyleContainer, generalStyleHeader, _layoutAnchors, borderRadiusLabel, contrastLabel, opacityLabel, groupOpacityLabel, buttonOpacityLabel, siteButtonWidthLabel, panelBgColorLabel, glowHeader, glowToggleLbl, glowColorLbl, glowStrLbl, glowInsetLbl, sheenToggleLbl, sheenAngleLbl, sheenOpLbl, siteGlowLbl, groupGlowLbl, vignetteHeader, _sbsHeader, _sbsPresetLbl, _sbsBgLbl, _sbsBgOpLbl, _sbsFgLbl, _sbsGlowToggleLbl, _sbsGlowColorLbl, _sbsGlowStrLbl } = _buildGeneralStyleSection();
-    const { toggleBtnStyleContainer, _tbsHeader } = _buildToggleBtnStyleSection();
-    const { textStyleContainer, textStyleHeader, fontSizeLabel, textBackgroundColorLabel, textBorderLabel, textOpacityCompensationLabel } = _buildTextStyleSection();
-    const { backgroundOverlayContainer, backgroundOverlayHeader, overlayDarkeningLabel, overlayStrengthLabel, imageLabel, imageModeLabel, imageOffsetXLabel, imageOffsetYLabel, imageScaleLabel, imageOpacityLabel } = _buildBgOverlaySection();
-    const { multiSelectContainer, multiSelectHeader, msColorLabel, msOpacityLabel } = _buildMultiSelectSection();
-    const { customThemeContainer, customThemeHeader, backgroundColorLabel, textColorLabel, buttonBgLabel } = _buildCustomThemeSection();
+    const { panelLayoutContainer } = _buildPanelLayoutSection();
+    const { generalStyleContainer, _layoutAnchors } = _buildGeneralStyleSection();
+    const { toggleBtnStyleContainer } = _buildToggleBtnStyleSection();
+    const { textStyleContainer } = _buildTextStyleSection();
+    const { backgroundOverlayContainer } = _buildBgOverlaySection();
+    const { multiSelectContainer } = _buildMultiSelectSection();
+    const { customThemeContainer } = _buildCustomThemeSection();
 
     styleConfigContent.appendChild(panelLayoutContainer);
     generalStyleContainer.insertBefore(toggleBtnStyleContainer, _layoutAnchors.toggleBtnStyle);
