@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.7.0.0
+// @version      2.7.0.5
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -2810,12 +2810,23 @@
     const _svgColor = styleSettings.svgIconColor || "";
     document.querySelectorAll(".icon-btn[data-grp-emoji]").forEach(el => {
       const emoji = el.dataset.grpEmoji;
+      const _isSendBtn = el.classList.contains("multi-send-btn");
+      let _selCount = 0;
+      if (_isSendBtn) {
+        const _blk = el.closest(".group-block");
+        if (_blk && _blk.dataset.multiSelectActive === "true" && _blk._multiSelected) {
+          _selCount = _blk._multiSelected.size;
+        }
+      }
       if (_svgMode && GRP_SVG_MAP[emoji]) {
         el.innerHTML = GRP_SVG_MAP[emoji];
         el.style.fontSize = "0";
         el.style.color = _svgColor || "";
+        if (_isSendBtn && _selCount > 0) {
+          el.innerHTML += `<span style="font-size:11px;margin-left:2px;">${_selCount}</span>`;
+        }
       } else {
-        el.textContent = emoji;
+        el.textContent = _isSendBtn && _selCount > 0 ? `${emoji}${_selCount}` : emoji;
         el.style.fontSize = "";
         el.style.color = "";
       }
@@ -3272,7 +3283,7 @@
   let _hdlCompactDragMove      = null;
   let _hdlCompactDragUp        = null;
   let _dragPanelActive         = false;
-  let _dragStyleFloatActive = false, _dragStyleFloatOx = 0, _dragStyleFloatOy = 0;
+  let _dragStyleFloatState = { active: false, x: 0, y: 0 };
   let _dragStyleFloatOnMove = null, _dragStyleFloatOnUp = null;
 
   function parseSmartDomain(raw) {
@@ -4437,15 +4448,17 @@
     btn.title = titleText;
     btn.dataset.grpEmoji = emoji;
     btn.style.cssText = `
-      background:none; border:none; border-radius:0;
+      background:none; border:none; border-radius:5px;
       cursor:pointer; padding:2px 7px;
       font-size:12px; line-height:1.6;
       display:inline-flex; align-items:center; justify-content:center;
-      opacity:0.6; transition:opacity 0.15s, background 0.15s, color 0.15s;
+      opacity:0.6; box-shadow:none;
+      transition:opacity 0.15s, background 0.2s, color 0.15s,
+                 border-radius 0.2s, box-shadow 0.2s;
     `;
     _applyGrpIcon(btn, emoji);
-    btn.addEventListener("mouseenter", () => { btn.style.opacity = "1"; btn.style.background = "rgba(128,128,128,0.12)"; });
-    btn.addEventListener("mouseleave", () => { btn.style.opacity = btn._activeStyle ? "1" : "0.6"; btn.style.background = btn._activeStyle || "none"; });
+    btn.addEventListener("mouseenter", () => { btn.style.opacity = "1"; if (!btn._activeStyle) btn.style.background = "rgba(128,128,128,0.12)"; });
+    btn.addEventListener("mouseleave", () => { btn.style.opacity = btn._activeStyle ? "1" : "0.6"; if (!btn._activeStyle) btn.style.background = "none"; });
     return btn;
   }
 
@@ -4535,20 +4548,53 @@
       if (!state.active) return;
       const el = getBoxEl();
       if (!el) return;
-      const nx = Math.max(0, Math.min(e.clientX - state.x, window.innerWidth  - el.offsetWidth));
-      const ny = Math.max(0, Math.min(e.clientY - state.y, window.innerHeight - el.offsetHeight));
-      el.style.left  = nx + "px";
-      el.style.top   = ny + "px";
-      el.style.right = "auto";
-      return { nx, ny };
+      const tx = Math.max(-state._baseLeft, Math.min(e.clientX - state.x - state._baseLeft, window.innerWidth  - state._baseLeft - state._pw));
+      const ty = Math.max(-state._baseTop,  Math.min(e.clientY - state.y - state._baseTop,  window.innerHeight - state._baseTop  - state._ph));
+      state._nextX = tx;
+      state._nextY = ty;
+      if (state._rafId) return;
+      state._rafId = requestAnimationFrame(() => {
+        state._rafId = 0;
+        if (!document.contains(el)) return;
+        el.style.transform = `translate(${state._nextX}px,${state._nextY}px)`;
+      });
     }
     function onUp() {
       if (!state.active) return;
       state.active = false;
       const el = getBoxEl();
-      if (el && onDrop) onDrop(parseInt(el.style.left), parseInt(el.style.top), el);
+      if (!el) return;
+      if (state._rafId) { cancelAnimationFrame(state._rafId); state._rafId = 0; }
+      const nx = Math.max(0, Math.min(state._baseLeft + state._nextX, window.innerWidth  - state._pw));
+      const ny = Math.max(0, Math.min(state._baseTop  + state._nextY, window.innerHeight - state._ph));
+      el.style.left      = nx + "px";
+      el.style.top       = ny + "px";
+      el.style.right     = "auto";
+      el.style.transform = "translate(0,0)";
+      if (onDrop) onDrop(nx, ny, el);
     }
     return { onMove, onUp };
+  }
+
+  function _startDrag(state, el, e) {
+    const rect = el.getBoundingClientRect();
+    state.active    = true;
+    state._baseLeft = rect.left;
+    state._baseTop  = rect.top;
+    state._pw       = rect.width;
+    state._ph       = rect.height;
+    state.x         = e.clientX - rect.left;
+    state.y         = e.clientY - rect.top;
+    state._nextX    = 0;
+    state._nextY    = 0;
+    if (el.style.transition) {
+      el.style.transition = el.style.transition
+        .split(",")
+        .map(s => s.trim())
+        .filter(s => s && !s.startsWith("transform"))
+        .join(", ");
+    }
+    el.style.transform = "translate(0,0)";
   }
 
   function _exitMultiSelect(blk, mBtn, sBtn) {
@@ -4558,6 +4604,8 @@
     mBtn.style.background = "none";
     mBtn.style.color = "";
     mBtn.style.fontWeight = "";
+    mBtn.style.borderRadius = "5px";
+    mBtn.style.boxShadow = "none";
     mBtn._activeStyle = null;
     sBtn.style.display = "none";
     sBtn.textContent = "↗";
@@ -4565,6 +4613,9 @@
     sBtn.style.color = "#e08000";
     sBtn.style.fontWeight = "";
     sBtn.style.opacity = "";
+    sBtn.style.borderRadius = "5px";
+    sBtn.style.boxShadow = "none";
+    sBtn._activeStyle = null;
     blk.querySelectorAll(".site-ms-chk").forEach(c => { c.style.display = "none"; c.checked = false; });
     const ov = document.getElementById(`ms-overlay-${blk.dataset.groupIndex}`);
     if (ov) ov.remove();
@@ -4587,9 +4638,10 @@
       mBtn.style.opacity = "1";
       mBtn.style.color = "#fff";
       mBtn.style.fontWeight = "bold";
-      mBtn._activeStyle = "#c88000";
-      mBtn.style.background = "#c88000";
-      mBtn.style.borderRadius = "0";
+      mBtn._activeStyle = "linear-gradient(135deg, #d99424, #c07800)";
+      mBtn.style.background = mBtn._activeStyle;
+      mBtn.style.borderRadius = "6px";
+      mBtn.style.boxShadow = "0 1px 4px rgba(180,110,0,0.45)";
       sBtn.style.display = "";
       blk.querySelector(".multi-pill-sep").style.display = "";
       showToast((t.multiSelectMode || "Multi-select") + " ON ☑");
@@ -4611,17 +4663,30 @@
 
       const _updateSendLabel = () => {
         const n = blk._multiSelected.size;
-        sBtn.textContent = n > 0 ? `↗${n}` : "↗";
+        const _svgMode = (styleSettings.iconStyle || "emoji") !== "emoji";
+        if (_svgMode && GRP_SVG_MAP["↗"]) {
+          sBtn.innerHTML = GRP_SVG_MAP["↗"] + (n > 0 ? `<span style="font-size:11px;margin-left:2px;">${n}</span>` : "");
+          sBtn.style.fontSize = "0";
+        } else {
+          sBtn.textContent = n > 0 ? `↗${n}` : "↗";
+          sBtn.style.fontSize = "";
+        }
         if (n > 0) {
-          sBtn.style.background = "#e08000";
+          sBtn._activeStyle = "linear-gradient(135deg, #f0983a, #e08000)";
+          sBtn.style.background = sBtn._activeStyle;
           sBtn.style.color = "#fff";
           sBtn.style.fontWeight = "bold";
           sBtn.style.opacity = "1";
+          sBtn.style.borderRadius = "6px";
+          sBtn.style.boxShadow = "0 1px 4px rgba(200,120,0,0.4)";
         } else {
+          sBtn._activeStyle = null;
           sBtn.style.background = "none";
           sBtn.style.color = "#e08000";
           sBtn.style.fontWeight = "";
           sBtn.style.opacity = "0.7";
+          sBtn.style.borderRadius = "5px";
+          sBtn.style.boxShadow = "none";
         }
       };
       blk._updateSendLabel = _updateSendLabel;
@@ -7040,6 +7105,10 @@
       if (enginePanelPinned && !force) return;
       document.removeEventListener("mousemove", _epOnMove);
       document.removeEventListener("mouseup",   _epOnUp);
+      if (_dragEnginePanel._rafId) {
+        cancelAnimationFrame(_dragEnginePanel._rafId);
+        _dragEnginePanel._rafId = 0;
+      }
       _dragEnginePanel.active = false;
       _engineDragTitleBarRef = null;
       enginePanelFloat.remove();
@@ -7346,10 +7415,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _dragEnginePanel.active = false;
     epTitleBar.addEventListener("mousedown", (e) => {
       if (e.target === epCloseBtn || e.target === helpBtn) return;
-      const rect = enginePanelFloat.getBoundingClientRect();
-      _dragEnginePanel.active = true;
-      _dragEnginePanel.x = e.clientX - rect.left;
-      _dragEnginePanel.y = e.clientY - rect.top;
+      _startDrag(_dragEnginePanel, enginePanelFloat, e);
       epTitleBar.style.cursor = "grabbing";
       e.preventDefault();
     });
@@ -10001,31 +10067,25 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   styleConfigHeaderRow.addEventListener("mousedown", (e) => {
     if (e.target.tagName === "BUTTON" || e.target.tagName === "SELECT") return;
-    _dragStyleFloatActive = true;
-    _dragStyleFloatOx = e.clientX - styleConfigWrap.getBoundingClientRect().left;
-    _dragStyleFloatOy = e.clientY - styleConfigWrap.getBoundingClientRect().top;
+    _startDrag(_dragStyleFloatState, styleConfigWrap, e);
     styleConfigHeaderRow.style.cursor = "grabbing";
     e.preventDefault();
   });
-  _dragStyleFloatOnMove = function(e) {
-    if (!_dragStyleFloatActive) return;
-    const nx = Math.max(0, Math.min(e.clientX - _dragStyleFloatOx, window.innerWidth  - styleConfigWrap.offsetWidth));
-    const ny = Math.max(0, Math.min(e.clientY - _dragStyleFloatOy, window.innerHeight - styleConfigWrap.offsetHeight));
-    styleConfigWrap.style.left  = nx + "px";
-    styleConfigWrap.style.top   = ny + "px";
-    styleConfigWrap.style.right = "auto";
-  };
-  _dragStyleFloatOnUp = function() {
-    if (!_dragStyleFloatActive) return;
-    _dragStyleFloatActive = false;
-    styleConfigHeaderRow.style.cursor = "grab";
-    GM_setValue(STORAGE_KEYS.STYLE_FLOAT_POS, {
-      top:  styleConfigWrap.style.top,
-      left: styleConfigWrap.style.left,
-    });
-    document.removeEventListener("mousemove", _dragStyleFloatOnMove);
-    document.removeEventListener("mouseup",   _dragStyleFloatOnUp);
-  };
+  const _scDrag = _makeDraggable(
+    () => styleConfigWrap,
+    _dragStyleFloatState,
+    (nx, ny) => {
+      styleConfigHeaderRow.style.cursor = "grab";
+      GM_setValue(STORAGE_KEYS.STYLE_FLOAT_POS, {
+        top:  ny + "px",
+        left: nx + "px",
+      });
+      document.removeEventListener("mousemove", _dragStyleFloatOnMove);
+      document.removeEventListener("mouseup",   _dragStyleFloatOnUp);
+    }
+  );
+  _dragStyleFloatOnMove = _scDrag.onMove;
+  _dragStyleFloatOnUp   = _scDrag.onUp;
   document.addEventListener("mousemove", _dragStyleFloatOnMove);
   document.addEventListener("mouseup",   _dragStyleFloatOnUp);
 
@@ -11841,7 +11901,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     closeDpDropdown();
     document.removeEventListener("mousemove", _dragStyleFloatOnMove);
     document.removeEventListener("mouseup",   _dragStyleFloatOnUp);
-    _dragStyleFloatActive = false;
+    if (_dragStyleFloatState._rafId) {
+      cancelAnimationFrame(_dragStyleFloatState._rafId);
+      _dragStyleFloatState._rafId = 0;
+    }
+    _dragStyleFloatState.active = false;
 
     const wasVisible = (() => {
       const p = document.getElementById("site-group-panel");
@@ -11889,7 +11953,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       if (_grip) { _grip.style.pointerEvents = "none"; _grip.style.opacity = "0"; }
     } else {
       const _cp = document.getElementById("set-compact-panel");
-      if (_cp) _cp.remove();
+      if (_cp) {
+        document.removeEventListener("mousemove", _hdlCompactDragMove);
+        document.removeEventListener("mouseup",   _hdlCompactDragUp);
+        _cp.remove();
+      }
       if (_mainPanel) showPanel(_mainPanel);
       if (_grip) { _grip.style.pointerEvents = ""; _grip.style.opacity = ""; }
     }
@@ -12148,10 +12216,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     _handle.addEventListener("mousedown", (e) => {
       if (e.target === _exitBtn) return;
-      _cpDragState.active = true;
-      const r = _cp.getBoundingClientRect();
-      _cpDragState.x = e.clientX - r.left;
-      _cpDragState.y = e.clientY - r.top;
+      _startDrag(_cpDragState, _cp, e);
       _handle.style.cursor = "grabbing";
       e.preventDefault();
     });
