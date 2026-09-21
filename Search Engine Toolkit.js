@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.7.0.5
+// @version      2.7.0.8
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -42,6 +42,9 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_openInTab
+// @grant        GM_xmlhttpRequest
+// @connect      www.google.com
+// @connect      gstatic.com
 // @description      A site-search assistant for major search engines (Google, Bing, Brave, DuckDuckGo, Yandex, Baidu). Organise target domains into named groups — one click appends site:<domain> to your current query instantly. Secondary tools: granular time filter (1 hour – 9 years), multi-engine switcher, keyword exclusion, and full import/export config. Themes, opacity, and background image supported.
 // @description:zh-TW 以 site: 域名過濾為核心的搜尋輔助工具，適用於 Google、Bing、Brave 等主流引擎。將常用目標網站整理成群組，一鍵將 site:<域名> 附加至當前搜尋詞即時跳轉。附加功能：1小時至9年細粒度時間篩選、多引擎切換、排除關鍵字、設定匯入匯出，以及主題、透明度與背景圖片自訂。
 // @description:zh-CN 以 site: 域名过滤为核心的搜索辅助工具，支持 Google、Bing、Brave 等主流引擎。将常用目标网站整理为分组，一键将 site:<域名> 追加至当前搜索词并即时跳转。附加功能：1小时至9年细粒度时间筛选、多引擎切换、排除关键词、配置导入导出，以及主题、透明度与背景图片自定义。
@@ -2358,10 +2361,94 @@
     }
   }
 
+  const _IS_DDG_PAGE = window.location.hostname.includes("duckduckgo.com");
+  function _faviconSrcFor(host, sz) {
+    if (_IS_DDG_PAGE) {
+      return "https://icons.duckduckgo.com/ip3/" + encodeURIComponent(host) + ".ico";
+    }
+    return "https://www.google.com/s2/favicons?sz=" + sz + "&domain=" + encodeURIComponent(host);
+  }
+
+  const _FAVICON_GLOBE_URI =
+    "data:image/svg+xml;utf8," +
+    encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="#888" stroke-width="1.2">' +
+      '<circle cx="8" cy="8" r="6.4"/><ellipse cx="8" cy="8" rx="2.8" ry="6.4"/><path d="M1.6 8h12.8"/></svg>'
+    );
+
+  const _gmFetchFavicon = (() => {
+    const _cache = new Map();
+    return function (host) {
+      if (typeof GM_xmlhttpRequest !== "function") return Promise.resolve(null);
+      if (_cache.has(host)) return _cache.get(host);
+      const p = new Promise((resolve) => {
+        let settled = false;
+        const done = (v) => { if (!settled) { settled = true; resolve(v); } };
+        try {
+          GM_xmlhttpRequest({
+            method: "GET",
+            url: "https://www.google.com/s2/favicons?sz=32&domain=" + encodeURIComponent(host),
+            responseType: "arraybuffer",
+            timeout: 8000,
+            onload: (res) => {
+              try {
+                if (!res.response || !res.response.byteLength) return done(null);
+                const ok2xx = res.status >= 200 && res.status < 300;
+                const m = /content-type:\s*([^\r\n;]+)/i.exec(res.responseHeaders || "");
+                const isImg = !!m && /^image\//i.test(m[1].trim());
+                if (!ok2xx && !isImg) return done(null);
+                const mime = isImg ? m[1].trim() : "image/png";
+                const bytes = new Uint8Array(res.response);
+                let bin = "";
+                for (let i = 0; i < bytes.length; i += 0x8000) {
+                  bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+                }
+                done("data:" + mime + ";base64," + btoa(bin));
+              } catch (_) { done(null); }
+            },
+            onerror: () => done(null),
+            ontimeout: () => done(null),
+            onabort: () => done(null),
+          });
+        } catch (_) { done(null); }
+      });
+      _cache.set(host, p);
+      return p;
+    };
+  })();
+
+  function _faviconFallback(imgEl, host, onFail) {
+    imgEl.onerror = null;
+    _gmFetchFavicon(host).then((uri) => {
+      if (uri) { imgEl.src = uri; return; }
+      if (typeof onFail === "function") onFail();
+      else imgEl.src = _FAVICON_GLOBE_URI;
+    });
+  }
+
+  function _loadSiteFavicon(imgEl, host, onFail, sz) {
+    const _sz = sz || 16;
+    if (!_IS_DDG_PAGE) {
+      imgEl.src = _faviconSrcFor(host, _sz);
+      imgEl.onerror = () => _faviconFallback(imgEl, host, onFail);
+      return;
+    }
+    imgEl.src = _FAVICON_GLOBE_URI;
+    _gmFetchFavicon(host).then((uri) => {
+      if (uri) { imgEl.src = uri; return; }
+      imgEl.onerror = () => {
+        imgEl.onerror = null;
+        if (typeof onFail === "function") onFail();
+        else imgEl.src = _FAVICON_GLOBE_URI;
+      };
+      imgEl.src = _faviconSrcFor(host, _sz);
+    });
+  }
+
   function se_faviconUrl(engineUrl) {
     try {
       const domain = new URL(engineUrl).hostname;
-      return "https://www.google.com/s2/favicons?sz=32&domain=" + domain;
+      return _faviconSrcFor(domain, 32);
     } catch (e) {
       return "";
     }
@@ -3209,11 +3296,6 @@
       else     url.searchParams.delete("tbs");
     }
     location.href = url.toString();
-  }
-
-  function getFaviconURL(domain) {
-    const host = domain.split("/")[0];
-    return `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(host)}`;
   }
 
   function getDragAfterElement(container, y, selector, cachedMidpoints) {
@@ -5185,14 +5267,10 @@
   });
 
   const favicon = document.createElement("img");
-  favicon.src = getFaviconURL(site.url);
   favicon.style.width = "16px";
   favicon.style.height = "16px";
   favicon.style.marginRight = "4px";
-  favicon.onerror = () => {
-    favicon.onerror = null;
-    favicon.src = "https://www.google.com/favicon.ico";
-  };
+  _loadSiteFavicon(favicon, site.url.split("/")[0]);
 
   const label = document.createElement("span");
   label.className = "site-label";
@@ -12083,16 +12161,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         const _fullUrl = /^https?:\/\//.test(site.url)
           ? site.url : "https://" + site.url;
         const _img = document.createElement("img");
-        _img.src = typeof se_faviconUrl === "function" ? se_faviconUrl(_fullUrl) : "";
         _img.alt = "";
-        _img.onerror = () => {
+        const _domain = site.url.replace(/^https?:\/\//, "").split("/")[0];
+        _loadSiteFavicon(_img, _domain, () => {
           _img.style.display = "none";
           const _fb = document.createElement("span");
           _fb.className = "scp-site-fallback";
-          const _domain = site.url.replace(/^https?:\/\//, "").split("/")[0];
           _fb.textContent = _domain.charAt(0).toUpperCase();
           _siteBtn.appendChild(_fb);
-        };
+        }, 32);
         _siteBtn.appendChild(_img);
 
         _siteBtn.addEventListener("click", (e) => {
