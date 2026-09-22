@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.7.0.8
+// @version      2.7.1.0
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -120,6 +120,7 @@
       hideSyntaxBtn: false,
       hideBlacklistBtn: false,
       hideAddGroupBtn: false,
+      hideAddGroupQuickBtn: false,
       hideAddressToggleBtn: false,
       hideExportBtn: false,
       hideImportBtn: false,
@@ -387,6 +388,7 @@
       hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
       hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
       hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
+      hideAddGroupQuickBtnLabel: "Hide Toolbar ➕ Add Group Quick Button",
       hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
       hideExportBtnLabel: "Hide 📤 Export Button",
       hideImportBtnLabel: "Hide 📥 Import Button",
@@ -510,7 +512,7 @@
       blacklistInvalid: (d) => `Invalid domain skipped: "${d}"`,
       onboarding: {
         step0Title: "🔍 Finding the panel",
-        step0Body: "See the <b>🔍 button</b> on the page? That's your entry point.\nClick it anytime to open or close the main panel.",
+        step0Body: "See the <b>🔍 button</b> on the page? That's your entry point.\nClick it anytime to open or close the main panel.\nHover over it for a moment and a small <b>compact-mode</b> button will pop out beside it.",
         step1Title: "👋 Welcome!",
         step1Body: "Let's get you started.\nFirst, click <b>Add Group ➕</b> to create a site group (e.g. \"News\", \"Dev\").",
         step2Title: "📂 Group created!",
@@ -682,6 +684,7 @@
       hideSyntaxBtnLabel: "隱藏 📖 語法說明按鈕",
       hideBlacklistBtnLabel: "隱藏 🚫 黑名單按鈕",
       hideAddGroupBtnLabel: "隱藏 ➕ 新增群組按鈕",
+      hideAddGroupQuickBtnLabel: "隱藏工具列 ➕ 新增群組快捷按鈕",
       hideAddressToggleBtnLabel: "隱藏 🔁 顯示/隱藏網址按鈕",
       hideExportBtnLabel: "隱藏 📤 匯出按鈕",
       hideImportBtnLabel: "隱藏 📥 匯入按鈕",
@@ -805,7 +808,7 @@
       blacklistInvalid: (d) => `無效網域已略過：「${d}」`,
       onboarding: {
         step0Title: "🔍 找到面板入口",
-        step0Body: "看到頁面上的 <b>🔍 按鈕</b>了嗎？那就是入口。\n隨時點擊它來開啟或關閉主面板。",
+        step0Body: "看到頁面上的 <b>🔍 按鈕</b>了嗎？那就是入口。\n隨時點擊它來開啟或關閉主面板。\n把滑鼠停留在上面一下，旁邊還會冒出一個切換<b>精簡面板</b>的小按鈕喔。",
         step1Title: "👋 歡迎使用！",
         step1Body: "讓我們快速上手。\n請先點擊 <b>新增群組 ➕</b> 建立一個站台群組（例如「新聞」、「開發」）。",
         step2Title: "📂 群組建立完成！",
@@ -972,6 +975,7 @@
       hideSyntaxBtnLabel: "隐藏 📖 语法说明按钮",
       hideBlacklistBtnLabel: "隐藏 🚫 黑名单按钮",
       hideAddGroupBtnLabel: "隐藏 ➕ 新增分组按钮",
+      hideAddGroupQuickBtnLabel: "隐藏工具栏 ➕ 新增分组快捷按钮",
       hideAddressToggleBtnLabel: "隐藏 🔁 显示/隐藏网址按钮",
       hideExportBtnLabel: "隐藏 📤 导出按钮",
       hideImportBtnLabel: "隐藏 📥 导入按钮",
@@ -1095,7 +1099,7 @@
       blacklistInvalid: (d) => `无效域名已跳过：「${d}」`,
       onboarding: {
         step0Title: "🔍 找到面板入口",
-        step0Body: "看到页面上的 <b>🔍 按钮</b>了吗？那就是入口。\n随时点击它来打开或关闭主面板。",
+        step0Body: "看到页面上的 <b>🔍 按钮</b>了吗？那就是入口。\n随时点击它来打开或关闭主面板。\n把鼠标停留在上面一下，旁边还会弹出一个切换<b>精简面板</b>的小按钮哦。",
         step1Title: "👋 欢迎使用！",
         step1Body: "让我们快速上手。\n请先点击 <b>添加群组 ➕</b> 创建一个站点群组（例如「新闻」、「开发」）。",
         step2Title: "📂 群组创建完成！",
@@ -1263,6 +1267,7 @@
       hideSyntaxBtnLabel: "📖 構文ﾍﾙﾌﾟを非表示",
       hideBlacklistBtnLabel: "🚫 除外域ﾎﾞﾀﾝを非表示",
       hideAddGroupBtnLabel: "➕ ｸﾞﾙｰﾌﾟ追加ﾎﾞﾀﾝを非表示",
+      hideAddGroupQuickBtnLabel: "ﾂｰﾙﾊﾞｰの➕ｸﾞﾙｰﾌﾟ追加ｸｲｯｸﾎﾞﾀﾝを非表示",
       hideAddressToggleBtnLabel: "🔁 ｱﾄﾞﾚｽ切替ﾎﾞﾀﾝを非表示",
       hideExportBtnLabel: "📤 ｴｸｽﾎﾟｰﾄﾎﾞﾀﾝを非表示",
       hideImportBtnLabel: "📥 ｲﾝﾎﾟｰﾄﾎﾞﾀﾝを非表示",
@@ -1387,7 +1392,7 @@
       blacklistInvalid: (d) => `無効なドメインをスキップしました：「${d}」`,
       onboarding: {
         step0Title: "🔍 パネルの開き方",
-        step0Body: "ページ上の <b>🔍 ボタン</b>が見えますか？それが入口です。\nいつでもクリックしてメインパネルを開閉できます。",
+        step0Body: "ページ上の <b>🔍 ボタン</b>が見えますか？それが入口です。\nいつでもクリックしてメインパネルを開閉できます。\nしばらくホバーすると、隣に<b>コンパクトモード</b>を切り替える小さなボタンが現れます。",
         step1Title: "👋 ようこそ！",
         step1Body: "さっそく始めましょう。\nまず <b>ｸﾞﾙｰﾌﾟを追加 ➕</b> をクリックしてサイトグループを作成してください（例：「ニュース」「開発」）。",
         step2Title: "📂 グループ作成完了！",
@@ -1555,6 +1560,7 @@
       hideSyntaxBtnLabel: "📖 문법 도움말 숨기기",
       hideBlacklistBtnLabel: "🚫 차단목록 버튼 숨기기",
       hideAddGroupBtnLabel: "➕ 그룹 추가 버튼 숨기기",
+      hideAddGroupQuickBtnLabel: "툴바 ➕ 그룹 추가 바로가기 버튼 숨기기",
       hideAddressToggleBtnLabel: "🔁 주소 토글 버튼 숨기기",
       hideExportBtnLabel: "📤 내보내기 버튼 숨기기",
       hideImportBtnLabel: "📥 가져오기 버튼 숨기기",
@@ -1678,7 +1684,7 @@
       blacklistInvalid: (d) => `유효하지 않은 도메인 건너뜀: "${d}"`,
       onboarding: {
         step0Title: "🔍 패널 열기",
-        step0Body: "페이지에서 <b>🔍 버튼</b>이 보이시나요？ 그게 입구입니다。\n언제든지 클릭하면 메인 패널을 열고 닫을 수 있습니다。",
+        step0Body: "페이지에서 <b>🔍 버튼</b>이 보이시나요？ 그게 입구입니다。\n언제든지 클릭하면 메인 패널을 열고 닫을 수 있습니다。\n잠시 마우스를 올려두면 옆에 <b>컴팩트 모드</b>를 전환하는 작은 버튼이 나타납니다。",
         step1Title: "👋 환영합니다！",
         step1Body: "먼저 <b>그룹 추가 ➕</b>를 클릭하여 사이트 그룹을 만들어 보세요（예: 「뉴스」, 「개발」）。",
         step2Title: "📂 그룹 생성 완료！",
@@ -1860,6 +1866,7 @@
     panelLayoutLabel: "Panel Layout",
     hideSyntaxBtnLabel: "Hide 📖 Syntax Help Button",
     hideAddGroupBtnLabel: "Hide ➕ Add Group Button",
+    hideAddGroupQuickBtnLabel: "Hide Toolbar ➕ Add Group Quick Button",
     hideAddressToggleBtnLabel: "Hide 🔁 Address Toggle Button",
     hideExportBtnLabel: "Hide 📤 Export Button",
     hideImportBtnLabel: "Hide 📥 Import Button",
@@ -2030,7 +2037,7 @@
     ]),
     onboarding: {
       step0Title: "🔍 Finding the panel",
-      step0Body: "See the <b>🔍 button</b> on the page? Click it to open or close the main panel.",
+      step0Body: "See the <b>🔍 button</b> on the page? Click it to open or close the main panel.\nHover over it for a moment and a small compact-mode button will pop out beside it.",
       step1Title: "👋 Welcome!",
       step1Body: "First, click <b>Add Group ➕</b> to create a site group.",
       step2Title: "📂 Group created!",
@@ -2747,13 +2754,13 @@
   const ICONS = {
     plus: {
       emoji: "🔧", size: "14px",
-      line: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><g transform="rotate(-30 12 12)"><path d="M15.5 2a5.5 5.5 0 0 0-5.28 6.98L3.3 15.9a2.3 2.3 0 0 0 3.25 3.25l6.93-6.93A5.5 5.5 0 0 0 20.5 7.5a5.4 5.4 0 0 0-.32-1.84l-2.92 2.93-1.41-1.41 2.93-2.93A5.4 5.4 0 0 0 15.5 2z"/></g></svg>`,
-      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" style="display:block;pointer-events:none"><g transform="rotate(-30 12 12)"><path fill="currentColor" d="M15.5 2a5.5 5.5 0 0 0-5.28 6.98L3.3 15.9a2.3 2.3 0 0 0 3.25 3.25l6.93-6.93A5.5 5.5 0 0 0 20.5 7.5a5.4 5.4 0 0 0-.32-1.84l-2.92 2.93-1.41-1.41 2.93-2.93A5.4 5.4 0 0 0 15.5 2z"/></g></svg>`,
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" style="display:block;pointer-events:none"><path fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>`,
     },
     pin: {
       emoji: "📌", size: "16px",
-      line: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:block;pointer-events:none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
-      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:block;pointer-events:none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="currentColor" fill-opacity=".2"/><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" fill="currentColor"/></svg>`,
+      line: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;pointer-events:none"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>`,
+      fill: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" style="display:block;pointer-events:none"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 17v5"/><path fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>`,
     },
     history: {
       emoji: "🕐", size: "12px",
@@ -2935,6 +2942,11 @@
 
     const _addGroupIcon = document.getElementById("toolbar-add-group-btn")?.firstElementChild;
     if (_addGroupIcon) _applyIconToBtn(_addGroupIcon, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
+    const _addGroupQuickBtn = document.getElementById("toolbar-add-group-quick-btn");
+    if (_addGroupQuickBtn) {
+      _applyIconToBtn(_addGroupQuickBtn, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
+      _addGroupQuickBtn.classList.toggle("se-pulse-empty", groups.length === 0);
+    }
     const _exportIcon = document.getElementById("toolbar-export-btn")?.firstElementChild;
     if (_exportIcon) _applyIconToBtn(_exportIcon, ICONS.exportConfig.emoji, ICONS.exportConfig.line, ICONS.exportConfig.fill, ICONS.exportConfig.size);
     const _importIcon = document.getElementById("toolbar-import-btn")?.firstElementChild;
@@ -2957,6 +2969,63 @@
     const _toggleBtn = document.getElementById("toolbar-compact-toggle-btn");
     if (_toggleBtn) _toggleBtn.style.display = allHidden ? "none" : "inline-flex";
     container.style.display = allHidden ? "none" : "flex";
+  }
+
+  function _doAddGroup(onAdded) {
+    if (_dlgPromptActive) {
+      warn("[Prompt] Another prompt is active, ignoring add-group request");
+      return;
+    }
+    showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
+      if (!name || !name.trim()) {
+        showToast(t.emptyGroupName || "Group name cannot be empty!");
+        return;
+      }
+      groups.push({ name: name.trim(), sites: [] });
+      save();
+      renderSites(panel);
+      showToast(`${t.addGroup || "Group added"} ✅`);
+      if (typeof onAdded === "function") onAdded();
+    });
+  }
+
+  function _buildAddGroupTailRow(bodyTarget) {
+    let row = document.getElementById("toolbar-add-group-btn");
+    const isDark = panelTheme === "dark";
+    if (!row) {
+      row = document.createElement("button");
+      row.id = "toolbar-add-group-btn";
+      row.type = "button";
+      const _iconEl  = document.createElement("span");
+      const _labelEl = document.createElement("span");
+      row.appendChild(_iconEl);
+      row.appendChild(_labelEl);
+      row.onclick = () => _doAddGroup();
+    }
+    const iconEl  = row.firstElementChild;
+    const labelEl = row.lastElementChild;
+    row.style.cssText = `
+      display:${styleSettings.hideAddGroupBtn ? "none" : "flex"};
+      align-items:center; justify-content:center; gap:6px;
+      width:100%; box-sizing:border-box; margin-top:4px;
+      padding:8px; cursor:pointer; font-size:13px;
+      border-radius:${Math.max(styleSettings.borderRadius, 6)}px;
+      border:1px dashed ${isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.2)"};
+      background:transparent; color:${isDark ? "#ddd" : "#333"};
+      transition:background .15s, border-color .15s;
+    `;
+    row.onmouseenter = () => {
+      row.style.background  = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)";
+      row.style.borderColor = isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.35)";
+    };
+    row.onmouseleave = () => {
+      row.style.background  = "transparent";
+      row.style.borderColor = isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.2)";
+    };
+    _applyIconToBtn(iconEl, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
+    labelEl.textContent = (t.addGroup || "Add Group ➕").replace(/\s*➕\s*$/, "");
+    labelEl.style.fontSize = `var(--set-font-size, ${styleSettings.fontSize}px)`;
+    bodyTarget.appendChild(row);
   }
 
   function applyToggleBtnStyle(btn) {
@@ -5626,8 +5695,7 @@
           border:1px solid rgba(128,128,128,0.25);
           border-radius:8px; overflow:hidden; flex-shrink:0;
           background:rgba(0,0,0,0.12);
-          opacity:0; transition:opacity 0.15s;
-          pointer-events:none;
+          transition:opacity 0.15s;
         `;
         header.addEventListener("mouseenter", () => {
           if (_dragPanelActive) return;
@@ -5635,11 +5703,49 @@
           rightContainer.style.pointerEvents = "auto";
         });
         header.addEventListener("mouseleave", () => {
-          rightContainer.style.opacity = "0";
-          rightContainer.style.pointerEvents = "none";
+          if (typeof rightContainer._syncRestState === "function") rightContainer._syncRestState();
         });
         header.appendChild(rightContainer);
       }
+      rightContainer._syncRestState = () => {
+        const _isEmpty = group.sites.length === 0;
+        rightContainer.style.opacity = _isEmpty ? "0.55" : "0";
+        rightContainer.style.pointerEvents = _isEmpty ? "auto" : "none";
+      };
+      rightContainer._syncRestState();
+
+      let addSiteBtnInline = rightContainer.querySelector(".add-site-btn");
+      if (!addSiteBtnInline) {
+        addSiteBtnInline = mkIconBtn("➕", t.addSite || "Add Site ➕");
+        addSiteBtnInline.className += " add-site-btn";
+        rightContainer.appendChild(addSiteBtnInline);
+        rightContainer.appendChild(mkSep());
+      }
+      addSiteBtnInline.classList.toggle("se-pulse-empty", group.sites.length === 0);
+
+      addSiteBtnInline.onclick = () => {
+        if (_dlgPromptActive) return;
+        showCustomPrompt(t.enterSite, "", (siteInput) => {
+          const parsed = parseSmartDomain(siteInput);
+          if (parsed) {
+            showCustomPrompt(
+              t.enterSiteNote || "Enter site note (recommended: within 4 characters):",
+              "",
+              (note) => {
+                const trimNote = note.trim();
+                if ([...trimNote].length > 4) {
+                  showToast(t.noteTooLong || "Note cannot exceed 4 characters!");
+                  return;
+                }
+                group.sites.push({ url: parsed, note: trimNote || "" });
+                save();
+                renderSites(panel);
+                showToast(`${t.addSite || "Added"} ✅`);
+              },
+            );
+          } else showToast(t.invalidSite || "Please enter a valid URL (e.g., example.com)!");
+        });
+      };
 
       let editBtn = rightContainer.querySelector(".edit-btn");
       if (!editBtn) {
@@ -5666,38 +5772,6 @@
           });
         };
       })(groupIndex);
-
-      let addSiteBtnInline = rightContainer.querySelector(".add-site-btn");
-      if (!addSiteBtnInline) {
-        addSiteBtnInline = mkIconBtn("➕", t.addSite || "Add Site ➕");
-        addSiteBtnInline.className += " add-site-btn";
-        rightContainer.appendChild(addSiteBtnInline);
-        rightContainer.appendChild(mkSep());
-      }
-
-      addSiteBtnInline.onclick = () => {
-        if (_dlgPromptActive) return;
-        showCustomPrompt(t.enterSite, "", (siteInput) => {
-          const parsed = parseSmartDomain(siteInput);
-          if (parsed) {
-            showCustomPrompt(
-              t.enterSiteNote || "Enter site note (recommended: within 4 characters):",
-              "",
-              (note) => {
-                const trimNote = note.trim();
-                if ([...trimNote].length > 4) {
-                  showToast(t.noteTooLong || "Note cannot exceed 4 characters!");
-                  return;
-                }
-                group.sites.push({ url: parsed, note: trimNote || "" });
-                save();
-                renderSites(panel);
-                showToast(`${t.addSite || "Added"} ✅`);
-              },
-            );
-          } else showToast(t.invalidSite || "Please enter a valid URL (e.g., example.com)!");
-        });
-      };
 
       let delBtn = rightContainer.querySelector(".del-btn");
       if (!delBtn) {
@@ -5874,6 +5948,8 @@
       if (typeof block._restoreHighlight === "function") block._restoreHighlight();
 
     });
+
+    _buildAddGroupTailRow(_bodyTarget);
 
     updateAddressesVisibility();
 
@@ -6928,11 +7004,20 @@
     cursor:pointer; border:1px solid #aaa; border-radius:3px;
     background:transparent; padding:3px; display:inline-flex;
     align-items:center; justify-content:center; flex-shrink:0;
-    transition:border-color .15s, background .15s;
+    opacity:0; pointer-events:none;
+    transition:opacity .15s, border-color .15s, background .15s;
   `;
   enginePanelBar.appendChild(plusBtn);
   seBarWrap.appendChild(enginePanelBar);
   panelHeaderEl.appendChild(seBarWrap);
+  enginePanelBar.addEventListener("mouseenter", () => {
+    plusBtn.style.opacity = "1";
+    plusBtn.style.pointerEvents = "auto";
+  });
+  enginePanelBar.addEventListener("mouseleave", () => {
+    plusBtn.style.opacity = "0";
+    plusBtn.style.pointerEvents = "none";
+  });
 
   pinDropdownBtn = document.createElement("button");
   pinDropdownBtn.id = "se-dp-btn";
@@ -8208,7 +8293,8 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings[key] = chk.checked;
       save();
       const _idMap = {
-        hideAddGroupBtn:      { id: "toolbar-add-group-btn", show: "inline-flex" },
+        hideAddGroupBtn:      { id: "toolbar-add-group-btn", show: "flex" },
+        hideAddGroupQuickBtn: { id: "toolbar-add-group-quick-btn", show: "inline-flex" },
         hideAddressToggleBtn: { id: "se-toggle-address-btn",  show: "inline-flex"  },
         hideExportBtn:        { id: "toolbar-export-btn",     show: "inline-flex" },
         hideImportBtn:        { id: "toolbar-import-btn",     show: "inline-flex" },
@@ -8247,15 +8333,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     "hideAddGroupBtn",
     t.hideAddGroupBtnLabel || "Hide ➕ Add Group Button",
     "➕", t.addGroup || "Add Group",
-    () => {
-      if (_dlgPromptActive) return;
-      showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
-        if (!name || !name.trim()) { showToast(t.emptyGroupName || "Group name cannot be empty!"); return; }
-        groups.push({ name: name.trim(), sites: [] });
-        save(); renderSites(panel);
-        showToast(`${t.addGroup || "Group added"} ✅`);
-      });
-    }
+    () => _doAddGroup()
+  );
+
+  _makeHideRow(
+    "hideAddGroupQuickBtn",
+    t.hideAddGroupQuickBtnLabel || "Hide Toolbar ➕ Add Group Quick Button",
+    "➕", t.addGroup || "Add Group",
+    () => _doAddGroup()
   );
 
   _makeHideRow(
@@ -10878,6 +10963,36 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     return { hide: _hide, el: () => tip };
   }
 
+  const addGroupQuickBtn = document.createElement("button");
+  addGroupQuickBtn.id = "toolbar-add-group-quick-btn";
+  addGroupQuickBtn.style.cssText = `
+    padding:3px 6px; border-radius:${_tlbRad};
+    cursor:pointer; white-space:nowrap; font-size:13px;
+    display:${styleSettings.hideAddGroupQuickBtn ? "none" : "inline-flex"};
+    align-items:center; justify-content:center;
+    background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd};
+    opacity:${_tlbOpacity};
+  `;
+  _applyIconToBtn(addGroupQuickBtn, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
+  _attachHoverTooltip(addGroupQuickBtn, () => t.addGroup ? t.addGroup.replace(/\s*➕\s*$/, "") : "Add Group");
+  addGroupQuickBtn.onclick = () => _doAddGroup();
+
+  if (!document.getElementById("set-add-group-pulse-style")) {
+    const _addGroupPulseStyle = document.createElement("style");
+    _addGroupPulseStyle.id = "set-add-group-pulse-style";
+    _addGroupPulseStyle.textContent = `
+      @keyframes setAddGroupPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(120,150,255,0.45); }
+        50%      { box-shadow: 0 0 0 6px rgba(120,150,255,0); }
+      }
+      
+      .se-pulse-empty {
+        animation: setAddGroupPulse 2.4s ease-in-out infinite;
+      }
+    `;
+    document.head.appendChild(_addGroupPulseStyle);
+  }
+
   const compactToggleBtn = document.createElement("button");
   compactToggleBtn.id = "toolbar-compact-toggle-btn";
   compactToggleBtn.style.cssText = `
@@ -10899,50 +11014,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     compactToggleBtn.style.background = toolbarCompactMode
       ? (panelTheme === "dark" ? "rgba(90,150,255,0.35)" : "rgba(60,120,255,0.15)")
       : _tlbBg;
-    _updateAddGroupBtn();
     _updateExportBtn();
     _updateImportBtn();
     _updateBlacklistBtn();
-  };
-
-  const addGroupBtn = document.createElement("button");
-  addGroupBtn.id = "toolbar-add-group-btn";
-  addGroupBtn.style.cssText = `
-    padding:3px 8px; border-radius:${_tlbRad};
-    cursor:pointer; white-space:nowrap; font-size:11px; flex-shrink:1;
-    background:${_tlbBg}; color:${_tlbFg}; border:1px solid ${_tlbBd}; opacity:${_tlbOpacity};
-    display:inline-flex; align-items:center; justify-content:center; gap:4px;
-  `;
-  const addGroupIconEl  = document.createElement("span");
-  const addGroupLabelEl = document.createElement("span");
-  addGroupLabelEl.style.fontSize = _tlbFontSize;
-  addGroupBtn.appendChild(addGroupIconEl);
-  addGroupBtn.appendChild(addGroupLabelEl);
-  function _updateAddGroupBtn() {
-    _applyIconToBtn(addGroupIconEl, ICONS.addGroup.emoji, ICONS.addGroup.line, ICONS.addGroup.fill, ICONS.addGroup.size);
-    addGroupLabelEl.textContent = toolbarCompactMode ? "" : (t.addGroup || "Add Group ➕").replace(/\s*➕\s*$/, "");
-    addGroupBtn.style.gap = toolbarCompactMode ? "0" : "4px";
-    addGroupBtn.style.padding = toolbarCompactMode ? "3px 6px" : "3px 8px";
-  }
-  _updateAddGroupBtn();
-  addGroupBtn.style.display = styleSettings.hideAddGroupBtn ? "none" : "inline-flex";
-  _attachHoverTooltip(addGroupBtn, () => toolbarCompactMode ? (t.addGroup || "Add Group ➕") : "");
-  addGroupBtn.onclick = () => {
-    if (_dlgPromptActive) {
-      warn("[Prompt] Another prompt is active, ignoring add-group request");
-      return;
-    }
-    showCustomPrompt(t.enterGroupName || "Enter group name", "", (name) => {
-      if (!name || !name.trim()) {
-        showToast(t.emptyGroupName || "Group name cannot be empty!");
-        return;
-      }
-      groups.push({ name: name.trim(), sites: [] });
-      save();
-      renderSites(panel);
-      panel.style.display = "block";
-      showToast(`${t.addGroup || "Group added"} ✅`);
-    });
   };
 
   const toggleAddressBtn = document.createElement("button");
@@ -10976,6 +11050,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _updateAddrBtn();
     renderSites(panel);
   };
+  buttonContainer.appendChild(addGroupQuickBtn);
   buttonContainer.appendChild(compactToggleBtn);
   buttonContainer.appendChild(toggleAddressBtn);
 
@@ -11220,7 +11295,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   });
 
   buttonContainer.appendChild(modGroup);
-  buttonContainer.appendChild(addGroupBtn);
 
   const exportBtn = document.createElement("button");
   exportBtn.id = "toolbar-export-btn";
@@ -11377,6 +11451,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               "groupBackgroundColor", "enableOverlayDarkening", "textBackgroundColor",
               "textBorder", "overlayStrength", "multiSelectColor", "multiSelectOpacity",
               "siteButtonWidth", "hideSyntaxBtn", "hideBlacklistBtn", "hideAddGroupBtn",
+              "hideAddGroupQuickBtn",
               "hideAddressToggleBtn", "hideExportBtn", "hideImportBtn", "hideModGroup",
               "iconStyle", "toggleBtnBg", "toggleBtnBgOpacity", "svgIconColor",
               "toggleBtnIconStyle", "toggleBtnShape",
@@ -13126,6 +13201,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       style.textContent = `
         @keyframes obFadeIn { from { opacity:0 } to { opacity:1 } }
         @keyframes obSlideUp { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:translateY(0) } }
+        
+        #ob-overlay.ob-has-cutout {
+          transition: clip-path 0.15s ease;
+        }
+        @keyframes obSpotlightPulse {
+          0%, 100% { outline: 0px solid rgba(255,220,80,0); }
+          50%      { outline: 10px solid rgba(255,220,80,0.85); }
+        }
+        #site-toggle-simple.ob-spotlight-active {
+          outline-offset: 4px;
+          animation: obSpotlightPulse 1.6s ease-in-out infinite;
+          z-index: 2147483661 !important;
+        }
       `;
       document.head.appendChild(style);
     }
@@ -13192,6 +13280,45 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     overlay.appendChild(card);
     document.body.appendChild(overlay);
 
+    let _obCutoutReposTimer = null;
+    function _positionObCutout() {
+      const _tb = document.getElementById("site-toggle-simple");
+      if (!_tb) return;
+      const r = _tb.getBoundingClientRect();
+      const _pad = 8;
+      const _radius = Math.max(r.width, r.height) / 2 + _pad;
+      const _cx = r.left + r.width  / 2;
+      const _cy = r.top  + r.height / 2;
+      const _W = 100000, _H = 100000;
+      overlay.style.clipPath =
+        `path(evenodd, 'M0,0 H${_W} V${_H} H0 Z ` +
+        `M${_cx - _radius},${_cy} ` +
+        `A${_radius},${_radius} 0 1,0 ${_cx + _radius},${_cy} ` +
+        `A${_radius},${_radius} 0 1,0 ${_cx - _radius},${_cy} Z')`;
+    }
+    function _setEntryBtnSpotlight(on) {
+      const _tb = document.getElementById("site-toggle-simple");
+      if (!_tb) return;
+      if (on) {
+        overlay.classList.add("ob-has-cutout");
+        _tb.classList.add("ob-spotlight-active");
+        _positionObCutout();
+        if (!_obCutoutReposTimer) {
+          _obCutoutReposTimer = setInterval(_positionObCutout, 100);
+        }
+        window.addEventListener("resize", _positionObCutout);
+      } else {
+        overlay.classList.remove("ob-has-cutout");
+        overlay.style.clipPath = "";
+        _tb.classList.remove("ob-spotlight-active");
+        if (_obCutoutReposTimer) {
+          clearInterval(_obCutoutReposTimer);
+          _obCutoutReposTimer = null;
+        }
+        window.removeEventListener("resize", _positionObCutout);
+      }
+    }
+
     function updateStep(idx) {
       currentStep = idx;
       const s = steps[idx];
@@ -13211,11 +13338,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       dots.querySelectorAll("span").forEach((dot, i) => {
         dot.style.background = i === idx ? accent : (isDark ? "#333" : "#ddd");
       });
+      _setEntryBtnSpotlight(idx === 0);
     }
 
     function finish() {
       GM_setValue(STORAGE_KEYS.ONBOARDING_DONE, true);
       GM_setValue(STORAGE_KEYS.COMPACT_HINT_SHOWN, false);
+      _setEntryBtnSpotlight(false);
       document.removeEventListener("keydown", _obEscHandler);
       overlay.style.animation = "obFadeIn 0.2s ease reverse";
       setTimeout(() => overlay.remove(), 200);
