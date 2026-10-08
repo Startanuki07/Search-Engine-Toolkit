@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.7.1.0
+// @version      2.7.1.4
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -45,6 +45,7 @@
 // @grant        GM_xmlhttpRequest
 // @connect      www.google.com
 // @connect      gstatic.com
+// 💡 This script needs to connect to www.google.com and gstatic.com solely to bypass CSP restrictions and retrieve website favicons for display.
 // @description      A site-search assistant for major search engines (Google, Bing, Brave, DuckDuckGo, Yandex, Baidu). Organise target domains into named groups — one click appends site:<domain> to your current query instantly. Secondary tools: granular time filter (1 hour – 9 years), multi-engine switcher, keyword exclusion, and full import/export config. Themes, opacity, and background image supported.
 // @description:zh-TW 以 site: 域名過濾為核心的搜尋輔助工具，適用於 Google、Bing、Brave 等主流引擎。將常用目標網站整理成群組，一鍵將 site:<域名> 附加至當前搜尋詞即時跳轉。附加功能：1小時至9年細粒度時間篩選、多引擎切換、排除關鍵字、設定匯入匯出，以及主題、透明度與背景圖片自訂。
 // @description:zh-CN 以 site: 域名过滤为核心的搜索辅助工具，支持 Google、Bing、Brave 等主流引擎。将常用目标网站整理为分组，一键将 site:<域名> 追加至当前搜索词并即时跳转。附加功能：1小时至9年细粒度时间筛选、多引擎切换、排除关键词、配置导入导出，以及主题、透明度与背景图片自定义。
@@ -58,6 +59,13 @@
   const DEBUG = false;
   const log = (...args) => DEBUG && console.log(...args);
   const warn = (...args) => DEBUG && console.warn(...args);
+
+  const _ttPolicy = (() => {
+    if (typeof trustedTypes === "undefined" || !trustedTypes.createPolicy) return null;
+    try { return trustedTypes.createPolicy("search-engine-toolkit-html", { createHTML: (s) => s }); }
+    catch (_) { return null; }
+  })();
+  const setHTML = (el, val) => { el.innerHTML = _ttPolicy ? _ttPolicy.createHTML(val) : val; };
 
   const STORAGE_KEYS = {
     PANEL_THEME:            "panelTheme",
@@ -2452,6 +2460,20 @@
     });
   }
 
+  function _siteFaviconHost(siteUrl) {
+    return String(siteUrl || "").trim().replace(/^https?:\/\//i, "").split(/[/?#]/)[0];
+  }
+
+  function _loadEngineFavicon(imgEl, engineUrl, onFail, sz) {
+    let host = "";
+    try { host = new URL(engineUrl).hostname; } catch (_) { host = ""; }
+    if (!host) {
+      if (typeof onFail === "function") onFail();
+      return;
+    }
+    _loadSiteFavicon(imgEl, host, onFail, sz || 32);
+  }
+
   function se_faviconUrl(engineUrl) {
     try {
       const domain = new URL(engineUrl).hostname;
@@ -2459,6 +2481,13 @@
     } catch (e) {
       return "";
     }
+  }
+
+  function se_buildEngineUrl(engineUrl, keyword) {
+    const base = engineUrl || "";
+    if (!base) return "";
+    const q = encodeURIComponent(keyword || "");
+    return /\{query\}|%s/.test(base) ? base.replace(/\{query\}|%s/, () => q) : base + q;
   }
 
   function se_navigate(engine, openMode) {
@@ -2483,7 +2512,7 @@
       const imgUrl = getImageSearchUrl(engine.url, kw);
       if (imgUrl) { window.open(imgUrl, "_blank"); return; }
     }
-    window.open(engine.url + encodeURIComponent(kw), "_blank");
+    window.open(se_buildEngineUrl(engine.url, kw), "_blank");
   }
 
   log("Initial panelDefaultOpen:", panelDefaultOpen);
@@ -2630,7 +2659,7 @@
 
   function _exitDelMode(delEl) {
     if (delEl.dataset.sdOrigHtml === undefined) return;
-    delEl.innerHTML   = delEl.dataset.sdOrigHtml;
+    setHTML(delEl, delEl.dataset.sdOrigHtml);
     delEl.style.fontSize = delEl.dataset.sdOrigFontSize;
     delEl.title       = delEl.dataset.sdOrigTitle;
     delEl.style.opacity = "0.4";
@@ -2844,11 +2873,11 @@
     const style = styleOverride || styleSettings.iconStyle || "emoji";
     const color = styleSettings.svgIconColor || "";
     if (style === "svg-line") {
-      btn.innerHTML      = svgLine;
+      setHTML(btn, svgLine);
       btn.style.fontSize = "0";
       btn.style.color    = color || "";
     } else if (style === "svg-fill") {
-      btn.innerHTML      = svgFill;
+      setHTML(btn, svgFill);
       btn.style.fontSize = "0";
       btn.style.color    = color || "";
     } else {
@@ -2865,7 +2894,7 @@
       btn.textContent = iconDef.emoji;
       btn.style.fontSize = iconDef.size || "13px";
     } else {
-      btn.innerHTML = style === "svg-line" ? iconDef.line : iconDef.fill;
+      setHTML(btn, style === "svg-line" ? iconDef.line : iconDef.fill);
       btn.style.fontSize = "0";
     }
     if (preserveChild) btn.appendChild(preserveChild);
@@ -2913,11 +2942,11 @@
         }
       }
       if (_svgMode && GRP_SVG_MAP[emoji]) {
-        el.innerHTML = GRP_SVG_MAP[emoji];
+        setHTML(el, GRP_SVG_MAP[emoji]);
         el.style.fontSize = "0";
         el.style.color = _svgColor || "";
         if (_isSendBtn && _selCount > 0) {
-          el.innerHTML += `<span style="font-size:11px;margin-left:2px;">${_selCount}</span>`;
+          setHTML(el, el.innerHTML + `<span style="font-size:11px;margin-left:2px;">${_selCount}</span>`);
         }
       } else {
         el.textContent = _isSendBtn && _selCount > 0 ? `${emoji}${_selCount}` : emoji;
@@ -4583,7 +4612,7 @@
     const _svgMode = (styleSettings.iconStyle || "emoji") !== "emoji";
     const _svgColor = styleSettings.svgIconColor || "";
     if (_svgMode && _GRP_SVG[emoji]) {
-      el.innerHTML = _GRP_SVG[emoji];
+      setHTML(el, _GRP_SVG[emoji]);
       el.style.fontSize = "0";
       el.style.color = _svgColor || "";
     } else {
@@ -4816,7 +4845,7 @@
         const n = blk._multiSelected.size;
         const _svgMode = (styleSettings.iconStyle || "emoji") !== "emoji";
         if (_svgMode && GRP_SVG_MAP["↗"]) {
-          sBtn.innerHTML = GRP_SVG_MAP["↗"] + (n > 0 ? `<span style="font-size:11px;margin-left:2px;">${n}</span>` : "");
+          setHTML(sBtn, GRP_SVG_MAP["↗"] + (n > 0 ? `<span style="font-size:11px;margin-left:2px;">${n}</span>` : ""));
           sBtn.style.fontSize = "0";
         } else {
           sBtn.textContent = n > 0 ? `↗${n}` : "↗";
@@ -5080,7 +5109,7 @@
         return m ? m[1] : "";
       } catch(_) { return ""; }
     })();
-    msTimeSelect.innerHTML = "";
+    setHTML(msTimeSelect, "");
     const _msOptAll = document.createElement("option");
     _msOptAll.value = ""; _msOptAll.textContent = t.unlimited || "Unlimited";
     msTimeSelect.appendChild(_msOptAll);
@@ -5339,7 +5368,7 @@
   favicon.style.width = "16px";
   favicon.style.height = "16px";
   favicon.style.marginRight = "4px";
-  _loadSiteFavicon(favicon, site.url.split("/")[0]);
+  _loadSiteFavicon(favicon, _siteFaviconHost(site.url));
 
   const label = document.createElement("span");
   label.className = "site-label";
@@ -5537,6 +5566,22 @@
   btn.appendChild(label);
   btn.appendChild(del);
   return btn;
+  }
+
+  function filterSites(keyword) {
+    if (!panel) return;
+    const lk = String(keyword || "").toLowerCase().trim();
+    panel.querySelectorAll(".group-block").forEach((block) => {
+      let visibleCount = 0;
+      block.querySelectorAll(".draggable-site").forEach((btn) => {
+        const url  = (btn.dataset.siteUrl  || "").toLowerCase();
+        const note = (btn.dataset.siteNote || "").toLowerCase();
+        const match = !lk || url.includes(lk) || note.includes(lk);
+        btn.style.display = match ? "" : "none";
+        if (match) visibleCount++;
+      });
+      block.style.display = (lk && visibleCount === 0) ? "none" : "";
+    });
   }
 
   function renderSites(panel) {
@@ -5896,7 +5941,7 @@
         siteContainer.dataset.groupIndex = groupIndex;
       }
 
-      siteContainer.innerHTML = "";
+      setHTML(siteContainer, "");
 
       if (!siteContainer.__delegationBound) {
         siteContainer.__delegationBound = true;
@@ -7291,7 +7336,6 @@
       wrap.className = "se-icon-pinned";
       wrap.style.cssText = "display:inline-flex; align-items:center;";
       const btn = document.createElement("img");
-      btn.src = se_faviconUrl(engine.url);
       btn.title = engine.name;
       btn.style.cssText = `
         width:25px; height:25px; cursor:pointer; border-radius:3px;
@@ -7318,9 +7362,9 @@
         if (!enginePanelPinned) closeExtraPanel(true);
         se_navigate(engine, "new");
       });
-      btn.onerror = () => {
+      _loadEngineFavicon(btn, engine.url, () => {
         btn.style.visibility = "hidden";
-      };
+      });
       wrap.appendChild(btn);
       enginePanelBar.insertBefore(wrap, plusBtnEl || null);
     });
@@ -7615,7 +7659,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     epBody.appendChild(epList);
 
     function renderEngineList() {
-      epList.innerHTML = "";
+      setHTML(epList, "");
 
       if (engineList.length === 0) {
         const empty = document.createElement("div");
@@ -7660,12 +7704,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         row.appendChild(dragHint);
 
         const favicon = document.createElement("img");
-        favicon.src = se_faviconUrl(engine.url);
         favicon.style.cssText =
           "width:14px;height:14px;flex-shrink:0;object-fit:contain;border-radius:2px;";
-        favicon.onerror = () => {
+        _loadEngineFavicon(favicon, engine.url, () => {
           favicon.style.visibility = "hidden";
-        };
+        });
         row.appendChild(favicon);
 
         const nameSpan = document.createElement("span");
@@ -10595,7 +10638,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   let _historyHighlightIdx = -1;
 
   function renderHistoryDropdown(keyword) {
-    historyDropdown.innerHTML = "";
+    setHTML(historyDropdown, "");
     _historyHighlightIdx = -1;
     const history = SearchHistoryManager.getHistory();
 
@@ -10746,21 +10789,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         : "transparent";
     });
     _historyHighlightIdx = idx;
-  }
-
-  function filterSites(keyword) {
-    const lk = keyword.toLowerCase().trim();
-    panel.querySelectorAll(".group-block").forEach((block) => {
-      let visibleCount = 0;
-      block.querySelectorAll(".draggable-site").forEach((btn) => {
-        const url  = (btn.dataset.siteUrl  || "").toLowerCase();
-        const note = (btn.dataset.siteNote || "").toLowerCase();
-        const match = !lk || url.includes(lk) || note.includes(lk);
-        btn.style.display = match ? "" : "none";
-        if (match) visibleCount++;
-      });
-      block.style.display = (lk && visibleCount === 0) ? "none" : "";
-    });
   }
 
   function positionDropdown() {
@@ -11035,7 +11063,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       toggleAddressBtn.style.color = "";
     } else {
       const svgSrc = _ic === "svg-line" ? ICONS.toggleAddress.line : ICONS.toggleAddress.fill;
-      toggleAddressBtn.innerHTML = svgSrc;
+      setHTML(toggleAddressBtn, svgSrc);
       toggleAddressBtn.style.color = styleSettings.svgIconColor || "";
     }
   }
@@ -12003,11 +12031,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       border-radius:0 0 ${Math.max(styleSettings.borderRadius, 10)}px ${Math.max(styleSettings.borderRadius, 10)}px;
       user-select:none;
     `;
-    grip.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" style="opacity:0.30;display:block">
+    setHTML(grip, `<svg width="10" height="10" viewBox="0 0 10 10" style="opacity:0.30;display:block">
       <line x1="2" y1="9" x2="9" y2="2" stroke="currentColor" stroke-width="1.2"/>
       <line x1="5" y1="9" x2="9" y2="5" stroke="currentColor" stroke-width="1.2"/>
       <line x1="8" y1="9" x2="9" y2="8" stroke="currentColor" stroke-width="1.2"/>
-    </svg>`;
+    </svg>`);
     panel.appendChild(grip);
 
     let _rDragging = false, _rStartX = 0, _rStartY = 0, _rStartW = 0, _rStartH = 0;
@@ -12224,7 +12252,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _cp.appendChild(_sitesEl);
 
     function _renderSites(groupIdx) {
-      _sitesEl.innerHTML = "";
+      setHTML(_sitesEl, "");
       const _grp = groups[groupIdx];
       const _sites = (_grp && _grp.sites) ? _grp.sites : [];
 
@@ -12237,7 +12265,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           ? site.url : "https://" + site.url;
         const _img = document.createElement("img");
         _img.alt = "";
-        const _domain = site.url.replace(/^https?:\/\//, "").split("/")[0];
+        const _domain = _siteFaviconHost(site.url);
         _loadSiteFavicon(_img, _domain, () => {
           _img.style.display = "none";
           const _fb = document.createElement("span");
@@ -12297,26 +12325,25 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
       _pinned.forEach(eng => {
         const _img = document.createElement("img");
-        _img.src   = typeof se_faviconUrl === "function" ? se_faviconUrl(eng.url) : "";
+        _loadEngineFavicon(_img, eng.url);
         _img.alt   = eng.name || "";
         _img.title = eng.name || eng.url;
-        _img.addEventListener("click", (e) => {
-          if (e.button !== 0) return;
+        const _engineUrl = () => {
           const _qEl = document.querySelector(
             "input[name='q'], input[name='query'], input[name='text'], input[name='search'], input[type='search']"
           );
-          const _q   = _qEl ? encodeURIComponent(_qEl.value.trim()) : "";
-          const _url = (eng.url || "").replace(/\{query\}|%s/, _q);
+          const _kw = (_qEl && _qEl.value.trim()) || se_extractKeyword();
+          return se_buildEngineUrl(eng.url, _kw);
+        };
+        _img.addEventListener("click", (e) => {
+          if (e.button !== 0) return;
+          const _url = _engineUrl();
           if (_url) window.location.href = _url;
         });
         _img.addEventListener("auxclick", (e) => {
           if (e.button !== 1) return;
           e.preventDefault();
-          const _qEl = document.querySelector(
-            "input[name='q'], input[name='query'], input[name='text'], input[name='search'], input[type='search']"
-          );
-          const _q   = _qEl ? encodeURIComponent(_qEl.value.trim()) : "";
-          const _url = (eng.url || "").replace(/\{query\}|%s/, _q);
+          const _url = _engineUrl();
           if (_url) window.open(_url, "_blank");
         });
         _img.addEventListener("mousedown", (e) => {
@@ -13298,25 +13325,25 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
     function _setEntryBtnSpotlight(on) {
       const _tb = document.getElementById("site-toggle-simple");
-      if (!_tb) return;
-      if (on) {
-        overlay.classList.add("ob-has-cutout");
-        _tb.classList.add("ob-spotlight-active");
-        _positionObCutout();
-        if (!_obCutoutReposTimer) {
-          _obCutoutReposTimer = setInterval(_positionObCutout, 100);
-        }
-        window.addEventListener("resize", _positionObCutout);
-      } else {
+      if (!on) {
         overlay.classList.remove("ob-has-cutout");
         overlay.style.clipPath = "";
-        _tb.classList.remove("ob-spotlight-active");
+        if (_tb) _tb.classList.remove("ob-spotlight-active");
         if (_obCutoutReposTimer) {
           clearInterval(_obCutoutReposTimer);
           _obCutoutReposTimer = null;
         }
         window.removeEventListener("resize", _positionObCutout);
+        return;
       }
+      if (!_tb) return;
+      overlay.classList.add("ob-has-cutout");
+      _tb.classList.add("ob-spotlight-active");
+      _positionObCutout();
+      if (!_obCutoutReposTimer) {
+        _obCutoutReposTimer = setInterval(_positionObCutout, 100);
+      }
+      window.addEventListener("resize", _positionObCutout);
     }
 
     function updateStep(idx) {
