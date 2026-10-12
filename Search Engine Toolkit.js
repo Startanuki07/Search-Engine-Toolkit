@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.7.1.4
+// @version      2.7.2.0
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -45,12 +45,12 @@
 // @grant        GM_xmlhttpRequest
 // @connect      www.google.com
 // @connect      gstatic.com
-// 💡 This script needs to connect to www.google.com and gstatic.com solely to bypass CSP restrictions and retrieve website favicons for display.
-// @description      A site-search assistant for major search engines (Google, Bing, Brave, DuckDuckGo, Yandex, Baidu). Organise target domains into named groups — one click appends site:<domain> to your current query instantly. Secondary tools: granular time filter (1 hour – 9 years), multi-engine switcher, keyword exclusion, and full import/export config. Themes, opacity, and background image supported.
-// @description:zh-TW 以 site: 域名過濾為核心的搜尋輔助工具，適用於 Google、Bing、Brave 等主流引擎。將常用目標網站整理成群組，一鍵將 site:<域名> 附加至當前搜尋詞即時跳轉。附加功能：1小時至9年細粒度時間篩選、多引擎切換、排除關鍵字、設定匯入匯出，以及主題、透明度與背景圖片自訂。
-// @description:zh-CN 以 site: 域名过滤为核心的搜索辅助工具，支持 Google、Bing、Brave 等主流引擎。将常用目标网站整理为分组，一键将 site:<域名> 追加至当前搜索词并即时跳转。附加功能：1小时至9年细粒度时间筛选、多引擎切换、排除关键词、配置导入导出，以及主题、透明度与背景图片自定义。
-// @description:ja    site: ドメインフィルタリングを主軸とした検索補助ツール。Google・Bing・Brave など主要エンジンに対応。よく使うサイトをグループにまとめ、ワンクリックで site:<ドメイン> を現在のクエリに付加して即時検索。補助機能：1時間〜9年の詳細時間フィルター・マルチエンジン切替・除外キーワード・設定のインポート/エクスポート・テーマ/透明度/背景画像カスタマイズ。
-// @description:ko    site: 도메인 필터링을 핵심 기능으로 하는 검색 보조 도구. Google, Bing, Brave 등 주요 검색 엔진 지원. 자주 사용하는 사이트를 그룹으로 관리하고, 클릭 한 번으로 site:<도메인>을 현재 검색어에 추가해 즉시 이동. 부가 기능: 1시간~9년 세분화 시간 필터, 멀티엔진 전환, 키워드 제외, 설정 가져오기/내보내기, 테마·투명도·배경 이미지 커스터마이즈.
+// 💡 此腳本需要連線至 www.google.com 與 gstatic.com，僅用於繞過 CSP 限制並取得網站的 Favicon 顯示。
+// @description      Organize favorite sites into groups and add site:<domain> to your current search in one click. The panel's buttons and appearance can be adjusted to your taste.
+// @description:zh-TW 將常用網站整理成群組，一鍵把 site:<域名> 加入目前的搜尋。面板的按鈕與外觀可依個人喜好調整。
+// @description:zh-CN 将常用网站整理成分组，一键把 site:<域名> 加入当前的搜索。面板的按钮与外观可按个人喜好调整。
+// @description:ja    よく使うサイトをグループにまとめ、ワンクリックで現在の検索に site:<ドメイン> を追加。パネルのボタンや外観は好みに合わせて調整できます。
+// @description:ko    자주 쓰는 사이트를 그룹으로 정리하고, 클릭 한 번으로 현재 검색에 site:<도메인>을 추가합니다. 패널의 버튼과 외관은 취향에 맞게 조정할 수 있습니다.
 // ==/UserScript==
 
 (function () {
@@ -70,7 +70,6 @@
   const STORAGE_KEYS = {
     PANEL_THEME:            "panelTheme",
     STYLE_SETTINGS:         "styleSettings",
-    STYLE_FLOAT_POS:        "styleFloatPos",
     SEARCH_CONFIG:          "searchConfig",
     SEARCH_CONFIG_COLLAPSED:"searchConfigCollapsed",
     DEFAULT_PANEL_OPEN:     "defaultPanelOpen",
@@ -113,7 +112,7 @@
 
   const STYLE_DEFAULTS = {
       style: "default", borderRadius: 6, contrast: 0, opacity: 0.9,
-      fontSize: 12, isExpanded: false,
+      fontSize: 12,
       panelTop: 80, panelRight: 20, panelLeft: -1, panelWidth: 0, panelMaxHeight: 87,
       panelUserSized: false,
       backgroundImage: "", imageMode: "center", textColor: "", backgroundColor: "",
@@ -121,7 +120,7 @@
       textOpacityCompensation: 1.0, buttonOpacity: 1.0,
       imageScale: 1.0, imageOpacity: 1.0, theme: "light",
       customBackgroundColor: "#ffffff", customTextColor: "#000000",
-      customButtonBg: "#f5f5f5", groupBackgroundColor: "",
+      customButtonBg: "#f5f5f5",
       enableOverlayDarkening: false, textBackgroundColor: "", textBorder: false,
       overlayStrength: 0.5, multiSelectColor: "#ffc400", multiSelectOpacity: 0.85,
       siteButtonWidth: 0,
@@ -169,6 +168,11 @@
 
   function isValidPixelValue(value) {
     return typeof value === "string" && /^\d+(\.\d+)?px$/.test(value);
+  }
+
+  function _clampPxToViewport(value, axis) {
+    const limit = (axis === "top" ? window.innerHeight : window.innerWidth) - 48;
+    return Math.min(Math.max(0, parseFloat(value)), Math.max(0, limit)) + "px";
   }
 
   function _downscaleImage(dataUrl, maxDim = 1200, quality = 0.85) {
@@ -458,7 +462,6 @@
       enhancedClarity: "Clarity: ",
       enabled: "On",
       disabled: "Off",
-      groupBackgroundColor: "Group Background Color",
       enableOverlayDarkening: "Enable Overlay Darkening",
       overlayStrength: "Overlay Strength",
       searchSites: "Search Sites...",
@@ -593,11 +596,8 @@
       compactOn:  "Compact Mode",
       compactOff: "Exit Compact",
 
-      modExactMatch:  "Exact match",
       modExactMatchTip: 'Wrap your keyword in quotes: "ABCD" — forces exact wording, no synonyms',
-      modIntitle:     "Title only",
       modIntitleTip:  "intitle:ABCD — the word must appear in the page title",
-      modInurl:       "URL only",
       modInurlTip:    "inurl:ABCD — the word must appear in the page URL",
       modFiletype:    "File type",
       modFiletypeTip: "filetype:pdf — only show that file type on the site",
@@ -606,7 +606,6 @@
       modFiletypeCustomPrompt: "Enter a file extension (e.g. pptx)",
       modGroupHelp:
         "🎯 Search Modifiers\n\n▸ Exact match \"…\" — wraps your keyword in quotes for an exact-wording match.\n▸ Title only (intitle:) — the word must appear in the page title.\n▸ URL only (inurl:) — the word must appear in the page URL.\n   (Title only and URL only are mutually exclusive — turning one on turns the other off.)\n▸ File type (filetype:) — restricts results to a specific file type on the site.\n\nAll modifiers apply automatically the next time you click a site button. Use the ⚙️ button to review or reset all modifiers at once.",
-      modSettingsTitle: "Search Modifiers",
       modSettingsSaved: "Modifiers updated",
     },
     zh_TW: {
@@ -754,7 +753,6 @@
       enhancedClarity: "清晰度：",
       enabled: "開啟",
       disabled: "關閉",
-      groupBackgroundColor: "群組背景顏色",
       enableOverlayDarkening: "啟用黑幕效果",
       overlayStrength: "黑幕強度",
       searchSites: "搜尋站台...",
@@ -884,11 +882,8 @@
       resetToDefault: "重置為預設值",
       compactOn:  "精簡模式",
       compactOff: "離開精簡模式",
-      modExactMatch:  "精準比對",
       modExactMatchTip: '將關鍵字加上引號："ABCD" —— 強制完全比對字詞，排除同義詞',
-      modIntitle:     "限定標題",
       modIntitleTip:  "intitle:ABCD —— 該字詞必須出現在頁面標題中",
-      modInurl:       "限定網址",
       modInurlTip:    "inurl:ABCD —— 該字詞必須出現在頁面網址中",
       modFiletype:    "檔案類型",
       modFiletypeTip: "filetype:pdf —— 僅顯示該站台上此檔案類型的結果",
@@ -897,7 +892,6 @@
       modFiletypeCustomPrompt: "輸入副檔名（例如 pptx）",
       modGroupHelp:
         "🎯 搜尋修飾器\n\n▸ 精準比對「…」—— 將關鍵字加上引號，強制完全比對字詞。\n▸ 限定標題（intitle:）—— 該字詞必須出現在頁面標題中。\n▸ 限定網址（inurl:）—— 該字詞必須出現在頁面網址中。\n　（限定標題與限定網址互斥，開啟其中一項會自動關閉另一項。）\n▸ 檔案類型（filetype:）—— 將結果限定為該站台上的特定檔案類型。\n\n所有修飾器會在下次點擊站台按鈕時自動套用。可用 ⚙️ 按鈕檢視或一次重置全部修飾器。",
-      modSettingsTitle: "搜尋修飾器",
       modSettingsSaved: "修飾器已更新",
     },
     zh_CN: {
@@ -1045,7 +1039,6 @@
       enhancedClarity: "清晰度：",
       enabled: "开启",
       disabled: "关闭",
-      groupBackgroundColor: "群组背景颜色",
       enableOverlayDarkening: "启用黑幕效果",
       overlayStrength: "黑幕强度",
       searchSites: "搜索站点...",
@@ -1175,11 +1168,8 @@
       resetToDefault: "重置为默认值",
       compactOn:  "精简模式",
       compactOff: "退出精简模式",
-      modExactMatch:  "精准匹配",
       modExactMatchTip: '将关键字加上引号："ABCD" —— 强制完全匹配字词，排除同义词',
-      modIntitle:     "限定标题",
       modIntitleTip:  "intitle:ABCD —— 该字词必须出现在页面标题中",
-      modInurl:       "限定网址",
       modInurlTip:    "inurl:ABCD —— 该字词必须出现在页面网址中",
       modFiletype:    "文件类型",
       modFiletypeTip: "filetype:pdf —— 仅显示该站点上此文件类型的结果",
@@ -1188,7 +1178,6 @@
       modFiletypeCustomPrompt: "输入扩展名（例如 pptx）",
       modGroupHelp:
         "🎯 搜索修饰器\n\n▸ 精准匹配「…」—— 将关键字加上引号，强制完全匹配字词。\n▸ 限定标题（intitle:）—— 该字词必须出现在页面标题中。\n▸ 限定网址（inurl:）—— 该字词必须出现在页面网址中。\n　（限定标题与限定网址互斥，开启其中一项会自动关闭另一项。）\n▸ 文件类型（filetype:）—— 将结果限定为该站点上的特定文件类型。\n\n所有修饰器会在下次点击站点按钮时自动套用。可用 ⚙️ 按钮查看或一次重置全部修饰器。",
-      modSettingsTitle: "搜索修饰器",
       modSettingsSaved: "修饰器已更新",
     },
     ja: {
@@ -1337,7 +1326,6 @@
       enhancedClarity: "ｸｯｷﾘ度：",
       enabled: "有効",
       disabled: "無効",
-      groupBackgroundColor: "ｸﾞﾙｰﾌﾟ背景色",
       enableOverlayDarkening: "黒幕効果を有効化",
       overlayStrength: "黒幕の強度",
       searchSites: "ｻｲﾄを検索...",
@@ -1469,11 +1457,8 @@
       resetToDefault: "デフォルトにリセット",
       compactOn:  "コンパクトモード",
       compactOff: "コンパクトモード終了",
-      modExactMatch:  "完全一致",
       modExactMatchTip: "キーワードを引用符で囲む：\"ABCD\" —— 表記を完全一致させ、類義語を除外します",
-      modIntitle:     "タイトルのみ",
       modIntitleTip:  "intitle:ABCD —— その語がページタイトルに含まれている必要があります",
-      modInurl:       "URLのみ",
       modInurlTip:    "inurl:ABCD —— その語がページURLに含まれている必要があります",
       modFiletype:    "ファイル形式",
       modFiletypeTip: "filetype:pdf —— そのサイト内の指定ファイル形式のみ表示します",
@@ -1482,7 +1467,6 @@
       modFiletypeCustomPrompt: "拡張子を入力（例：pptx）",
       modGroupHelp:
         "🎯 検索修飾子\n\n▸ 完全一致「…」—— キーワードを引用符で囲み、表記を完全一致させます。\n▸ タイトルのみ（intitle:）—— その語がページタイトルに含まれている必要があります。\n▸ URLのみ（inurl:）—— その語がページURLに含まれている必要があります。\n　（タイトルのみとURLのみは排他的で、片方をONにすると他方は自動でOFFになります。）\n▸ ファイル形式（filetype:）—— そのサイト内で指定したファイル形式に結果を限定します。\n\nすべての修飾子は次回サイトボタンをクリックした際に自動的に適用されます。⚙️ ボタンで確認、または一括リセットができます。",
-      modSettingsTitle: "検索修飾子",
       modSettingsSaved: "修飾子を更新しました",
     },
     ko: {
@@ -1630,7 +1614,6 @@
       enhancedClarity: "선명도：",
       enabled: "켜짐",
       disabled: "꺼짐",
-      groupBackgroundColor: "그룹 배경 색상",
       enableOverlayDarkening: "오버레이 어둡게 효과",
       overlayStrength: "오버레이 강도",
       searchSites: "사이트 검색...",
@@ -1760,11 +1743,8 @@
       resetToDefault: "기본값으로 재설정",
       compactOn:  "컴팩트 모드",
       compactOff: "컴팩트 모드 종료",
-      modExactMatch:  "정확히 일치",
       modExactMatchTip: '키워드를 인용부호로 감싸기: "ABCD" —— 표기를 정확히 일치시키고 동의어를 제외합니다',
-      modIntitle:     "제목만",
       modIntitleTip:  "intitle:ABCD —— 해당 단어가 페이지 제목에 포함되어야 합니다",
-      modInurl:       "URL만",
       modInurlTip:    "inurl:ABCD —— 해당 단어가 페이지 URL에 포함되어야 합니다",
       modFiletype:    "파일 형식",
       modFiletypeTip: "filetype:pdf —— 해당 사이트에서 지정한 파일 형식만 표시합니다",
@@ -1773,7 +1753,6 @@
       modFiletypeCustomPrompt: "확장자 입력（예: pptx）",
       modGroupHelp:
         "🎯 검색 수정자\n\n▸ 정확히 일치「…」—— 키워드를 인용부호로 감싸 표기를 정확히 일치시킵니다.\n▸ 제목만（intitle:）—— 해당 단어가 페이지 제목에 포함되어야 합니다.\n▸ URL만（inurl:）—— 해당 단어가 페이지 URL에 포함되어야 합니다.\n　（제목만과 URL만은 상호 배타적이며, 하나를 켜면 다른 하나는 자동으로 꺼집니다.）\n▸ 파일 형식（filetype:）—— 해당 사이트에서 지정한 파일 형식으로 결과를 제한합니다.\n\n모든 수정자는 다음에 사이트 버튼을 클릭할 때 자동으로 적용됩니다. ⚙️ 버튼으로 확인하거나 한번에 초기화할 수 있습니다.",
-      modSettingsTitle: "검색 수정자",
       modSettingsSaved: "수정자가 업데이트되었습니다",
     },
   };
@@ -1785,15 +1764,15 @@
       "CRITICAL — OUTPUT RULES:",
       "  1. Output the COMPLETE JSON in a single code block. Do NOT split into multiple messages.",
       "  2. Do NOT omit, skip, or summarize any key. Every key in the input MUST appear in the output.",
-      "  3. 'timeOptions' is an array of exactly 22 objects — all 22 must be present in your output.",
+      `  3. 'timeOptions' is an array of exactly ${TIME_VALUES.length} objects — all ${TIME_VALUES.length} must be present in your output.`,
       "  4. 'syntaxExamples' is an array of exactly 6 objects — all 6 must be present.",
       "  5. Nested objects ('se', 'dpItemHint', 'styleOptions', 'imageModes', 'themeOptions', 'onboarding', 'customLang', 'se.dpTitle') must be fully translated.",
-      "  6. Keep ALL placeholders UNCHANGED: {n} {s} {t} {name} {url} {urls}",
+      "  6. Keep ALL placeholders UNCHANGED: {n} {d} {name} {url} {urls}",
       "  7. Keep ALL emoji characters UNCHANGED.",
       "  8. Preserve any HTML tags and class='...' attributes as-is.",
       "  9. The 'name' field is the language display label — set it to the target language name (e.g. '日本語', 'Français').",
       " 10. '_note' and '_completionCheck' must be copied verbatim — do NOT translate them.",
-      "SELF-CHECK before finishing: verify timeOptions has 22 entries and the JSON ends with _completionCheck.",
+      `SELF-CHECK before finishing: verify timeOptions has ${TIME_VALUES.length} entries and the JSON ends with _completionCheck.`,
       "===================================================================",
     ],
     name: "My Custom Language",
@@ -1936,7 +1915,6 @@
     enhancedClarity: "Clarity: ",
     enabled: "On",
     disabled: "Off",
-    groupBackgroundColor: "Group Background Color",
     enableOverlayDarkening: "Enable Overlay Darkening",
     overlayStrength: "Overlay Strength",
     searchSites: "Search Sites...",
@@ -2056,6 +2034,20 @@
     },
     compactOn:  "Compact Mode",
     compactOff: "Exit Compact",
+    toolbarCompactOn: "Collapse to icons only",
+    toolbarCompactOff: "Show button labels",
+    hideBlacklistBtnLabel: "Hide 🚫 Blacklist Button",
+    modExactMatchTip: 'Wrap your keyword in quotes: "ABCD" — forces exact wording, no synonyms',
+    modIntitleTip:  "intitle:ABCD — the word must appear in the page title",
+    modInurlTip:    "inurl:ABCD — the word must appear in the page URL",
+    modFiletype:    "File type",
+    modFiletypeTip: "filetype:pdf — only show that file type on the site",
+    modFiletypeNone: "No filter",
+    modFiletypeCustom: "Custom…",
+    modFiletypeCustomPrompt: "Enter a file extension (e.g. pptx)",
+    modGroupHelp:
+      "🎯 Search Modifiers\n\n▸ Exact match \"…\" — wraps your keyword in quotes for an exact-wording match.\n▸ Title only (intitle:) — the word must appear in the page title.\n▸ URL only (inurl:) — the word must appear in the page URL.\n   (Title only and URL only are mutually exclusive — turning one on turns the other off.)\n▸ File type (filetype:) — restricts results to a specific file type on the site.\n\nAll modifiers apply automatically the next time you click a site button. Use the ⚙️ button to review or reset all modifiers at once.",
+    modSettingsSaved: "Modifiers updated",
     customLang: {
       menuLabel: "Custom Language",
       panelTitle: "Custom Language Translation",
@@ -2071,36 +2063,80 @@
     _completionCheck: "COMPLETE",
   };
 
+  function _fillPlaceholders(tpl, vars) {
+    return String(tpl).replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k] ?? "") : m));
+  }
+
+  function _fillMissingFromBase(target, base) {
+    for (const k of Object.keys(base)) {
+      const bv = base[k], tv = target[k];
+      const bIsObj = bv !== null && typeof bv === "object" && !Array.isArray(bv);
+      if (tv === undefined) {
+        target[k] = Array.isArray(bv) ? bv.slice() : (bIsObj ? _fillMissingFromBase({}, bv) : bv);
+      } else if (bIsObj && tv !== null && typeof tv === "object" && !Array.isArray(tv)) {
+        _fillMissingFromBase(tv, bv);
+      }
+    }
+    return target;
+  }
+
   function hydrateCustomLang(raw) {
-    const out = Object.assign({}, raw);
-    const fnKeys = {
-      confirmDel:        (name) => (raw.confirmDel        ?? `Confirm to delete group "${name}"?`).replace("{name}", name),
-      groupDeleted:      (name) => (raw.groupDeleted       ?? `Group "${name}" deleted!`).replace("{name}", name),
-      multiSelectConfirm:(n)    => (raw.multiSelectConfirm ?? `Open ${n} site(s)?`).replace("{n}", String(n)),
-      multiSelectSendMsg:(n, urls) => (raw.multiSelectSendMsg ?? `Open ${n} site(s):\n${urls}`)
-        .replace("{n}", String(n)).replace("{urls}", urls ?? ""),
-      blacklistSaved:    (n) => (raw.blacklistSaved    ?? `Blacklist saved — ${n} domain(s) blocked`).replace("{n}", String(n)),
-      blacklistCount:    (n) => (raw.blacklistCount    ?? `Currently blocking ${n} domain(s)`).replace("{n}", String(n)),
-      blacklistInvalid:  (d) => (raw.blacklistInvalid  ?? `Invalid domain skipped: "${d}"`).replace("{d}", String(d)),
-    };
-    Object.assign(out, fnKeys);
+    const out = JSON.parse(JSON.stringify(raw));
+    Object.assign(out, {
+      confirmDel:         (name) => _fillPlaceholders(raw.confirmDel         ?? 'Confirm to delete group "{name}"?', { name }),
+      groupDeleted:       (name) => _fillPlaceholders(raw.groupDeleted       ?? 'Group "{name}" deleted!', { name }),
+      multiSelectConfirm: (n)    => _fillPlaceholders(raw.multiSelectConfirm ?? "Open {n} site(s)?", { n }),
+      multiSelectSendMsg: (n, urls) => _fillPlaceholders(raw.multiSelectSendMsg ?? "Open {n} site(s):\n{urls}", { n, urls }),
+      blacklistSaved:     (n)    => _fillPlaceholders(raw.blacklistSaved     ?? "Blacklist saved — {n} domain(s) blocked", { n }),
+      blacklistCount:     (n)    => _fillPlaceholders(raw.blacklistCount     ?? "Currently blocking {n} domain(s)", { n }),
+      blacklistInvalid:   (d)    => _fillPlaceholders(raw.blacklistInvalid   ?? 'Invalid domain skipped: "{d}"', { d }),
+    });
     if (raw.se) {
-      out.se = Object.assign({}, raw.se, {
-        lockToast:     (name) => (raw.se.lockToast     ?? `🔒 Locked: ${name}`).replace("{name}", name),
-        detectConfirm: (name, url) => (raw.se.detectConfirm ?? `Detected: ${name}\n${url}\n\nAdd as search engine?`)
-          .replace("{name}", name).replace("{url}", url ?? ""),
-        detectSuccess: (name) => (raw.se.detectSuccess ?? `✅ Added: ${name}`).replace("{name}", name),
-        addSuccess:    (name) => (raw.se.addSuccess    ?? `✅ Added: ${name}`).replace("{name}", name),
+      Object.assign(out.se, {
+        lockToast:     (name) => _fillPlaceholders(raw.se.lockToast     ?? "🔒 Locked: {name}", { name }),
+        detectConfirm: (name, url) => _fillPlaceholders(raw.se.detectConfirm ?? "Detected: {name}\n{url}\n\nAdd as search engine?", { name, url }),
+        detectSuccess: (name) => _fillPlaceholders(raw.se.detectSuccess ?? "✅ Added: {name}", { name }),
+        addSuccess:    (name) => _fillPlaceholders(raw.se.addSuccess    ?? "✅ Added: {name}", { name }),
       });
     }
-    return out;
+    return _fillMissingFromBase(out, LANGUAGES.en);
+  }
+
+  function _validateCustomLangData(raw) {
+    if (raw === null || typeof raw !== "object" || Array.isArray(raw)) return "Invalid custom language data";
+    if (!raw.name || typeof raw.name !== "string") return "missing name";
+    if ("_completionCheck" in raw && raw._completionCheck !== "COMPLETE") {
+      return "⚠️ File may be truncated (_completionCheck error), please re-fetch complete JSON from AI";
+    }
+    if ("timeOptions" in raw) {
+      if (!Array.isArray(raw.timeOptions)) return "⚠️ timeOptions must be an array";
+      if (raw.timeOptions.length !== TIME_VALUES.length) {
+        return `⚠️ timeOptions should have ${TIME_VALUES.length} items, got ${raw.timeOptions.length} — AI output may be truncated`;
+      }
+      if (!raw.timeOptions.every((o) => o !== null && typeof o === "object")) return "⚠️ timeOptions items must be objects";
+    }
+    if ("syntaxExamples" in raw &&
+        (!Array.isArray(raw.syntaxExamples) || !raw.syntaxExamples.every((o) => o !== null && typeof o === "object"))) {
+      return "⚠️ syntaxExamples must be an array of objects";
+    }
+    if ("se" in raw && (raw.se === null || typeof raw.se !== "object" || Array.isArray(raw.se))) return "⚠️ se must be an object";
+    return null;
+  }
+
+  function _installCustomLangData(raw) {
+    const err = _validateCustomLangData(raw);
+    if (err) return err;
+    LANGUAGES.custom = hydrateCustomLang(raw);
+    GM_setValue(STORAGE_KEYS.CUSTOM_LANG_DATA, JSON.stringify(raw));
+    return null;
   }
 
   (function () {
     const saved = GM_getValue(STORAGE_KEYS.CUSTOM_LANG_DATA, null);
     if (saved) {
       try {
-        LANGUAGES.custom = hydrateCustomLang(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        if (_validateCustomLangData(parsed) === null) LANGUAGES.custom = hydrateCustomLang(parsed);
       } catch (_) {}
     }
   })();
@@ -2474,15 +2510,6 @@
     _loadSiteFavicon(imgEl, host, onFail, sz || 32);
   }
 
-  function se_faviconUrl(engineUrl) {
-    try {
-      const domain = new URL(engineUrl).hostname;
-      return _faviconSrcFor(domain, 32);
-    } catch (e) {
-      return "";
-    }
-  }
-
   function se_buildEngineUrl(engineUrl, keyword) {
     const base = engineUrl || "";
     if (!base) return "";
@@ -2595,6 +2622,8 @@
     for (const k of Object.keys(STYLE_DEFAULTS)) {
       if (styleSettings[k] === undefined) styleSettings[k] = STYLE_DEFAULTS[k];
     }
+    if (!["light", "dark", "custom"].includes(panelTheme)) panelTheme = "light";
+    if (styleSettings.theme !== panelTheme) styleSettings.theme = panelTheme;
 
   }
 
@@ -3174,6 +3203,13 @@
   }
 
   let timeFilterOptions = t.timeOptions;
+
+  function _setUiLang(code) {
+    uiLang = code;
+    GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, uiLang);
+    t = LANGUAGES[uiLang] || LANGUAGES["en"];
+    timeFilterOptions = t.timeOptions;
+  }
 
   function getBingFilters(val) {
     if (!val) return null;
@@ -6770,10 +6806,7 @@
         const sf = document.getElementById("style-config-wrap");
         if (sf) sf.style.display = "none";
         syntaxConfig.isExpanded = false;
-        uiLang = code;
-        GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, uiLang);
-        t = LANGUAGES[uiLang] || LANGUAGES["en"];
-        timeFilterOptions = t.timeOptions;
+        _setUiLang(code);
         createPanel();
         showToast(t.langSwitched);
       });
@@ -6945,18 +6978,13 @@
               GM_setValue(STORAGE_KEYS.CUSTOM_LANG_DRAFT, JSON.stringify(draft));
               const hasCore  = typeof draft.siteTitle === "string";
               const hasSe    = typeof draft.se === "object";
-              const hasArray = Array.isArray(draft.timeOptions) && draft.timeOptions.length === 22;
+              const hasArray = Array.isArray(draft.timeOptions) && draft.timeOptions.length === TIME_VALUES.length;
               const isComplete = hasCore && hasSe && hasArray && draft._completionCheck === "COMPLETE";
               if (isComplete) {
-                if (!draft.name || typeof draft.name !== "string") throw new Error("missing name");
+                const err = _installCustomLangData(draft);
+                if (err) { showToast(err.startsWith("⚠️") ? err : cl.importFailed); return; }
                 GM_setValue(STORAGE_KEYS.CUSTOM_LANG_DRAFT, null);
-                const hydrated = hydrateCustomLang(draft);
-                LANGUAGES.custom = hydrated;
-                GM_setValue(STORAGE_KEYS.CUSTOM_LANG_DATA, JSON.stringify(draft));
-                uiLang = "custom";
-                GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, "custom");
-                t = LANGUAGES.custom;
-                timeFilterOptions = t.timeOptions;
+                _setUiLang("custom");
                 overlay.remove();
                 createPanel();
                 showToast(cl.importSuccess + " ✅ (3/3 segments merged)");
@@ -6967,24 +6995,9 @@
               return;
             }
 
-            if (!raw.name || typeof raw.name !== "string") throw new Error("missing name");
-
-            if ("_completionCheck" in raw && raw._completionCheck !== "COMPLETE") {
-              showToast("⚠️ File may be truncated (_completionCheck error), please re-fetch complete JSON from AI");
-              return;
-            }
-            if (Array.isArray(raw.timeOptions) && raw.timeOptions.length !== 22) {
-              showToast(`⚠️ timeOptions should have 22 items, got ${raw.timeOptions.length} — AI output may be truncated`);
-              return;
-            }
-
-            const hydrated = hydrateCustomLang(raw);
-            LANGUAGES.custom = hydrated;
-            GM_setValue(STORAGE_KEYS.CUSTOM_LANG_DATA, JSON.stringify(raw));
-            uiLang = "custom";
-            GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, "custom");
-            t = LANGUAGES.custom;
-            timeFilterOptions = t.timeOptions;
+            const err = _installCustomLangData(raw);
+            if (err) { showToast(err.startsWith("⚠️") ? err : cl.importFailed); return; }
+            _setUiLang("custom");
             overlay.remove();
             createPanel();
             showToast(cl.importSuccess);
@@ -7005,10 +7018,7 @@
       switchBtn.textContent = "✅ " + (LANGUAGES.custom.customLang?.menuLabel || "Use Custom");
       switchBtn.style.cssText = btnStyle("#e08a00");
       switchBtn.onclick = () => {
-        uiLang = "custom";
-        GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, "custom");
-        t = LANGUAGES.custom;
-        timeFilterOptions = t.timeOptions;
+        _setUiLang("custom");
         overlay.remove();
         createPanel();
         showToast(LANGUAGES.custom.langSwitched || "Language switched!");
@@ -7782,7 +7792,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           const w = Math.min(1280, screen.availWidth || 1280);
           const h = Math.min(900, screen.availHeight || 900);
           window.open(
-            engine.url + encodeURIComponent(kw),
+            se_buildEngineUrl(engine.url, kw),
             "_blank",
             `width=${w},height=${h},left=60,top=60,noopener,noreferrer`,
           );
@@ -9489,7 +9499,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     },
     {
       resetVal: panelTheme === "dark" ? "#333333" : "#ffffff",
-      onReset: (dv) => { panelBgColorInput.value = dv; styleSettings.backgroundColor = dv; save(); applyTheme(panelTheme); },
+      onReset: () => {
+        styleSettings.backgroundColor = "";
+        panelBgColorInput.value = panelTheme === "dark" ? "#333333" : "#ffffff";
+        save();
+        applyTheme(panelTheme);
+      },
     }
   );
   generalStyleContainer.appendChild(panelBgColorRow);
@@ -10282,10 +10297,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _dragStyleFloatState,
     (nx, ny) => {
       styleConfigHeaderRow.style.cursor = "grab";
-      GM_setValue(STORAGE_KEYS.STYLE_FLOAT_POS, {
-        top:  ny + "px",
-        left: nx + "px",
-      });
       document.removeEventListener("mousemove", _dragStyleFloatOnMove);
       document.removeEventListener("mouseup",   _dragStyleFloatOnUp);
     }
@@ -10439,6 +10450,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       ...STYLE_DEFAULTS,
       backgroundImage: currentBackgroundImage,
     };
+    panelTheme = styleSettings.theme;
     save();
     applyTheme(panelTheme);
     rebuildPanel();
@@ -11371,9 +11383,29 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       searchConfigCollapsed: GM_getValue(STORAGE_KEYS.SEARCH_CONFIG_COLLAPSED, false),
       toggleButtonTop: GM_getValue(STORAGE_KEYS.TOGGLE_BUTTON_TOP, null),
       toggleButtonLeft: GM_getValue(STORAGE_KEYS.TOGGLE_BUTTON_LEFT, null),
-      styleFloatPos: GM_getValue(STORAGE_KEYS.STYLE_FLOAT_POS, null),
       manuallyClosed: GM_getValue(STORAGE_KEYS.MANUALLY_CLOSED, false),
       domainBlacklist: blacklistDomains,
+      customLangData: (() => {
+        try { const s = GM_getValue(STORAGE_KEYS.CUSTOM_LANG_DATA, null); return s ? JSON.parse(s) : null; }
+        catch (_) { return null; }
+      })(),
+      blacklistWeakenMode: blacklistWeakenOn,
+      msSendMode: GM_getValue(STORAGE_KEYS.MS_SEND_MODE, "site_same"),
+      msClearAfterSend: GM_getValue(STORAGE_KEYS.MS_CLEAR_AFTER_SEND, true),
+      compactTheme: GM_getValue(STORAGE_KEYS.COMPACT_THEME, null),
+      syntaxModifiers: {
+        exactMatch: syntaxExactMatchOn,
+        intitle: syntaxIntitleOn,
+        inurl: syntaxInurlOn,
+        filetype: syntaxFiletypeVal,
+      },
+      oneTimeFlags: {
+        shiftDeleteNoticed: _shiftDeleteNoticed,
+        lockHintBannerHidden: GM_getValue(STORAGE_KEYS.HIDE_LOCK_HINT_BANNER, false),
+        seAdviceBannerHidden: GM_getValue(STORAGE_KEYS.HIDE_SE_ADVICE_BANNER, false),
+        compactHintShown: GM_getValue(STORAGE_KEYS.COMPACT_HINT_SHOWN, false),
+        onboardingDone: GM_getValue(STORAGE_KEYS.ONBOARDING_DONE, false),
+      },
     };
     const jsonString = JSON.stringify(config, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
@@ -11451,32 +11483,46 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               typeof g.name === "string" && g.name.length > 0 && g.name.length < 256 &&
               Array.isArray(g.sites) && g.sites.every(_isValidSite);
           }
-          if (config.siteGroups) groups.length = 0;
-          const _importedGroups = Array.isArray(config.siteGroups)
-            ? config.siteGroups.filter(_isValidGroup)
-            : [];
-          Object.assign(groups, _importedGroups);
-          if (config.searchConfig && typeof config.searchConfig === "object") {
-            const _cfgKeys = ["isExpanded", "resetOnReload", "exclude1", "exclude2"];
-            for (const k of _cfgKeys) {
-              if (k in config.searchConfig) syntaxConfig[k] = config.searchConfig[k];
+          if (config === null || typeof config !== "object" || Array.isArray(config)) throw new Error("config must be an object");
+          let _newGroups = null;
+          if (config.siteGroups !== undefined) {
+            if (!Array.isArray(config.siteGroups)) throw new Error("siteGroups must be an array");
+            _newGroups = config.siteGroups.filter(_isValidGroup);
+            if (config.siteGroups.length > 0 && _newGroups.length === 0) throw new Error("no valid site groups");
+          }
+          const _newTheme = ["light", "dark", "custom"].includes(config.panelTheme) ? config.panelTheme : null;
+          const _newCustomLang = (config.customLangData && _validateCustomLangData(config.customLangData) === null)
+            ? config.customLangData : null;
+          let _newLang = null;
+          if (typeof config.sitePanelLang === "string") {
+            if (config.sitePanelLang === "custom") {
+              if (_newCustomLang || LANGUAGES.custom) _newLang = "custom";
+            } else if (Object.prototype.hasOwnProperty.call(LANGUAGES, config.sitePanelLang)) {
+              _newLang = config.sitePanelLang;
             }
           }
-          syntaxSafeSearchOn  = config.safeSearchEnabled  ?? syntaxSafeSearchOn;
-          syntaxRegionOn = config.searchRegionEnabled ?? syntaxRegionOn;
-          panelDefaultOpen = config.defaultPanelOpen ?? panelDefaultOpen;
+          if (_newGroups) { groups.length = 0; groups.push(..._newGroups); }
+          if (config.searchConfig && typeof config.searchConfig === "object") {
+            const _cfgTypes = { isExpanded: "boolean", resetOnReload: "boolean", exclude1: "string", exclude2: "string" };
+            for (const k of Object.keys(_cfgTypes)) {
+              if (k in config.searchConfig && typeof config.searchConfig[k] === _cfgTypes[k]) syntaxConfig[k] = config.searchConfig[k];
+            }
+          }
+          if (typeof config.safeSearchEnabled === "boolean") syntaxSafeSearchOn = config.safeSearchEnabled;
+          if (typeof config.searchRegionEnabled === "boolean") syntaxRegionOn = config.searchRegionEnabled;
+          if ([true, false, "pinned"].includes(config.defaultPanelOpen)) panelDefaultOpen = config.defaultPanelOpen;
           GM_setValue(STORAGE_KEYS.DEFAULT_PANEL_OPEN, panelDefaultOpen);
-          panelTheme = config.panelTheme || panelTheme;
+          if (_newTheme) panelTheme = _newTheme;
           GM_setValue(STORAGE_KEYS.PANEL_THEME, panelTheme);
           if (config.styleSettings && typeof config.styleSettings === "object") {
             const _ssAllowedKeys = [
-              "style", "borderRadius", "contrast", "opacity", "fontSize", "isExpanded",
+              "style", "borderRadius", "contrast", "opacity", "fontSize",
               "panelTop", "panelRight", "panelLeft", "panelWidth", "panelMaxHeight",
               "panelUserSized", "backgroundImage", "imageMode", "textColor", "backgroundColor",
               "imageOffsetX", "imageOffsetY", "groupOpacity", "textOpacityCompensation",
               "buttonOpacity", "imageScale", "imageOpacity", "theme",
               "customBackgroundColor", "customTextColor", "customButtonBg",
-              "groupBackgroundColor", "enableOverlayDarkening", "textBackgroundColor",
+              "enableOverlayDarkening", "textBackgroundColor",
               "textBorder", "overlayStrength", "multiSelectColor", "multiSelectOpacity",
               "siteButtonWidth", "hideSyntaxBtn", "hideBlacklistBtn", "hideAddGroupBtn",
               "hideAddGroupQuickBtn",
@@ -11497,9 +11543,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               if (k in config.styleSettings) styleSettings[k] = config.styleSettings[k];
             }
           }
+          styleSettings.theme = panelTheme;
           GM_setValue(STORAGE_KEYS.STYLE_SETTINGS, styleSettings);
-          uiLang = config.sitePanelLang || uiLang;
-          GM_setValue(STORAGE_KEYS.SITE_PANEL_LANG, uiLang);
+          if (_newCustomLang && (_newLang === "custom" || !LANGUAGES.custom)) _installCustomLangData(_newCustomLang);
+          if (_newLang) _setUiLang(_newLang);
           if (config.safeSearchNoticedOnce !== undefined) {
             _syntaxSafeSearchNoticed = config.safeSearchNoticedOnce;
             GM_setValue(STORAGE_KEYS.SAFE_SEARCH_NOTICED_ONCE, _syntaxSafeSearchNoticed);
@@ -11538,14 +11585,19 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           }
           if (config.searchConfigCollapsed !== undefined)
             GM_setValue(STORAGE_KEYS.SEARCH_CONFIG_COLLAPSED, config.searchConfigCollapsed);
-          if (config.toggleButtonTop != null)
-            GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_TOP, config.toggleButtonTop);
-          if (config.toggleButtonLeft != null)
-            GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_LEFT, config.toggleButtonLeft);
-          if (config.styleFloatPos != null)
-            GM_setValue(STORAGE_KEYS.STYLE_FLOAT_POS, config.styleFloatPos);
-          if (config.manuallyClosed !== undefined)
-            GM_setValue(STORAGE_KEYS.MANUALLY_CLOSED, config.manuallyClosed);
+          if (isValidPixelValue(config.toggleButtonTop) && isValidPixelValue(config.toggleButtonLeft)) {
+            const _top = _clampPxToViewport(config.toggleButtonTop, "top");
+            const _left = _clampPxToViewport(config.toggleButtonLeft, "left");
+            const _tbtn = document.getElementById("site-toggle-simple");
+            if (_tbtn) {
+              _tbtn.style.top = _top;
+              _tbtn.style.left = _left;
+            } else {
+              GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_TOP, _top);
+              GM_setValue(STORAGE_KEYS.TOGGLE_BUTTON_LEFT, _left);
+            }
+          }
+          if (typeof config.manuallyClosed === "boolean") _panelManuallyClosed = config.manuallyClosed;
           if (Array.isArray(config.domainBlacklist)) {
             blacklistDomains = [...new Set(
               config.domainBlacklist
@@ -11553,6 +11605,37 @@ KR │ 패널 고정 (won't disappear after navigation)`;
                 .filter(Boolean)
             )];
             GM_setValue(STORAGE_KEYS.DOMAIN_BLACKLIST, blacklistDomains);
+          }
+          if (typeof config.blacklistWeakenMode === "boolean") {
+            blacklistWeakenOn = config.blacklistWeakenMode;
+            GM_setValue(STORAGE_KEYS.BLACKLIST_WEAKEN_MODE, blacklistWeakenOn);
+          }
+          if (typeof config.msSendMode === "string" && /^[a-z_]{1,24}$/.test(config.msSendMode))
+            GM_setValue(STORAGE_KEYS.MS_SEND_MODE, config.msSendMode);
+          if (typeof config.msClearAfterSend === "boolean")
+            GM_setValue(STORAGE_KEYS.MS_CLEAR_AFTER_SEND, config.msClearAfterSend);
+          if (config.compactTheme === "light" || config.compactTheme === "dark")
+            GM_setValue(STORAGE_KEYS.COMPACT_THEME, config.compactTheme);
+          if (config.syntaxModifiers && typeof config.syntaxModifiers === "object") {
+            const _m = config.syntaxModifiers;
+            if (typeof _m.exactMatch === "boolean") { syntaxExactMatchOn = _m.exactMatch; GM_setValue(STORAGE_KEYS.EXACT_MATCH_ENABLED, syntaxExactMatchOn); }
+            if (typeof _m.intitle === "boolean") { syntaxIntitleOn = _m.intitle; GM_setValue(STORAGE_KEYS.INTITLE_ENABLED, syntaxIntitleOn); }
+            if (typeof _m.inurl === "boolean") { syntaxInurlOn = _m.inurl; GM_setValue(STORAGE_KEYS.INURL_ENABLED, syntaxInurlOn); }
+            if (typeof _m.filetype === "string") {
+              const _ft = _m.filetype.trim().replace(/^\./, "").toLowerCase();
+              if (/^[^\s"'`<>\\]{0,32}$/.test(_ft)) {
+                syntaxFiletypeVal = _ft;
+                GM_setValue(STORAGE_KEYS.FILETYPE_VALUE, syntaxFiletypeVal);
+              }
+            }
+          }
+          if (config.oneTimeFlags && typeof config.oneTimeFlags === "object") {
+            const _f = config.oneTimeFlags;
+            if (_f.shiftDeleteNoticed === true) { _shiftDeleteNoticed = true; GM_setValue(STORAGE_KEYS.SHIFT_DELETE_NOTICED_ONCE, true); }
+            if (_f.lockHintBannerHidden === true) GM_setValue(STORAGE_KEYS.HIDE_LOCK_HINT_BANNER, true);
+            if (_f.seAdviceBannerHidden === true) GM_setValue(STORAGE_KEYS.HIDE_SE_ADVICE_BANNER, true);
+            if (_f.compactHintShown === true) GM_setValue(STORAGE_KEYS.COMPACT_HINT_SHOWN, true);
+            if (_f.onboardingDone === true) GM_setValue(STORAGE_KEYS.ONBOARDING_DONE, true);
           }
           se_save();
           save();
