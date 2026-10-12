@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.7.2.0
+// @version      2.7.2.1
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -45,7 +45,7 @@
 // @grant        GM_xmlhttpRequest
 // @connect      www.google.com
 // @connect      gstatic.com
-// 💡 此腳本需要連線至 www.google.com 與 gstatic.com，僅用於繞過 CSP 限制並取得網站的 Favicon 顯示。
+// 💡 This script needs to connect to www.google.com and gstatic.com solely to bypass CSP restrictions and retrieve website favicons for display.
 // @description      Organize favorite sites into groups and add site:<domain> to your current search in one click. The panel's buttons and appearance can be adjusted to your taste.
 // @description:zh-TW 將常用網站整理成群組，一鍵把 site:<域名> 加入目前的搜尋。面板的按鈕與外觀可依個人喜好調整。
 // @description:zh-CN 将常用网站整理成分组，一键把 site:<域名> 加入当前的搜索。面板的按钮与外观可按个人喜好调整。
