@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.7.2.1
+// @version      2.7.2.7
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -173,6 +173,24 @@
   function _clampPxToViewport(value, axis) {
     const limit = (axis === "top" ? window.innerHeight : window.innerWidth) - 48;
     return Math.min(Math.max(0, parseFloat(value)), Math.max(0, limit)) + "px";
+  }
+
+  const _STYLE_COLOR_KEYS = new Set([
+    "textColor", "backgroundColor", "customBackgroundColor", "customTextColor", "customButtonBg",
+    "textBackgroundColor", "multiSelectColor", "toggleBtnBg", "toggleBtnGlowColor", "svgIconColor",
+    "borderGlowColor", "searchBarBg", "searchBarFg", "searchBarGlowColor", "vignetteColor",
+  ]);
+
+  function _validStyleValue(key, value) {
+    const def = STYLE_DEFAULTS[key];
+    if (typeof def === "number")  return typeof value === "number" && Number.isFinite(value);
+    if (typeof def === "boolean") return typeof value === "boolean";
+    if (typeof def !== "string" || typeof value !== "string") return false;
+    if (key === "backgroundImage") return value === "" || /^(https?:|data:image\/)/.test(value);
+    if (_STYLE_COLOR_KEYS.has(key)) {
+      return value === "" || /^#[0-9a-f]{3,8}$/i.test(value) || /^rgba?\(\s*[\d.\s,%]+\)$/i.test(value);
+    }
+    return /^[a-z0-9-]{1,24}$/i.test(value);
   }
 
   function _downscaleImage(dataUrl, maxDim = 1200, quality = 0.85) {
@@ -464,6 +482,11 @@
       disabled: "Off",
       enableOverlayDarkening: "Enable Overlay Darkening",
       overlayStrength: "Overlay Strength",
+      pinned: "Pinned",
+      processingImage: "🖼️ Processing image...",
+      apply: "Apply",
+      timeCustom: "…",
+      timeCustomLabel: "Custom date range",
       searchSites: "Search Sites...",
       searchHistory: "Search History",
       clearSearchHistory: "Clear Search History",
@@ -755,6 +778,11 @@
       disabled: "關閉",
       enableOverlayDarkening: "啟用黑幕效果",
       overlayStrength: "黑幕強度",
+      pinned: "已釘選",
+      processingImage: "🖼️ 正在處理圖片...",
+      apply: "套用",
+      timeCustom: "…",
+      timeCustomLabel: "自訂日期範圍",
       searchSites: "搜尋站台...",
       searchHistory: "搜尋歷史",
       clearSearchHistory: "清除搜尋歷史",
@@ -1041,6 +1069,11 @@
       disabled: "关闭",
       enableOverlayDarkening: "启用黑幕效果",
       overlayStrength: "黑幕强度",
+      pinned: "已固定",
+      processingImage: "🖼️ 正在处理图片...",
+      apply: "应用",
+      timeCustom: "…",
+      timeCustomLabel: "自定义日期范围",
       searchSites: "搜索站点...",
       searchHistory: "搜索历史",
       clearSearchHistory: "清除搜索历史",
@@ -1328,6 +1361,11 @@
       disabled: "無効",
       enableOverlayDarkening: "黒幕効果を有効化",
       overlayStrength: "黒幕の強度",
+      pinned: "ピン留め中",
+      processingImage: "🖼️ 画像を処理中...",
+      apply: "適用",
+      timeCustom: "…",
+      timeCustomLabel: "カスタム期間",
       searchSites: "ｻｲﾄを検索...",
       searchHistory: "検索履歴",
       clearSearchHistory: "検索履歴をｸﾘｱ",
@@ -1616,6 +1654,11 @@
       disabled: "꺼짐",
       enableOverlayDarkening: "오버레이 어둡게 효과",
       overlayStrength: "오버레이 강도",
+      pinned: "고정됨",
+      processingImage: "🖼️ 이미지 처리 중...",
+      apply: "적용",
+      timeCustom: "…",
+      timeCustomLabel: "사용자 지정 기간",
       searchSites: "사이트 검색...",
       searchHistory: "검색 기록",
       clearSearchHistory: "검색 기록 지우기",
@@ -1917,6 +1960,11 @@
     disabled: "Off",
     enableOverlayDarkening: "Enable Overlay Darkening",
     overlayStrength: "Overlay Strength",
+    pinned: "Pinned",
+    processingImage: "🖼️ Processing image...",
+    apply: "Apply",
+    timeCustom: "…",
+    timeCustomLabel: "Custom date range",
     searchSites: "Search Sites...",
     searchHistory: "Search History",
     clearSearchHistory: "Clear Search History",
@@ -2176,6 +2224,7 @@
   let _syntaxRegionNoticed = GM_getValue(STORAGE_KEYS.SEARCH_REGION_NOTICED_ONCE, false);
   let blacklistDomains     = GM_getValue(STORAGE_KEYS.DOMAIN_BLACKLIST,     []);
   let blacklistWeakenOn = GM_getValue(STORAGE_KEYS.BLACKLIST_WEAKEN_MODE, false);
+  let _refreshBlacklistBtn = null;
 
   let syntaxExactMatchOn = GM_getValue(STORAGE_KEYS.EXACT_MATCH_ENABLED, false);
   let syntaxIntitleOn    = GM_getValue(STORAGE_KEYS.INTITLE_ENABLED,    false);
@@ -2195,6 +2244,7 @@
         history.replaceState(null, "", url.toString());
         return;
       }
+      if ((host.includes("duckduckgo.com") || host.includes("qwant.com")) && !params.has("q")) return;
       let updated = false;
 
       if (syntaxSafeSearchOn) {
@@ -3426,10 +3476,20 @@
       if (val) url.searchParams.set("nso", getNaverNso(val));
       else     url.searchParams.delete("nso");
     } else {
-      if (val) url.searchParams.set("tbs", `qdr:${val}`);
-      else     url.searchParams.delete("tbs");
+      const _tbsParts = (url.searchParams.get("tbs") || "").split(",")
+        .filter(p => p && !/^(?:qdr|cdr|cd_min|cd_max):/.test(p));
+      if (val) _tbsParts.push(`qdr:${val}`);
+      if (_tbsParts.length) url.searchParams.set("tbs", _tbsParts.join(","));
+      else                  url.searchParams.delete("tbs");
     }
+    _resetPagination(url);
     location.href = url.toString();
+  }
+
+  function _resetPagination(url) {
+    const h = url.hostname;
+    if (h.includes("google.")) url.searchParams.delete("start");
+    else if (h.includes("bing.com")) url.searchParams.delete("first");
   }
 
   function getDragAfterElement(container, y, selector, cachedMidpoints) {
@@ -3521,6 +3581,17 @@
     if (!/[a-z]/i.test(tld) || !sldPart || !/^[a-z0-9._-]+$/i.test(hostPart)) return null;
 
     return s.toLowerCase();
+  }
+
+  function _normBlEntry(raw) {
+    if (typeof raw !== "string") return null;
+    let s = raw.trim().toLowerCase();
+    if (!s || /\s/.test(s)) return null;
+    s = s.replace(/^https?:\/\//, "");
+    s = s.split(/[\/?#]/)[0];
+    s = s.replace(/:\d+$/, "").replace(/^\.+/, "").replace(/^www\./, "");
+    if (/^\d{1,3}(?:\.\d{1,3}){3}$/.test(s)) return s;
+    return /^(?:[a-z0-9-]+\.)+[a-z][a-z0-9-]*$/.test(s) ? s : null;
   }
 
   function showCustomPrompt(
@@ -3937,7 +4008,6 @@
       #site-group-panel .site-container {
         grid-template-columns: var(--set-grid-cols);
       }
-      
       #site-group-panel {
         scrollbar-width: thin;
         scrollbar-color: var(--set-sb-thumb) var(--set-sb-track);
@@ -4056,7 +4126,6 @@
                     inset 0 -1px 0 rgba(0,0,0,0.04);
         color:      rgba(40,40,55,0.92);
       }
-      
       #set-compact-panel .scp-handle {
         height:     32px;
         display:    flex;
@@ -4067,7 +4136,6 @@
         flex-shrink: 0;
       }
       #set-compact-panel .scp-handle:active { cursor: grabbing; }
-      
       #set-compact-panel .scp-handle-lines {
         display: flex; flex-direction: column; gap: 3px;
         opacity: 0.25; flex-shrink: 0;
@@ -4076,7 +4144,6 @@
         width: 16px; height: 1.5px; border-radius: 2px;
         background: currentColor; display: block;
       }
-      
       #set-compact-panel .scp-group-wrap {
         flex: 1;
         display: flex;
@@ -4109,7 +4176,6 @@
       #set-compact-panel[data-cp-theme="light"] .scp-group-select:hover {
         background: rgba(0,0,0,0.06);
       }
-      
       #set-compact-panel .scp-group-wrap::after {
         content: "▾";
         font-size: 9px;
@@ -4124,7 +4190,6 @@
       #set-compact-panel[data-cp-theme="light"] .scp-group-select option {
         background: #f8f8fc; color: #334;
       }
-      
       #set-compact-panel .scp-theme-btn {
         font-size: 13px; opacity: 0.35; cursor: pointer;
         padding: 2px 4px; border-radius: 5px;
@@ -4141,21 +4206,18 @@
         flex-shrink: 0;
       }
       #set-compact-panel .scp-handle-exit:hover { opacity: 0.88; }
-      
       #set-compact-panel .scp-sites {
         display:    grid;
         grid-template-columns: repeat(4, 38px);
         gap:        2px;
         padding:    4px 6px 6px;
         margin:     0 2px;
-        max-height: 228px;  
+        max-height: 228px;
         overflow-y: auto;
         overflow-x: hidden;
-        
         scrollbar-width: thin;
         scrollbar-color: rgba(128,128,160,0.3) transparent;
       }
-      
       #set-compact-panel .scp-sites::-webkit-scrollbar        { width: 3px; }
       #set-compact-panel .scp-sites::-webkit-scrollbar-track  { background: transparent; }
       #set-compact-panel .scp-sites::-webkit-scrollbar-thumb  {
@@ -4201,7 +4263,6 @@
       #set-compact-panel[data-cp-theme="light"] .scp-site-fallback {
         background: rgba(0,0,0,0.08); color: rgba(40,40,55,0.7);
       }
-      
       #set-compact-panel .scp-engines {
         display: flex; align-items: center; justify-content: center;
         gap: 6px; padding: 5px 6px 7px;
@@ -4291,6 +4352,7 @@
             el.style.backgroundImage  = `linear-gradient(rgba(0,0,0,${_ov}), rgba(0,0,0,${_ov})), url(${_cached})`;
             el.style.backgroundRepeat = "no-repeat";
             el.style.backgroundSize   = "100% 100%";
+            el.style.backgroundPosition = "0 0";
           } else {
             _buildTiledImage(_safe, _panelW, _panelH, _scale, _offX, _offY).then((tiled) => {
               if (!tiled) return;
@@ -4302,6 +4364,7 @@
                 el.style.backgroundImage  = `linear-gradient(rgba(0,0,0,${_ov}), rgba(0,0,0,${_ov})), url(${tiled})`;
                 el.style.backgroundRepeat = "no-repeat";
                 el.style.backgroundSize   = "100% 100%";
+                el.style.backgroundPosition = "0 0";
               }
             });
           }
@@ -4412,6 +4475,7 @@
           document.head.appendChild(overlayStyle);
         }
 
+        const _ovStrength = Math.min(1, Math.max(0, Number(styleSettings.overlayStrength) || 0));
         overlayStyle.textContent = `
         #site-group-panel::before, #syntax-panel::before {
             content: '';
@@ -4419,7 +4483,7 @@
             top: 0; left: 0;
             width: 100%;
             height: 10000px;
-            background: rgba(0,0,0,${styleSettings.overlayStrength || 0});
+            background: rgba(0,0,0,${_ovStrength});
             z-index: 1;
             pointer-events: none;
         }
@@ -5272,7 +5336,7 @@
         const siteStr = selected.map(u => `site:${u}`).join(" OR ");
         const _isBaidu = window.location.hostname.includes("baidu.com");
         const _blStr = (!_isBaidu && Array.isArray(blacklistDomains) && blacklistDomains.length > 0)
-          ? blacklistDomains.map(d => d.trim()).filter(d => d).map(d => `-site:${d}`).join(" ")
+          ? blacklistDomains.map(_normBlEntry).filter(Boolean).map(d => `-site:${d}`).join(" ")
           : "";
         const finalQuery = [
           finalKeyword ? `${siteStr} ${finalKeyword}` : siteStr,
@@ -5613,7 +5677,7 @@
         const url  = (btn.dataset.siteUrl  || "").toLowerCase();
         const note = (btn.dataset.siteNote || "").toLowerCase();
         const match = !lk || url.includes(lk) || note.includes(lk);
-        btn.style.display = match ? "" : "none";
+        btn.style.display = match ? "flex" : "none";
         if (match) visibleCount++;
       });
       block.style.display = (lk && visibleCount === 0) ? "none" : "";
@@ -6119,7 +6183,8 @@
 
   function _extractPureKw() {
     return se_extractKeyword()
-      .replace(/\b(?:site|filetype|inurl|intitle|intext|source|before|after|cache|related):\S+/gi, "")
+      .replace(/(?:^|\s)-?(?:site|filetype|inurl|intitle|intext|source|before|after|cache|related):(?:"[^"]*"|\S+)/gi, " ")
+      .replace(/["“”]/g, "")
       .replace(/\s+/g, " ")
       .trim();
   }
@@ -6306,9 +6371,14 @@
     return null;
   }
 
-  function _quickAddToBlacklist(domain, resultEl) {
+  function _quickAddToBlacklist(rawDomain, resultEl) {
     if (!Array.isArray(blacklistDomains)) blacklistDomains = [];
-    if (blacklistDomains.some(d => d.trim().toLowerCase() === domain)) {
+    const domain = _normBlEntry(rawDomain);
+    if (!domain) {
+      showToast(`Invalid domain: ${rawDomain}`);
+      return;
+    }
+    if (blacklistDomains.some(d => _normBlEntry(d) === domain)) {
       showToast(`Already blocked: ${domain}`);
       return;
     }
@@ -6316,12 +6386,7 @@
     GM_setValue(STORAGE_KEYS.DOMAIN_BLACKLIST, blacklistDomains);
     save();
 
-    const cnt = blacklistDomains.filter(d => d.trim()).length;
-    const blBtn = document.getElementById("blacklist-btn");
-    if (blBtn) {
-      blBtn.textContent = `🚫 ${cnt}`;
-      blBtn.title = `Blocking ${cnt} domain(s)`;
-    }
+    if (_refreshBlacklistBtn) _refreshBlacklistBtn();
 
     _applyBlacklistToDOM();
     showToast(`🚫 ${domain} added to blacklist`);
@@ -6331,11 +6396,11 @@
     const cfg = _getQbConfig();
     if (!cfg) return;
     if (!Array.isArray(blacklistDomains) || blacklistDomains.length === 0) return;
-    const blocked = new Set(blacklistDomains.map(d => d.trim().toLowerCase()).filter(Boolean));
+    const blocked = new Set(blacklistDomains.map(_normBlEntry).filter(Boolean));
     if (!blocked.size) return;
     document.querySelectorAll(cfg.resultSel).forEach(el => {
       if (el.dataset.seBl) return;
-      const domain = _extractDomain(el, cfg);
+      const domain = _normBlEntry(_extractDomain(el, cfg));
       if (!domain) return;
       const isBlocked = blocked.has(domain) ||
         [...blocked].some(b => domain.endsWith("." + b));
@@ -6807,7 +6872,7 @@
         if (sf) sf.style.display = "none";
         syntaxConfig.isExpanded = false;
         _setUiLang(code);
-        createPanel();
+        rebuildPanel();
         showToast(t.langSwitched);
       });
       menu.appendChild(item);
@@ -6986,7 +7051,7 @@
                 GM_setValue(STORAGE_KEYS.CUSTOM_LANG_DRAFT, null);
                 _setUiLang("custom");
                 overlay.remove();
-                createPanel();
+                rebuildPanel();
                 showToast(cl.importSuccess + " ✅ (3/3 segments merged)");
               } else {
                 const parts = [hasCore ? "1" : "?", hasSe ? "2" : "?", hasArray ? "3" : "?"].join("/");
@@ -6999,7 +7064,7 @@
             if (err) { showToast(err.startsWith("⚠️") ? err : cl.importFailed); return; }
             _setUiLang("custom");
             overlay.remove();
-            createPanel();
+            rebuildPanel();
             showToast(cl.importSuccess);
           } catch (_) {
             showToast(cl.importFailed);
@@ -7020,7 +7085,7 @@
       switchBtn.onclick = () => {
         _setUiLang("custom");
         overlay.remove();
-        createPanel();
+        rebuildPanel();
         showToast(LANGUAGES.custom.langSwitched || "Language switched!");
       };
       btnRow.appendChild(switchBtn);
@@ -7047,8 +7112,7 @@
   enginePanelBar.style.cssText =
     "display:flex; align-items:center; gap:3px; flex-shrink:0;";
 
-  enginePanelFloat = null;
-  enginePanelHelpTip    = null;
+  closeExtraPanel(true);
 
   const plusBtn = document.createElement("button");
   plusBtn.className = "se-plus-btn";
@@ -7450,8 +7514,6 @@
         top:  parseInt(enginePanelFloat.style.top),
       };
       se_save();
-      document.removeEventListener("mousemove", _epOnMove);
-      document.removeEventListener("mouseup",   _epOnUp);
     }
   );
   function _epOnUp() {
@@ -8110,7 +8172,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function labelCss() {
-    return `flex-shrink: 0; font-size: 12px; margin-right: 6px; color: ${panelTheme === "dark" ? "#eee" : "#111"};`;
+    return `flex-shrink: 0; font-size: 12px; margin-right: 6px; color: ${panelTheme === "custom" ? (styleSettings.customTextColor || "#111") : (panelTheme === "dark" ? "#eee" : "#111")};`;
   }
 
   function sliderCss() {
@@ -8258,7 +8320,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.hideSyntaxBtn = chk.checked;
       save();
       const btn = document.getElementById("syntax-help-btn");
-      if (btn) btn.style.display = chk.checked ? "none" : "";
+      if (btn) btn.style.display = chk.checked ? "none" : "inline-flex";
       if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
     };
     const _openSyntax = document.createElement("button");
@@ -8302,7 +8364,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.hideBlacklistBtn = chk.checked;
       save();
       const btn = document.getElementById("blacklist-btn");
-      if (btn) btn.style.display = chk.checked ? "none" : "";
+      if (btn) btn.style.display = chk.checked ? "none" : "inline-flex";
       if (typeof _syncToolbarContainerVisibility === "function") _syncToolbarContainerVisibility();
     };
     const _openBl = document.createElement("button");
@@ -10197,7 +10259,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _scBg = (panelTheme === "custom" && styleSettings.customBackgroundColor)
     ? styleSettings.customBackgroundColor
     : panelTheme === "dark" ? "#2a2a2a" : "#fff";
-  const _scFg = styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000");
+  const _scFg = (panelTheme === "custom" && styleSettings.customTextColor)
+    ? styleSettings.customTextColor
+    : (styleSettings.textColor || (panelTheme === "dark" ? "#fff" : "#000"));
   styleConfigWrap.style.cssText = `
     display: ${syntaxConfig.isExpanded ? "block" : "none"};
     position: fixed;
@@ -10297,8 +10361,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _dragStyleFloatState,
     (nx, ny) => {
       styleConfigHeaderRow.style.cursor = "grab";
-      document.removeEventListener("mousemove", _dragStyleFloatOnMove);
-      document.removeEventListener("mouseup",   _dragStyleFloatOnUp);
     }
   );
   _dragStyleFloatOnMove = _scDrag.onMove;
@@ -10321,7 +10383,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       font-size: 11px;
       line-height: 1.4;
       display: flex;
-      align-items: flex-start; 
+      align-items: flex-start;
       gap: 6px;
     `;
 
@@ -11025,7 +11087,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         0%, 100% { box-shadow: 0 0 0 0 rgba(120,150,255,0.45); }
         50%      { box-shadow: 0 0 0 6px rgba(120,150,255,0); }
       }
-      
       .se-pulse-empty {
         animation: setAddGroupPulse 2.4s ease-in-out infinite;
       }
@@ -11540,7 +11601,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
               "vignetteSize", "vignetteColor", "vignetteOpacity",
             ];
             for (const k of _ssAllowedKeys) {
-              if (k in config.styleSettings) styleSettings[k] = config.styleSettings[k];
+              if (!(k in config.styleSettings)) continue;
+              if (!_validStyleValue(k, config.styleSettings[k])) { warn("Import skipped invalid styleSettings value:", k); continue; }
+              styleSettings[k] = config.styleSettings[k];
             }
           }
           styleSettings.theme = panelTheme;
@@ -11568,22 +11631,22 @@ KR │ 패널 고정 (won't disappear after navigation)`;
             const _filtered = config.se_engines.filter(_isValidEngine);
             if (_filtered.length > 0) engineList = _filtered;
           }
-          if (config.se_panelPinned !== undefined) enginePanelPinned = config.se_panelPinned;
+          if (typeof config.se_panelPinned === "boolean") enginePanelPinned = config.se_panelPinned;
           if (config.se_panelPos !== null && typeof config.se_panelPos === "object") {
             const { left: _l, top: _t } = config.se_panelPos;
             if (typeof _l === "number" && typeof _t === "number") {
               enginePanelPos = { left: _l, top: _t };
             }
           }
-          if (config.showAddresses !== undefined) {
+          if (typeof config.showAddresses === "boolean") {
             showSiteAddresses = config.showAddresses;
             GM_setValue(STORAGE_KEYS.SHOW_ADDRESSES, showSiteAddresses);
           }
-          if (config.toolbarCompact !== undefined) {
+          if (typeof config.toolbarCompact === "boolean") {
             toolbarCompactMode = config.toolbarCompact;
             GM_setValue(STORAGE_KEYS.TOOLBAR_COMPACT, toolbarCompactMode);
           }
-          if (config.searchConfigCollapsed !== undefined)
+          if (typeof config.searchConfigCollapsed === "boolean")
             GM_setValue(STORAGE_KEYS.SEARCH_CONFIG_COLLAPSED, config.searchConfigCollapsed);
           if (isValidPixelValue(config.toggleButtonTop) && isValidPixelValue(config.toggleButtonLeft)) {
             const _top = _clampPxToViewport(config.toggleButtonTop, "top");
@@ -11601,7 +11664,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           if (Array.isArray(config.domainBlacklist)) {
             blacklistDomains = [...new Set(
               config.domainBlacklist
-                .map(d => (typeof d === "string" ? parseSmartDomain(d.trim()) : null))
+                .map(d => _normBlEntry(d))
                 .filter(Boolean)
             )];
             GM_setValue(STORAGE_KEYS.DOMAIN_BLACKLIST, blacklistDomains);
@@ -11639,7 +11702,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           }
           se_save();
           save();
-          createPanel();
+          rebuildPanel();
           showToast(t.importConfigSuccess || "Configuration imported successfully!");
           log("Configuration imported successfully");
         } catch (err) {
@@ -11696,8 +11759,9 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   blacklistBtnEl.appendChild(blacklistIconEl);
   blacklistBtnEl.appendChild(blacklistCountEl);
   blacklistBtnEl.appendChild(blacklistLabelEl);
-  const _blCount = Array.isArray(blacklistDomains) ? blacklistDomains.filter(d => d.trim()).length : 0;
+  const _blCountNow = () => (Array.isArray(blacklistDomains) ? blacklistDomains.filter(d => d.trim()).length : 0);
   function _updateBlacklistBtn() {
+    const _blCount = _blCountNow();
     _applyIconToBtn(blacklistIconEl, ICONS.blacklist.emoji, ICONS.blacklist.line, ICONS.blacklist.fill, ICONS.blacklist.size);
     blacklistCountEl.textContent = _blCount > 0 ? String(_blCount) : "";
     if (toolbarCompactMode) {
@@ -11714,13 +11778,14 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     blacklistBtnEl.style.padding = _isIconOnly ? "3px 6px" : "4px 8px";
   }
   _updateBlacklistBtn();
-  _attachHoverTooltip(blacklistBtnEl, () =>
-    toolbarCompactMode
-      ? (_blCount > 0
-          ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
-          : (t.blacklistTitle || "Domain Blacklist"))
-      : ""
-  );
+  _refreshBlacklistBtn = _updateBlacklistBtn;
+  _attachHoverTooltip(blacklistBtnEl, () => {
+    if (!toolbarCompactMode) return "";
+    const _blCount = _blCountNow();
+    return _blCount > 0
+      ? (t.blacklistCount ? t.blacklistCount(_blCount) : `Blocking ${_blCount} domain(s)`) + "\n" + (t.blacklistTitle || "Domain Blacklist")
+      : (t.blacklistTitle || "Domain Blacklist");
+  });
   blacklistBtnEl.onclick = () => showBlacklistDialog();
   blacklistBtnEl.style.display = styleSettings.hideBlacklistBtn ? "none" : "inline-flex";
   buttonContainer.appendChild(blacklistBtnEl);
@@ -12835,14 +12900,15 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       const isBaidu = window.location.hostname.includes("baidu.com");
       if (!isBaidu && Array.isArray(blacklistDomains) && blacklistDomains.length > 0) {
         const blackStr = blacklistDomains
-          .map(d => d.trim())
-          .filter(d => d.length > 0)
+          .map(_normBlEntry)
+          .filter(Boolean)
           .map(d => `-site:${d}`)
           .join(" ");
         if (blackStr) newQuery = `${newQuery} ${blackStr}`;
       }
 
       url.searchParams.set(qParam, newQuery);
+      _resetPagination(url);
       log("New search URL:", url.toString());
       location.href = url.toString();
     } catch (error) {
@@ -13003,7 +13069,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       lines.forEach(raw => {
         const trimmed = raw.trim().toLowerCase();
         if (!trimmed) return;
-        const parsed = parseSmartDomain(trimmed);
+        const parsed = _normBlEntry(trimmed);
         if (parsed) {
           valid.push(parsed);
         } else {
@@ -13015,14 +13081,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       GM_setValue(STORAGE_KEYS.DOMAIN_BLACKLIST, blacklistDomains);
       save();
 
-      const blBtn = document.getElementById("blacklist-btn");
-      if (blBtn) {
-        const cnt = blacklistDomains.filter(d => d.trim()).length;
-        blBtn.textContent = cnt > 0 ? `🚫 ${cnt}` : (t_bl.blacklistBtn || "🚫 Blacklist");
-        blBtn.title = cnt > 0
-          ? (t_bl.blacklistCount ? t_bl.blacklistCount(cnt) : `Blocking ${cnt}`) + "\n" + (t_bl.blacklistTitle || "Domain Blacklist")
-          : (t_bl.blacklistTitle || "Domain Blacklist");
-      }
+      if (_refreshBlacklistBtn) _refreshBlacklistBtn();
 
       blacklistWeakenOn = weakenChk.checked;
       GM_setValue(STORAGE_KEYS.BLACKLIST_WEAKEN_MODE, blacklistWeakenOn);
@@ -13311,7 +13370,6 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       style.textContent = `
         @keyframes obFadeIn { from { opacity:0 } to { opacity:1 } }
         @keyframes obSlideUp { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:translateY(0) } }
-        
         #ob-overlay.ob-has-cutout {
           transition: clip-path 0.15s ease;
         }
