@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.7.2.14
+// @version      2.7.2.19
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -2670,7 +2670,11 @@
   let styleSettings = GM_getValue(STORAGE_KEYS.STYLE_SETTINGS, {});
   {
     for (const k of Object.keys(STYLE_DEFAULTS)) {
-      if (styleSettings[k] === undefined) styleSettings[k] = STYLE_DEFAULTS[k];
+      if (styleSettings[k] === undefined) { styleSettings[k] = STYLE_DEFAULTS[k]; continue; }
+      if (typeof STYLE_DEFAULTS[k] === "number" && typeof styleSettings[k] !== "number") {
+        const _n = parseFloat(styleSettings[k]);
+        styleSettings[k] = Number.isFinite(_n) ? _n : STYLE_DEFAULTS[k];
+      }
     }
     if (!["light", "dark", "custom"].includes(panelTheme)) panelTheme = "light";
     if (styleSettings.theme !== panelTheme) styleSettings.theme = panelTheme;
@@ -3473,8 +3477,16 @@
       if (_w !== null) url.searchParams.set("within", String(_w));
       else             url.searchParams.delete("within");
     } else if (engine === "naver") {
-      if (val) url.searchParams.set("nso", getNaverNso(val));
-      else     url.searchParams.delete("nso");
+      const _nsoKeep = (url.searchParams.get("nso") || "").split(",").filter(p => p && !/^p:/.test(p));
+      if (val) {
+        const _nsoP = getNaverNso(val).split(",").filter(p => /^p:/.test(p));
+        if (!_nsoKeep.some(p => /^so:/.test(p))) _nsoKeep.unshift("so:r");
+        url.searchParams.set("nso", [..._nsoKeep, ..._nsoP].join(","));
+      } else if (_nsoKeep.length) {
+        url.searchParams.set("nso", _nsoKeep.join(","));
+      } else {
+        url.searchParams.delete("nso");
+      }
     } else {
       const _tbsParts = (url.searchParams.get("tbs") || "").split(",")
         .filter(p => p && !/^(?:qdr|cdr|cd_min|cd_max):/.test(p));
@@ -6478,15 +6490,22 @@
 
     function processResult(el) {
       if (el.dataset.seQb) return;
-      el.dataset.seQb = "1";
       el.classList.add("se-qb-result");
 
+      const _retryLater = () => {
+        const n = (parseInt(el.dataset.seQbTry, 10) || 0) + 1;
+        el.dataset.seQbTry = String(n);
+        if (n >= 60) el.dataset.seQb = "1";
+      };
+
       const domain = _extractDomain(el, cfg);
-      if (!domain) return;
+      if (!domain) { _retryLater(); return; }
 
       if (Array.isArray(blacklistDomains) && blacklistDomains.length > 0) {
-        const _bl = new Set(blacklistDomains.map(d => d.trim().toLowerCase()).filter(Boolean));
-        if (_bl.has(domain) || [..._bl].some(b => domain.endsWith("." + b))) {
+        const _bl = new Set(blacklistDomains.map(_normBlEntry).filter(Boolean));
+        const _domN = _normBlEntry(domain) || domain;
+        if (_bl.has(_domN) || [..._bl].some(b => _domN.endsWith("." + b))) {
+          el.dataset.seQb = "1";
           if (!el.dataset.seBl) {
             if (blacklistWeakenOn) {
               el.dataset.seBl = "weaken";
@@ -6503,7 +6522,8 @@
       }
 
       const insertEl = el.querySelector(cfg.insertSel);
-      if (!insertEl) return;
+      if (!insertEl) { _retryLater(); return; }
+      el.dataset.seQb = "1";
 
       const btnInsertEl = cfg.btnInsertSel
         ? (el.querySelector(cfg.btnInsertSel) || insertEl)
@@ -7947,8 +7967,12 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         });
         row.addEventListener("drop", (e) => {
           e.preventDefault();
-          const fromIdx = parseInt(e.dataTransfer.getData("se-idx"));
+          const fromIdx = parseInt(e.dataTransfer.getData("se-idx"), 10);
           const toIdx = idx;
+          if (!Number.isInteger(fromIdx) || fromIdx < 0 || fromIdx >= engineList.length) {
+            row.dispatchEvent(new Event("dragleave"));
+            return;
+          }
           if (fromIdx === toIdx) return;
           const moved = engineList.splice(fromIdx, 1)[0];
           engineList.splice(toIdx, 0, moved);
@@ -8131,6 +8155,11 @@ KR │ 패널 고정 (won't disappear after navigation)`;
           showToast(st.urlInvalid || "URL must start with http!");
           return;
         }
+        const _normEngUrl = (u) => String(u || "").trim().toLowerCase().replace(/\/+$/, "");
+        if (engineList.some(en => _normEngUrl(en.url) === _normEngUrl(url))) {
+          showToast(st.engineDuplicate || "This search URL is already in the list");
+          return;
+        }
         engineList.push({ name, url });
         se_save();
         nameInp.value = "";
@@ -8200,7 +8229,13 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   }
 
   function labelCss() {
-    return `flex-shrink: 0; font-size: 12px; margin-right: 6px; color: ${panelTheme === "custom" ? (styleSettings.customTextColor || "#111") : (panelTheme === "dark" ? "#eee" : "#111")};`;
+    return `flex-shrink: 0; font-size: 12px; margin-right: 6px; color: ${_styleFgColor()};`;
+  }
+
+  function _styleFgColor() {
+    return panelTheme === "custom"
+      ? (styleSettings.customTextColor || "#111")
+      : (panelTheme === "dark" ? "#eee" : "#111");
   }
 
   function sliderCss() {
@@ -8329,7 +8364,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const panelLayoutHeader = document.createElement("div");
   panelLayoutHeader.textContent = t.panelLayoutLabel || "Panel Layout";
-  panelLayoutHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  panelLayoutHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${_styleFgColor()};`;
   panelLayoutContainer.appendChild(panelLayoutHeader);
 
   (function() {
@@ -8343,7 +8378,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const lbl = document.createElement("label");
     lbl.htmlFor = "hide-syntax-btn-chk";
     lbl.textContent = t.hideSyntaxBtnLabel || "Hide 📖 Syntax Help Button";
-    lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+    lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${_styleFgColor()};`;
     chk.onchange = () => {
       styleSettings.hideSyntaxBtn = chk.checked;
       save();
@@ -8387,7 +8422,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     const lbl = document.createElement("label");
     lbl.htmlFor = "hide-blacklist-btn-chk";
     lbl.textContent = t.hideBlacklistBtnLabel || "Hide 🚫 Blacklist Button";
-    lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+    lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${_styleFgColor()};`;
     chk.onchange = () => {
       styleSettings.hideBlacklistBtn = chk.checked;
       save();
@@ -8430,7 +8465,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     chk.style.cssText = "cursor:pointer; flex-shrink:0;";
     const lbl = document.createElement("label");
     lbl.textContent = labelText;
-    lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+    lbl.style.cssText = `cursor:pointer; font-size:12px; user-select:none; flex:1; color:${_styleFgColor()};`;
     lbl.addEventListener("click", () => { chk.checked = !chk.checked; chk.dispatchEvent(new Event("change")); });
     chk.onchange = () => {
       styleSettings[key] = chk.checked;
@@ -8542,7 +8577,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const textStyleHeader = document.createElement("div");
   textStyleHeader.textContent = t.fontSize || "Text Settings";
-  textStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  textStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${_styleFgColor()};`;
   textStyleContainer.appendChild(textStyleHeader);
 
   const fontSizeRow = document.createElement("div");
@@ -8555,6 +8590,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const fontSizeInput = document.createElement("input");
   fontSizeInput.type = "range";
+  fontSizeInput.id = "set-style-fontsize-input";
   fontSizeInput.min = "10";
   fontSizeInput.max = "16";
   fontSizeInput.value = styleSettings.fontSize;
@@ -8566,6 +8602,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _vs_fontSizeInput.textContent = fontSizeInput.value+"px";
   };
   const _vs_fontSizeInput = makeValueSpan(fontSizeInput.value+"px");
+  _vs_fontSizeInput.id = "set-style-fontsize-val";
   const _rb_fontSizeInput = makeResetBtn(STYLE_DEFAULTS.fontSize, (dv) => {
     fontSizeInput.value = dv;
     styleSettings.fontSize = dv;
@@ -8685,7 +8722,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const multiSelectHeader = document.createElement("div");
   multiSelectHeader.textContent = t.multiSelectMode || "Multi-select Mode";
-  multiSelectHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  multiSelectHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${_styleFgColor()};`;
   multiSelectContainer.appendChild(multiSelectHeader);
 
   const { row: msColorRow, label: msColorLabel, input: msColorInput } = mkColorInput(
@@ -8968,7 +9005,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     vigHeaderRow.style.cssText = checkboxRowCss() + "margin-bottom:0;";
     const vignetteHeader = document.createElement("div");
     vignetteHeader.textContent = "🌑 " + (t.vignetteLabel || "Vignette");
-    vignetteHeader.style.cssText = `font-weight:bold; font-size:11px; margin-right:6px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+    vignetteHeader.style.cssText = `font-weight:bold; font-size:11px; margin-right:6px; color:${_styleFgColor()};`;
     const vigToggle = document.createElement("input");
     vigToggle.type = "checkbox";
     vigToggle.checked = !!styleSettings.enableVignette;
@@ -9310,7 +9347,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const generalStyleHeader = document.createElement("div");
   generalStyleHeader.textContent = t.style || "Style";
-  generalStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  generalStyleHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${_styleFgColor()};`;
   generalStyleContainer.appendChild(generalStyleHeader);
 
   const _styleOptEntries = Object.entries(t.styleOptions || {});
@@ -9332,6 +9369,10 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       _vs_groupOpacityInput.textContent = parseFloat(styleSettings.groupOpacity).toFixed(1);
       buttonOpacityInput.value = styleSettings.buttonOpacity;
       _vs_buttonOpacityInput.textContent = parseFloat(styleSettings.buttonOpacity).toFixed(1);
+      const _fsIn = document.getElementById("set-style-fontsize-input");
+      const _fsVal = document.getElementById("set-style-fontsize-val");
+      if (_fsIn) _fsIn.value = styleSettings.fontSize;
+      if (_fsVal) _fsVal.textContent = styleSettings.fontSize + "px";
     }
   );
   generalStyleContainer.appendChild(styleGroupRow);
@@ -9586,6 +9627,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     (v) => {
       styleSettings.backgroundColor = v;
       _debouncedSave();
+      _debouncedApply();
     },
     {
       resetVal: panelTheme === "dark" ? "#333333" : "#ffffff",
@@ -9652,7 +9694,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   `;
   const _tbsHeader = document.createElement("div");
   _tbsHeader.textContent = t.toggleBtnStyleLabel || "Toggle Button Style";
-  _tbsHeader.style.cssText = `font-weight:bold; margin-bottom:6px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  _tbsHeader.style.cssText = `font-weight:bold; margin-bottom:6px; font-size:11px; color:${_styleFgColor()};`;
   toggleBtnStyleContainer.appendChild(_tbsHeader);
 
   (function() {
@@ -9921,7 +9963,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const backgroundOverlayHeader = document.createElement("div");
   backgroundOverlayHeader.textContent = t.backgroundImage || "Background & Overlay";
-  backgroundOverlayHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  backgroundOverlayHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${_styleFgColor()};`;
   backgroundOverlayContainer.appendChild(backgroundOverlayHeader);
 
   const overlayDarkeningRow = document.createElement("div");
@@ -9964,7 +10006,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   overlayStrengthInput.min = "0.0";
   overlayStrengthInput.max = "1.0";
   overlayStrengthInput.step = "0.1";
-  overlayStrengthInput.value = styleSettings.overlayStrength || 0.5;
+  overlayStrengthInput.value = styleSettings.overlayStrength ?? 0.5;
   overlayStrengthInput.style.cssText = sliderCss();
   overlayStrengthInput.oninput = () => {
     styleSettings.overlayStrength = parseFloat(overlayStrengthInput.value);
@@ -10022,6 +10064,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   clearImageBtn.style.flexShrink = "0";
   clearImageBtn.onclick = () => {
     styleSettings.backgroundImage = "";
+    imageInput.value = "";
     save();
     applyTheme(panelTheme);
   };
@@ -10084,6 +10127,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
     _vs_imageOffsetXInput.textContent = imageOffsetXInput.value+"px";
   };
+  imageOffsetXInput.onchange = () => { save(); applyTheme(panelTheme); };
   const _vs_imageOffsetXInput = makeValueSpan(imageOffsetXInput.value+"px");
   const _rb_imageOffsetXInput = makeResetBtn(STYLE_DEFAULTS.imageOffsetX, (dv) => {
     imageOffsetXInput.value = dv;
@@ -10119,6 +10163,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
     _vs_imageOffsetYInput.textContent = imageOffsetYInput.value+"px";
   };
+  imageOffsetYInput.onchange = () => { save(); applyTheme(panelTheme); };
   const _vs_imageOffsetYInput = makeValueSpan(imageOffsetYInput.value+"px");
   const _rb_imageOffsetYInput = makeResetBtn(STYLE_DEFAULTS.imageOffsetY, (dv) => {
     imageOffsetYInput.value = dv;
@@ -10156,6 +10201,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     }
     _vs_imageScaleInput.textContent = parseFloat(imageScaleInput.value).toFixed(1)+"x";
   };
+  imageScaleInput.onchange = () => { save(); applyTheme(panelTheme); };
   const _vs_imageScaleInput = makeValueSpan(parseFloat(imageScaleInput.value).toFixed(1)+"x");
   const _rb_imageScaleInput = makeResetBtn(STYLE_DEFAULTS.imageScale, (dv) => {
     imageScaleInput.value = dv;
@@ -10237,7 +10283,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const customThemeHeader = document.createElement("div");
   customThemeHeader.textContent = t.customThemeLabel || "Custom Theme";
-  customThemeHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  customThemeHeader.style.cssText = `font-weight:bold; margin-bottom:4px; font-size:11px; color:${_styleFgColor()};`;
   customThemeContainer.appendChild(customThemeHeader);
 
   const { row: backgroundColorRow, label: backgroundColorLabel, input: backgroundColorInput } = mkColorInput(
@@ -10488,7 +10534,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   const styleConfigHeader = document.createElement("div");
   styleConfigHeader.textContent = t.styleConfig || "Style Settings 🎨";
-  styleConfigHeader.style.cssText = `font-weight:bold; flex:1; color:${panelTheme === "dark" ? "#eee" : "#111"};`;
+  styleConfigHeader.style.cssText = `font-weight:bold; flex:1; color:${_styleFgColor()};`;
   styleConfigHeaderRow.appendChild(sfDragHandle);
   styleConfigHeaderRow.appendChild(styleConfigHeader);
 
@@ -12799,6 +12845,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const ENGINE_QUERY_PARAMS = [
     { host: "yandex.",     param: "text"  },
     { host: "ya.ru",       param: "text"  },
+    { host: "image.baidu.com", param: "word" },
     { host: "baidu.com",   param: "wd"    },
     { host: "yahoo.co.jp", param: "p"     },
     { host: "yahoo.com",   param: "p"     },
