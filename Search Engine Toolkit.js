@@ -6,7 +6,7 @@
 // @name:ko      멀티엔진 검색 도구 — 사이트 그룹, 시간 필터 및 검색 패널
 // @namespace    https://greasyfork.org/en/users/1575945-star-tanuki07
 // @homepageURL  https://github.com/Startanuki07
-// @version      2.7.2.19
+// @version      2.7.2.25
 // @license      MIT
 // @author       Star_tanuki07
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
@@ -6586,6 +6586,7 @@
     existingPanel.querySelectorAll('.group-block[data-multi-select-active="true"]').forEach(b => {
       if (typeof b._msExit === "function") b._msExit();
     });
+    document.querySelectorAll("#site-history-dropdown, .se-hover-tip").forEach(n => n.remove());
     existingPanel.remove();
   }
 
@@ -7742,6 +7743,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     _dragEnginePanel.active = false;
     epTitleBar.addEventListener("mousedown", (e) => {
       if (e.target === epCloseBtn || e.target === helpBtn) return;
+      if (e.button !== 0) return;
       _startDrag(_dragEnginePanel, enginePanelFloat, e);
       epTitleBar.style.cursor = "grabbing";
       e.preventDefault();
@@ -8606,7 +8608,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_fontSizeInput = makeResetBtn(STYLE_DEFAULTS.fontSize, (dv) => {
     fontSizeInput.value = dv;
     styleSettings.fontSize = dv;
-    _vs_fontSizeInput.textContent = String(dv);
+    _vs_fontSizeInput.textContent = dv + "px";
     save(); applyTheme(panelTheme);
   });
   fontSizeRow.appendChild(fontSizeInput);
@@ -8678,7 +8680,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_textOpacityCompensationInput = makeResetBtn(STYLE_DEFAULTS.textOpacityCompensation, (dv) => {
     textOpacityCompensationInput.value = dv;
     styleSettings.textOpacityCompensation = dv;
-    _vs_textOpacityCompensationInput.textContent = String(dv);
+    _vs_textOpacityCompensationInput.textContent = parseFloat(dv).toFixed(1);
     save(); applyTheme(panelTheme);
   });
   textOpacityCompensationRow.appendChild(textOpacityCompensationInput);
@@ -8757,7 +8759,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_msOpacity = makeResetBtn(0.85, (dv) => {
     msOpacityInput.value = dv;
     styleSettings.multiSelectOpacity = dv;
-    _vs_msOpacity.textContent = String(dv);
+    _vs_msOpacity.textContent = parseFloat(dv).toFixed(2);
     save();
   });
   msOpacityRow.appendChild(msOpacityInput);
@@ -8792,7 +8794,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     `;
     const glowHeader = document.createElement("div");
     glowHeader.textContent = "✨ " + (t.glowLabel || "Border Glow / Sheen");
-    glowHeader.style.cssText = `font-weight:bold; font-size:11px; margin-bottom:2px; color:${_isDark ? "#eee" : "#111"};`;
+    glowHeader.style.cssText = `font-weight:bold; font-size:11px; margin-bottom:2px; color:${_styleFgColor()};`;
     glowSection.appendChild(glowHeader);
 
     const glowToggleRow = document.createElement("div");
@@ -8818,6 +8820,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       (v) => {
         styleSettings.borderGlowColor = v;
         _debouncedSave();
+        _debouncedApply();
       },
       {
         resetVal: "#00bfff",
@@ -8841,6 +8844,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.borderGlowStrength = parseInt(glowStrInput.value);
       _vs_glowStr.textContent = glowStrInput.value + "px";
       _debouncedSave();
+      _debouncedApply();
     };
     glowStrRow.appendChild(glowStrInput);
     glowStrRow.appendChild(_vs_glowStr);
@@ -8895,6 +8899,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.sheenAngle = parseInt(sheenAngleInput.value);
       _vs_sheenAngle.textContent = sheenAngleInput.value + "°";
       _debouncedSave();
+      _debouncedApply();
     };
     sheenAngleRow.appendChild(sheenAngleInput);
     sheenAngleRow.appendChild(_vs_sheenAngle);
@@ -8915,6 +8920,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.sheenOpacity = parseFloat(sheenOpInput.value);
       _vs_sheenOp.textContent = styleSettings.sheenOpacity.toFixed(2);
       _debouncedSave();
+      _debouncedApply();
     };
     sheenOpRow.appendChild(sheenOpInput);
     sheenOpRow.appendChild(_vs_sheenOp);
@@ -9152,7 +9158,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     `;
     const _sbsHeader = document.createElement("div");
     _sbsHeader.textContent = "🔍 " + (t.searchBarStyleLabel || "Search Bar Style");
-    _sbsHeader.style.cssText = `font-weight:bold; font-size:11px; margin-bottom:2px; color:${_isDark ? "#eee" : "#111"};`;
+    _sbsHeader.style.cssText = `font-weight:bold; font-size:11px; margin-bottom:2px; color:${_styleFgColor()};`;
     searchBarSection.appendChild(_sbsHeader);
 
     const _sbsPresetRow = document.createElement("div");
@@ -9198,6 +9204,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       (v) => {
         styleSettings.searchBarBg = v;
         _debouncedSave();
+        _debouncedApply();
       },
       {
         resetVal: "",
@@ -9222,6 +9229,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.searchBarBgOpacity = parseFloat(sbsBgOpInput.value);
       sbsBgOpSpan.textContent = styleSettings.searchBarBgOpacity.toFixed(2);
       _debouncedSave();
+      _debouncedApply();
     };
     _sbsBgOpInputRef = sbsBgOpInput;
     _sbsBgOpSpanRef  = sbsBgOpSpan;
@@ -9242,6 +9250,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       (v) => {
         styleSettings.searchBarFg = v;
         _debouncedSave();
+        _debouncedApply();
       },
       {
         resetVal: "",
@@ -9275,6 +9284,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       (v) => {
         styleSettings.searchBarGlowColor = v;
         _debouncedSave();
+        _debouncedApply();
       },
       {
         resetVal: "#5599ff",
@@ -9298,6 +9308,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       styleSettings.searchBarGlowStrength = parseInt(_sbsGlowStrInput.value);
       _vs_sbsGlowStr.textContent = _sbsGlowStrInput.value + "px";
       _debouncedSave();
+      _debouncedApply();
     };
     const _rb_sbsGlowStr = makeResetBtn(6, (dv) => {
       _sbsGlowStrInput.value = dv;
@@ -9423,7 +9434,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_borderRadiusInput = makeResetBtn(STYLE_DEFAULTS.borderRadius, (dv) => {
     borderRadiusInput.value = dv;
     styleSettings.borderRadius = dv;
-    _vs_borderRadiusInput.textContent = String(dv);
+    _vs_borderRadiusInput.textContent = dv + "px";
     save(); applyTheme(panelTheme);
   });
   borderRadiusRow.appendChild(borderRadiusInput);
@@ -9488,7 +9499,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_opacityInput = makeResetBtn(STYLE_DEFAULTS.opacity, (dv) => {
     opacityInput.value = dv;
     styleSettings.opacity = dv;
-    _vs_opacityInput.textContent = String(dv);
+    _vs_opacityInput.textContent = parseFloat(dv).toFixed(1);
     save(); applyTheme(panelTheme);
   });
   opacityRow.appendChild(opacityInput);
@@ -9521,7 +9532,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_groupOpacityInput = makeResetBtn(STYLE_DEFAULTS.groupOpacity, (dv) => {
     groupOpacityInput.value = dv;
     styleSettings.groupOpacity = dv;
-    _vs_groupOpacityInput.textContent = String(dv);
+    _vs_groupOpacityInput.textContent = parseFloat(dv).toFixed(1);
     save(); applyTheme(panelTheme);
   });
   groupOpacityRow.appendChild(groupOpacityInput);
@@ -9554,7 +9565,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_buttonOpacityInput = makeResetBtn(STYLE_DEFAULTS.buttonOpacity, (dv) => {
     buttonOpacityInput.value = dv;
     styleSettings.buttonOpacity = dv;
-    _vs_buttonOpacityInput.textContent = String(dv);
+    _vs_buttonOpacityInput.textContent = parseFloat(dv).toFixed(1);
     save(); applyTheme(panelTheme);
   });
   buttonOpacityRow.appendChild(buttonOpacityInput);
@@ -10018,7 +10029,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_overlayStrengthInput = makeResetBtn(STYLE_DEFAULTS.overlayStrength, (dv) => {
     overlayStrengthInput.value = dv;
     styleSettings.overlayStrength = dv;
-    _vs_overlayStrengthInput.textContent = String(dv);
+    _vs_overlayStrengthInput.textContent = parseFloat(dv).toFixed(1);
     save(); applyTheme(panelTheme);
   });
   overlayStrengthRow.appendChild(overlayStrengthInput);
@@ -10132,7 +10143,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_imageOffsetXInput = makeResetBtn(STYLE_DEFAULTS.imageOffsetX, (dv) => {
     imageOffsetXInput.value = dv;
     styleSettings.imageOffsetX = dv;
-    _vs_imageOffsetXInput.textContent = String(dv);
+    _vs_imageOffsetXInput.textContent = dv + "px";
     save(); applyTheme(panelTheme);
   });
   imageOffsetXRow.appendChild(imageOffsetXInput);
@@ -10168,7 +10179,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_imageOffsetYInput = makeResetBtn(STYLE_DEFAULTS.imageOffsetY, (dv) => {
     imageOffsetYInput.value = dv;
     styleSettings.imageOffsetY = dv;
-    _vs_imageOffsetYInput.textContent = String(dv);
+    _vs_imageOffsetYInput.textContent = dv + "px";
     save(); applyTheme(panelTheme);
   });
   imageOffsetYRow.appendChild(imageOffsetYInput);
@@ -10206,7 +10217,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_imageScaleInput = makeResetBtn(STYLE_DEFAULTS.imageScale, (dv) => {
     imageScaleInput.value = dv;
     styleSettings.imageScale = dv;
-    _vs_imageScaleInput.textContent = String(dv);
+    _vs_imageScaleInput.textContent = parseFloat(dv).toFixed(1) + "x";
     save(); applyTheme(panelTheme);
   });
   imageScaleRow.appendChild(imageScaleInput);
@@ -10246,7 +10257,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
   const _rb_imageOpacityInput = makeResetBtn(STYLE_DEFAULTS.imageOpacity, (dv) => {
     imageOpacityInput.value = dv;
     styleSettings.imageOpacity = dv;
-    _vs_imageOpacityInput.textContent = String(dv);
+    _vs_imageOpacityInput.textContent = parseFloat(dv).toFixed(1);
     save(); applyTheme(panelTheme);
   });
   imageOpacityRow.appendChild(imageOpacityInput);
@@ -10426,6 +10437,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
   styleConfigHeaderRow.addEventListener("mousedown", (e) => {
     if (e.target.tagName === "BUTTON" || e.target.tagName === "SELECT") return;
+    if (e.button !== 0) return;
     _startDrag(_dragStyleFloatState, styleConfigWrap, e);
     styleConfigHeaderRow.style.cursor = "grabbing";
     e.preventDefault();
@@ -11103,6 +11115,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       if (!text) return;
       if (!tip) {
         tip = document.createElement("div");
+        tip.className = "se-hover-tip";
         tip.style.cssText = `
           position:fixed; z-index:2147483660; display:none;
           background:${panelTheme === "dark" ? "#2a2a4a" : "#f8f8ff"};
@@ -11114,6 +11127,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         `;
         document.body.appendChild(tip);
       }
+      if (!tip.isConnected) document.body.appendChild(tip);
       tip.textContent = text;
       tip.style.visibility = "hidden";
       tip.style.display = "block";
@@ -11549,16 +11563,18 @@ KR │ 패널 고정 (won't disappear after navigation)`;
     a.href = url;
     a.download = "site-shortcuts-config.json";
     a.click();
-    URL.revokeObjectURL(url);
-    navigator.clipboard
-      .writeText(jsonString)
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    const _clipPromise = (navigator.clipboard && navigator.clipboard.writeText)
+      ? navigator.clipboard.writeText(jsonString)
+      : Promise.reject(new Error("clipboard API unavailable"));
+    _clipPromise
       .then(() => {
         showToast(t.exportConfigSuccess || "Configuration exported successfully! 📤");
         log("Configuration exported and copied to clipboard");
       })
       .catch((err) => {
         warn("Failed to copy to clipboard:", err);
-        showToast(t.copied || "Copied! 📋");
+        showToast(t.exportConfigSuccess || "Configuration exported successfully! 📤");
       });
   };
   buttonContainer.appendChild(exportBtn);
@@ -12051,6 +12067,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       if (u.searchParams.has("q"))     u.searchParams.set("q", newQ.trim());
       else if (u.searchParams.has("query")) u.searchParams.set("query", newQ.trim());
       else { showToast(t.unknownQueryParam || "⚠️ Cannot detect query parameter for this engine", 2000); return; }
+      _resetPagination(u);
       location.href = u.toString();
     } catch(_) {
       showToast(t.dateFormatError || "⚠️ Invalid date format, use YYYY-MM-DD", 2000);
@@ -12128,7 +12145,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
         customDateRow.style.display = "none";
         applyTimeFilter(val);
       });
-      segWrap.addEventListener("click", () => { _yearSel.value = ""; });
+      segWrap.addEventListener("click", (e) => { if (!_yearSel.contains(e.target)) _yearSel.value = ""; });
       segWrap.appendChild(_yearSel);
     }
   }
@@ -12288,6 +12305,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
       setTimeout(() => { _dragPanelActive = false; }, 50);
     }
     grip.addEventListener("mousedown", (e) => {
+      if (e.button !== 0) return;
       _rDragging = true;
       _dragPanelActive = true;
       _rStartX = e.clientX; _rStartY = e.clientY;
@@ -12617,6 +12635,7 @@ KR │ 패널 고정 (won't disappear after navigation)`;
 
     _handle.addEventListener("mousedown", (e) => {
       if (e.target === _exitBtn) return;
+      if (e.button !== 0) return;
       _startDrag(_cpDragState, _cp, e);
       _handle.style.cursor = "grabbing";
       e.preventDefault();
